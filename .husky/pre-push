@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Exit on test failures
+set -e
+
+echo "Running tests before push..."
+npm run test:ci
