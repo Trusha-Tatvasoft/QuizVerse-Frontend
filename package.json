@@ -10,6 +10,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:ci": "jest --runInBand",
+    "test:coverage": "jest --coverage",
     "storybook": "ng run QuizVerse-Frontend:storybook",
     "build-storybook": "ng run QuizVerse-Frontend:build-storybook",
     "lint": "ng lint",
@@ -61,11 +62,5 @@
     "storybook": "^9.0.15",
     "typescript": "~5.7.2",
     "typescript-eslint": "8.34.1"
-  },
-  "jest": {
-    "preset": "jest-preset-angular",
-    "setupFilesAfterEnv": [
-      "<rootDir>/setupJest.js"
-    ]
   }
 }
