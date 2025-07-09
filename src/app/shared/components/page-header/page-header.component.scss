@@ -1,0 +1,25 @@
+.page-header-card {
+  margin: 60px;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: none;
+  border: 1px solid #000000;
+  // font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 550;
+  }
+
+  .subtitle {
+    margin: 0;
+    font-size: 14px;
+  }
+}
