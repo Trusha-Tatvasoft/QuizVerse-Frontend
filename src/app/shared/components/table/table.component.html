@@ -1,0 +1,96 @@
+<mat-card class="data-table-card mat-elevation-z2">
+    <!-- Optional Header -->
+    <div *ngIf="tableTitle || tableDescription" class="table-header mb-4">
+        <h2 *ngIf="tableTitle">{{ tableTitle }}</h2>
+        <p *ngIf="tableDescription">{{ tableDescription }}</p>
+    </div>
+
+    <!-- Table -->
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)"
+            class="full-width-table mat-elevation-z1">
+
+            <!-- Dynamic Columns -->
+            <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
+                <ng-container *ngIf="column.sortable; else plainHeader">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header="{{ column.key }}"
+                        class="table-column-heading">
+                        {{ column.label }}
+                    </th>
+                </ng-container>
+
+                <!-- Fallback plain header - for non sortable column -->
+                <ng-template #plainHeader>
+                    <th mat-header-cell *matHeaderCellDef class="table-column-heading">
+                        {{ column.label }}
+                    </th>
+                </ng-template>
+
+                <td mat-cell *matCellDef="let row">
+                    <ng-container [ngSwitch]="column.type">
+
+                        <!-- Text Type -->
+                        <ng-container *ngSwitchCase="'text'">{{ row[column.key] }}</ng-container>
+
+                        <!-- Tag Type -->
+                        <mat-chip *ngSwitchCase="'tag'" selected>
+                            {{ row[column.key] }}
+                        </mat-chip>
+
+                        <!-- Button Type -->
+                        <button *ngSwitchCase="'button'" mat-button (click)="onActionClick(column.key, row)">
+                            {{ row[column.key] }}
+                        </button>
+
+                        <!-- Profile Picture Type -->
+                        <ng-container *ngSwitchCase="'profile'">
+                            <div class="profile-cell">
+                                <img [src]="row[column.key].image" alt="{{ row[column.key].name }}" />
+                                <div class="info">
+                                    <div class="name">{{ row[column.key].name }}</div>
+                                    <div class="email">{{ row[column.key].email }}</div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <!-- Custom Template - any html template -->
+                        <ng-container *ngSwitchCase="'custom'">
+                            <ng-container
+                                *ngTemplateOutlet="columnTemplates[column.key]; context: { $implicit: row }"></ng-container>
+                        </ng-container>
+                    </ng-container>
+                </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef class="table-column-heading">Actions</th>
+                <td mat-cell *matCellDef="let row">
+                    <button *ngFor="let icon of actionIcons" mat-icon-button [color]="icon.color || 'primary'"
+                        [matTooltip]="icon.tooltip || icon.action" (click)="onActionClick(icon.action, row)">
+                        <mat-icon>{{ icon.icon }}</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+                <td [attr.colspan]="displayedColumns.length" class="no-data-message">
+                    {{ noDataMessage || 'No data available.' }}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Paginator -->
+    <div *ngIf="totalItems > 0">
+        <div class="pagination-container">
+            <mat-paginator class="custom-paginator" [length]="totalItems" [pageSize]="pageSize"
+                [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)"></mat-paginator>
+        </div>
+    </div>
+
+
+</mat-card>
