@@ -1,0 +1,32 @@
+<mat-card class="stats-card" [ngStyle]="getCardStyles()">
+  <mat-card-content>
+    <div class="card-header">
+      <div class="card-title-section">
+        <h3 class="card-title">{{ title }}</h3>
+        <div class="card-value" [ngStyle]="{ color: resolvedValueColor }">
+          {{ value }}
+        </div>
+        <p class="card-subtitle" *ngIf="subtitle" [ngStyle]="{ color: resolvedSubtitleColor }">
+          {{ subtitle }}
+        </p>
+      </div>
+
+      <div class="card-right-section" *ngIf="hasRightElement">
+        <div class="card-icon" *ngIf="showIcon" [ngStyle]="{ color: resolvedSubtitleColor }">
+          <mat-icon>{{ icon }}</mat-icon>
+        </div>
+
+        <div
+          class="card-status"
+          *ngIf="showStatus"
+          [ngStyle]="{
+            color: resolvedSubtitleColor,
+            'background-color': getStatusBackgroundColor(),
+          }"
+        >
+          <span>{{ status }}</span>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
