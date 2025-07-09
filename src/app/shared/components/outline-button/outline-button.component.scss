@@ -1,0 +1,39 @@
+@import 'tailwindcss';
+
+.outline-button {
+  color: var(--outline-primary);
+  border: 1px solid #d1d5db;
+  border-color: #d1d5db;
+
+  &:hover:not(:disabled) {
+    background-color: #eeeeee;
+    opacity: 0.85;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+.button-icon,
+.button-image {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+
+.button-image-only {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}

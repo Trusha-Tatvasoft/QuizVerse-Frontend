@@ -1,0 +1,30 @@
+<button
+  [attr.type]="type"
+  [disabled]="disabled"
+  (click)="!disabled && onClick.emit($event)"
+  class="filled-button text-white font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+>
+  <div class="button-content flex items-center justify-center gap-2">
+    <ng-container *ngIf="imagePosition === 'left' && label !== ''">
+      <mat-icon *ngIf="matIcon" [fontSet]="iconFontSet" class="button-icon">{{ matIcon }}</mat-icon>
+      <img *ngIf="!matIcon && imageSrc" [src]="imageSrc" alt="button icon" class="button-image" />
+    </ng-container>
+
+    <div [style.fontWeight]="validFontWeight" *ngIf="label !== ''">{{ label }}</div>
+
+    <ng-container *ngIf="imagePosition === 'right' && label !== ''">
+      <mat-icon *ngIf="matIcon" [fontSet]="iconFontSet" class="button-icon">{{ matIcon }}</mat-icon>
+      <img *ngIf="!matIcon && imageSrc" [src]="imageSrc" alt="button icon" class="button-image" />
+    </ng-container>
+
+    <ng-container *ngIf="label === ''">
+      <mat-icon *ngIf="matIcon" [fontSet]="iconFontSet" class="button-icon">{{ matIcon }}</mat-icon>
+      <img
+        *ngIf="!matIcon && imageSrc"
+        [src]="imageSrc"
+        alt="button icon"
+        class="button-image-only"
+      />
+    </ng-container>
+  </div>
+</button>
