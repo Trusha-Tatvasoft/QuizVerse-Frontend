@@ -1,0 +1,150 @@
+.data-table-card {
+  background-color: #ffffff;
+  padding: 24px;
+  box-shadow: 5px 5px 49px 0 rgba(182, 181, 181, 0.75) !important;
+  border: 0.5px solid rgb(218, 217, 217);
+  border-radius: 8px;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
+}
+
+.table-header {
+  h2 {
+    margin: 0 0 3px 0;
+    font-size: 24px;
+    font-weight: 500;
+    color: #000;
+
+    @media (max-width: 768px) {
+      font-size: 20px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 18px;
+    }
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+
+    @media (max-width: 768px) {
+      font-size: 13px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 12px;
+    }
+  }
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.full-width-table {
+  width: 100%;
+  background-color: #ffffff;
+  min-width: 800px;
+
+  tr {
+    white-space: nowrap;
+    td,
+    th {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: middle;
+    }
+
+    &:hover {
+      background-color: #f8f9fa;
+    }
+  }
+}
+
+.table-column-heading {
+  color: #8a96a8;
+  font-weight: 500;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  background-color: #ffffff !important;
+
+  @media (max-width: 600px) {
+    flex-wrap: wrap;
+    padding: 0px;
+  }
+}
+
+mat-paginator,
+mat-paginator .mat-paginator-container,
+.mat-paginator-container {
+  background-color: #ffffff !important;
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 16px;
+  color: #ff4d4d;
+  font-size: 16px;
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+    padding: 12px;
+  }
+}
+
+.profile-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+
+  img {
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    border-radius: 50%;
+    background: #ddd;
+
+    @media (max-width: 480px) {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+
+    .name {
+      font-weight: 600;
+      font-size: 14px;
+
+      @media (max-width: 480px) {
+        font-size: 13px;
+      }
+    }
+
+    .email {
+      font-size: 13px;
+      color: #6c757d;
+
+      @media (max-width: 480px) {
+        font-size: 12px;
+      }
+    }
+  }
+}

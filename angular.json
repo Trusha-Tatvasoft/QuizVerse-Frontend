@@ -110,7 +110,10 @@
               "-d",
               "."
             ],
-            "port": 6006
+            "port": 6006,
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/azure-blue.css"
+            ]
           }
         },
         "build-storybook": {
