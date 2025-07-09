@@ -40,19 +40,12 @@ describe('PageHeaderComponent', () => {
     expect(iconEl.textContent.trim()).toBe('shield');
   });
 
-  it('should apply dynamic styles from inputs', () => {
-    component.backgroundColor = 'red';
-    component.textColor = 'blue';
-    component.borderColor = 'green';
-    component.subtitleColor = 'purple';
+  it('should apply correct theme class based on input', () => {
+    component.theme = 'admin';
     fixture.detectChanges();
 
     const cardEl = fixture.nativeElement.querySelector('mat-card');
-    const subtitleEl = fixture.nativeElement.querySelector('.subtitle');
 
-    expect(cardEl.style.background).toBe('red');
-    expect(cardEl.style.color).toBe('blue');
-    expect(cardEl.style.border).toContain('green');
-    expect(subtitleEl.style.color).toBe('purple');
+    expect(cardEl.classList.contains('admin')).toBe(true);
   });
 });

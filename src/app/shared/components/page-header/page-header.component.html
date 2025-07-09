@@ -1,14 +1,9 @@
-<mat-card
-  class="page-header-card"
-  [ngStyle]="{ background: backgroundColor, color: textColor, border: '1px solid ' + borderColor }"
->
+<mat-card class="page-header-card" [ngClass]="theme">
   <div class="header-content">
-    <mat-icon class="icon material-icons-outlined" [ngStyle]="{ color: textColor }">{{
-      icon
-    }}</mat-icon>
+    <mat-icon class="icon material-icons-outlined">{{ icon }}</mat-icon>
     <div>
       <h2 class="title">{{ title }}</h2>
-      <p class="subtitle" [ngStyle]="{ color: subtitleColor }">{{ subtitle }}</p>
+      <p class="subtitle">{{ subtitle }}</p>
     </div>
   </div>
 </mat-card>

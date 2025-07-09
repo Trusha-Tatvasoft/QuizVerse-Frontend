@@ -45,7 +45,7 @@
     "components": [
         {
             "name": "AppComponent",
-            "id": "component-AppComponent-9bee2a646c4b0843e3f1a86f451aed760c93eef68cfaa7385db6cbc5bd4f4419bf7de856e3f53f3be75d0fafa15363b57e6f77931307816b64953656aba41254",
+            "id": "component-AppComponent-161c3105a61bae7495c1f4bc39290ffa1300f64fd20233a5aa5c2fa5f5dbe97b560d0dd0c6c721f23a72823f45214b11e4a6b11e72dbbf49edd743f9f535d435",
             "file": "src/app/app.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -64,17 +64,6 @@
             "outputsClass": [],
             "propertiesClass": [
                 {
-                    "name": "colors",
-                    "defaultValue": "AppColors",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 14
-                },
-                {
                     "name": "title",
                     "defaultValue": "'QuizVerse-Frontend'",
                     "deprecated": false,
@@ -83,7 +72,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 13
+                    "line": 12
                 }
             ],
             "methodsClass": [],
@@ -104,13 +93,13 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\r\nimport { RouterOutlet } from '@angular/router';\r\nimport { AppColors } from './utils/constants';\r\nimport { PageHeaderComponent } from './shared/components/page-header/page-header.component';\r\n\r\n@Component({\r\n  selector: 'app-root',\r\n  imports: [RouterOutlet,PageHeaderComponent],\r\n  templateUrl: './app.component.html',\r\n  styleUrl: './app.component.scss'\r\n})\r\nexport class AppComponent {\r\n  title = 'QuizVerse-Frontend';\r\n  colors = AppColors;\r\n}\r\n",
+            "sourceCode": "import { Component } from '@angular/core';\r\nimport { RouterOutlet } from '@angular/router';\r\nimport { PageHeaderComponent } from './shared/components/page-header/page-header.component';\r\n\r\n@Component({\r\n  selector: 'app-root',\r\n  imports: [RouterOutlet,PageHeaderComponent],\r\n  templateUrl: './app.component.html',\r\n  styleUrl: './app.component.scss',\r\n})\r\nexport class AppComponent {\r\n  title = 'QuizVerse-Frontend';\r\n}\r\n",
             "styleUrl": "./app.component.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<h1 class=\"text-3xl font-bold \">\r\n  Hello world!\r\n</h1>\r\n\r\n<app-page-header\r\n  icon=\"shield\"\r\n  title=\"Administrator Control Panel\"\r\n  subtitle=\"Comprehensive analytics and platform performance metrics\"\r\n  [backgroundColor]=\"colors.adminBackgroundColor\"\r\n  [textColor]=\"colors.adminTextColor\"\r\n  [borderColor]=\"colors.adminBorderColor\"\r\n  [subtitleColor]=\"colors.adminSubtitleColor\"\r\n></app-page-header>\r\n\r\n\r\n<app-page-header\r\n  icon=\"account_circle\"\r\n  title=\"User Managment\"\r\n  subtitle=\"Manage user accounts, roles, and permissions\"\r\n  [backgroundColor]=\"colors.userBackgroundColor\"\r\n  [textColor]=\"colors.userTextColor\"\r\n  [borderColor]=\"colors.userBorderColor\"\r\n  [subtitleColor]=\"colors.userSubtitleColor\"\r\n></app-page-header>\r\n\r\n<app-page-header\r\n  icon=\"folder_copy\"\r\n  title=\"Quiz Categories Managment\"\r\n  subtitle=\"Organize quizzes by categories and subjects\"\r\n  [backgroundColor]=\"colors.quizBackgroundColor\"\r\n  [textColor]=\"colors.quizTextColor\"\r\n  [borderColor]=\"colors.quizBorderColor\"\r\n  [subtitleColor]=\"colors.quizSubtitleColor\"\r\n></app-page-header>\r\n\r\n\r\n<app-page-header\r\n  icon=\"workspace_premium\"\r\n  title=\"Quiz Difficulty Configuration\"\r\n  subtitle=\"Manage quiz difficulty levels and settings\"\r\n  [backgroundColor]=\"colors.quizDifficultyBackgroundColor\"\r\n  [textColor]=\"colors.quizDifficultyTextColor\"\r\n  [borderColor]=\"colors.quizDifficultyBorderColor\"\r\n  [subtitleColor]=\"colors.quizDifficultySubtitleColor\"\r\n></app-page-header>\r\n\r\n\r\n<app-page-header\r\n  icon=\"psychology_alt\"\r\n  title=\"Question Difficulty Managment\"\r\n  subtitle=\"Configure difficulty levels for questions with XP rewards\"\r\n  [backgroundColor]=\"colors.queDifficultyBackgroundColor\"\r\n  [textColor]=\"colors.queDifficultyTextColor\"\r\n  [borderColor]=\"colors.queDifficultyBorderColor\"\r\n  [subtitleColor]=\"colors.queDifficultySubtitleColor\"\r\n></app-page-header>\r\n\r\n\r\n<app-page-header\r\n  icon=\"mail\"\r\n  title=\"Email Template Managment\"\r\n  subtitle=\"Configure email templates for various platform notifications\"\r\n  [backgroundColor]=\"colors.emailBackgroundColor\"\r\n  [textColor]=\"colors.emailTextColor\"\r\n  [borderColor]=\"colors.emailBorderColor\"\r\n  [subtitleColor]=\"colors.emailSubtitleColor\"\r\n></app-page-header>\r\n\r\n<app-page-header\r\n  icon=\"settings\"\r\n  title=\"Platform Configuration\"\r\n  subtitle=\"Configure general platform settings and payment options\"\r\n  [backgroundColor]=\"colors.emailBackgroundColor\"\r\n  [textColor]=\"colors.emailTextColor\"\r\n  [borderColor]=\"colors.emailBorderColor\"\r\n  [subtitleColor]=\"colors.emailSubtitleColor\"\r\n></app-page-header>\r\n\r\n<app-page-header\r\n  icon=\"bolt\"\r\n  title=\"AI & Machine Learning Configuration\"\r\n  subtitle=\"Configure AI-powered features for quiz generation and explanations\"\r\n  [backgroundColor]=\"colors.quizDifficultyBackgroundColor\"\r\n  [textColor]=\"colors.quizDifficultyTextColor\"\r\n  [borderColor]=\"colors.quizDifficultyBorderColor\"\r\n  [subtitleColor]=\"colors.quizDifficultySubtitleColor\"\r\n></app-page-header>\r\n\r\n<app-page-header\r\n  icon=\"event_note\"\r\n  title=\"Financial Overview & Management\"\r\n  subtitle=\"Track revenue, manage transactions, and monitor financial performance\"\r\n  [backgroundColor]=\"colors.financialBackgroundColor\"\r\n  [textColor]=\"colors.financialTextColor\"\r\n  [borderColor]=\"colors.financialBorderColor\"\r\n  [subtitleColor]=\"colors.financialSubtitleColor\"\r\n></app-page-header>\r\n\r\n<app-page-header\r\n  icon=\"warning\"\r\n  title=\"Content Moderation Center\"\r\n  subtitle=\"Review and moderate reported content, users, and comments\"\r\n  [backgroundColor]=\"colors.adminBackgroundColor\"\r\n  [textColor]=\"colors.adminTextColor\"\r\n  [borderColor]=\"colors.adminBorderColor\"\r\n  [subtitleColor]=\"colors.adminSubtitleColor\"\r\n></app-page-header>\r\n\r\n\r\n"
+            "templateData": "<h1 class=\"text-3xl font-bold\">Hello world!</h1>\r\n<app-page-header\r\n  icon=\"shield\"\r\n  title=\"Administrator Control Panel\"\r\n  subtitle=\"Comprehensive analytics and platform performance metrics\"\r\n  theme=\"admin\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"account_circle\"\r\n  title=\"User Management\"\r\n  subtitle=\"Manage user accounts, roles, and permissions\"\r\n  theme=\"user\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"folder_copy\"\r\n  title=\"Quiz Categories Management\"\r\n  subtitle=\"Organize quizzes by categories and subjects\"\r\n  theme=\"quiz\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"workspace_premium\"\r\n  title=\"Quiz Difficulty Configuration\"\r\n  subtitle=\"Manage quiz difficulty levels and settings\"\r\n  theme=\"quizDifficulty\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"psychology_alt\"\r\n  title=\"Question Difficulty Management\"\r\n  subtitle=\"Configure difficulty levels for questions with XP rewards\"\r\n  theme=\"queDifficulty\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"mail\"\r\n  title=\"Email Template Management\"\r\n  subtitle=\"Configure email templates for various platform notifications\"\r\n  theme=\"email\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"settings\"\r\n  title=\"Platform Configuration\"\r\n  subtitle=\"Configure general platform settings and payment options\"\r\n  theme=\"email\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"bolt\"\r\n  title=\"AI & Machine Learning Configuration\"\r\n  subtitle=\"Configure AI-powered features for quiz generation and explanations\"\r\n  theme=\"quizDifficulty\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"event_note\"\r\n  title=\"Financial Overview & Management\"\r\n  subtitle=\"Track revenue, manage transactions, and monitor financial performance\"\r\n  theme=\"financial\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"warning\"\r\n  title=\"Content Moderation Center\"\r\n  subtitle=\"Review and moderate reported content, users, and comments\"\r\n  theme=\"admin\"\r\n/>\r\n"
         },
         {
             "name": "ForgotPasswordComponent",
@@ -190,7 +179,7 @@
         },
         {
             "name": "PageHeaderComponent",
-            "id": "component-PageHeaderComponent-b9a0a46fd1794fdaa4635abd9309ea07863ab5b04c6039ea8622681a380bea702dfb898bc7233cc4940a4acfa3f73f913088c2d7b7b18cc3eb47f0273b9ed33c",
+            "id": "component-PageHeaderComponent-c9740b18750f9ca7024d73ce4ff84fdab548d84a7da82b332e009f07a25d89241de4264474f78f941ea97b133b0d27a10d4d60f16ee8b10690478e213a1411de",
             "file": "src/app/shared/components/page-header/page-header.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -206,24 +195,6 @@
             "viewProviders": [],
             "hostDirectives": [],
             "inputsClass": [
-                {
-                    "name": "backgroundColor",
-                    "defaultValue": "'#f9f9f9'",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 16,
-                    "type": "string",
-                    "decorators": []
-                },
-                {
-                    "name": "borderColor",
-                    "defaultValue": "'#ccc'",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 18,
-                    "type": "string",
-                    "decorators": []
-                },
                 {
                     "name": "icon",
                     "defaultValue": "'edit'",
@@ -243,21 +214,12 @@
                     "decorators": []
                 },
                 {
-                    "name": "subtitleColor",
-                    "defaultValue": "'#555'",
+                    "name": "theme",
+                    "defaultValue": "'admin'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 19,
-                    "type": "string",
-                    "decorators": []
-                },
-                {
-                    "name": "textColor",
-                    "defaultValue": "'#333'",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "line": 17,
-                    "type": "string",
+                    "line": 16,
+                    "type": "\"admin\" | \"user\" | \"quiz\" | \"quizDifficulty\" | \"queDifficulty\" | \"email\" | \"financial\"",
                     "decorators": []
                 },
                 {
@@ -295,13 +257,13 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { CommonModule } from '@angular/common';\r\nimport { Component, Input } from '@angular/core';\r\nimport { MatCardModule } from '@angular/material/card';\r\nimport { MatIconModule } from '@angular/material/icon';\r\n\r\n@Component({\r\n  selector: 'app-page-header',\r\n  imports: [CommonModule,MatCardModule,MatIconModule],\r\n  templateUrl: './page-header.component.html',\r\n  styleUrl: './page-header.component.scss'\r\n})\r\nexport class PageHeaderComponent {\r\n  @Input() icon: string = 'edit';\r\n  @Input() title: string = '';\r\n  @Input() subtitle: string = '';\r\n  @Input() backgroundColor: string = '#f9f9f9';\r\n  @Input() textColor: string = '#333';\r\n  @Input() borderColor: string = '#ccc';\r\n  @Input() subtitleColor: string = '#555';\r\n}\r\n",
+            "sourceCode": "import { CommonModule } from '@angular/common';\r\nimport { Component, Input } from '@angular/core';\r\nimport { MatCardModule } from '@angular/material/card';\r\nimport { MatIconModule } from '@angular/material/icon';\r\n\r\n@Component({\r\n  selector: 'app-page-header',\r\n  imports: [CommonModule, MatCardModule, MatIconModule],\r\n  templateUrl: './page-header.component.html',\r\n  styleUrl: './page-header.component.scss',\r\n})\r\nexport class PageHeaderComponent {\r\n  @Input() icon: string = 'edit';\r\n  @Input() title: string = '';\r\n  @Input() subtitle: string = '';\r\n  @Input() theme: 'admin' | 'user' | 'quiz' | 'quizDifficulty' | 'queDifficulty' | 'email' | 'financial' = 'admin';\r\n}\r\n",
             "styleUrl": "./page-header.component.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "\r\n<mat-card\r\n  class=\"page-header-card\"\r\n  [ngStyle]=\"{ 'background': backgroundColor, 'color': textColor,  border: '1px solid ' + borderColor }\"\r\n>\r\n  <div class=\"header-content\">\r\n    <mat-icon class=\"icon material-icons-outlined\"  [ngStyle]=\"{ 'color': textColor }\" >{{ icon }}</mat-icon>\r\n    <div>\r\n      <h2 class=\"title\">{{ title }}</h2>\r\n      <p class=\"subtitle\" [ngStyle]=\"{ 'color': subtitleColor }\">{{ subtitle }}</p>\r\n    </div>\r\n  </div>\r\n</mat-card>\r\n"
+            "templateData": "<mat-card class=\"page-header-card\" [ngClass]=\"theme\">\r\n  <div class=\"header-content\">\r\n    <mat-icon class=\"icon material-icons-outlined\">{{ icon }}</mat-icon>\r\n    <div>\r\n      <h2 class=\"title\">{{ title }}</h2>\r\n      <p class=\"subtitle\">{{ subtitle }}</p>\r\n    </div>\r\n  </div>\r\n</mat-card>\r\n"
         }
     ],
     "modules": [],
@@ -315,7 +277,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "object",
-                "defaultValue": "{\r\n  adminBackgroundColor: 'linear-gradient(to right, #fff4f2, #fffaf6)',\r\n  adminTextColor: 'rgb(153 27 27 / var(--tw-text-opacity, 1))',\r\n  adminBorderColor :'rgb(254 202 202 / var(--tw-border-opacity, 1))',\r\n  adminSubtitleColor: 'rgb(185 28 28 / var(--tw-text-opacity, 1))',\r\n\r\n  userBackgroundColor: 'linear-gradient(to right, #eff6ff, #e0f2fe)', // soft blue tones\r\n  userTextColor: '#1e40af',\r\n  userBorderColor: '#bfdbfe',\r\n  userSubtitleColor: '#1d4ed8',\r\n\r\n  quizBackgroundColor: 'linear-gradient(to right, #ecebff, #f3f4ff)', // violet tones\r\n  quizTextColor: '#3730a3',\r\n  quizBorderColor: '#c7d2fe',\r\n  quizSubtitleColor: '#4338ca',\r\n\r\n  queDifficultyBackgroundColor: 'linear-gradient(to right, #f3e8ff, #faf5ff)', // purple pastel\r\n  queDifficultyTextColor: '#6b21a8',\r\n  queDifficultyBorderColor: '#e9d5ff',\r\n  queDifficultySubtitleColor: '#7e22ce',\r\n\r\n  quizDifficultyBackgroundColor: 'linear-gradient(to right, #fff7ed, #fff3e0)', // soft orange\r\n  quizDifficultyTextColor: '#9a3412',\r\n  quizDifficultyBorderColor: '#fed7aa',\r\n  quizDifficultySubtitleColor: '#c2410c',\r\n\r\n  emailBackgroundColor: 'linear-gradient(to right, #eff6ff, #e0f2fe)', // same as user\r\n  emailTextColor: '#1e40af',\r\n  emailBorderColor: '#bfdbfe',\r\n  emailSubtitleColor: '#1d4ed8',\r\n\r\n  financialBackgroundColor: 'linear-gradient(to right, #ecfdf5, #d1fae5)', // mint green\r\n  financialTextColor: '#065f46',\r\n  financialBorderColor: '#a7f3d0',\r\n  financialSubtitleColor: '#047857',\r\n\r\n  darkText: '#333',\r\n\r\n}"
+                "defaultValue": "{\r\n  adminBackgroundColor: 'linear-gradient(to right, #fff4f2, #fffaf6)',\r\n  adminTextColor: 'rgb(153 27 27 / var(--tw-text-opacity, 1))',\r\n  adminBorderColor: 'rgb(254 202 202 / var(--tw-border-opacity, 1))',\r\n  adminSubtitleColor: 'rgb(185 28 28 / var(--tw-text-opacity, 1))',\r\n\r\n  userBackgroundColor: 'linear-gradient(to right, #eff6ff, #e0f2fe)', // soft blue tones\r\n  userTextColor: '#1e40af',\r\n  userBorderColor: '#bfdbfe',\r\n  userSubtitleColor: '#1d4ed8',\r\n\r\n  quizBackgroundColor: 'linear-gradient(to right, #ecebff, #f3f4ff)', // violet tones\r\n  quizTextColor: '#3730a3',\r\n  quizBorderColor: '#c7d2fe',\r\n  quizSubtitleColor: '#4338ca',\r\n\r\n  queDifficultyBackgroundColor: 'linear-gradient(to right, #f3e8ff, #faf5ff)', // purple pastel\r\n  queDifficultyTextColor: '#6b21a8',\r\n  queDifficultyBorderColor: '#e9d5ff',\r\n  queDifficultySubtitleColor: '#7e22ce',\r\n\r\n  quizDifficultyBackgroundColor: 'linear-gradient(to right, #fff7ed, #fff3e0)', // soft orange\r\n  quizDifficultyTextColor: '#9a3412',\r\n  quizDifficultyBorderColor: '#fed7aa',\r\n  quizDifficultySubtitleColor: '#c2410c',\r\n\r\n  emailBackgroundColor: 'linear-gradient(to right, #eff6ff, #e0f2fe)', // same as user\r\n  emailTextColor: '#1e40af',\r\n  emailBorderColor: '#bfdbfe',\r\n  emailSubtitleColor: '#1d4ed8',\r\n\r\n  financialBackgroundColor: 'linear-gradient(to right, #ecfdf5, #d1fae5)', // mint green\r\n  financialTextColor: '#065f46',\r\n  financialBorderColor: '#a7f3d0',\r\n  financialSubtitleColor: '#047857',\r\n\r\n  darkText: '#333',\r\n}"
             },
             {
                 "name": "appConfig",
@@ -371,7 +333,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "object",
-                    "defaultValue": "{\r\n  adminBackgroundColor: 'linear-gradient(to right, #fff4f2, #fffaf6)',\r\n  adminTextColor: 'rgb(153 27 27 / var(--tw-text-opacity, 1))',\r\n  adminBorderColor :'rgb(254 202 202 / var(--tw-border-opacity, 1))',\r\n  adminSubtitleColor: 'rgb(185 28 28 / var(--tw-text-opacity, 1))',\r\n\r\n  userBackgroundColor: 'linear-gradient(to right, #eff6ff, #e0f2fe)', // soft blue tones\r\n  userTextColor: '#1e40af',\r\n  userBorderColor: '#bfdbfe',\r\n  userSubtitleColor: '#1d4ed8',\r\n\r\n  quizBackgroundColor: 'linear-gradient(to right, #ecebff, #f3f4ff)', // violet tones\r\n  quizTextColor: '#3730a3',\r\n  quizBorderColor: '#c7d2fe',\r\n  quizSubtitleColor: '#4338ca',\r\n\r\n  queDifficultyBackgroundColor: 'linear-gradient(to right, #f3e8ff, #faf5ff)', // purple pastel\r\n  queDifficultyTextColor: '#6b21a8',\r\n  queDifficultyBorderColor: '#e9d5ff',\r\n  queDifficultySubtitleColor: '#7e22ce',\r\n\r\n  quizDifficultyBackgroundColor: 'linear-gradient(to right, #fff7ed, #fff3e0)', // soft orange\r\n  quizDifficultyTextColor: '#9a3412',\r\n  quizDifficultyBorderColor: '#fed7aa',\r\n  quizDifficultySubtitleColor: '#c2410c',\r\n\r\n  emailBackgroundColor: 'linear-gradient(to right, #eff6ff, #e0f2fe)', // same as user\r\n  emailTextColor: '#1e40af',\r\n  emailBorderColor: '#bfdbfe',\r\n  emailSubtitleColor: '#1d4ed8',\r\n\r\n  financialBackgroundColor: 'linear-gradient(to right, #ecfdf5, #d1fae5)', // mint green\r\n  financialTextColor: '#065f46',\r\n  financialBorderColor: '#a7f3d0',\r\n  financialSubtitleColor: '#047857',\r\n\r\n  darkText: '#333',\r\n\r\n}"
+                    "defaultValue": "{\r\n  adminBackgroundColor: 'linear-gradient(to right, #fff4f2, #fffaf6)',\r\n  adminTextColor: 'rgb(153 27 27 / var(--tw-text-opacity, 1))',\r\n  adminBorderColor: 'rgb(254 202 202 / var(--tw-border-opacity, 1))',\r\n  adminSubtitleColor: 'rgb(185 28 28 / var(--tw-text-opacity, 1))',\r\n\r\n  userBackgroundColor: 'linear-gradient(to right, #eff6ff, #e0f2fe)', // soft blue tones\r\n  userTextColor: '#1e40af',\r\n  userBorderColor: '#bfdbfe',\r\n  userSubtitleColor: '#1d4ed8',\r\n\r\n  quizBackgroundColor: 'linear-gradient(to right, #ecebff, #f3f4ff)', // violet tones\r\n  quizTextColor: '#3730a3',\r\n  quizBorderColor: '#c7d2fe',\r\n  quizSubtitleColor: '#4338ca',\r\n\r\n  queDifficultyBackgroundColor: 'linear-gradient(to right, #f3e8ff, #faf5ff)', // purple pastel\r\n  queDifficultyTextColor: '#6b21a8',\r\n  queDifficultyBorderColor: '#e9d5ff',\r\n  queDifficultySubtitleColor: '#7e22ce',\r\n\r\n  quizDifficultyBackgroundColor: 'linear-gradient(to right, #fff7ed, #fff3e0)', // soft orange\r\n  quizDifficultyTextColor: '#9a3412',\r\n  quizDifficultyBorderColor: '#fed7aa',\r\n  quizDifficultySubtitleColor: '#c2410c',\r\n\r\n  emailBackgroundColor: 'linear-gradient(to right, #eff6ff, #e0f2fe)', // same as user\r\n  emailTextColor: '#1e40af',\r\n  emailBorderColor: '#bfdbfe',\r\n  emailSubtitleColor: '#1d4ed8',\r\n\r\n  financialBackgroundColor: 'linear-gradient(to right, #ecfdf5, #d1fae5)', // mint green\r\n  financialTextColor: '#065f46',\r\n  financialBorderColor: '#a7f3d0',\r\n  financialSubtitleColor: '#047857',\r\n\r\n  darkText: '#333',\r\n}"
                 }
             ],
             "src/app/app.config.ts": [
@@ -438,7 +400,7 @@
                 "linktype": "component",
                 "name": "AppComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/3",
+                "coverageCount": "0/2",
                 "status": "low"
             },
             {
@@ -504,7 +466,7 @@
                 "linktype": "component",
                 "name": "PageHeaderComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/8",
+                "coverageCount": "0/5",
                 "status": "low"
             },
             {

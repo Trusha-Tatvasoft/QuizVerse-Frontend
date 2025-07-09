@@ -13,8 +13,12 @@ export class PageHeaderComponent {
   @Input() icon: string = 'edit';
   @Input() title: string = '';
   @Input() subtitle: string = '';
-  @Input() backgroundColor: string = '#f9f9f9';
-  @Input() textColor: string = '#333';
-  @Input() borderColor: string = '#ccc';
-  @Input() subtitleColor: string = '#555';
+  @Input() theme:
+    | 'admin'
+    | 'user'
+    | 'quiz'
+    | 'quizDifficulty'
+    | 'queDifficulty'
+    | 'email'
+    | 'financial' = 'admin';
 }
