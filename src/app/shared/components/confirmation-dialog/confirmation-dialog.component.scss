@@ -1,0 +1,29 @@
+.main-dialog-content {
+  padding: 10px;
+
+  .dialog-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 10px;
+    flex-direction: column;
+
+    .image-wrapper {
+      margin-bottom: 16px;
+
+      img {
+        width: 64px;
+        height: 64px;
+      }
+    }
+
+    .message-text {
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+  }
+}
+
+mat-dialog-actions {
+  padding: 0 16px 16px;
+}
