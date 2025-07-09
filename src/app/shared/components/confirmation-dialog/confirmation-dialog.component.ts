@@ -12,16 +12,14 @@ import { CommonModule } from '@angular/common';
   styleUrl: './confirmation-dialog.component.scss',
 })
 export class ConfirmationDialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData,
-  ) {}
-
-  onCancel(): void {
-    this.dialogRef.close(false);
-  }
-
-  onConfirm(): void {
-    this.dialogRef.close(true);
-  }
+  // constructor(
+  //   public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
+  //   @Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData,
+  // ) {}
+  // onCancel(): void {
+  //   this.dialogRef.close(false);
+  // }
+  // onConfirm(): void {
+  //   this.dialogRef.close(true);
+  // }
 }
