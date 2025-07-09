@@ -1,2 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'tailwindcss';
+
+.search-field {
+  width: 100%;
+  --mat-form-field-container-height: 40px;
+
+  .mdc-text-field {
+    border: 1px solid #d3d3d3;
+    border-radius: 8px;
+  }
+
+  .mat-mdc-text-field-input::placeholder {
+    color: #d3d3d3;
+    opacity: 1;
+  }
+
+  .mat-mdc-form-field-infix {
+    padding: 10px 0 !important;
+  }
+}
+
+.search-purple {
+  .mdc-text-field.mdc-text-field--focused {
+    border: 2px solid #9333ea;
+  }
+}
+
+.search-black {
+  .mdc-text-field.mdc-text-field--focused {
+    border: 2px solid #000000;
+  }
+}
+
+.mdc-notched-outline__trailing,
+.mdc-notched-outline__leading {
+  border: none !important;
+}

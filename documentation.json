@@ -45,7 +45,7 @@
     "components": [
         {
             "name": "AppComponent",
-            "id": "component-AppComponent-161c3105a61bae7495c1f4bc39290ffa1300f64fd20233a5aa5c2fa5f5dbe97b560d0dd0c6c721f23a72823f45214b11e4a6b11e72dbbf49edd743f9f535d435",
+            "id": "component-AppComponent-554d734232cc9360873bfb242bacb51fc8d2fc3c101813d1af8bd53199c057d0d5590cf6fdfc50244ca8181a145585bbd51e4cdce582bd270750bd226e312e74",
             "file": "src/app/app.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -84,22 +84,18 @@
             "imports": [
                 {
                     "name": "RouterOutlet"
-                },
-                {
-                    "name": "PageHeaderComponent",
-                    "type": "component"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\r\nimport { RouterOutlet } from '@angular/router';\r\nimport { PageHeaderComponent } from './shared/components/page-header/page-header.component';\r\n\r\n@Component({\r\n  selector: 'app-root',\r\n  imports: [RouterOutlet,PageHeaderComponent],\r\n  templateUrl: './app.component.html',\r\n  styleUrl: './app.component.scss',\r\n})\r\nexport class AppComponent {\r\n  title = 'QuizVerse-Frontend';\r\n}\r\n",
+            "sourceCode": "import { Component } from '@angular/core';\r\nimport { RouterOutlet } from '@angular/router';\r\nimport { PageHeaderComponent } from './shared/components/page-header/page-header.component';\r\n\r\n@Component({\r\n  selector: 'app-root',\r\n  imports: [RouterOutlet],\r\n  templateUrl: './app.component.html',\r\n  styleUrl: './app.component.scss',\r\n})\r\nexport class AppComponent {\r\n  title = 'QuizVerse-Frontend';\r\n}\r\n",
             "styleUrl": "./app.component.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
-            "templateData": "<h1 class=\"text-3xl font-bold\">Hello world!</h1>\r\n<app-page-header\r\n  icon=\"shield\"\r\n  title=\"Administrator Control Panel\"\r\n  subtitle=\"Comprehensive analytics and platform performance metrics\"\r\n  theme=\"admin\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"account_circle\"\r\n  title=\"User Management\"\r\n  subtitle=\"Manage user accounts, roles, and permissions\"\r\n  theme=\"user\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"folder_copy\"\r\n  title=\"Quiz Categories Management\"\r\n  subtitle=\"Organize quizzes by categories and subjects\"\r\n  theme=\"quiz\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"workspace_premium\"\r\n  title=\"Quiz Difficulty Configuration\"\r\n  subtitle=\"Manage quiz difficulty levels and settings\"\r\n  theme=\"quizDifficulty\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"psychology_alt\"\r\n  title=\"Question Difficulty Management\"\r\n  subtitle=\"Configure difficulty levels for questions with XP rewards\"\r\n  theme=\"queDifficulty\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"mail\"\r\n  title=\"Email Template Management\"\r\n  subtitle=\"Configure email templates for various platform notifications\"\r\n  theme=\"email\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"settings\"\r\n  title=\"Platform Configuration\"\r\n  subtitle=\"Configure general platform settings and payment options\"\r\n  theme=\"email\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"bolt\"\r\n  title=\"AI & Machine Learning Configuration\"\r\n  subtitle=\"Configure AI-powered features for quiz generation and explanations\"\r\n  theme=\"quizDifficulty\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"event_note\"\r\n  title=\"Financial Overview & Management\"\r\n  subtitle=\"Track revenue, manage transactions, and monitor financial performance\"\r\n  theme=\"financial\"\r\n/>\r\n\r\n<app-page-header\r\n  icon=\"warning\"\r\n  title=\"Content Moderation Center\"\r\n  subtitle=\"Review and moderate reported content, users, and comments\"\r\n  theme=\"admin\"\r\n/>\r\n"
+            "templateData": "<h1 class=\"text-3xl font-bold underline\">Hello world!</h1>\r\n"
         },
         {
             "name": "ForgotPasswordComponent",
@@ -179,7 +175,7 @@
         },
         {
             "name": "PageHeaderComponent",
-            "id": "component-PageHeaderComponent-c9740b18750f9ca7024d73ce4ff84fdab548d84a7da82b332e009f07a25d89241de4264474f78f941ea97b133b0d27a10d4d60f16ee8b10690478e213a1411de",
+            "id": "component-PageHeaderComponent-607697e75eddbd8022f20bac707ab3b5981d4628bd107addb8544fd8182cf8603ea47302f9e26de21795983ed6fa40148d55784f9a7feda7533a137b1f4a1900",
             "file": "src/app/shared/components/page-header/page-header.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -257,13 +253,126 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { CommonModule } from '@angular/common';\r\nimport { Component, Input } from '@angular/core';\r\nimport { MatCardModule } from '@angular/material/card';\r\nimport { MatIconModule } from '@angular/material/icon';\r\n\r\n@Component({\r\n  selector: 'app-page-header',\r\n  imports: [CommonModule, MatCardModule, MatIconModule],\r\n  templateUrl: './page-header.component.html',\r\n  styleUrl: './page-header.component.scss',\r\n})\r\nexport class PageHeaderComponent {\r\n  @Input() icon: string = 'edit';\r\n  @Input() title: string = '';\r\n  @Input() subtitle: string = '';\r\n  @Input() theme: 'admin' | 'user' | 'quiz' | 'quizDifficulty' | 'queDifficulty' | 'email' | 'financial' = 'admin';\r\n}\r\n",
+            "sourceCode": "import { CommonModule } from '@angular/common';\r\nimport { Component, Input } from '@angular/core';\r\nimport { MatCardModule } from '@angular/material/card';\r\nimport { MatIconModule } from '@angular/material/icon';\r\n\r\n@Component({\r\n  selector: 'app-page-header',\r\n  imports: [CommonModule, MatCardModule, MatIconModule],\r\n  templateUrl: './page-header.component.html',\r\n  styleUrl: './page-header.component.scss',\r\n})\r\nexport class PageHeaderComponent {\r\n  @Input() icon: string = 'edit';\r\n  @Input() title: string = '';\r\n  @Input() subtitle: string = '';\r\n  @Input() theme:\r\n    | 'admin'\r\n    | 'user'\r\n    | 'quiz'\r\n    | 'quizDifficulty'\r\n    | 'queDifficulty'\r\n    | 'email'\r\n    | 'financial' = 'admin';\r\n}\r\n",
             "styleUrl": "./page-header.component.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
             "stylesData": "",
             "extends": [],
             "templateData": "<mat-card class=\"page-header-card\" [ngClass]=\"theme\">\r\n  <div class=\"header-content\">\r\n    <mat-icon class=\"icon material-icons-outlined\">{{ icon }}</mat-icon>\r\n    <div>\r\n      <h2 class=\"title\">{{ title }}</h2>\r\n      <p class=\"subtitle\">{{ subtitle }}</p>\r\n    </div>\r\n  </div>\r\n</mat-card>\r\n"
+        },
+        {
+            "name": "SearchInputComponent",
+            "id": "component-SearchInputComponent-974c4c933be66e3e702b9fa2c813e3365e7f4f60f92bfb6109b533bd1b85451021926591346b099d07991dd28ed7ea88b1707ac74172ca69a0d710b930d1be9c",
+            "file": "src/app/shared/components/search-input/search-input.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-search-input",
+            "styleUrls": [
+                "./search-input.component.scss"
+            ],
+            "styles": [],
+            "templateUrl": [
+                "./search-input.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "borderClass",
+                    "defaultValue": "'search-purple'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 18,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "control",
+                    "defaultValue": "new FormControl('')",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 17,
+                    "type": "FormControl",
+                    "decorators": []
+                },
+                {
+                    "name": "placeholder",
+                    "defaultValue": "'Search...'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 16,
+                    "type": "string",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [
+                {
+                    "name": "search",
+                    "defaultValue": "new EventEmitter<string>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 20,
+                    "type": "EventEmitter"
+                }
+            ],
+            "propertiesClass": [],
+            "methodsClass": [
+                {
+                    "name": "onInput",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 22,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                },
+                {
+                    "name": "ReactiveFormsModule",
+                    "type": "module"
+                },
+                {
+                    "name": "MatFormFieldModule",
+                    "type": "module"
+                },
+                {
+                    "name": "MatInputModule",
+                    "type": "module"
+                },
+                {
+                    "name": "MatIconModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, EventEmitter, Input, Output } from '@angular/core';\r\nimport { CommonModule } from '@angular/common';\r\nimport { MatFormFieldModule } from '@angular/material/form-field';\r\nimport { MatInputModule } from '@angular/material/input';\r\nimport { MatIconModule } from '@angular/material/icon';\r\nimport { ReactiveFormsModule, FormControl } from '@angular/forms';\r\n\r\n@Component({\r\n  selector: 'app-search-input',\r\n  standalone: true,\r\n  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule],\r\n  templateUrl: './search-input.component.html',\r\n  styleUrls: ['./search-input.component.scss'],\r\n})\r\nexport class SearchInputComponent {\r\n  @Input() placeholder: string = 'Search...';\r\n  @Input() control: FormControl = new FormControl('');\r\n  @Input() borderClass: string = 'search-purple';\r\n\r\n  @Output() search = new EventEmitter<string>();\r\n\r\n  onInput() {\r\n    this.search.emit(this.control.value);\r\n  }\r\n}\r\n",
+            "assetsDirs": [],
+            "styleUrlsData": [
+                {
+                    "data": "\r\n",
+                    "styleUrl": "./search-input.component.scss"
+                }
+            ],
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<mat-form-field appearance=\"outline\" class=\"search-field\" [ngClass]=\"borderClass\">\r\n  <mat-icon matPrefix style=\"color: #d3d3d3;\">search</mat-icon>\r\n  <input matInput [placeholder]=\"placeholder\" [formControl]=\"control\" (input)=\"onInput()\" type=\"text\" />\r\n</mat-form-field>"
         }
     ],
     "modules": [],
@@ -467,6 +576,15 @@
                 "name": "PageHeaderComponent",
                 "coveragePercent": 0,
                 "coverageCount": "0/5",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/shared/components/search-input/search-input.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "SearchInputComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/6",
                 "status": "low"
             },
             {
