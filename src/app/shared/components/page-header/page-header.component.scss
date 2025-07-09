@@ -1,0 +1,99 @@
+.page-header-card {
+  padding: 16px;
+  margin: auto;
+  border-radius: 12px;
+  box-shadow: none;
+  border: 1px solid #000000;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .icon {
+    font-size: 28px;
+    min-width: 28px;
+    min-height: 28px;
+  }
+
+  .title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 550;
+  }
+
+  .subtitle {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  &.admin {
+    background: linear-gradient(to right, #fff4f2, #fffaf6); // already in hex
+    color: #991b1b;
+    border-color: #fecaca;
+
+    .subtitle {
+      color: #b91c1c;
+    }
+  }
+
+  &.user {
+    background: linear-gradient(to right, #eff6ff, #e0f2fe);
+    color: #1e40af;
+    border-color: #bfdbfe;
+
+    .subtitle {
+      color: #1d4ed8;
+    }
+  }
+
+  &.quiz {
+    background: linear-gradient(to right, #ecebff, #f3f4ff);
+    color: #3730a3;
+    border-color: #c7d2fe;
+
+    .subtitle {
+      color: #4338ca;
+    }
+  }
+
+  &.quizDifficulty {
+    background: linear-gradient(to right, #fff7ed, #fff3e0);
+    color: #9a3412;
+    border-color: #fed7aa;
+
+    .subtitle {
+      color: #c2410c;
+    }
+  }
+
+  &.queDifficulty {
+    background: linear-gradient(to right, #f3e8ff, #faf5ff);
+    color: #6b21a8;
+    border-color: #e9d5ff;
+
+    .subtitle {
+      color: #7e22ce;
+    }
+  }
+
+  &.email {
+    background: linear-gradient(to right, #eff6ff, #e0f2fe);
+    color: #1e40af;
+    border-color: #bfdbfe;
+
+    .subtitle {
+      color: #1d4ed8;
+    }
+  }
+
+  &.financial {
+    background: linear-gradient(to right, #ecfdf5, #d1fae5);
+    color: #065f46;
+    border-color: #a7f3d0;
+
+    .subtitle {
+      color: #047857;
+    }
+  }
+}
