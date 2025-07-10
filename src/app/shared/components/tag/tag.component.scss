@@ -1,0 +1,146 @@
+.tag-container {
+    display: inline-block;
+  }
+
+  .tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 1.5px solid var(--border-color) !important;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.1;
+    transition: all 0.15s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    user-select: none;
+    min-height: 22px;
+    box-sizing: border-box;
+
+    &.clickable {
+      cursor: pointer;
+    }
+
+    &.hoverable {
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--text-color) !important;
+        color: var(--bg-color) !important;
+        border-color: var(--bg-color) !important;
+      }
+    }
+
+    &.selected {
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      border-color: var(--text-color) !important;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+        border-radius: inherit;
+        pointer-events: none;
+      }
+    }
+
+    &.static {
+      cursor: default;
+
+      &:hover {
+        transform: none;
+        box-shadow: none;
+      }
+    }
+
+    .tag-label {
+      display: inline-block;
+      white-space: nowrap;
+      font-weight: inherit;
+    }
+
+    .close-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      padding: 0;
+      margin-left: 4px;
+      border: none;
+      border-radius: 50%;
+      background-color: var(--bg-color);
+      color: inherit;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+
+      svg {
+        width: 10px;
+        height: 10px;
+        stroke-width: 1.5;
+      }
+    }
+
+    &.white-bg .close-button {
+      background: rgba(0, 0, 0, 0.08);
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.15);
+      }
+
+      &:active {
+        background: rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+
+  .tag-chip.removing {
+    animation: fadeOut 0.2s ease-out forwards;
+  }
+
+  .tag-chip:focus-visible {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
+  }
+
+  .close-button:focus-visible {
+    outline: 2px solid #4CAF50;
+    outline-offset: 1px;
+  }
+
+  @media (max-width: 768px) {
+    .tag-chip {
+      padding: 2px 6px;
+      font-size: 10px;
+
+      .close-button {
+        width: 6px;
+        height: 6px;
+
+        svg {
+          width: 9px;
+          height: 9px;
+        }
+      }
+    }
+  }

@@ -1,0 +1,17 @@
+<div class="tag-container">
+    <div [class]="chipClasses" [ngStyle]="{
+        '--bg-color': getBackgroundColor(),
+        '--text-color': getTextColor(),
+        '--border-color': getBorderColor(),
+      }" (click)="onTagClick()" [attr.aria-pressed]="type === 'selectable' ? (selected ?? false) : null"
+        [attr.role]="type === 'selectable' ? 'button' : null">
+        <span class="tag-label">{{ label }}</span>
+        <button *ngIf="isClosable" class="close-button" (click)="onRemoveClick($event)" aria-label="Remove tag"
+            tabindex="0">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 3L3 9M3 3L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+        </button>
+    </div>
+</div>
