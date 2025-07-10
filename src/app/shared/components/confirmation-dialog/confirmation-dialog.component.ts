@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmationDialogData } from '../../interfaces/constants.static';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -12,14 +12,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './confirmation-dialog.component.scss',
 })
 export class ConfirmationDialogComponent {
-  // constructor(
-  //   public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
-  //   @Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData,
-  // ) {}
-  // onCancel(): void {
-  //   this.dialogRef.close(false);
-  // }
-  // onConfirm(): void {
-  //   this.dialogRef.close(true);
-  // }
+  @Output() confirm = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData) {}
 }

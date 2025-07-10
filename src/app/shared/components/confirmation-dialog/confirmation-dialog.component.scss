@@ -1,16 +1,32 @@
 .main-dialog-content {
-  padding: 10px;
+  padding: 10px 25px;
+
+  .dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h2 {
+      padding: 0px;
+      font-size: 24px;
+      font-weight: 400;
+    }
+
+    .icon {
+      padding-right: 24px;
+    }
+  }
 
   .dialog-content {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 10px;
+    padding: 20px 0px 10px;
     flex-direction: column;
+    color: #808080;
 
     .image-wrapper {
-      margin-bottom: 16px;
-
+      padding-bottom: 10px;
       img {
         width: 64px;
         height: 64px;
@@ -19,11 +35,13 @@
 
     .message-text {
       font-size: 14px;
-      margin-bottom: 12px;
     }
   }
 }
 
 mat-dialog-actions {
-  padding: 0 16px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 10px 0px 16px;
 }

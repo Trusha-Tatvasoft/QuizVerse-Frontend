@@ -3,5 +3,5 @@ export interface ConfirmationDialogData {
   message: string;
   confirmText?: string;
   cancelText?: string;
-  imageUrl?: string; // Optional image
+  imageUrl?: string; //optional
 }

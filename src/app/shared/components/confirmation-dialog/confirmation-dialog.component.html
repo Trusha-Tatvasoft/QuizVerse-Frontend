@@ -1,5 +1,7 @@
-<!-- <div class="main-dialog-content">
-  <h2 mat-dialog-title>{{ data.title }}</h2>
+<div class="main-dialog-content">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>{{ data.title }}</h2>
+  </div>
 
   <mat-dialog-content class="dialog-content">
     <div class="image-wrapper" *ngIf="data.imageUrl">
@@ -8,12 +10,12 @@
     <p class="message-text">{{ data.message }}</p>
   </mat-dialog-content>
 
-  <mat-dialog-actions align="end">
-    <button mat-button (click)="onCancel()">
+  <mat-dialog-actions>
+    <button mat-button (click)="cancel.emit()">
       {{ data.cancelText || 'Cancel' }}
     </button>
-    <button mat-flat-button color="warn" (click)="onConfirm()">
+    <button mat-flat-button color="warn" (click)="confirm.emit()">
       {{ data.confirmText || 'Delete' }}
     </button>
   </mat-dialog-actions>
-</div> -->
+</div>
