@@ -48,7 +48,6 @@ export default {
         MatIconModule,
         MatTooltipModule,
         MatChipsModule,
-        TableComponent,
       ],
     }),
   ],
@@ -59,7 +58,6 @@ type Story = StoryObj<TableComponent>;
 export const QuestionPoolCustom: Story = {
   name: 'Question Pool - Custom Column',
   render: (args) => ({
-    component: TableComponent,
     props: {
       ...args,
       totalItems: questionPoolData.length,
@@ -104,46 +102,51 @@ export const QuestionPoolCustom: Story = {
 
 export const TransactionList: Story = {
   name: 'Recent Transactions Table',
-  render: (args) => ({
-    component: TableComponent,
-    props: args,
-    template: `
-      <ng-template #currencyCell let-row>
-        <span class="text-success">{{ row.amount | currency:'USD':'symbol':'1.2-2' }}</span>
-      </ng-template>
-
-      <ng-template #statusChip let-row>
-        <mat-chip [color]="row.status === 'Completed' ? 'primary' : 'warn'" selected>
-          {{ row.status }}
-        </mat-chip>
-      </ng-template>
-
-      <app-data-table
-        [columns]="columns"
-        [dataSource]="dataSource"
-        [actionIcons]="actionIcons"
-        [columnTemplates]="{
-          'amount': currencyCell,
-          'status': statusChip
-        }"
-        [tableTitle]="tableTitle"
-        [tableDescription]="tableDescription"
-        [totalItems]="totalItems"
-        [pageSize]="pageSize"
-        [pageSizeOptions]="pageSizeOptions">
-      </app-data-table>`,
-  }),
-  args: {
-    tableTitle: 'Recent Transactions',
-    tableDescription: 'All payment transactions and platform activity',
-    columns: [
+  render: (args) => {
+    const columns = [
       { key: 'type', label: 'Type', type: 'text', isSortable: true },
       { key: 'user', label: 'User', type: 'text', isSortable: true },
       { key: 'amount', label: 'Amount', type: 'custom', isSortable: true },
       { key: 'status', label: 'Status', type: 'custom', isSortable: true },
       { key: 'date', label: 'Date', type: 'text' },
       { key: 'method', label: 'Method', type: 'text' },
-    ],
+    ];
+
+    return {
+      props: {
+        ...args,
+        columns,
+      },
+      template: `
+        <ng-template #currencyCell let-row>
+          <span class="text-success">{{ row.amount | currency:'USD':'symbol':'1.2-2' }}</span>
+        </ng-template>
+
+        <ng-template #statusChip let-row>
+          <mat-chip [color]="row.status === 'Completed' ? 'primary' : 'warn'" selected>
+            {{ row.status }}
+          </mat-chip>
+        </ng-template>
+
+        <app-data-table
+          [columns]="columns"
+          [dataSource]="dataSource"
+          [actionIcons]="actionIcons"
+          [columnTemplates]="{
+            'amount': currencyCell,
+            'status': statusChip
+          }"
+          [tableTitle]="tableTitle"
+          [tableDescription]="tableDescription"
+          [totalItems]="totalItems"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="pageSizeOptions">
+        </app-data-table>`,
+    };
+  },
+  args: {
+    tableTitle: 'Recent Transactions',
+    tableDescription: 'All payment transactions and platform activity',
     dataSource: transactionData,
     actionIcons: [{ icon: 'visibility', action: 'view', tooltip: 'View' }],
     totalItems: transactionData.length,
@@ -202,32 +205,73 @@ export const ProfileTable: Story = {
 
 export const WithTitleAndDescription: Story = {
   name: 'With Title & Description',
-  args: {
-    tableTitle: 'All Categories',
-    tableDescription: 'Manage quiz categories and their organization',
-    columns: [
+  render: (args) => {
+    const columns = [
       { key: 'category', label: 'Category', type: 'text', isSortable: true },
       { key: 'description', label: 'Description', type: 'text', isSortable: true },
       { key: 'quizCount', label: 'Quiz Count', type: 'button', isSortable: true },
       { key: 'status', label: 'Status', type: 'tag' },
       { key: 'created', label: 'Created', type: 'text' },
-    ],
+    ];
+
+    return {
+      props: {
+        ...args,
+        columns,
+      },
+      template: `
+        <app-data-table
+          [columns]="columns"
+          [dataSource]="dataSource"
+          [actionIcons]="actionIcons"
+          [tableTitle]="tableTitle"
+          [tableDescription]="tableDescription"
+          [totalItems]="totalItems"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="pageSizeOptions">
+        </app-data-table>
+      `,
+    };
+  },
+  args: {
+    tableTitle: 'All Categories',
+    tableDescription: 'Manage quiz categories and their organization',
     dataSource: categoriesData,
     totalItems: categoriesData.length,
     pageSize: 10,
+    pageSizeOptions: [5, 10, 20],
     actionIcons: defaultActions,
   },
 };
 
 export const WithoutTitleAndDescription: Story = {
   name: 'Without Title & Description',
-  args: {
-    columns: [
+  render: (args) => {
+    const columns = [
       { key: 'type', label: 'Type', type: 'tag', isSortable: true },
       { key: 'title', label: 'Title', type: 'text', isSortable: true },
       { key: 'subject', label: 'Subject', type: 'text' },
       { key: 'status', label: 'Status', type: 'tag' },
-    ],
+    ];
+
+    return {
+      props: {
+        ...args,
+        columns,
+      },
+      template: `
+        <app-data-table
+          [columns]="columns"
+          [dataSource]="dataSource"
+          [actionIcons]="actionIcons"
+          [totalItems]="totalItems"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="[5, 10, 20]">
+        </app-data-table>
+      `,
+    };
+  },
+  args: {
     dataSource: emailData,
     totalItems: emailData.length,
     pageSize: 10,

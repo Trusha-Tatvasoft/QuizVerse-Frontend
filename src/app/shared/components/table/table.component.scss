@@ -55,13 +55,14 @@
   background-color: #ffffff;
   min-width: 800px;
 
-  .table-row {
-    border-bottom: 1px solid rgb(233, 8, 38) !important;
+  .table-row:not(:last-child),
+  .table-header-row {
+    border-bottom: 1px solid #e2e8f0;
   }
 
-  ::ng-deep .mat-mdc-row,
-  .table-row {
-    border-bottom: 1px solid #e2e8f0 !important;
+  .table-column-heading {
+    color: #64748b;
+    font-weight: 500;
   }
 
   tr {
@@ -69,6 +70,7 @@
 
     td,
     th {
+      border-bottom: none !important;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -80,11 +82,6 @@
       background-color: #f8fafc;
     }
   }
-}
-
-.table-column-heading {
-  color: #64748b;
-  font-weight: 500;
 }
 
 .pagination-container {
