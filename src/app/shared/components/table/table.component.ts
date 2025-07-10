@@ -58,6 +58,7 @@ export class TableComponent implements OnInit, OnChanges {
   @ViewChild(MatSort) sort!: MatSort;
 
   displayedColumns: string[] = [];
+  showPaginator: boolean = false;
 
   ngOnInit() {
     this.setDisplayedColumns();
@@ -67,15 +68,20 @@ export class TableComponent implements OnInit, OnChanges {
     if (changes['dataSource'] || changes['columns'] || changes['actionIcons']) {
       this.setDisplayedColumns();
     }
+
+    if (this.dataSource && Array.isArray(this.dataSource)) {
+      this.showPaginator = this.dataSource.length > 0;
+    }
   }
 
   private setDisplayedColumns(): void {
-    this.columns = this.columns.map((col) => ({
+    const updatedColumns = this.columns.map((col) => ({
       ...col,
-      sortable: col.sortable ?? false,
+      isSortable: col.isSortable ?? false,
     }));
 
-    this.displayedColumns = this.columns.map((col) => col.key);
+    this.columns = updatedColumns;
+    this.displayedColumns = updatedColumns.map((col) => col.key);
 
     if (this.actionIcons?.length) {
       this.displayedColumns.push('actions');

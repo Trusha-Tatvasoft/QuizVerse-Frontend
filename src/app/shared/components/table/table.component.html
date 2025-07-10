@@ -16,11 +16,11 @@
     >
       <!-- Dynamic Columns -->
       <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
-        <ng-container *ngIf="column.sortable; else plainHeader">
+        <ng-container *ngIf="column.isSortable; else plainHeader">
           <th
             mat-header-cell
             *matHeaderCellDef
-            mat-sort-header="{{ column.key }}"
+            mat-sort-header="column.key"
             class="table-column-heading"
           >
             {{ column.label }}
@@ -87,9 +87,9 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" class="table-row"></tr>
 
-      <tr class="mat-row" *matNoDataRow>
+      <tr class="table-row" *matNoDataRow>
         <td [attr.colspan]="displayedColumns.length" class="no-data-message">
           {{ noDataMessage || 'No data available.' }}
         </td>
@@ -98,13 +98,14 @@
   </div>
 
   <!-- Paginator -->
-  <div *ngIf="totalItems > 0">
+  <div *ngIf="showPaginator">
     <div class="pagination-container">
       <mat-paginator
         class="custom-paginator"
         [length]="totalItems"
         [pageSize]="pageSize"
         [pageSizeOptions]="pageSizeOptions"
+        [showFirstLastButtons]="true"
         (page)="onPageChange($event)"
       >
       </mat-paginator>

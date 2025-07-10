@@ -63,10 +63,10 @@ describe('TableComponent - Edge Cases', () => {
     expect(component.displayedColumns).toEqual([]);
   });
 
-  it('should default column.sortable to false if undefined', () => {
+  it('should default column.isSortable to false if undefined', () => {
     component.columns = [{ key: 'id', label: 'ID', type: 'text' }];
     component.ngOnInit();
-    expect(component.columns[0].sortable).toBe(false);
+    expect(component.columns[0].isSortable).toBe(false);
   });
 
   it('should skip actions column if no actionIcons are passed', () => {
@@ -155,10 +155,10 @@ describe('TableComponent - Edge Cases', () => {
     expect(component).toBeTruthy(); // just check rendering didn't crash
   });
 
-  it('should preserve sortable true if set explicitly in column', () => {
-    component.columns = [{ key: 'email', label: 'Email', type: 'text', sortable: true }];
+  it('should preserve isSortable true if set explicitly in column', () => {
+    component.columns = [{ key: 'email', label: 'Email', type: 'text', isSortable: true }];
     component.ngOnInit();
-    expect(component.columns[0].sortable).toBe(true);
+    expect(component.columns[0].isSortable).toBe(true);
   });
 
   it('should emit correct data when action icon is clicked', () => {

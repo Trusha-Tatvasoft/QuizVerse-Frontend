@@ -1,8 +1,8 @@
 .data-table-card {
   background-color: #ffffff;
   padding: 24px;
-  box-shadow: 5px 5px 49px 0 rgba(182, 181, 181, 0.75) !important;
-  border: 0.5px solid rgb(218, 217, 217);
+  box-shadow: 5px 5px 5px 0 rgba(238, 237, 237, 0.75) !important;
+  border: 0.5px solid #e2e8f0;
   border-radius: 8px;
 
   @media (max-width: 768px) {
@@ -33,7 +33,7 @@
   p {
     margin: 0;
     font-size: 14px;
-    color: #6c757d;
+    color: #64748b;
 
     @media (max-width: 768px) {
       font-size: 13px;
@@ -55,6 +55,15 @@
   background-color: #ffffff;
   min-width: 800px;
 
+  .table-row {
+    border-bottom: 1px solid rgb(233, 8, 38) !important;
+  }
+
+  ::ng-deep .mat-mdc-row,
+  .table-row {
+    border-bottom: 1px solid #e2e8f0 !important;
+  }
+
   tr {
     white-space: nowrap;
 
@@ -64,16 +73,17 @@
       overflow: hidden;
       text-overflow: ellipsis;
       vertical-align: middle;
+      padding: 16px;
     }
 
     &:hover {
-      background-color: #f8f9fa;
+      background-color: #f8fafc;
     }
   }
 }
 
 .table-column-heading {
-  color: #8a96a8;
+  color: #64748b;
   font-weight: 500;
 }
 

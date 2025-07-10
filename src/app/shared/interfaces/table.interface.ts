@@ -3,7 +3,7 @@ export interface ColumnDef {
   label: string;
   type: 'text' | 'tag' | 'button' | 'icon' | 'custom' | 'profile';
   align?: 'left' | 'right' | 'center';
-  sortable?: boolean;
+  isSortable?: boolean;
 }
 
 export interface TableData {

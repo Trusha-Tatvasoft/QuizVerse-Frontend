@@ -20,11 +20,11 @@ export const questionPoolData = [
     difficulty: 'Easy',
   },
   {
-    question: 'What is 2 + 2?',
-    correctAnswer: '4',
+    question: 'What is 90 + 12?',
+    correctAnswer: '102',
     type: 'Multiple Choice',
     category: 'Mathematics',
-    difficulty: 'Easy',
+    difficulty: 'Medium',
   },
 ];
 

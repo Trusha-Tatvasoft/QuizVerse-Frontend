@@ -92,7 +92,7 @@ export const QuestionPoolCustom: Story = {
     columns: [
       { key: 'questionBlock', label: 'Question', type: 'custom' },
       { key: 'type', label: 'Type', type: 'tag' },
-      { key: 'category', label: 'Category', type: 'text', sortable: true },
+      { key: 'category', label: 'Category', type: 'text', isSortable: true },
       { key: 'difficulty', label: 'Difficulty', type: 'tag' },
     ],
     dataSource: questionPoolData,
@@ -137,10 +137,10 @@ export const TransactionList: Story = {
     tableTitle: 'Recent Transactions',
     tableDescription: 'All payment transactions and platform activity',
     columns: [
-      { key: 'type', label: 'Type', type: 'text', sortable: true },
-      { key: 'user', label: 'User', type: 'text', sortable: true },
-      { key: 'amount', label: 'Amount', type: 'custom', sortable: true },
-      { key: 'status', label: 'Status', type: 'custom', sortable: true },
+      { key: 'type', label: 'Type', type: 'text', isSortable: true },
+      { key: 'user', label: 'User', type: 'text', isSortable: true },
+      { key: 'amount', label: 'Amount', type: 'custom', isSortable: true },
+      { key: 'status', label: 'Status', type: 'custom', isSortable: true },
       { key: 'date', label: 'Date', type: 'text' },
       { key: 'method', label: 'Method', type: 'text' },
     ],
@@ -186,7 +186,7 @@ export const ProfileTable: Story = {
     tableDescription: 'List of users with profile and role information',
     columns: [
       { key: 'profile', label: 'User', type: 'custom' },
-      { key: 'role', label: 'Role', type: 'text', sortable: true },
+      { key: 'role', label: 'Role', type: 'text', isSortable: true },
       { key: 'status', label: 'Status', type: 'tag' },
     ],
     dataSource: profileData,
@@ -206,9 +206,9 @@ export const WithTitleAndDescription: Story = {
     tableTitle: 'All Categories',
     tableDescription: 'Manage quiz categories and their organization',
     columns: [
-      { key: 'category', label: 'Category', type: 'text', sortable: true },
-      { key: 'description', label: 'Description', type: 'text', sortable: true },
-      { key: 'quizCount', label: 'Quiz Count', type: 'button', sortable: true },
+      { key: 'category', label: 'Category', type: 'text', isSortable: true },
+      { key: 'description', label: 'Description', type: 'text', isSortable: true },
+      { key: 'quizCount', label: 'Quiz Count', type: 'button', isSortable: true },
       { key: 'status', label: 'Status', type: 'tag' },
       { key: 'created', label: 'Created', type: 'text' },
     ],
@@ -223,8 +223,8 @@ export const WithoutTitleAndDescription: Story = {
   name: 'Without Title & Description',
   args: {
     columns: [
-      { key: 'type', label: 'Type', type: 'tag', sortable: true },
-      { key: 'title', label: 'Title', type: 'text', sortable: true },
+      { key: 'type', label: 'Type', type: 'tag', isSortable: true },
+      { key: 'title', label: 'Title', type: 'text', isSortable: true },
       { key: 'subject', label: 'Subject', type: 'text' },
       { key: 'status', label: 'Status', type: 'tag' },
     ],
