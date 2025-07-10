@@ -50,4 +50,13 @@ describe('SearchInputComponent', () => {
     const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
     expect(inputEl.placeholder).toBe('Search quizzes...');
   });
+
+  it('should update control value on input', () => {
+    const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    inputEl.value = 'hello world';
+    inputEl.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    expect(component.control.value).toBe('hello world');
+  });
 });

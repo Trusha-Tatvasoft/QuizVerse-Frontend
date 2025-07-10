@@ -19,7 +19,8 @@ export class SearchInputComponent {
 
   @Output() search = new EventEmitter<string>();
 
-  onInput() {
-    this.search.emit(this.control.value);
+  onInputChange(event: Event): void {
+    const value = (event.target as HTMLInputElement).value.trim();
+    this.search.emit(value);
   }
 }

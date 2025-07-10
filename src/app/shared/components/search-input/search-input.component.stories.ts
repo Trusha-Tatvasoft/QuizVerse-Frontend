@@ -71,7 +71,6 @@ export const Quizzes: Story = {
 export const Users: Story = {
   args: {
     placeholder: 'Search users...',
-    borderClass: 'search-purple',
   },
 };
 

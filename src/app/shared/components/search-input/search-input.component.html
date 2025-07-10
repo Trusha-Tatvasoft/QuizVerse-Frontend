@@ -1,10 +1,10 @@
 <mat-form-field appearance="outline" class="search-field" [ngClass]="borderClass">
-  <mat-icon matPrefix style="color: #d3d3d3">search</mat-icon>
+  <mat-icon matPrefix class="search-icon">search</mat-icon>
   <input
     matInput
     [placeholder]="placeholder"
     [formControl]="control"
-    (input)="onInput()"
+    (input)="onInputChange($event)"
     type="text"
   />
 </mat-form-field>
