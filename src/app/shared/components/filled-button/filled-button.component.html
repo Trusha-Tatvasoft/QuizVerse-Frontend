@@ -2,7 +2,7 @@
   [attr.type]="type"
   [disabled]="disabled"
   (click)="!disabled && onClick.emit($event)"
-  class="filled-button text-white font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+  class="filled-button text-white font-medium rounded-lg text-sm px-5 py-2.5"
 >
   <div class="button-content flex items-center justify-center gap-2">
     <ng-container *ngIf="imagePosition === 'left' && label !== ''">

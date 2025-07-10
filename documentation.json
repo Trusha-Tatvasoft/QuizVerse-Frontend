@@ -99,7 +99,7 @@
         },
         {
             "name": "FilledButtonComponent",
-            "id": "component-FilledButtonComponent-956cb1615d1b56d36629efd475ddd90233c8030928e64afa9eae02dc1f8fb182d287159ac0e154d7628b2099337da8c62fe66ed15a0b6e2cc7ccad2e6c6d35a5",
+            "id": "component-FilledButtonComponent-4a0c51018e59650ae20b97b4f308f18f0e979f6a2efcae368e67d6f02e261ae3f9a24fe0e989e61e0440ee3d99f92a33e6e56c307b4ac62b287c43f10332376f",
             "file": "src/app/shared/components/filled-button/filled-button.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -122,7 +122,7 @@
                     "defaultValue": "false",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 16,
+                    "line": 15,
                     "type": "boolean",
                     "decorators": []
                 },
@@ -131,7 +131,7 @@
                     "defaultValue": "500",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 21,
+                    "line": 20,
                     "type": "number",
                     "decorators": []
                 },
@@ -140,7 +140,7 @@
                     "defaultValue": "'material-icons'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 23,
+                    "line": 22,
                     "type": "\"material-icons-outlined\" | \"material-icons\"",
                     "decorators": []
                 },
@@ -149,7 +149,7 @@
                     "defaultValue": "'left'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 19,
+                    "line": 18,
                     "type": "\"left\" | \"right\"",
                     "decorators": []
                 },
@@ -158,7 +158,7 @@
                     "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 17,
+                    "line": 16,
                     "type": "string",
                     "decorators": []
                 },
@@ -167,7 +167,7 @@
                     "defaultValue": "'Button'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 20,
+                    "line": 19,
                     "type": "string",
                     "decorators": []
                 },
@@ -176,7 +176,7 @@
                     "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 18,
+                    "line": 17,
                     "type": "string",
                     "decorators": []
                 },
@@ -185,7 +185,7 @@
                     "defaultValue": "'button'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 22,
+                    "line": 21,
                     "type": "\"button\" | \"submit\" | \"reset\"",
                     "decorators": []
                 }
@@ -196,7 +196,7 @@
                     "defaultValue": "new EventEmitter<Event>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 25,
+                    "line": 24,
                     "type": "EventEmitter"
                 }
             ],
@@ -210,7 +210,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 27
+                    "line": 26
                 },
                 {
                     "name": "gradientTo",
@@ -221,7 +221,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 28
+                    "line": 27
                 }
             ],
             "methodsClass": [
@@ -231,7 +231,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 30,
+                    "line": 29,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -258,7 +258,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, EventEmitter, Input, Output } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { MatButtonModule } from '@angular/material/button';\nimport { MatIconModule } from '@angular/material/icon';\nimport { AppColors } from '../../../utils/constants';\n\n@Component({\n  selector: 'app-filled-button',\n  standalone: true,\n  imports: [CommonModule, MatButtonModule, MatIconModule],\n  templateUrl: './filled-button.component.html',\n  styleUrls: ['./filled-button.component.scss'],\n})\nexport class FilledButtonComponent {\n  \n  @Input() disabled: boolean = false;\n  @Input() imageSrc: string = '';\n  @Input() matIcon: string = '';\n  @Input() imagePosition: 'left' | 'right' = 'left';\n  @Input() label: string = 'Button';\n  @Input() fontWeight: number = 500;\n  @Input() type: 'button' | 'submit' | 'reset' = 'button';\n  @Input() iconFontSet: 'material-icons-outlined' | 'material-icons' = 'material-icons';\n\n  @Output() onClick = new EventEmitter<Event>();\n\n  gradientFrom = AppColors.globalPrimaryColor;\n  gradientTo = AppColors.globalSecondaryColor;\n\n  ngOnInit() {\n    document.documentElement.style.setProperty('--filled-btn-primary', this.gradientFrom);\n    document.documentElement.style.setProperty('--filled-btn-secondary', this.gradientTo);\n  }\n\n  get validFontWeight(): string {\n    return this.fontWeight?.toString() || '400';\n  }\n}\n",
+            "sourceCode": "import { Component, EventEmitter, Input, Output } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { MatButtonModule } from '@angular/material/button';\nimport { MatIconModule } from '@angular/material/icon';\nimport { AppColors } from '../../../utils/constants';\n\n@Component({\n  selector: 'app-filled-button',\n  standalone: true,\n  imports: [CommonModule, MatButtonModule, MatIconModule],\n  templateUrl: './filled-button.component.html',\n  styleUrls: ['./filled-button.component.scss'],\n})\nexport class FilledButtonComponent {\n  @Input() disabled: boolean = false;\n  @Input() imageSrc: string = '';\n  @Input() matIcon: string = '';\n  @Input() imagePosition: 'left' | 'right' = 'left';\n  @Input() label: string = 'Button';\n  @Input() fontWeight: number = 500;\n  @Input() type: 'button' | 'submit' | 'reset' = 'button';\n  @Input() iconFontSet: 'material-icons-outlined' | 'material-icons' = 'material-icons';\n\n  @Output() onClick = new EventEmitter<Event>();\n\n  gradientFrom = AppColors.globalPrimaryColor;\n  gradientTo = AppColors.globalSecondaryColor;\n\n  ngOnInit() {\n    document.documentElement.style.setProperty('--filled-btn-primary', this.gradientFrom);\n    document.documentElement.style.setProperty('--filled-btn-secondary', this.gradientTo);\n  }\n\n  get validFontWeight(): string {\n    return this.fontWeight?.toString() || '400';\n  }\n}\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
@@ -275,7 +275,7 @@
                         "name": "validFontWeight",
                         "type": "string",
                         "returnType": "string",
-                        "line": 35
+                        "line": 34
                     }
                 }
             },
@@ -359,7 +359,7 @@
         },
         {
             "name": "OutlineButtonComponent",
-            "id": "component-OutlineButtonComponent-af3d8a1b64a098ac65fbd3ace726af4525be8696ee4ab90c363f3fdd7382a424a61ed26303028df3b5893df4d182c38668a2b8f0e698a46630cde97e1f0c4bf7",
+            "id": "component-OutlineButtonComponent-c7f52e931eeb2b4efd84fdba57b346edc89efa84a21625906c352399490ecbbd2425ee70c531a421c99a06b7035f0876fcce0cc6b729f0cd0dae0910a3412983",
             "file": "src/app/shared/components/outline-button/outline-button.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -380,7 +380,7 @@
                     "defaultValue": "false",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 16,
+                    "line": 15,
                     "type": "boolean",
                     "decorators": []
                 },
@@ -389,7 +389,7 @@
                     "defaultValue": "500",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 21,
+                    "line": 20,
                     "type": "number",
                     "decorators": []
                 },
@@ -398,7 +398,7 @@
                     "defaultValue": "'material-icons'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 23,
+                    "line": 22,
                     "type": "\"material-icons-outlined\" | \"material-icons\"",
                     "decorators": []
                 },
@@ -407,7 +407,7 @@
                     "defaultValue": "'left'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 19,
+                    "line": 18,
                     "type": "\"left\" | \"right\"",
                     "decorators": []
                 },
@@ -416,7 +416,7 @@
                     "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 17,
+                    "line": 16,
                     "type": "string",
                     "decorators": []
                 },
@@ -425,7 +425,7 @@
                     "defaultValue": "'Button'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 20,
+                    "line": 19,
                     "type": "string",
                     "decorators": []
                 },
@@ -434,7 +434,7 @@
                     "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 18,
+                    "line": 17,
                     "type": "string",
                     "decorators": []
                 },
@@ -443,7 +443,7 @@
                     "defaultValue": "'button'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 22,
+                    "line": 21,
                     "type": "\"button\" | \"submit\" | \"reset\"",
                     "decorators": []
                 }
@@ -454,7 +454,7 @@
                     "defaultValue": "new EventEmitter<Event>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 25,
+                    "line": 24,
                     "type": "EventEmitter"
                 }
             ],
@@ -466,7 +466,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 27,
+                    "line": 26,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -493,7 +493,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { MatButtonModule } from '@angular/material/button';\nimport { MatIconModule } from '@angular/material/icon';\nimport { AppColors } from '../../../utils/constants';\nimport { Component, ElementRef, EventEmitter, Input, Output, Renderer2 } from '@angular/core';\n\n@Component({\n  selector: 'app-outline-button',\n  standalone: true,\n  imports: [CommonModule, MatButtonModule, MatIconModule],\n  templateUrl: './outline-button.component.html',\n  styleUrl: './outline-button.component.scss',\n})\nexport class OutlineButtonComponent {\n\n  @Input() disabled: boolean = false;\n  @Input() imageSrc: string = '';\n  @Input() matIcon: string = '';\n  @Input() imagePosition: 'left' | 'right' = 'left';\n  @Input() label: string = 'Button';\n  @Input() fontWeight: number = 500;\n  @Input() type: 'button' | 'submit' | 'reset' = 'button';\n  @Input() iconFontSet: 'material-icons-outlined' | 'material-icons' = 'material-icons';\n\n  @Output() onClick = new EventEmitter<Event>();\n\n  ngOnInit() {\n    document.documentElement.style.setProperty('--outline-primary', AppColors.globalPrimaryColor);\n  }\n\n  get validFontWeight(): string {\n    return this.fontWeight?.toString() || '400';\n  }\n}\n",
+            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { MatButtonModule } from '@angular/material/button';\nimport { MatIconModule } from '@angular/material/icon';\nimport { AppColors } from '../../../utils/constants';\nimport { Component, ElementRef, EventEmitter, Input, Output, Renderer2 } from '@angular/core';\n\n@Component({\n  selector: 'app-outline-button',\n  standalone: true,\n  imports: [CommonModule, MatButtonModule, MatIconModule],\n  templateUrl: './outline-button.component.html',\n  styleUrl: './outline-button.component.scss',\n})\nexport class OutlineButtonComponent {\n  @Input() disabled: boolean = false;\n  @Input() imageSrc: string = '';\n  @Input() matIcon: string = '';\n  @Input() imagePosition: 'left' | 'right' = 'left';\n  @Input() label: string = 'Button';\n  @Input() fontWeight: number = 500;\n  @Input() type: 'button' | 'submit' | 'reset' = 'button';\n  @Input() iconFontSet: 'material-icons-outlined' | 'material-icons' = 'material-icons';\n\n  @Output() onClick = new EventEmitter<Event>();\n\n  ngOnInit() {\n    document.documentElement.style.setProperty('--outline-primary', AppColors.globalPrimaryColor);\n  }\n\n  get validFontWeight(): string {\n    return this.fontWeight?.toString() || '400';\n  }\n}\n",
             "styleUrl": "./outline-button.component.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -506,11 +506,11 @@
                         "name": "validFontWeight",
                         "type": "string",
                         "returnType": "string",
-                        "line": 31
+                        "line": 30
                     }
                 }
             },
-            "templateData": "<button \n  [attr.type]=\"type\" \n  [disabled]=\"disabled\" \n  (click)=\"!disabled && onClick.emit($event)\"\n  class=\"outline-button bg-white border text-sm font-medium rounded-lg px-5 py-2.5 me-2 mb-2 flex items-center justify-center gap-2 transition-all duration-200\"\n>\n  <div class=\"flex items-center gap-2\">\n\n    <ng-container *ngIf=\"imagePosition === 'left' && label !== ''\">\n      <mat-icon *ngIf=\"matIcon\" [fontSet]=\"iconFontSet\"\n        class=\"w-5 h-5 text-[color:inherit] flex items-center justify-center\">\n        {{ matIcon }}\n      </mat-icon>\n      <img *ngIf=\"!matIcon && imageSrc\" [src]=\"imageSrc\" alt=\"button icon\" class=\"w-5 h-5 object-contain\" />\n    </ng-container>\n\n    <div [style.fontWeight]=\"validFontWeight\" *ngIf=\"label !== ''\">{{ label }}</div>\n\n    <ng-container *ngIf=\"imagePosition === 'right' && label !== ''\">\n      <mat-icon *ngIf=\"matIcon\" [fontSet]=\"iconFontSet\"\n        class=\"w-5 h-5 text-[color:inherit] flex items-center justify-center\">\n        {{ matIcon }}\n      </mat-icon>\n      <img *ngIf=\"!matIcon && imageSrc\" [src]=\"imageSrc\" alt=\"button icon\" class=\"w-5 h-5 object-contain\" />\n    </ng-container>\n\n    <ng-container *ngIf=\"label === ''\">\n      <mat-icon *ngIf=\"matIcon\" [fontSet]=\"iconFontSet\"\n        class=\"w-5 h-5 text-[color:inherit] flex items-center justify-center\">\n        {{ matIcon }}\n      </mat-icon>\n      <img *ngIf=\"!matIcon && imageSrc\" [src]=\"imageSrc\" alt=\"button icon\" class=\"w-5 h-5 object-contain\" />\n    </ng-container>\n    \n  </div>\n</button>"
+            "templateData": "<button\n  [attr.type]=\"type\"\n  [disabled]=\"disabled\"\n  (click)=\"!disabled && onClick.emit($event)\"\n  class=\"outline-button bg-white border text-sm font-medium rounded-lg px-5 py-2.5 me-2 mb-2 flex items-center justify-center gap-2 transition-all duration-200\"\n>\n  <div class=\"flex items-center gap-2\">\n    <ng-container *ngIf=\"imagePosition === 'left' && label !== ''\">\n      <mat-icon\n        *ngIf=\"matIcon\"\n        [fontSet]=\"iconFontSet\"\n        class=\"w-5 h-5 text-[color:inherit] flex items-center justify-center\"\n      >\n        {{ matIcon }}\n      </mat-icon>\n      <img\n        *ngIf=\"!matIcon && imageSrc\"\n        [src]=\"imageSrc\"\n        alt=\"button icon\"\n        class=\"w-5 h-5 object-contain\"\n      />\n    </ng-container>\n\n    <div [style.fontWeight]=\"validFontWeight\" *ngIf=\"label !== ''\">{{ label }}</div>\n\n    <ng-container *ngIf=\"imagePosition === 'right' && label !== ''\">\n      <mat-icon\n        *ngIf=\"matIcon\"\n        [fontSet]=\"iconFontSet\"\n        class=\"w-5 h-5 text-[color:inherit] flex items-center justify-center\"\n      >\n        {{ matIcon }}\n      </mat-icon>\n      <img\n        *ngIf=\"!matIcon && imageSrc\"\n        [src]=\"imageSrc\"\n        alt=\"button icon\"\n        class=\"w-5 h-5 object-contain\"\n      />\n    </ng-container>\n\n    <ng-container *ngIf=\"label === ''\">\n      <mat-icon\n        *ngIf=\"matIcon\"\n        [fontSet]=\"iconFontSet\"\n        class=\"w-5 h-5 text-[color:inherit] flex items-center justify-center\"\n      >\n        {{ matIcon }}\n      </mat-icon>\n      <img\n        *ngIf=\"!matIcon && imageSrc\"\n        [src]=\"imageSrc\"\n        alt=\"button icon\"\n        class=\"w-5 h-5 object-contain\"\n      />\n    </ng-container>\n  </div>\n</button>\n"
         },
         {
             "name": "PageHeaderComponent",
@@ -602,7 +602,7 @@
         },
         {
             "name": "TextButtonComponent",
-            "id": "component-TextButtonComponent-e2625e7723ea17050005e286cb32e78f69f2e476311c8be4aa3d68a9b856a3fa313aceafd0e9f5b046dde7606129efe19f4e46436c75e0ff6fc183f9d0d50589",
+            "id": "component-TextButtonComponent-c199ea84415ae7af6f73f335e26ec112456d20a871dfbb86e219cf37581054f665ddd06d3ddc87148d82dfb3370f54307e4d7b1b26a3fc8a9a509287769e6e22",
             "file": "src/app/shared/components/text-button/text-button.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -623,7 +623,7 @@
                     "defaultValue": "false",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 16,
+                    "line": 15,
                     "type": "boolean",
                     "decorators": []
                 },
@@ -632,7 +632,7 @@
                     "defaultValue": "500",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 21,
+                    "line": 20,
                     "type": "number",
                     "decorators": []
                 },
@@ -641,7 +641,7 @@
                     "defaultValue": "'material-icons'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 23,
+                    "line": 22,
                     "type": "\"material-icons-outlined\" | \"material-icons\"",
                     "decorators": []
                 },
@@ -650,7 +650,7 @@
                     "defaultValue": "'left'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 19,
+                    "line": 18,
                     "type": "\"left\" | \"right\"",
                     "decorators": []
                 },
@@ -659,7 +659,7 @@
                     "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 17,
+                    "line": 16,
                     "type": "string",
                     "decorators": []
                 },
@@ -668,7 +668,7 @@
                     "defaultValue": "'Button'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 20,
+                    "line": 19,
                     "type": "string",
                     "decorators": []
                 },
@@ -677,7 +677,7 @@
                     "defaultValue": "''",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 18,
+                    "line": 17,
                     "type": "string",
                     "decorators": []
                 },
@@ -686,7 +686,7 @@
                     "defaultValue": "'button'",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 22,
+                    "line": 21,
                     "type": "\"button\" | \"submit\" | \"reset\"",
                     "decorators": []
                 }
@@ -697,7 +697,7 @@
                     "defaultValue": "new EventEmitter<Event>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 25,
+                    "line": 24,
                     "type": "EventEmitter"
                 }
             ],
@@ -709,7 +709,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 27,
+                    "line": 26,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -736,7 +736,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { MatButtonModule } from '@angular/material/button';\nimport { MatIconModule } from '@angular/material/icon';\nimport { AppColors } from '../../../utils/constants';\nimport { Component, ElementRef, EventEmitter, Input, Output, Renderer2 } from '@angular/core';\n\n@Component({\n  selector: 'app-outline-button',\n  standalone: true,\n  imports: [CommonModule, MatButtonModule, MatIconModule],\n  templateUrl: './text-button.component.html',\n  styleUrl: './text-button.component.scss',\n})\nexport class TextButtonComponent {\n  \n  @Input() disabled: boolean = false;\n  @Input() imageSrc: string = '';\n  @Input() matIcon: string = '';\n  @Input() imagePosition: 'left' | 'right' = 'left';\n  @Input() label: string = 'Button';\n  @Input() fontWeight: number = 500;\n  @Input() type: 'button' | 'submit' | 'reset' = 'button';\n  @Input() iconFontSet: 'material-icons-outlined' | 'material-icons' = 'material-icons';\n\n  @Output() onClick = new EventEmitter<Event>();\n\n  ngOnInit() {\n    document.documentElement.style.setProperty('--outline-primary', AppColors.globalSecondaryColor);\n  }\n\n  get validFontWeight(): string {\n    return this.fontWeight?.toString() || '400';\n  }\n}\n",
+            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { MatButtonModule } from '@angular/material/button';\nimport { MatIconModule } from '@angular/material/icon';\nimport { AppColors } from '../../../utils/constants';\nimport { Component, ElementRef, EventEmitter, Input, Output, Renderer2 } from '@angular/core';\n\n@Component({\n  selector: 'app-outline-button',\n  standalone: true,\n  imports: [CommonModule, MatButtonModule, MatIconModule],\n  templateUrl: './text-button.component.html',\n  styleUrl: './text-button.component.scss',\n})\nexport class TextButtonComponent {\n  @Input() disabled: boolean = false;\n  @Input() imageSrc: string = '';\n  @Input() matIcon: string = '';\n  @Input() imagePosition: 'left' | 'right' = 'left';\n  @Input() label: string = 'Button';\n  @Input() fontWeight: number = 500;\n  @Input() type: 'button' | 'submit' | 'reset' = 'button';\n  @Input() iconFontSet: 'material-icons-outlined' | 'material-icons' = 'material-icons';\n\n  @Output() onClick = new EventEmitter<Event>();\n\n  ngOnInit() {\n    document.documentElement.style.setProperty('--outline-primary', AppColors.globalSecondaryColor);\n  }\n\n  get validFontWeight(): string {\n    return this.fontWeight?.toString() || '400';\n  }\n}\n",
             "styleUrl": "./text-button.component.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -749,11 +749,11 @@
                         "name": "validFontWeight",
                         "type": "string",
                         "returnType": "string",
-                        "line": 31
+                        "line": 30
                     }
                 }
             },
-            "templateData": "<button \n  [attr.type]=\"type\" \n  [disabled]=\"disabled\" \n  (click)=\"!disabled && onClick.emit($event)\"\n  class=\"outline-button bg-white text-sm font-medium rounded-lg px-5 py-2.5 me-2 mb-2 flex items-center justify-center gap-2 transition-all duration-200\"\n>\n  <div class=\"flex items-center gap-2\">\n\n    <ng-container *ngIf=\"imagePosition === 'left' && label !== ''\">\n      <mat-icon *ngIf=\"matIcon\" [fontSet]=\"iconFontSet\"\n        class=\"w-5 h-5 text-[color:inherit] flex items-center justify-center\">\n        {{ matIcon }}\n      </mat-icon>\n      <img *ngIf=\"!matIcon && imageSrc\" [src]=\"imageSrc\" alt=\"button icon\" class=\"w-5 h-5 object-contain\" />\n    </ng-container>\n\n    <div [style.fontWeight]=\"validFontWeight\" *ngIf=\"label !== ''\">{{ label }}</div>\n\n    <ng-container *ngIf=\"imagePosition === 'right' && label !== ''\">\n      <mat-icon *ngIf=\"matIcon\" [fontSet]=\"iconFontSet\"\n        class=\"w-5 h-5 text-[color:inherit] flex items-center justify-center\">\n        {{ matIcon }}\n      </mat-icon>\n      <img *ngIf=\"!matIcon && imageSrc\" [src]=\"imageSrc\" alt=\"button icon\" class=\"w-5 h-5 object-contain\" />\n    </ng-container>\n\n    <ng-container *ngIf=\"label === ''\">\n      <mat-icon *ngIf=\"matIcon\" [fontSet]=\"iconFontSet\"\n        class=\"w-5 h-5 text-[color:inherit] flex items-center justify-center\">\n        {{ matIcon }}\n      </mat-icon>\n      <img *ngIf=\"!matIcon && imageSrc\" [src]=\"imageSrc\" alt=\"button icon\" class=\"w-5 h-5 object-contain\" />\n    </ng-container>\n    \n  </div>\n</button>"
+            "templateData": "<button\n  [attr.type]=\"type\"\n  [disabled]=\"disabled\"\n  (click)=\"!disabled && onClick.emit($event)\"\n  class=\"outline-button bg-white text-sm font-medium rounded-lg px-5 py-2.5 me-2 mb-2 flex items-center justify-center gap-2 transition-all duration-200\"\n>\n  <div class=\"flex items-center gap-2\">\n    <ng-container *ngIf=\"imagePosition === 'left' && label !== ''\">\n      <mat-icon\n        *ngIf=\"matIcon\"\n        [fontSet]=\"iconFontSet\"\n        class=\"w-5 h-5 text-[color:inherit] flex items-center justify-center\"\n      >\n        {{ matIcon }}\n      </mat-icon>\n      <img\n        *ngIf=\"!matIcon && imageSrc\"\n        [src]=\"imageSrc\"\n        alt=\"button icon\"\n        class=\"w-5 h-5 object-contain\"\n      />\n    </ng-container>\n\n    <div [style.fontWeight]=\"validFontWeight\" *ngIf=\"label !== ''\">{{ label }}</div>\n\n    <ng-container *ngIf=\"imagePosition === 'right' && label !== ''\">\n      <mat-icon\n        *ngIf=\"matIcon\"\n        [fontSet]=\"iconFontSet\"\n        class=\"w-5 h-5 text-[color:inherit] flex items-center justify-center\"\n      >\n        {{ matIcon }}\n      </mat-icon>\n      <img\n        *ngIf=\"!matIcon && imageSrc\"\n        [src]=\"imageSrc\"\n        alt=\"button icon\"\n        class=\"w-5 h-5 object-contain\"\n      />\n    </ng-container>\n\n    <ng-container *ngIf=\"label === ''\">\n      <mat-icon\n        *ngIf=\"matIcon\"\n        [fontSet]=\"iconFontSet\"\n        class=\"w-5 h-5 text-[color:inherit] flex items-center justify-center\"\n      >\n        {{ matIcon }}\n      </mat-icon>\n      <img\n        *ngIf=\"!matIcon && imageSrc\"\n        [src]=\"imageSrc\"\n        alt=\"button icon\"\n        class=\"w-5 h-5 object-contain\"\n      />\n    </ng-container>\n  </div>\n</button>\n"
         }
     ],
     "modules": [],
