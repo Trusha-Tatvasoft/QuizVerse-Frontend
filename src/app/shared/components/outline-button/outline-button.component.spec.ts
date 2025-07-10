@@ -14,7 +14,6 @@ describe('OutlineButtonComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CommonModule, MatIconModule, OutlineButtonComponent],
     }).compileComponents();
-
     fixture = TestBed.createComponent(OutlineButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

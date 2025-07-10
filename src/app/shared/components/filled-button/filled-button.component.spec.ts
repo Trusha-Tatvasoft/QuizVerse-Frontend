@@ -14,7 +14,6 @@ describe('FilledButtonComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CommonModule, MatIconModule, FilledButtonComponent],
     }).compileComponents();
-
     fixture = TestBed.createComponent(FilledButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
