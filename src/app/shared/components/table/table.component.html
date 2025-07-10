@@ -27,7 +27,7 @@
           </th>
         </ng-container>
 
-        <!-- Fallback plain header - without the sorting column header -->
+        <!-- Fallback plain header - without the sorting - column header -->
         <ng-template #plainHeader>
           <th mat-header-cell *matHeaderCellDef class="table-column-heading">
             {{ column.label }}
@@ -77,7 +77,7 @@
           <button
             *ngFor="let icon of actionIcons"
             mat-icon-button
-            [color]="icon.color || 'primary'"
+            [ngStyle]="{ color: icon.color }"
             [matTooltip]="icon.tooltip || icon.action"
             (click)="onActionClick(icon.action, row)"
           >

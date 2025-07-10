@@ -57,6 +57,7 @@
 
   tr {
     white-space: nowrap;
+
     td,
     th {
       white-space: nowrap;
@@ -84,7 +85,7 @@
 
   @media (max-width: 600px) {
     flex-wrap: wrap;
-    padding: 0px;
+    padding: 0;
   }
 }
 

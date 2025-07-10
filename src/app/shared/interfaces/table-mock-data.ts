@@ -1,9 +1,7 @@
-// table-mock-data.ts
-
 export const defaultActions = [
   { icon: 'visibility', action: 'view' },
   { icon: 'edit', action: 'edit' },
-  { icon: 'delete', action: 'delete', color: 'warn' },
+  { icon: 'delete', action: 'delete', color: '#000000' },
 ];
 
 export const questionPoolData = [
@@ -171,9 +169,4 @@ export const largeUserList = Array.from({ length: 50 }, (_, i) => ({
 export const mixedTypeData = [
   { id: 1, name: 'Alice', status: 'Active', score: 88, actionBtn: 'View' },
   { id: 2, name: 'Bob', status: 'Inactive', score: 74, actionBtn: 'Edit' },
-];
-
-export const customColumnData = [
-  { name: 'Alice', age: 30, status: 'Active' },
-  { name: 'Bob', age: 25, status: 'Inactive' },
 ];

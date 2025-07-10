@@ -3,12 +3,12 @@
     "interfaces": [
         {
             "name": "ActionIcon",
-            "id": "interface-ActionIcon-22de52ebb7aa47d4b227b7d3b58d1b4151498a940a8fb56d0fed10d700555640a0d1c863ca5fbabed152b7a9f4eb9866af91bb22162ef551bc624b1059d69c08",
+            "id": "interface-ActionIcon-0b7302305511d14c5035f4f164a570f52bb07aee6e383ead00b94b5d124f99a490cf7bc722708d580940ee84e9272af44ad942cdd0b98d15961cdaac6be56297",
             "file": "src/app/shared/interfaces/table.interface.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "export interface ColumnDef {\r\n    key: string;\r\n    label: string;\r\n    type: 'text' | 'tag' | 'button' | 'icon' | 'custom' | 'profile';\r\n    align?: 'left' | 'right' | 'center';\r\n    sortable?: boolean;\r\n}\r\n\r\nexport interface TableData {\r\n    [key: string]: any;\r\n}\r\n\r\nexport interface ActionIcon {\r\n    icon: string;\r\n    tooltip?: string;\r\n    action: string;\r\n    color?: string;\r\n}\r\n",
+            "sourceCode": "export interface ColumnDef {\n  key: string;\n  label: string;\n  type: 'text' | 'tag' | 'button' | 'icon' | 'custom' | 'profile';\n  align?: 'left' | 'right' | 'center';\n  sortable?: boolean;\n}\n\nexport interface TableData {\n  [key: string]: any;\n}\n\nexport interface ActionIcon {\n  icon: string;\n  tooltip?: string;\n  action: string;\n  color?: string;\n}\n",
             "properties": [
                 {
                     "name": "action",
@@ -58,12 +58,12 @@
         },
         {
             "name": "ColumnDef",
-            "id": "interface-ColumnDef-22de52ebb7aa47d4b227b7d3b58d1b4151498a940a8fb56d0fed10d700555640a0d1c863ca5fbabed152b7a9f4eb9866af91bb22162ef551bc624b1059d69c08",
+            "id": "interface-ColumnDef-0b7302305511d14c5035f4f164a570f52bb07aee6e383ead00b94b5d124f99a490cf7bc722708d580940ee84e9272af44ad942cdd0b98d15961cdaac6be56297",
             "file": "src/app/shared/interfaces/table.interface.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "export interface ColumnDef {\r\n    key: string;\r\n    label: string;\r\n    type: 'text' | 'tag' | 'button' | 'icon' | 'custom' | 'profile';\r\n    align?: 'left' | 'right' | 'center';\r\n    sortable?: boolean;\r\n}\r\n\r\nexport interface TableData {\r\n    [key: string]: any;\r\n}\r\n\r\nexport interface ActionIcon {\r\n    icon: string;\r\n    tooltip?: string;\r\n    action: string;\r\n    color?: string;\r\n}\r\n",
+            "sourceCode": "export interface ColumnDef {\n  key: string;\n  label: string;\n  type: 'text' | 'tag' | 'button' | 'icon' | 'custom' | 'profile';\n  align?: 'left' | 'right' | 'center';\n  sortable?: boolean;\n}\n\nexport interface TableData {\n  [key: string]: any;\n}\n\nexport interface ActionIcon {\n  icon: string;\n  tooltip?: string;\n  action: string;\n  color?: string;\n}\n",
             "properties": [
                 {
                     "name": "align",
@@ -158,16 +158,16 @@
         },
         {
             "name": "TableData",
-            "id": "interface-TableData-22de52ebb7aa47d4b227b7d3b58d1b4151498a940a8fb56d0fed10d700555640a0d1c863ca5fbabed152b7a9f4eb9866af91bb22162ef551bc624b1059d69c08",
+            "id": "interface-TableData-0b7302305511d14c5035f4f164a570f52bb07aee6e383ead00b94b5d124f99a490cf7bc722708d580940ee84e9272af44ad942cdd0b98d15961cdaac6be56297",
             "file": "src/app/shared/interfaces/table.interface.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "export interface ColumnDef {\r\n    key: string;\r\n    label: string;\r\n    type: 'text' | 'tag' | 'button' | 'icon' | 'custom' | 'profile';\r\n    align?: 'left' | 'right' | 'center';\r\n    sortable?: boolean;\r\n}\r\n\r\nexport interface TableData {\r\n    [key: string]: any;\r\n}\r\n\r\nexport interface ActionIcon {\r\n    icon: string;\r\n    tooltip?: string;\r\n    action: string;\r\n    color?: string;\r\n}\r\n",
+            "sourceCode": "export interface ColumnDef {\n  key: string;\n  label: string;\n  type: 'text' | 'tag' | 'button' | 'icon' | 'custom' | 'profile';\n  align?: 'left' | 'right' | 'center';\n  sortable?: boolean;\n}\n\nexport interface TableData {\n  [key: string]: any;\n}\n\nexport interface ActionIcon {\n  icon: string;\n  tooltip?: string;\n  action: string;\n  color?: string;\n}\n",
             "properties": [],
             "indexSignatures": [
                 {
-                    "id": "index-declaration-22de52ebb7aa47d4b227b7d3b58d1b4151498a940a8fb56d0fed10d700555640a0d1c863ca5fbabed152b7a9f4eb9866af91bb22162ef551bc624b1059d69c08",
+                    "id": "index-declaration-0b7302305511d14c5035f4f164a570f52bb07aee6e383ead00b94b5d124f99a490cf7bc722708d580940ee84e9272af44ad942cdd0b98d15961cdaac6be56297",
                     "args": [
                         {
                             "name": "key",
@@ -413,7 +413,7 @@
         },
         {
             "name": "TableComponent",
-            "id": "component-TableComponent-5ba3726ae626dc7a6b4de4d367ec310b0da2862efc8c93269978392dbbee52643bd9819c0b660bcc8691c9527343190ffee965e4a83eb3803cb7f2c1413a8ad2",
+            "id": "component-TableComponent-3713654589eab0b40ade1aba5aa1b6016487db708ed75a8e8ea46f9e1681a2a4dfe521218770781ba8215115caebb334d8898b63acb23e3289066e69d8e4e596",
             "file": "src/app/shared/components/table/table.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -436,7 +436,7 @@
                     "defaultValue": "[]",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 37,
+                    "line": 46,
                     "type": "ActionIcon[]",
                     "decorators": []
                 },
@@ -445,7 +445,7 @@
                     "defaultValue": "[]",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 32,
+                    "line": 41,
                     "type": "ColumnDef[]",
                     "decorators": []
                 },
@@ -454,7 +454,7 @@
                     "defaultValue": "{}",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 39,
+                    "line": 48,
                     "type": "literal type",
                     "decorators": []
                 },
@@ -463,7 +463,7 @@
                     "defaultValue": "[]",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 33,
+                    "line": 42,
                     "type": "TableData[]",
                     "decorators": []
                 },
@@ -471,7 +471,7 @@
                     "name": "noDataMessage",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 38,
+                    "line": 47,
                     "type": "string",
                     "decorators": []
                 },
@@ -480,7 +480,7 @@
                     "defaultValue": "10",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 35,
+                    "line": 44,
                     "type": "number",
                     "decorators": []
                 },
@@ -489,7 +489,7 @@
                     "defaultValue": "[5, 10, 20]",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 36,
+                    "line": 45,
                     "type": "number[]",
                     "decorators": []
                 },
@@ -497,7 +497,7 @@
                     "name": "tableDescription",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 42,
+                    "line": 51,
                     "type": "string",
                     "decorators": []
                 },
@@ -505,7 +505,7 @@
                     "name": "tableTitle",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 41,
+                    "line": 50,
                     "type": "string",
                     "decorators": []
                 },
@@ -514,7 +514,7 @@
                     "defaultValue": "0",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 34,
+                    "line": 43,
                     "type": "number",
                     "decorators": []
                 }
@@ -525,7 +525,7 @@
                     "defaultValue": "new EventEmitter<{ action: string; row: TableData }>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 46,
+                    "line": 55,
                     "type": "EventEmitter"
                 },
                 {
@@ -533,7 +533,7 @@
                     "defaultValue": "new EventEmitter<{ pageIndex: number; pageSize: number }>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 44,
+                    "line": 53,
                     "type": "EventEmitter"
                 },
                 {
@@ -541,7 +541,7 @@
                     "defaultValue": "new EventEmitter<{ active: string; direction: string }>()",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 45,
+                    "line": 54,
                     "type": "EventEmitter"
                 }
             ],
@@ -555,7 +555,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 51
+                    "line": 60
                 },
                 {
                     "name": "paginator",
@@ -565,7 +565,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 48,
+                    "line": 57,
                     "decorators": [
                         {
                             "name": "ViewChild",
@@ -584,7 +584,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 49,
+                    "line": 58,
                     "decorators": [
                         {
                             "name": "ViewChild",
@@ -610,7 +610,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 58,
+                    "line": 66,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -631,7 +631,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 54,
+                    "line": 62,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -654,7 +654,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 89,
+                    "line": 93,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -691,7 +691,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 81,
+                    "line": 85,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -719,7 +719,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 85,
+                    "line": 89,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -740,7 +740,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 68,
+                    "line": 72,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -794,11 +794,11 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, Input, Output, EventEmitter, ViewChild, OnInit, TemplateRef, SimpleChanges, OnChanges } from '@angular/core';\r\nimport { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';\r\nimport { MatSort, MatSortModule } from '@angular/material/sort';\r\nimport { ColumnDef, TableData, ActionIcon } from '../../interfaces/table.interface';\r\nimport { CommonModule } from '@angular/common';\r\nimport { MatTableModule } from '@angular/material/table';\r\nimport { MatButtonModule } from '@angular/material/button';\r\nimport { MatIconModule } from '@angular/material/icon';\r\nimport { MatTooltipModule } from '@angular/material/tooltip';\r\nimport { MatChipsModule } from '@angular/material/chips';\r\nimport { MatCardModule } from '@angular/material/card';\r\n\r\n@Component({\r\n  selector: 'app-data-table',\r\n  standalone: true,\r\n  templateUrl: './table.component.html',\r\n  styleUrls: ['./table.component.scss'],\r\n  imports: [\r\n    CommonModule,\r\n    MatTableModule,\r\n    MatPaginatorModule,\r\n    MatSortModule,\r\n    MatButtonModule,\r\n    MatIconModule,\r\n    MatTooltipModule,\r\n    MatChipsModule,\r\n    MatCardModule\r\n  ]\r\n})\r\n\r\nexport class TableComponent implements OnInit, OnChanges {\r\n  @Input() columns: ColumnDef[] = [];\r\n  @Input() dataSource: TableData[] = [];\r\n  @Input() totalItems = 0;\r\n  @Input() pageSize = 10;\r\n  @Input() pageSizeOptions: number[] = [5, 10, 20];\r\n  @Input() actionIcons: ActionIcon[] = [];\r\n  @Input() noDataMessage?: string;\r\n  @Input() columnTemplates: { [key: string]: TemplateRef<any> } = {};\r\n\r\n  @Input() tableTitle?: string;\r\n  @Input() tableDescription?: string;\r\n\r\n  @Output() pageChange = new EventEmitter<{ pageIndex: number; pageSize: number }>();\r\n  @Output() sortChange = new EventEmitter<{ active: string; direction: string }>();\r\n  @Output() actionClick = new EventEmitter<{ action: string; row: TableData }>();\r\n\r\n  @ViewChild(MatPaginator) paginator!: MatPaginator;\r\n  @ViewChild(MatSort) sort!: MatSort;\r\n\r\n  displayedColumns: string[] = [];\r\n\r\n\r\n  ngOnInit() {\r\n    this.setDisplayedColumns();\r\n  }\r\n\r\n  ngOnChanges(changes: SimpleChanges): void {\r\n    if (\r\n      changes['dataSource'] ||\r\n      changes['columns'] ||\r\n      changes['actionIcons']\r\n    ) {\r\n      this.setDisplayedColumns();\r\n    }\r\n  }\r\n\r\n  private setDisplayedColumns(): void {\r\n    this.columns = this.columns.map(col => ({\r\n      ...col,\r\n      sortable: col.sortable ?? false\r\n    }));\r\n\r\n    this.displayedColumns = this.columns.map(col => col.key);\r\n\r\n    if (this.actionIcons?.length) {\r\n      this.displayedColumns.push('actions');\r\n    }\r\n  }\r\n\r\n  onPageChange(event: any) {\r\n    this.pageChange.emit({ pageIndex: event.pageIndex, pageSize: event.pageSize });\r\n  }\r\n\r\n  onSortChange(sort: any) {\r\n    this.sortChange.emit({ active: sort.active, direction: sort.direction });\r\n  }\r\n\r\n  onActionClick(action: string, row: TableData) {\r\n    this.actionClick.emit({ action, row });\r\n  }\r\n}\r\n",
+            "sourceCode": "import {\n  Component,\n  Input,\n  Output,\n  EventEmitter,\n  ViewChild,\n  OnInit,\n  TemplateRef,\n  SimpleChanges,\n  OnChanges,\n} from '@angular/core';\nimport { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';\nimport { MatSort, MatSortModule } from '@angular/material/sort';\nimport { ColumnDef, TableData, ActionIcon } from '../../interfaces/table.interface';\nimport { CommonModule } from '@angular/common';\nimport { MatTableModule } from '@angular/material/table';\nimport { MatButtonModule } from '@angular/material/button';\nimport { MatIconModule } from '@angular/material/icon';\nimport { MatTooltipModule } from '@angular/material/tooltip';\nimport { MatChipsModule } from '@angular/material/chips';\nimport { MatCardModule } from '@angular/material/card';\n\n@Component({\n  selector: 'app-data-table',\n  standalone: true,\n  templateUrl: './table.component.html',\n  styleUrls: ['./table.component.scss'],\n  imports: [\n    CommonModule,\n    MatTableModule,\n    MatPaginatorModule,\n    MatSortModule,\n    MatButtonModule,\n    MatIconModule,\n    MatTooltipModule,\n    MatChipsModule,\n    MatCardModule,\n  ],\n})\nexport class TableComponent implements OnInit, OnChanges {\n  @Input() columns: ColumnDef[] = [];\n  @Input() dataSource: TableData[] = [];\n  @Input() totalItems = 0;\n  @Input() pageSize = 10;\n  @Input() pageSizeOptions: number[] = [5, 10, 20];\n  @Input() actionIcons: ActionIcon[] = [];\n  @Input() noDataMessage?: string;\n  @Input() columnTemplates: { [key: string]: TemplateRef<any> } = {};\n\n  @Input() tableTitle?: string;\n  @Input() tableDescription?: string;\n\n  @Output() pageChange = new EventEmitter<{ pageIndex: number; pageSize: number }>();\n  @Output() sortChange = new EventEmitter<{ active: string; direction: string }>();\n  @Output() actionClick = new EventEmitter<{ action: string; row: TableData }>();\n\n  @ViewChild(MatPaginator) paginator!: MatPaginator;\n  @ViewChild(MatSort) sort!: MatSort;\n\n  displayedColumns: string[] = [];\n\n  ngOnInit() {\n    this.setDisplayedColumns();\n  }\n\n  ngOnChanges(changes: SimpleChanges): void {\n    if (changes['dataSource'] || changes['columns'] || changes['actionIcons']) {\n      this.setDisplayedColumns();\n    }\n  }\n\n  private setDisplayedColumns(): void {\n    this.columns = this.columns.map((col) => ({\n      ...col,\n      sortable: col.sortable ?? false,\n    }));\n\n    this.displayedColumns = this.columns.map((col) => col.key);\n\n    if (this.actionIcons?.length) {\n      this.displayedColumns.push('actions');\n    }\n  }\n\n  onPageChange(event: any) {\n    this.pageChange.emit({ pageIndex: event.pageIndex, pageSize: event.pageSize });\n  }\n\n  onSortChange(sort: any) {\n    this.sortChange.emit({ active: sort.active, direction: sort.direction });\n  }\n\n  onActionClick(action: string, row: TableData) {\n    this.actionClick.emit({ action, row });\n  }\n}\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".data-table-card {\r\n  background-color: #ffffff;\r\n  padding: 24px;\r\n  box-shadow: 5px 5px 49px 0 rgba(182, 181, 181, 0.75) !important;\r\n  border: 0.5px solid rgb(218, 217, 217);\r\n  border-radius: 8px;\r\n\r\n  @media (max-width: 768px) {\r\n    padding: 16px;\r\n  }\r\n\r\n  @media (max-width: 480px) {\r\n    padding: 12px;\r\n  }\r\n}\r\n\r\n.table-header {\r\n  h2 {\r\n    margin: 0 0 3px 0;\r\n    font-size: 24px;\r\n    font-weight: 500;\r\n    color: #000;\r\n\r\n    @media (max-width: 768px) {\r\n      font-size: 20px;\r\n    }\r\n\r\n    @media (max-width: 480px) {\r\n      font-size: 18px;\r\n    }\r\n  }\r\n\r\n  p {\r\n    margin: 0;\r\n    font-size: 14px;\r\n    color: #6c757d;\r\n\r\n    @media (max-width: 768px) {\r\n      font-size: 13px;\r\n    }\r\n\r\n    @media (max-width: 480px) {\r\n      font-size: 12px;\r\n    }\r\n  }\r\n}\r\n\r\n.table-responsive {\r\n  width: 100%;\r\n  overflow-x: auto;\r\n}\r\n\r\n\r\n.full-width-table {\r\n  width: 100%;\r\n  background-color: #ffffff;\r\n  min-width: 800px; \r\n\r\n  tr {\r\n    white-space: nowrap;\r\n    td, th {\r\n      white-space: nowrap;\r\n      overflow: hidden;\r\n      text-overflow: ellipsis;\r\n      vertical-align: middle;\r\n    }\r\n\r\n    &:hover {\r\n      background-color: #f8f9fa;\r\n    }\r\n  }\r\n}\r\n\r\n\r\n.table-column-heading {\r\n  color: #8a96a8;\r\n  font-weight: 500;\r\n}\r\n\r\n.pagination-container {\r\n  display: flex;\r\n  justify-content: flex-end;\r\n  margin-top: 16px;\r\n  background-color: #ffffff !important;\r\n\r\n  @media (max-width: 600px) {\r\n    flex-wrap: wrap;\r\n    padding: 0px;\r\n  }\r\n}\r\n\r\nmat-paginator,\r\nmat-paginator .mat-paginator-container,\r\n.mat-paginator-container {\r\n  background-color: #ffffff !important;\r\n}\r\n\r\n.no-data-message {\r\n  text-align: center;\r\n  padding: 16px;\r\n  color: #ff4d4d;\r\n  font-size: 16px;\r\n\r\n  @media (max-width: 480px) {\r\n    font-size: 14px;\r\n    padding: 12px;\r\n  }\r\n}\r\n\r\n.profile-cell {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 10px;\r\n  flex-shrink: 0;\r\n\r\n  img {\r\n    width: 35px;\r\n    height: 35px;\r\n    object-fit: cover;\r\n    border-radius: 50%;\r\n    background: #ddd;\r\n\r\n    @media (max-width: 480px) {\r\n      width: 30px;\r\n      height: 30px;\r\n    }\r\n  }\r\n\r\n  .info {\r\n    display: flex;\r\n    flex-direction: column;\r\n\r\n    .name {\r\n      font-weight: 600;\r\n      font-size: 14px;\r\n\r\n      @media (max-width: 480px) {\r\n        font-size: 13px;\r\n      }\r\n    }\r\n\r\n    .email {\r\n      font-size: 13px;\r\n      color: #6c757d;\r\n\r\n      @media (max-width: 480px) {\r\n        font-size: 12px;\r\n      }\r\n    }\r\n  }\r\n}\r\n",
+                    "data": ".data-table-card {\n  background-color: #ffffff;\n  padding: 24px;\n  box-shadow: 5px 5px 49px 0 rgba(182, 181, 181, 0.75) !important;\n  border: 0.5px solid rgb(218, 217, 217);\n  border-radius: 8px;\n\n  @media (max-width: 768px) {\n    padding: 16px;\n  }\n\n  @media (max-width: 480px) {\n    padding: 12px;\n  }\n}\n\n.table-header {\n  h2 {\n    margin: 0 0 3px 0;\n    font-size: 24px;\n    font-weight: 500;\n    color: #000;\n\n    @media (max-width: 768px) {\n      font-size: 20px;\n    }\n\n    @media (max-width: 480px) {\n      font-size: 18px;\n    }\n  }\n\n  p {\n    margin: 0;\n    font-size: 14px;\n    color: #6c757d;\n\n    @media (max-width: 768px) {\n      font-size: 13px;\n    }\n\n    @media (max-width: 480px) {\n      font-size: 12px;\n    }\n  }\n}\n\n.table-responsive {\n  width: 100%;\n  overflow-x: auto;\n}\n\n.full-width-table {\n  width: 100%;\n  background-color: #ffffff;\n  min-width: 800px;\n\n  tr {\n    white-space: nowrap;\n    td,\n    th {\n      white-space: nowrap;\n      overflow: hidden;\n      text-overflow: ellipsis;\n      vertical-align: middle;\n    }\n\n    &:hover {\n      background-color: #f8f9fa;\n    }\n  }\n}\n\n.table-column-heading {\n  color: #8a96a8;\n  font-weight: 500;\n}\n\n.pagination-container {\n  display: flex;\n  justify-content: flex-end;\n  margin-top: 16px;\n  background-color: #ffffff !important;\n\n  @media (max-width: 600px) {\n    flex-wrap: wrap;\n    padding: 0px;\n  }\n}\n\nmat-paginator,\nmat-paginator .mat-paginator-container,\n.mat-paginator-container {\n  background-color: #ffffff !important;\n}\n\n.no-data-message {\n  text-align: center;\n  padding: 16px;\n  color: #ff4d4d;\n  font-size: 16px;\n\n  @media (max-width: 480px) {\n    font-size: 14px;\n    padding: 12px;\n  }\n}\n\n.profile-cell {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  flex-shrink: 0;\n\n  img {\n    width: 35px;\n    height: 35px;\n    object-fit: cover;\n    border-radius: 50%;\n    background: #ddd;\n\n    @media (max-width: 480px) {\n      width: 30px;\n      height: 30px;\n    }\n  }\n\n  .info {\n    display: flex;\n    flex-direction: column;\n\n    .name {\n      font-weight: 600;\n      font-size: 14px;\n\n      @media (max-width: 480px) {\n        font-size: 13px;\n      }\n    }\n\n    .email {\n      font-size: 13px;\n      color: #6c757d;\n\n      @media (max-width: 480px) {\n        font-size: 12px;\n      }\n    }\n  }\n}\n",
                     "styleUrl": "./table.component.scss"
                 }
             ],
@@ -808,7 +808,7 @@
                 "OnInit",
                 "OnChanges"
             ],
-            "templateData": "<mat-card class=\"data-table-card mat-elevation-z2\">\r\n    <!-- Optional Header -->\r\n    <div *ngIf=\"tableTitle || tableDescription\" class=\"table-header mb-4\">\r\n        <h2 *ngIf=\"tableTitle\">{{ tableTitle }}</h2>\r\n        <p *ngIf=\"tableDescription\">{{ tableDescription }}</p>\r\n    </div>\r\n\r\n    <!-- Table -->\r\n    <div class=\"table-responsive\">\r\n        <table mat-table [dataSource]=\"dataSource\" matSort (matSortChange)=\"onSortChange($event)\"\r\n            class=\"full-width-table mat-elevation-z1\">\r\n\r\n            <!-- Dynamic Columns -->\r\n            <ng-container *ngFor=\"let column of columns\" [matColumnDef]=\"column.key\">\r\n                <ng-container *ngIf=\"column.sortable; else plainHeader\">\r\n                    <th mat-header-cell *matHeaderCellDef mat-sort-header=\"{{ column.key }}\"\r\n                        class=\"table-column-heading\">\r\n                        {{ column.label }}\r\n                    </th>\r\n                </ng-container>\r\n\r\n                <!-- Fallback plain header - without the sorting column header -->\r\n                <ng-template #plainHeader>\r\n                    <th mat-header-cell *matHeaderCellDef class=\"table-column-heading\">\r\n                        {{ column.label }}\r\n                    </th>\r\n                </ng-template>\r\n\r\n                <td mat-cell *matCellDef=\"let row\">\r\n                    <ng-container [ngSwitch]=\"column.type\">\r\n                        <!-- Text Type -->\r\n                        <ng-container *ngSwitchCase=\"'text'\">{{ row[column.key] }}</ng-container>\r\n\r\n                        <!-- Tag Type -->\r\n                        <mat-chip *ngSwitchCase=\"'tag'\" selected>\r\n                            {{ row[column.key] }}\r\n                        </mat-chip>\r\n\r\n                        <!-- Button Type -->\r\n                        <button *ngSwitchCase=\"'button'\" mat-button (click)=\"onActionClick(column.key, row)\">\r\n                            {{ row[column.key] }}\r\n                        </button>\r\n\r\n                        <!-- Profile Picture Type -->\r\n                        <ng-container *ngSwitchCase=\"'profile'\">\r\n                            <div class=\"profile-cell\">\r\n                                <img [src]=\"row[column.key].image\" alt=\"{{ row[column.key].name }}\" />\r\n                                <div class=\"info\">\r\n                                    <div class=\"name\">{{ row[column.key].name }}</div>\r\n                                    <div class=\"email\">{{ row[column.key].email }}</div>\r\n                                </div>\r\n                            </div>\r\n                        </ng-container>\r\n\r\n                        <!-- Custom Template -->\r\n                        <ng-container *ngSwitchCase=\"'custom'\">\r\n                            <ng-container\r\n                                *ngTemplateOutlet=\"columnTemplates[column.key]; context: { $implicit: row }\"></ng-container>\r\n                        </ng-container>\r\n                    </ng-container>\r\n                </td>\r\n            </ng-container>\r\n\r\n            <!-- Actions Column -->\r\n            <ng-container matColumnDef=\"actions\">\r\n                <th mat-header-cell *matHeaderCellDef class=\"table-column-heading\">Actions</th>\r\n                <td mat-cell *matCellDef=\"let row\" class=\"mat-column-actions\">\r\n                    <button *ngFor=\"let icon of actionIcons\" mat-icon-button [color]=\"icon.color || 'primary'\"\r\n                        [matTooltip]=\"icon.tooltip || icon.action\" (click)=\"onActionClick(icon.action, row)\">\r\n                        <mat-icon>{{ icon.icon }}</mat-icon>\r\n                    </button>\r\n                </td>\r\n            </ng-container>\r\n\r\n            <tr mat-header-row *matHeaderRowDef=\"displayedColumns\"></tr>\r\n            <tr mat-row *matRowDef=\"let row; columns: displayedColumns\"></tr>\r\n\r\n            <tr class=\"mat-row\" *matNoDataRow>\r\n                <td [attr.colspan]=\"displayedColumns.length\" class=\"no-data-message\">\r\n                    {{ noDataMessage || 'No data available.' }}\r\n                </td>\r\n            </tr>\r\n        </table>\r\n    </div>\r\n\r\n    <!-- Paginator -->\r\n    <div *ngIf=\"totalItems > 0\">\r\n        <div class=\"pagination-container\">\r\n            <mat-paginator class=\"custom-paginator\" [length]=\"totalItems\" [pageSize]=\"pageSize\"\r\n                [pageSizeOptions]=\"pageSizeOptions\" (page)=\"onPageChange($event)\">\r\n            </mat-paginator>\r\n        </div>\r\n    </div>\r\n</mat-card>"
+            "templateData": "<mat-card class=\"data-table-card mat-elevation-z2\">\n  <!-- Optional Header -->\n  <div *ngIf=\"tableTitle || tableDescription\" class=\"table-header mb-4\">\n    <h2 *ngIf=\"tableTitle\">{{ tableTitle }}</h2>\n    <p *ngIf=\"tableDescription\">{{ tableDescription }}</p>\n  </div>\n\n  <!-- Table -->\n  <div class=\"table-responsive\">\n    <table mat-table [dataSource]=\"dataSource\" matSort (matSortChange)=\"onSortChange($event)\"\n      class=\"full-width-table mat-elevation-z1\">\n      <!-- Dynamic Columns -->\n      <ng-container *ngFor=\"let column of columns\" [matColumnDef]=\"column.key\">\n        <ng-container *ngIf=\"column.sortable; else plainHeader\">\n          <th mat-header-cell *matHeaderCellDef mat-sort-header=\"{{ column.key }}\" class=\"table-column-heading\">\n            {{ column.label }}\n          </th>\n        </ng-container>\n\n        <!-- Fallback plain header - without the sorting column header -->\n        <ng-template #plainHeader>\n          <th mat-header-cell *matHeaderCellDef class=\"table-column-heading\">\n            {{ column.label }}\n          </th>\n        </ng-template>\n\n        <td mat-cell *matCellDef=\"let row\">\n          <ng-container [ngSwitch]=\"column.type\">\n            <!-- Text Type -->\n            <ng-container *ngSwitchCase=\"'text'\">{{ row[column.key] }}</ng-container>\n\n            <!-- Tag Type -->\n            <mat-chip *ngSwitchCase=\"'tag'\" selected>\n              {{ row[column.key] }}\n            </mat-chip>\n\n            <!-- Button Type -->\n            <button *ngSwitchCase=\"'button'\" mat-button (click)=\"onActionClick(column.key, row)\">\n              {{ row[column.key] }}\n            </button>\n\n            <!-- Profile Picture Type -->\n            <ng-container *ngSwitchCase=\"'profile'\">\n              <div class=\"profile-cell\">\n                <img [src]=\"row[column.key].image\" alt=\"{{ row[column.key].name }}\" />\n                <div class=\"info\">\n                  <div class=\"name\">{{ row[column.key].name }}</div>\n                  <div class=\"email\">{{ row[column.key].email }}</div>\n                </div>\n              </div>\n            </ng-container>\n\n            <!-- Custom Template -->\n            <ng-container *ngSwitchCase=\"'custom'\">\n              <ng-container *ngTemplateOutlet=\"columnTemplates[column.key]; context: { $implicit: row }\"></ng-container>\n            </ng-container>\n          </ng-container>\n        </td>\n      </ng-container>\n\n      <!-- Actions Column -->\n      <ng-container matColumnDef=\"actions\">\n        <th mat-header-cell *matHeaderCellDef class=\"table-column-heading\">Actions</th>\n        <td mat-cell *matCellDef=\"let row\" class=\"mat-column-actions\">\n          <button *ngFor=\"let icon of actionIcons\" mat-icon-button [ngStyle]=\"{ 'color': icon.color }\"\n            [matTooltip]=\"icon.tooltip || icon.action\" (click)=\"onActionClick(icon.action, row)\">\n            <mat-icon>{{ icon.icon }}</mat-icon>\n          </button>\n        </td>\n      </ng-container>\n\n      <tr mat-header-row *matHeaderRowDef=\"displayedColumns\"></tr>\n      <tr mat-row *matRowDef=\"let row; columns: displayedColumns\"></tr>\n\n      <tr class=\"mat-row\" *matNoDataRow>\n        <td [attr.colspan]=\"displayedColumns.length\" class=\"no-data-message\">\n          {{ noDataMessage || 'No data available.' }}\n        </td>\n      </tr>\n    </table>\n  </div>\n\n  <!-- Paginator -->\n  <div *ngIf=\"totalItems > 0\">\n    <div class=\"pagination-container\">\n      <mat-paginator class=\"custom-paginator\" [length]=\"totalItems\" [pageSize]=\"pageSize\"\n        [pageSizeOptions]=\"pageSizeOptions\" (page)=\"onPageChange($event)\">\n      </mat-paginator>\n    </div>\n  </div>\n</mat-card>"
         }
     ],
     "modules": [],
@@ -852,7 +852,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\r\n    { name: 'John Doe', email: 'john@example.com' },\r\n    { name: 'Jane Smith', email: 'jane@example.com' }\r\n]"
+                "defaultValue": "[\n  { name: 'John Doe', email: 'john@example.com' },\n  { name: 'Jane Smith', email: 'jane@example.com' },\n]"
             },
             {
                 "name": "categoriesData",
@@ -862,17 +862,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\r\n    {\r\n        category: 'Technology',\r\n        description: 'Programming, Software, Hardware, AI/ML',\r\n        quizCount: '245 quizzes',\r\n        status: 'Active',\r\n        created: '2024-01-15'\r\n    },\r\n    {\r\n        category: 'Science',\r\n        description: 'Physics, Chemistry, Biology, Mathematics',\r\n        quizCount: '189 quizzes',\r\n        status: 'Active',\r\n        created: '2024-01-15'\r\n    },\r\n    {\r\n        category: 'History',\r\n        description: 'World History, Ancient Civilizations, Wars',\r\n        quizCount: '156 quizzes',\r\n        status: 'Active',\r\n        created: '2024-01-15'\r\n    },\r\n    {\r\n        category: 'Literature',\r\n        description: 'Classic Literature, Poetry, Modern Fiction',\r\n        quizCount: '98 quizzes',\r\n        status: 'Inactive',\r\n        created: '2024-01-15'\r\n    }\r\n]"
-            },
-            {
-                "name": "customColumnData",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": "src/app/shared/interfaces/table-mock-data.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "[]",
-                "defaultValue": "[\r\n    { name: 'Alice', age: 30, status: 'Active' },\r\n    { name: 'Bob', age: 25, status: 'Inactive' }\r\n]"
+                "defaultValue": "[\n  {\n    category: 'Technology',\n    description: 'Programming, Software, Hardware, AI/ML',\n    quizCount: '245 quizzes',\n    status: 'Active',\n    created: '2024-01-15',\n  },\n  {\n    category: 'Science',\n    description: 'Physics, Chemistry, Biology, Mathematics',\n    quizCount: '189 quizzes',\n    status: 'Active',\n    created: '2024-01-15',\n  },\n  {\n    category: 'History',\n    description: 'World History, Ancient Civilizations, Wars',\n    quizCount: '156 quizzes',\n    status: 'Active',\n    created: '2024-01-15',\n  },\n  {\n    category: 'Literature',\n    description: 'Classic Literature, Poetry, Modern Fiction',\n    quizCount: '98 quizzes',\n    status: 'Inactive',\n    created: '2024-01-15',\n  },\n]"
             },
             {
                 "name": "defaultActions",
@@ -882,7 +872,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\r\n    { icon: 'visibility', action: 'view' },\r\n    { icon: 'edit', action: 'edit' },\r\n    { icon: 'delete', action: 'delete', color: 'warn' }\r\n]"
+                "defaultValue": "[\n  { icon: 'visibility', action: 'view' },\n  { icon: 'edit', action: 'edit' },\n  { icon: 'delete', action: 'delete', color: '#000000' },\n]"
             },
             {
                 "name": "emailData",
@@ -892,7 +882,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\r\n    {\r\n        type: 'Password Reset',\r\n        title: 'Password Reset Request',\r\n        subject: 'Reset Your Password - QuizPlatform',\r\n        status: 'Active'\r\n    },\r\n    {\r\n        type: 'Email Verification',\r\n        title: 'Verify Your Email',\r\n        subject: 'Verify Your Email Address - QuizPlatform',\r\n        status: 'Active'\r\n    },\r\n    {\r\n        type: 'Battle Request',\r\n        title: 'Battle Challenge Received',\r\n        subject: \"You've Been Challenged to a Battle!\",\r\n        status: 'Active'\r\n    }\r\n]"
+                "defaultValue": "[\n  {\n    type: 'Password Reset',\n    title: 'Password Reset Request',\n    subject: 'Reset Your Password - QuizPlatform',\n    status: 'Active',\n  },\n  {\n    type: 'Email Verification',\n    title: 'Verify Your Email',\n    subject: 'Verify Your Email Address - QuizPlatform',\n    status: 'Active',\n  },\n  {\n    type: 'Battle Request',\n    title: 'Battle Challenge Received',\n    subject: \"You've Been Challenged to a Battle!\",\n    status: 'Active',\n  },\n]"
             },
             {
                 "name": "environment",
@@ -922,7 +912,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "",
-                "defaultValue": "Array.from({ length: 50 }, (_, i) => ({\r\n    id: i + 1,\r\n    name: `User ${i + 1}`,\r\n    status: i % 2 === 0 ? 'Active' : 'Inactive'\r\n}))"
+                "defaultValue": "Array.from({ length: 50 }, (_, i) => ({\n  id: i + 1,\n  name: `User ${i + 1}`,\n  status: i % 2 === 0 ? 'Active' : 'Inactive',\n}))"
             },
             {
                 "name": "mixedTypeData",
@@ -932,7 +922,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\r\n    { id: 1, name: 'Alice', status: 'Active', score: 88, actionBtn: 'View' },\r\n    { id: 2, name: 'Bob', status: 'Inactive', score: 74, actionBtn: 'Edit' }\r\n]"
+                "defaultValue": "[\n  { id: 1, name: 'Alice', status: 'Active', score: 88, actionBtn: 'View' },\n  { id: 2, name: 'Bob', status: 'Inactive', score: 74, actionBtn: 'Edit' },\n]"
             },
             {
                 "name": "profileData",
@@ -942,7 +932,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\r\n    {\r\n        profile: {\r\n            name: 'Alice Johnson',\r\n            email: 'alice@example.com',\r\n            image: 'https://i.pravatar.cc/150?img=11'\r\n        },\r\n        role: 'Admin',\r\n        status: 'Active'\r\n    },\r\n    {\r\n        profile: {\r\n            name: 'Bob Smith',\r\n            email: 'bob@example.com',\r\n            image: 'https://i.pravatar.cc/150?img=12'\r\n        },\r\n        role: 'User',\r\n        status: 'Inactive'\r\n    },\r\n    {\r\n        profile: {\r\n            name: 'Charlie Brown',\r\n            email: 'charlie@example.com',\r\n            image: 'https://i.pravatar.cc/150?img=13'\r\n        },\r\n        role: 'Moderator',\r\n        status: 'Pending'\r\n    }\r\n]"
+                "defaultValue": "[\n  {\n    profile: {\n      name: 'Alice Johnson',\n      email: 'alice@example.com',\n      image: 'https://i.pravatar.cc/150?img=11',\n    },\n    role: 'Admin',\n    status: 'Active',\n  },\n  {\n    profile: {\n      name: 'Bob Smith',\n      email: 'bob@example.com',\n      image: 'https://i.pravatar.cc/150?img=12',\n    },\n    role: 'User',\n    status: 'Inactive',\n  },\n  {\n    profile: {\n      name: 'Charlie Brown',\n      email: 'charlie@example.com',\n      image: 'https://i.pravatar.cc/150?img=13',\n    },\n    role: 'Moderator',\n    status: 'Pending',\n  },\n]"
             },
             {
                 "name": "questionPoolData",
@@ -952,7 +942,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\r\n    {\r\n        question: 'What is the capital of France?',\r\n        correctAnswer: 'Paris',\r\n        type: 'Multiple Choice',\r\n        category: 'Geography',\r\n        difficulty: 'Easy'\r\n    },\r\n    {\r\n        question: 'What is 2 + 2?',\r\n        correctAnswer: '4',\r\n        type: 'Multiple Choice',\r\n        category: 'Mathematics',\r\n        difficulty: 'Easy'\r\n    },\r\n    {\r\n        question: 'What is 2 + 2?',\r\n        correctAnswer: '4',\r\n        type: 'Multiple Choice',\r\n        category: 'Mathematics',\r\n        difficulty: 'Easy'\r\n    }\r\n]"
+                "defaultValue": "[\n  {\n    question: 'What is the capital of France?',\n    correctAnswer: 'Paris',\n    type: 'Multiple Choice',\n    category: 'Geography',\n    difficulty: 'Easy',\n  },\n  {\n    question: 'What is 2 + 2?',\n    correctAnswer: '4',\n    type: 'Multiple Choice',\n    category: 'Mathematics',\n    difficulty: 'Easy',\n  },\n  {\n    question: 'What is 2 + 2?',\n    correctAnswer: '4',\n    type: 'Multiple Choice',\n    category: 'Mathematics',\n    difficulty: 'Easy',\n  },\n]"
             },
             {
                 "name": "tagsOnlyData",
@@ -962,7 +952,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\r\n    { type: 'Alert', status: 'Active' },\r\n    { type: 'Warning', status: 'Inactive' }\r\n]"
+                "defaultValue": "[\n  { type: 'Alert', status: 'Active' },\n  { type: 'Warning', status: 'Inactive' },\n]"
             },
             {
                 "name": "textButtonData",
@@ -972,7 +962,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\r\n    { title: 'Do Task 1', actionsLabel: 'Start' },\r\n    { title: 'Do Task 2', actionsLabel: 'Run' }\r\n]"
+                "defaultValue": "[\n  { title: 'Do Task 1', actionsLabel: 'Start' },\n  { title: 'Do Task 2', actionsLabel: 'Run' },\n]"
             },
             {
                 "name": "transactionData",
@@ -982,7 +972,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "[]",
-                "defaultValue": "[\r\n    {\r\n        type: 'Quiz Purchase',\r\n        user: 'John Doe',\r\n        amount: 15.99,\r\n        status: 'Completed',\r\n        date: '2024-12-20',\r\n        method: 'Credit Card'\r\n    },\r\n    {\r\n        type: 'Tournament Entry',\r\n        user: 'Mike Johnson',\r\n        amount: 25.0,\r\n        status: 'Completed',\r\n        date: '2024-12-18',\r\n        method: 'Stripe'\r\n    },\r\n    {\r\n        type: 'Subscription',\r\n        user: 'Sarah Wilson',\r\n        amount: 9.99,\r\n        status: 'Completed',\r\n        date: '2024-12-17',\r\n        method: 'Credit Card'\r\n    },\r\n    {\r\n        type: 'Quiz Purchase',\r\n        user: 'Emma Davis',\r\n        amount: 12.5,\r\n        status: 'Pending',\r\n        date: '2024-12-16',\r\n        method: 'PayPal'\r\n    }\r\n]"
+                "defaultValue": "[\n  {\n    type: 'Quiz Purchase',\n    user: 'John Doe',\n    amount: 15.99,\n    status: 'Completed',\n    date: '2024-12-20',\n    method: 'Credit Card',\n  },\n  {\n    type: 'Tournament Entry',\n    user: 'Mike Johnson',\n    amount: 25.0,\n    status: 'Completed',\n    date: '2024-12-18',\n    method: 'Stripe',\n  },\n  {\n    type: 'Subscription',\n    user: 'Sarah Wilson',\n    amount: 9.99,\n    status: 'Completed',\n    date: '2024-12-17',\n    method: 'Credit Card',\n  },\n  {\n    type: 'Quiz Purchase',\n    user: 'Emma Davis',\n    amount: 12.5,\n    status: 'Pending',\n    date: '2024-12-16',\n    method: 'PayPal',\n  },\n]"
             }
         ],
         "functions": [],
@@ -1034,7 +1024,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\r\n    { name: 'John Doe', email: 'john@example.com' },\r\n    { name: 'Jane Smith', email: 'jane@example.com' }\r\n]"
+                    "defaultValue": "[\n  { name: 'John Doe', email: 'john@example.com' },\n  { name: 'Jane Smith', email: 'jane@example.com' },\n]"
                 },
                 {
                     "name": "categoriesData",
@@ -1044,17 +1034,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\r\n    {\r\n        category: 'Technology',\r\n        description: 'Programming, Software, Hardware, AI/ML',\r\n        quizCount: '245 quizzes',\r\n        status: 'Active',\r\n        created: '2024-01-15'\r\n    },\r\n    {\r\n        category: 'Science',\r\n        description: 'Physics, Chemistry, Biology, Mathematics',\r\n        quizCount: '189 quizzes',\r\n        status: 'Active',\r\n        created: '2024-01-15'\r\n    },\r\n    {\r\n        category: 'History',\r\n        description: 'World History, Ancient Civilizations, Wars',\r\n        quizCount: '156 quizzes',\r\n        status: 'Active',\r\n        created: '2024-01-15'\r\n    },\r\n    {\r\n        category: 'Literature',\r\n        description: 'Classic Literature, Poetry, Modern Fiction',\r\n        quizCount: '98 quizzes',\r\n        status: 'Inactive',\r\n        created: '2024-01-15'\r\n    }\r\n]"
-                },
-                {
-                    "name": "customColumnData",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/shared/interfaces/table-mock-data.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "[]",
-                    "defaultValue": "[\r\n    { name: 'Alice', age: 30, status: 'Active' },\r\n    { name: 'Bob', age: 25, status: 'Inactive' }\r\n]"
+                    "defaultValue": "[\n  {\n    category: 'Technology',\n    description: 'Programming, Software, Hardware, AI/ML',\n    quizCount: '245 quizzes',\n    status: 'Active',\n    created: '2024-01-15',\n  },\n  {\n    category: 'Science',\n    description: 'Physics, Chemistry, Biology, Mathematics',\n    quizCount: '189 quizzes',\n    status: 'Active',\n    created: '2024-01-15',\n  },\n  {\n    category: 'History',\n    description: 'World History, Ancient Civilizations, Wars',\n    quizCount: '156 quizzes',\n    status: 'Active',\n    created: '2024-01-15',\n  },\n  {\n    category: 'Literature',\n    description: 'Classic Literature, Poetry, Modern Fiction',\n    quizCount: '98 quizzes',\n    status: 'Inactive',\n    created: '2024-01-15',\n  },\n]"
                 },
                 {
                     "name": "defaultActions",
@@ -1064,7 +1044,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\r\n    { icon: 'visibility', action: 'view' },\r\n    { icon: 'edit', action: 'edit' },\r\n    { icon: 'delete', action: 'delete', color: 'warn' }\r\n]"
+                    "defaultValue": "[\n  { icon: 'visibility', action: 'view' },\n  { icon: 'edit', action: 'edit' },\n  { icon: 'delete', action: 'delete', color: '#000000' },\n]"
                 },
                 {
                     "name": "emailData",
@@ -1074,7 +1054,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\r\n    {\r\n        type: 'Password Reset',\r\n        title: 'Password Reset Request',\r\n        subject: 'Reset Your Password - QuizPlatform',\r\n        status: 'Active'\r\n    },\r\n    {\r\n        type: 'Email Verification',\r\n        title: 'Verify Your Email',\r\n        subject: 'Verify Your Email Address - QuizPlatform',\r\n        status: 'Active'\r\n    },\r\n    {\r\n        type: 'Battle Request',\r\n        title: 'Battle Challenge Received',\r\n        subject: \"You've Been Challenged to a Battle!\",\r\n        status: 'Active'\r\n    }\r\n]"
+                    "defaultValue": "[\n  {\n    type: 'Password Reset',\n    title: 'Password Reset Request',\n    subject: 'Reset Your Password - QuizPlatform',\n    status: 'Active',\n  },\n  {\n    type: 'Email Verification',\n    title: 'Verify Your Email',\n    subject: 'Verify Your Email Address - QuizPlatform',\n    status: 'Active',\n  },\n  {\n    type: 'Battle Request',\n    title: 'Battle Challenge Received',\n    subject: \"You've Been Challenged to a Battle!\",\n    status: 'Active',\n  },\n]"
                 },
                 {
                     "name": "largeUserList",
@@ -1084,7 +1064,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "",
-                    "defaultValue": "Array.from({ length: 50 }, (_, i) => ({\r\n    id: i + 1,\r\n    name: `User ${i + 1}`,\r\n    status: i % 2 === 0 ? 'Active' : 'Inactive'\r\n}))"
+                    "defaultValue": "Array.from({ length: 50 }, (_, i) => ({\n  id: i + 1,\n  name: `User ${i + 1}`,\n  status: i % 2 === 0 ? 'Active' : 'Inactive',\n}))"
                 },
                 {
                     "name": "mixedTypeData",
@@ -1094,7 +1074,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\r\n    { id: 1, name: 'Alice', status: 'Active', score: 88, actionBtn: 'View' },\r\n    { id: 2, name: 'Bob', status: 'Inactive', score: 74, actionBtn: 'Edit' }\r\n]"
+                    "defaultValue": "[\n  { id: 1, name: 'Alice', status: 'Active', score: 88, actionBtn: 'View' },\n  { id: 2, name: 'Bob', status: 'Inactive', score: 74, actionBtn: 'Edit' },\n]"
                 },
                 {
                     "name": "profileData",
@@ -1104,7 +1084,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\r\n    {\r\n        profile: {\r\n            name: 'Alice Johnson',\r\n            email: 'alice@example.com',\r\n            image: 'https://i.pravatar.cc/150?img=11'\r\n        },\r\n        role: 'Admin',\r\n        status: 'Active'\r\n    },\r\n    {\r\n        profile: {\r\n            name: 'Bob Smith',\r\n            email: 'bob@example.com',\r\n            image: 'https://i.pravatar.cc/150?img=12'\r\n        },\r\n        role: 'User',\r\n        status: 'Inactive'\r\n    },\r\n    {\r\n        profile: {\r\n            name: 'Charlie Brown',\r\n            email: 'charlie@example.com',\r\n            image: 'https://i.pravatar.cc/150?img=13'\r\n        },\r\n        role: 'Moderator',\r\n        status: 'Pending'\r\n    }\r\n]"
+                    "defaultValue": "[\n  {\n    profile: {\n      name: 'Alice Johnson',\n      email: 'alice@example.com',\n      image: 'https://i.pravatar.cc/150?img=11',\n    },\n    role: 'Admin',\n    status: 'Active',\n  },\n  {\n    profile: {\n      name: 'Bob Smith',\n      email: 'bob@example.com',\n      image: 'https://i.pravatar.cc/150?img=12',\n    },\n    role: 'User',\n    status: 'Inactive',\n  },\n  {\n    profile: {\n      name: 'Charlie Brown',\n      email: 'charlie@example.com',\n      image: 'https://i.pravatar.cc/150?img=13',\n    },\n    role: 'Moderator',\n    status: 'Pending',\n  },\n]"
                 },
                 {
                     "name": "questionPoolData",
@@ -1114,7 +1094,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\r\n    {\r\n        question: 'What is the capital of France?',\r\n        correctAnswer: 'Paris',\r\n        type: 'Multiple Choice',\r\n        category: 'Geography',\r\n        difficulty: 'Easy'\r\n    },\r\n    {\r\n        question: 'What is 2 + 2?',\r\n        correctAnswer: '4',\r\n        type: 'Multiple Choice',\r\n        category: 'Mathematics',\r\n        difficulty: 'Easy'\r\n    },\r\n    {\r\n        question: 'What is 2 + 2?',\r\n        correctAnswer: '4',\r\n        type: 'Multiple Choice',\r\n        category: 'Mathematics',\r\n        difficulty: 'Easy'\r\n    }\r\n]"
+                    "defaultValue": "[\n  {\n    question: 'What is the capital of France?',\n    correctAnswer: 'Paris',\n    type: 'Multiple Choice',\n    category: 'Geography',\n    difficulty: 'Easy',\n  },\n  {\n    question: 'What is 2 + 2?',\n    correctAnswer: '4',\n    type: 'Multiple Choice',\n    category: 'Mathematics',\n    difficulty: 'Easy',\n  },\n  {\n    question: 'What is 2 + 2?',\n    correctAnswer: '4',\n    type: 'Multiple Choice',\n    category: 'Mathematics',\n    difficulty: 'Easy',\n  },\n]"
                 },
                 {
                     "name": "tagsOnlyData",
@@ -1124,7 +1104,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\r\n    { type: 'Alert', status: 'Active' },\r\n    { type: 'Warning', status: 'Inactive' }\r\n]"
+                    "defaultValue": "[\n  { type: 'Alert', status: 'Active' },\n  { type: 'Warning', status: 'Inactive' },\n]"
                 },
                 {
                     "name": "textButtonData",
@@ -1134,7 +1114,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\r\n    { title: 'Do Task 1', actionsLabel: 'Start' },\r\n    { title: 'Do Task 2', actionsLabel: 'Run' }\r\n]"
+                    "defaultValue": "[\n  { title: 'Do Task 1', actionsLabel: 'Start' },\n  { title: 'Do Task 2', actionsLabel: 'Run' },\n]"
                 },
                 {
                     "name": "transactionData",
@@ -1144,7 +1124,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "[]",
-                    "defaultValue": "[\r\n    {\r\n        type: 'Quiz Purchase',\r\n        user: 'John Doe',\r\n        amount: 15.99,\r\n        status: 'Completed',\r\n        date: '2024-12-20',\r\n        method: 'Credit Card'\r\n    },\r\n    {\r\n        type: 'Tournament Entry',\r\n        user: 'Mike Johnson',\r\n        amount: 25.0,\r\n        status: 'Completed',\r\n        date: '2024-12-18',\r\n        method: 'Stripe'\r\n    },\r\n    {\r\n        type: 'Subscription',\r\n        user: 'Sarah Wilson',\r\n        amount: 9.99,\r\n        status: 'Completed',\r\n        date: '2024-12-17',\r\n        method: 'Credit Card'\r\n    },\r\n    {\r\n        type: 'Quiz Purchase',\r\n        user: 'Emma Davis',\r\n        amount: 12.5,\r\n        status: 'Pending',\r\n        date: '2024-12-16',\r\n        method: 'PayPal'\r\n    }\r\n]"
+                    "defaultValue": "[\n  {\n    type: 'Quiz Purchase',\n    user: 'John Doe',\n    amount: 15.99,\n    status: 'Completed',\n    date: '2024-12-20',\n    method: 'Credit Card',\n  },\n  {\n    type: 'Tournament Entry',\n    user: 'Mike Johnson',\n    amount: 25.0,\n    status: 'Completed',\n    date: '2024-12-18',\n    method: 'Stripe',\n  },\n  {\n    type: 'Subscription',\n    user: 'Sarah Wilson',\n    amount: 9.99,\n    status: 'Completed',\n    date: '2024-12-17',\n    method: 'Credit Card',\n  },\n  {\n    type: 'Quiz Purchase',\n    user: 'Emma Davis',\n    amount: 12.5,\n    status: 'Pending',\n    date: '2024-12-16',\n    method: 'PayPal',\n  },\n]"
                 }
             ],
             "src/environments/environment.dev.ts": [
@@ -1281,16 +1261,6 @@
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
                 "name": "categoriesData",
-                "coveragePercent": 0,
-                "coverageCount": "0/1",
-                "status": "low"
-            },
-            {
-                "filePath": "src/app/shared/interfaces/table-mock-data.ts",
-                "type": "variable",
-                "linktype": "miscellaneous",
-                "linksubtype": "variable",
-                "name": "customColumnData",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
