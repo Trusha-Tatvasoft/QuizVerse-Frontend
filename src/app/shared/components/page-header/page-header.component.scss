@@ -10,6 +10,7 @@
     align-items: center;
     gap: 12px;
   }
+
   .icon {
     font-size: 28px;
     min-width: 28px;
@@ -27,8 +28,9 @@
     font-size: 14px;
   }
 
+  // Theme: Admin
   &.admin {
-    background: linear-gradient(to right, #fff4f2, #fffaf6); // already in hex
+    background: linear-gradient(to right, #fff4f2, #fffaf6);
     color: #991b1b;
     border-color: #fecaca;
 
@@ -37,6 +39,7 @@
     }
   }
 
+  // Theme: User Management
   &.user {
     background: linear-gradient(to right, #eff6ff, #e0f2fe);
     color: #1e40af;
@@ -47,6 +50,7 @@
     }
   }
 
+  // Theme: Quiz Categories
   &.quiz {
     background: linear-gradient(to right, #ecebff, #f3f4ff);
     color: #3730a3;
@@ -57,6 +61,7 @@
     }
   }
 
+  // Theme: Quiz Difficulty
   &.quizDifficulty {
     background: linear-gradient(to right, #fff7ed, #fff3e0);
     color: #9a3412;
@@ -67,6 +72,7 @@
     }
   }
 
+  // Theme: Question Difficulty
   &.queDifficulty {
     background: linear-gradient(to right, #f3e8ff, #faf5ff);
     color: #6b21a8;
@@ -77,6 +83,7 @@
     }
   }
 
+  // Theme: Email Templates
   &.email {
     background: linear-gradient(to right, #eff6ff, #e0f2fe);
     color: #1e40af;
@@ -87,6 +94,7 @@
     }
   }
 
+  // Theme: Financial
   &.financial {
     background: linear-gradient(to right, #ecfdf5, #d1fae5);
     color: #065f46;
