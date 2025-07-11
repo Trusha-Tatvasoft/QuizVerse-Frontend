@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
  * Reusable header card component that displays an icon, title, and subtitle.
  * The appearance changes based on the provided `theme`.
  */
+
 @Component({
   selector: 'app-page-header',
   imports: [CommonModule, MatCardModule, MatIconModule],

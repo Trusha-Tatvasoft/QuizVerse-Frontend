@@ -1,2 +1,58 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --global-primary-color: #9333ea;
+  --global-secondary-color: #2563eb;
+}
+
 @import 'tailwindcss';
+
+.search-field {
+  width: 100%;
+  --mat-form-field-container-height: 40px;
+
+  .search-icon {
+    color: #d3d3d3;
+  }
+
+  .mdc-text-field:hover {
+    border: 2px solid var(--global-primary-color);
+  }
+
+  .mdc-text-field {
+    border: 1px solid #d3d3d3;
+    border-radius: 8px;
+  }
+
+  .mat-mdc-text-field-input::placeholder {
+    color: #d3d3d3;
+    opacity: 1;
+  }
+
+  .mat-mdc-form-field-infix {
+    padding: 10px 0 !important;
+  }
+}
+
+.search-purple {
+  .mdc-text-field:hover {
+    border: 2px solid var(--global-primary-color);
+  }
+
+  .mdc-text-field.mdc-text-field--focused {
+    border: 2px solid var(--global-primary-color);
+  }
+}
+
+.search-black {
+  .mdc-text-field:hover {
+    border: 2px solid #000000;
+  }
+  .mdc-text-field.mdc-text-field--focused {
+    border: 2px solid #000000;
+  }
+}
+
+.mdc-notched-outline__trailing,
+.mdc-notched-outline__leading {
+  border: none !important;
+}
