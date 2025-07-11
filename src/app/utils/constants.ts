@@ -39,3 +39,9 @@ export const AppColors = {
   globalPrimaryColor: '#9333ea',
   globalSecondaryColor: '#2563eb',
 };
+
+export const TablePaginationConfig = {
+  PageSize: 10,
+  TotalItems: 0,
+  PageSizeOptions: [5, 10, 20],
+};
