@@ -15,7 +15,7 @@ describe('ConfirmationDialogComponent', () => {
     message: 'Are you sure you want to delete this category?',
     confirmText: 'Delete',
     cancelText: 'Cancel',
-    imageUrl: 'https://example.com/icon.png',
+    imageUrl: 'assets/images/alert-triangle.svg',
   };
 
   beforeEach(async () => {
@@ -73,5 +73,15 @@ describe('ConfirmationDialogComponent', () => {
 
     const imgEl = fixture.nativeElement.querySelector('img');
     expect(imgEl).toBeNull();
+  });
+
+  it('should fallback to default button texts if not provided', () => {
+    component.data.confirmText = undefined;
+    component.data.cancelText = undefined;
+    fixture.detectChanges();
+
+    const buttons = fixture.nativeElement.querySelectorAll('button');
+    expect(buttons[0].textContent).toContain('Cancel');
+    expect(buttons[1].textContent).toContain('Delete');
   });
 });
