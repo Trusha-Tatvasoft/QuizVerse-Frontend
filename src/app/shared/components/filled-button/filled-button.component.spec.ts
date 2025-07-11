@@ -24,16 +24,16 @@ describe('FilledButtonComponent', () => {
   });
 
   it('should display label text', () => {
-    component.label = 'Test Button';
+    component.config.label = 'Test Button';
     fixture.detectChanges();
     const label = fixture.debugElement.query(By.css('.flex div'));
     expect(label?.nativeElement.textContent).toContain('Test Button');
   });
 
   it('should show image if matIcon is not provided but imageSrc is', () => {
-    component.label = 'Image Test';
-    component.matIcon = '';
-    component.imageSrc = 'https://example.com/icon.png';
+    component.config.label = 'Image Test';
+    component.config.matIcon = '';
+    component.config.imageSrc = 'https://example.com/icon.png';
     fixture.detectChanges();
     const img = fixture.debugElement.query(By.css('img'));
     expect(img).toBeTruthy();
@@ -42,7 +42,7 @@ describe('FilledButtonComponent', () => {
 
   it('should emit event on click when not disabled', () => {
     const spy = jest.spyOn(component.onClick, 'emit');
-    component.disabled = false;
+    component.config.isDisabled = false;
     fixture.detectChanges();
     const button = fixture.debugElement.query(By.css('button'));
     button.nativeElement.click();
@@ -51,7 +51,7 @@ describe('FilledButtonComponent', () => {
 
   it('should not emit event when disabled', () => {
     const spy = jest.spyOn(component.onClick, 'emit');
-    component.disabled = true;
+    component.config.isDisabled = true;
     fixture.detectChanges();
     const button = fixture.debugElement.query(By.css('button'));
     button.nativeElement.click();
@@ -59,9 +59,9 @@ describe('FilledButtonComponent', () => {
   });
 
   it('should render only icon when label is empty and matIcon is set', () => {
-    component.label = '';
-    component.matIcon = 'star';
-    component.iconFontSet = 'material-icons';
+    component.config.label = '';
+    component.config.matIcon = 'star';
+    component.config.iconFontSet = 'material-icons';
     fixture.detectChanges();
     const icon = fixture.debugElement.query(By.css('mat-icon'));
     expect(icon).toBeTruthy();
@@ -70,9 +70,9 @@ describe('FilledButtonComponent', () => {
   });
 
   it('should render only image when label is empty and imageSrc is set', () => {
-    component.label = '';
-    component.matIcon = '';
-    component.imageSrc = 'https://example.com/icon.png';
+    component.config.label = '';
+    component.config.matIcon = '';
+    component.config.imageSrc = 'https://example.com/icon.png';
     fixture.detectChanges();
     const img = fixture.debugElement.query(By.css('img'));
     expect(img).toBeTruthy();
@@ -81,10 +81,10 @@ describe('FilledButtonComponent', () => {
   });
 
   it('should set icon to left when imagePosition is left', () => {
-    component.label = 'Left Icon';
-    component.imagePosition = 'left';
-    component.matIcon = 'chevron_left';
-    component.imageSrc = '';
+    component.config.label = 'Left Icon';
+    component.config.imagePosition = 'left';
+    component.config.matIcon = 'chevron_left';
+    component.config.imageSrc = '';
     fixture.detectChanges();
     const icon = fixture.debugElement.query(By.css('mat-icon'));
     const label = fixture.debugElement.query(By.css('.flex div'));
@@ -97,10 +97,10 @@ describe('FilledButtonComponent', () => {
   });
 
   it('should set icon to right when imagePosition is right', () => {
-    component.label = 'Right Icon';
-    component.imagePosition = 'right';
-    component.matIcon = 'chevron_right';
-    component.imageSrc = '';
+    component.config.label = 'Right Icon';
+    component.config.imagePosition = 'right';
+    component.config.matIcon = 'chevron_right';
+    component.config.imageSrc = '';
     fixture.detectChanges();
     const icon = fixture.debugElement.query(By.css('mat-icon'));
     const label = fixture.debugElement.query(By.css('.flex div'));
@@ -113,10 +113,10 @@ describe('FilledButtonComponent', () => {
   });
 
   it('should set image to left when imagePosition is left', () => {
-    component.label = 'Left Image';
-    component.imagePosition = 'left';
-    component.matIcon = '';
-    component.imageSrc = 'https://example.com/icon.png';
+    component.config.label = 'Left Image';
+    component.config.imagePosition = 'left';
+    component.config.matIcon = '';
+    component.config.imageSrc = 'https://example.com/icon.png';
     fixture.detectChanges();
     const img = fixture.debugElement.query(By.css('img'));
     const label = fixture.debugElement.query(By.css('.flex div'));
@@ -129,10 +129,10 @@ describe('FilledButtonComponent', () => {
   });
 
   it('should set image to right when imagePosition is right', () => {
-    component.label = 'Right Image';
-    component.imagePosition = 'right';
-    component.matIcon = '';
-    component.imageSrc = 'https://example.com/icon.png';
+    component.config.label = 'Right Image';
+    component.config.imagePosition = 'right';
+    component.config.matIcon = '';
+    component.config.imageSrc = 'https://example.com/icon.png';
     fixture.detectChanges();
     const img = fixture.debugElement.query(By.css('img'));
     const label = fixture.debugElement.query(By.css('.flex div'));
@@ -145,7 +145,7 @@ describe('FilledButtonComponent', () => {
   });
 
   it('should apply font weight correctly', () => {
-    component.fontWeight = 600;
+    component.config.fontWeight = 600;
     fixture.detectChanges();
     expect(component.validFontWeight).toBe('600');
     const label = fixture.debugElement.query(By.css('.flex div'));
@@ -153,32 +153,32 @@ describe('FilledButtonComponent', () => {
   });
 
   it('should handle undefined or invalid fontWeight with default value', () => {
-    component.fontWeight = undefined as any;
+    component.config.fontWeight = undefined as any;
     expect(component.validFontWeight).toBe('400');
-    component.fontWeight = -1;
+    component.config.fontWeight = -1;
     expect(component.validFontWeight).toBe('-1');
-    component.fontWeight = 0;
+    component.config.fontWeight = 0;
     expect(component.validFontWeight).toBe('0');
   });
 
   it('should use correct button type for submit', () => {
-    component.type = 'submit';
+    component.config.type = 'submit';
     fixture.detectChanges();
     const button = fixture.debugElement.query(By.css('button'));
     expect(button.attributes['type']).toBe('submit');
   });
 
   it('should use correct button type for reset', () => {
-    component.type = 'reset';
+    component.config.type = 'reset';
     fixture.detectChanges();
     const button = fixture.debugElement.query(By.css('button'));
     expect(button.attributes['type']).toBe('reset');
   });
 
   it('should not render content when label, imageSrc, and matIcon are empty', () => {
-    component.label = '';
-    component.imageSrc = '';
-    component.matIcon = '';
+    component.config.label = '';
+    component.config.imageSrc = '';
+    component.config.matIcon = '';
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('.flex div'))).toBeNull();
     expect(fixture.debugElement.query(By.css('img'))).toBeNull();
@@ -186,7 +186,7 @@ describe('FilledButtonComponent', () => {
   });
 
   it('should apply disabled attribute correctly', () => {
-    component.disabled = true;
+    component.config.isDisabled = true;
     fixture.detectChanges();
     const button = fixture.debugElement.query(By.css('button'));
     expect(button.nativeElement.disabled).toBe(true);

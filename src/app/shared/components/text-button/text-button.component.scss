@@ -1,7 +1,9 @@
 @import 'tailwindcss';
 
-.outline-button {
-  color: var(--outline-primary);
+.text-button {
+  @apply bg-white text-sm font-medium rounded-lg px-5 py-2.5 flex items-center justify-center gap-2 transition-all duration-200;
+
+  color: black;
 
   &:hover:not(:disabled) {
     background-color: #eeeeee;

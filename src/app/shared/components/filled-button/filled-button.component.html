@@ -1,27 +1,43 @@
 <button
-  [attr.type]="type"
-  [disabled]="disabled"
-  (click)="!disabled && onClick.emit($event)"
-  class="filled-button text-white font-medium rounded-lg text-sm px-5 py-2.5"
+  [attr.type]="config.type"
+  [disabled]="config.isDisabled"
+  (click)="!config.isDisabled && onClick.emit($event)"
+  class="filled-button"
 >
   <div class="button-content flex items-center justify-center gap-2">
-    <ng-container *ngIf="imagePosition === 'left' && label !== ''">
-      <mat-icon *ngIf="matIcon" [fontSet]="iconFontSet" class="button-icon">{{ matIcon }}</mat-icon>
-      <img *ngIf="!matIcon && imageSrc" [src]="imageSrc" alt="button icon" class="button-image" />
-    </ng-container>
-
-    <div [style.fontWeight]="validFontWeight" *ngIf="label !== ''">{{ label }}</div>
-
-    <ng-container *ngIf="imagePosition === 'right' && label !== ''">
-      <mat-icon *ngIf="matIcon" [fontSet]="iconFontSet" class="button-icon">{{ matIcon }}</mat-icon>
-      <img *ngIf="!matIcon && imageSrc" [src]="imageSrc" alt="button icon" class="button-image" />
-    </ng-container>
-
-    <ng-container *ngIf="label === ''">
-      <mat-icon *ngIf="matIcon" [fontSet]="iconFontSet" class="button-icon">{{ matIcon }}</mat-icon>
+    <ng-container *ngIf="isIconLeft">
+      <mat-icon *ngIf="config.matIcon" [fontSet]="config.iconFontSet" class="button-icon">{{
+        config.matIcon
+      }}</mat-icon>
       <img
-        *ngIf="!matIcon && imageSrc"
-        [src]="imageSrc"
+        *ngIf="!config.matIcon && config.imageSrc"
+        [src]="config.imageSrc"
+        alt="button icon"
+        class="button-image"
+      />
+    </ng-container>
+
+    <div [style.fontWeight]="validFontWeight" *ngIf="hasLabel">{{ config.label }}</div>
+
+    <ng-container *ngIf="isIconRight">
+      <mat-icon *ngIf="config.matIcon" [fontSet]="config.iconFontSet" class="button-icon">{{
+        config.matIcon
+      }}</mat-icon>
+      <img
+        *ngIf="!config.matIcon && config.imageSrc"
+        [src]="config.imageSrc"
+        alt="button icon"
+        class="button-image"
+      />
+    </ng-container>
+
+    <ng-container *ngIf="!hasLabel">
+      <mat-icon *ngIf="config.matIcon" [fontSet]="config.iconFontSet" class="button-icon">{{
+        config.matIcon
+      }}</mat-icon>
+      <img
+        *ngIf="!config.matIcon && config.imageSrc"
+        [src]="config.imageSrc"
         alt="button icon"
         class="button-image-only"
       />
