@@ -16,7 +16,7 @@ import { DEFAULT_BUTTON_CONFIG } from '../../interfaces/default-button-config.co
 export class FilledButtonComponent {
   @Input() filledButtonConfig: ButtonConfig = {};
 
-  @Output() onClick = new EventEmitter<Event>();
+  @Output() buttonClicked = new EventEmitter<Event>();
 
   gradientFrom: string = AppColors.globalPrimaryColor;
   gradientTo: string = AppColors.globalSecondaryColor;

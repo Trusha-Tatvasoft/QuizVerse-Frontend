@@ -78,7 +78,7 @@ describe('TextButtonComponent', () => {
   });
 
   it('should emit onClick when button is clicked and not disabled', () => {
-    const spy = jest.spyOn(component.onClick, 'emit');
+    const spy = jest.spyOn(component.buttonClicked, 'emit');
     component.textButtonConfig = { isDisabled: false };
     component.ngOnInit();
     fixture.detectChanges();
@@ -88,7 +88,7 @@ describe('TextButtonComponent', () => {
   });
 
   it('should not emit onClick when disabled', () => {
-    const spy = jest.spyOn(component.onClick, 'emit');
+    const spy = jest.spyOn(component.buttonClicked, 'emit');
     component.textButtonConfig = { isDisabled: true };
     component.ngOnInit();
     fixture.detectChanges();

@@ -21,7 +21,7 @@ const meta: Meta<OutlineButtonComponent> = {
       control: 'object',
       description: 'Configuration object for the outline button',
     },
-    onClick: {
+    buttonClicked: {
       action: 'clicked',
       description: 'Emits when the button is clicked',
     },

@@ -21,7 +21,7 @@ const meta: Meta<FilledButtonComponent> = {
       control: 'object',
       description: 'Configuration object for the filled button',
     },
-    onClick: {
+    buttonClicked: {
       action: 'clicked',
       description: 'Emits when the button is clicked',
     },

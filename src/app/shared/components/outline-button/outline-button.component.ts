@@ -16,7 +16,7 @@ import { DEFAULT_BUTTON_CONFIG } from '../../interfaces/default-button-config.co
 export class OutlineButtonComponent {
   @Input() outlineButtonConfig: ButtonConfig = {};
 
-  @Output() onClick = new EventEmitter<Event>();
+  @Output() buttonClicked = new EventEmitter<Event>();
 
   config: Required<ButtonConfig> = { ...DEFAULT_BUTTON_CONFIG };
 

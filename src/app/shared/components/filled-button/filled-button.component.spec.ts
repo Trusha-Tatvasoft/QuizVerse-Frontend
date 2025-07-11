@@ -41,7 +41,7 @@ describe('FilledButtonComponent', () => {
   });
 
   it('should emit event on click when not disabled', () => {
-    const spy = jest.spyOn(component.onClick, 'emit');
+    const spy = jest.spyOn(component.buttonClicked, 'emit');
     component.config.isDisabled = false;
     fixture.detectChanges();
     const button = fixture.debugElement.query(By.css('button'));
@@ -50,7 +50,7 @@ describe('FilledButtonComponent', () => {
   });
 
   it('should not emit event when disabled', () => {
-    const spy = jest.spyOn(component.onClick, 'emit');
+    const spy = jest.spyOn(component.buttonClicked, 'emit');
     component.config.isDisabled = true;
     fixture.detectChanges();
     const button = fixture.debugElement.query(By.css('button'));

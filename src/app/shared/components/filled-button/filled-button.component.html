@@ -1,7 +1,7 @@
 <button
   [attr.type]="config.type"
   [disabled]="config.isDisabled"
-  (click)="!config.isDisabled && onClick.emit($event)"
+  (click)="!config.isDisabled && buttonClicked.emit($event)"
   class="filled-button"
 >
   <div class="button-content flex items-center justify-center gap-2">
