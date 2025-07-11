@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PageHeaderComponent } from './page-header.component';
 
 describe('PageHeaderComponent', () => {
@@ -16,10 +15,12 @@ describe('PageHeaderComponent', () => {
     fixture.detectChanges();
   });
 
+  // Test: Component should be created successfully
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  // Test: Title and subtitle should display correctly
   it('should display the title and subtitle', () => {
     component.title = 'Test Title';
     component.subtitle = 'Test Subtitle';
@@ -32,6 +33,7 @@ describe('PageHeaderComponent', () => {
     expect(subtitleEl.textContent).toContain('Test Subtitle');
   });
 
+  // Test: Icon should be rendered based on input
   it('should render the correct icon', () => {
     component.icon = 'shield';
     fixture.detectChanges();
@@ -40,12 +42,12 @@ describe('PageHeaderComponent', () => {
     expect(iconEl.textContent.trim()).toBe('shield');
   });
 
+  // Test: Theme class should be applied based on input
   it('should apply correct theme class based on input', () => {
     component.theme = 'admin';
     fixture.detectChanges();
 
     const cardEl = fixture.nativeElement.querySelector('mat-card');
-
     expect(cardEl.classList.contains('admin')).toBe(true);
   });
 });

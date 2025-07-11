@@ -1,6 +1,10 @@
 import { Meta, StoryObj } from '@storybook/angular';
 import { PageHeaderComponent } from './page-header.component';
-import { AppColors } from '../../../utils/constants';
+
+/**
+ * Storybook configuration for PageHeaderComponent.
+ * This file defines various visual states for different themes using mock data.
+ */
 
 export default {
   title: 'Components/PageHeader',
@@ -10,6 +14,7 @@ export default {
 
 type Story = StoryObj<PageHeaderComponent>;
 
+// Admin header example
 export const Admin: Story = {
   args: {
     icon: 'shield',
@@ -19,6 +24,7 @@ export const Admin: Story = {
   },
 };
 
+// User Management header
 export const UserManagement: Story = {
   args: {
     icon: 'account_circle',
@@ -28,6 +34,7 @@ export const UserManagement: Story = {
   },
 };
 
+// Quiz Categories header
 export const QuizCategories: Story = {
   args: {
     icon: 'folder_copy',
@@ -37,6 +44,7 @@ export const QuizCategories: Story = {
   },
 };
 
+// Quiz Difficulty header
 export const QuizDifficulty: Story = {
   args: {
     icon: 'workspace_premium',
@@ -46,6 +54,7 @@ export const QuizDifficulty: Story = {
   },
 };
 
+// Question Difficulty header
 export const QuestionDifficulty: Story = {
   args: {
     icon: 'psychology_alt',
@@ -55,6 +64,7 @@ export const QuestionDifficulty: Story = {
   },
 };
 
+// Email Templates header
 export const EmailTemplates: Story = {
   args: {
     icon: 'mail',
@@ -64,6 +74,7 @@ export const EmailTemplates: Story = {
   },
 };
 
+// Platform Settings header
 export const PlatformSettings: Story = {
   args: {
     icon: 'settings',
@@ -73,6 +84,7 @@ export const PlatformSettings: Story = {
   },
 };
 
+// AI & Machine Learning Configuration header
 export const AIConfig: Story = {
   args: {
     icon: 'bolt',
@@ -82,6 +94,7 @@ export const AIConfig: Story = {
   },
 };
 
+// Financial Overview header
 export const FinancialOverview: Story = {
   args: {
     icon: 'event_note',
@@ -91,6 +104,7 @@ export const FinancialOverview: Story = {
   },
 };
 
+// Content Moderation header
 export const Moderation: Story = {
   args: {
     icon: 'warning',
