@@ -1,142 +1,114 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { TagComponent } from './tag.component';
-
+import { TagComponent, TagInputConfig } from './tag.component';
 describe('TagComponent', () => {
-  let component: TagComponent;
-  let fixture: ComponentFixture<TagComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [CommonModule, TagComponent]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(TagComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should render the label text', () => {
-    component.label = 'Hello Tag';
-    fixture.detectChanges();
-    const labelEl = fixture.debugElement.query(By.css('.tag-label')).nativeElement;
-    expect(labelEl.textContent).toBe('Hello Tag');
-  });
-  it('should emit false if this.selected is undefined right before emit (synthetic test)', () => {
-    component.type = 'selectable';
-    component.id = 'test-id';
-    component.label = 'Test';
-    component.selected = undefined;
-  
-    const emitSpy = jest.spyOn(component.onSelect, 'emit');
-    component.onTagClick = function () {
-      if (this.type === 'selectable') {
-        const currentSelected = this.selected ?? false;
-        this.selected = undefined;
-        this.onSelect.emit({
-          id: this.id,
-          label: this.label,
-          selected: this.selected ?? false
-        });
-      }
+    let component: TagComponent;
+    let fixture: ComponentFixture<TagComponent>;
+    const defaultConfig: TagInputConfig = {
+        id: 'tag-1',
+        label: 'Test Tag',
+        type: 'static',
+        isSelected: false,
+        backgroundColor: 'lightGreen',
+        textColor: 'black'
     };
-  
-    component.onTagClick();
-  
-    expect(emitSpy).toHaveBeenCalledWith({
-      id: 'test-id',
-      label: 'Test',
-      selected: false
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [CommonModule, TagComponent],
+        }).compileComponents();
+        fixture = TestBed.createComponent(TagComponent);
+        component = fixture.componentInstance;
     });
-  });
-  it('should set selected to true if initially undefined and emit onSelect with correct values', () => {
-    component.type = 'selectable';
-    component.id = 'test-id';
-    component.label = 'Test Tag';
-    component.selected = undefined;
-    const emitSpy = jest.spyOn(component.onSelect, 'emit');
-    component.onTagClick();
-    expect(component.selected).toBeTruthy();
-    expect(emitSpy).toHaveBeenCalledWith({
-      id: 'test-id',
-      label: 'Test Tag',
-      selected: true
+    it('should create', () => {
+        component.tagConfig = { ...defaultConfig };
+        fixture.detectChanges();
+        expect(component).toBeTruthy();
     });
-  });
+    it('should render label text', () => {
+        component.tagConfig = { ...defaultConfig, label: 'Hello Tag' };
+        fixture.detectChanges();
+        const tagEl = fixture.debugElement.query(By.css('.tag')).nativeElement;
+        expect(tagEl.textContent).toContain('Hello Tag');
+    });
+    it('should emit onSelect and update isSelected on click when type is selectable', () => {
+        const emitSpy = jest.spyOn(component.onSelect, 'emit');
+        component.tagConfig = {
+            ...defaultConfig,
+            type: 'selectable',
+            isSelected: false,
+            label: 'Selectable Tag',
+            id: 'sel-1',
+        };
+        fixture.detectChanges();
+        const tagEl = fixture.debugElement.query(By.css('.tag'));
+        tagEl.triggerEventHandler('click', null);
+        expect(component.tagConfig.isSelected).toBe(true);
+        expect(emitSpy).toHaveBeenCalledWith({
+            id: 'sel-1',
+            label: 'Selectable Tag',
+            isSelected: true,
+        });
+    });
+    it('should not emit onSelect if already selected', () => {
+        const emitSpy = jest.spyOn(component.onSelect, 'emit');
+        component.tagConfig = {
+            ...defaultConfig,
+            type: 'selectable',
+            isSelected: true
+        };
 
-  it('should emit onSelect and toggle selected on click when type is selectable', () => {
-    component.type = 'selectable';
-    component.id = 'test1';
-    component.label = 'Click Me';
-    component.selected = false;
-    const emitSpy = jest.spyOn(component.onSelect, 'emit');
+        fixture.detectChanges();
 
-    fixture.detectChanges();
-    const chip = fixture.debugElement.query(By.css('.tag-chip'));
-    chip.triggerEventHandler('click', null);
+        const tagEl = fixture.debugElement.query(By.css('.tag'));
+        tagEl.triggerEventHandler('click', null);
 
-    expect(component.selected).toBe(true);
-    expect(emitSpy).toHaveBeenCalledWith({ id: 'test1', label: 'Click Me', selected: true });
-  });
+        expect(emitSpy).not.toHaveBeenCalled();
+    });
+    it('should emit onClose when close icon is clicked', () => {
+        const closeSpy = jest.spyOn(component.onClose, 'emit');
+        component.tagConfig = {
+            id: 'closable-1',
+            label: 'Close Me',
+            type: 'selectable',
+            isSelected: true,
+            backgroundColor: 'green',
+            textColor: 'white',
+        };
+        fixture.detectChanges();
+        const closeBtn = fixture.debugElement.query(By.css('.tag-close'));
+        expect(closeBtn).not.toBeNull();
+        closeBtn!.triggerEventHandler('click', {
+            stopPropagation: () => { }
+        });
+        expect(closeSpy).toHaveBeenCalledWith({
+            id: 'closable-1',
+            label: 'Close Me'
+        });
+    });
+    it('should apply correct classes when selected', () => {
+        component.tagConfig = {
+            ...defaultConfig,
+            type: 'selectable',
+            isSelected: true
+        };
+        fixture.detectChanges();
+        const tagEl = fixture.debugElement.query(By.css('.tag')).nativeElement;
+        expect(tagEl.classList).toContain('selected');
+        expect(tagEl.classList).toContain('closable');
+        expect(tagEl.classList).toContain('bg-black');
+        expect(tagEl.classList).toContain('text-light-green');
+    });
+    it('should apply static class and not closable class when type is static', () => {
+        component.tagConfig = {
+            ...defaultConfig,
+            type: 'static'
+        };
+        fixture.detectChanges();
 
-  it('should not emit onSelect when type is not selectable', () => {
-    component.type = 'static';
-    const emitSpy = jest.spyOn(component.onSelect, 'emit');
+        const tagEl = fixture.debugElement.query(By.css('.tag')).nativeElement;
 
-    fixture.detectChanges();
-    const chip = fixture.debugElement.query(By.css('.tag-chip'));
-    chip.triggerEventHandler('click', null);
-
-    expect(emitSpy).not.toHaveBeenCalled();
-  });
-
-  it('should emit onClose when close button is clicked for closable type', () => {
-    component.type = 'closable';
-    component.id = 'close1';
-    component.label = 'Remove Me';
-    const emitSpy = jest.spyOn(component.onClose, 'emit');
-
-    fixture.detectChanges();
-    const button = fixture.debugElement.query(By.css('.close-button'));
-    expect(button).toBeTruthy();
-
-    button.triggerEventHandler('click', { stopPropagation: () => { } });
-    expect(emitSpy).toHaveBeenCalledWith({ id: 'close1', label: 'Remove Me' });
-  });
-
-  it('should apply correct background and text color for static', () => {
-    component.type = 'static';
-    component.color = 'black';
-    component.textColor = 'white';
-
-    fixture.detectChanges();
-    const chipEl: HTMLElement = fixture.debugElement.query(By.css('.tag-chip')).nativeElement;
-    expect(chipEl.style.getPropertyValue('--bg-color')).toBe('#000000');
-    expect(chipEl.style.getPropertyValue('--text-color')).toBe('#FFFFFF');
-  });
-
-  it('should invert colors when selectable and selected is true', () => {
-    component.type = 'selectable';
-    component.color = 'black';
-    component.textColor = 'white';
-    component.selected = true;
-
-    fixture.detectChanges();
-    const chipEl: HTMLElement = fixture.debugElement.query(By.css('.tag-chip')).nativeElement;
-    expect(chipEl.style.getPropertyValue('--bg-color')).toBe('#FFFFFF');
-    expect(chipEl.style.getPropertyValue('--text-color')).toBe('#000000');
-  });
-
-  it('should have hoverable class when type is hoverable', () => {
-    component.type = 'hoverable';
-    fixture.detectChanges();
-    const chipEl: HTMLElement = fixture.debugElement.query(By.css('.tag-chip')).nativeElement;
-    expect(chipEl.classList.contains('hoverable')).toBe(true);
-  });
-
+        expect(tagEl.classList).toContain('static');
+        expect(tagEl.classList).toContain('notClosable');
+    });
 });

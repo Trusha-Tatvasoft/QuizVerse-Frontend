@@ -1,146 +1,116 @@
-.tag-container {
-    display: inline-block;
-  }
+    @use "../../../utils/_variable.scss";
 
-  .tag-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 8px;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    border: 1.5px solid var(--border-color) !important;
-    border-radius: 12px;
-    font-weight: 500;
-    font-size: 11px;
-    line-height: 1.1;
-    transition: all 0.15s ease-in-out;
-    position: relative;
-    overflow: hidden;
-    cursor: default;
-    user-select: none;
-    min-height: 22px;
-    box-sizing: border-box;
-
-    &.clickable {
-      cursor: pointer;
-    }
-
-    &.hoverable {
-      cursor: pointer;
-
-      &:hover {
-        background-color: var(--text-color) !important;
-        color: var(--bg-color) !important;
-        border-color: var(--bg-color) !important;
-      }
-    }
-
-    &.selected {
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      border-color: var(--text-color) !important;
-
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-        border-radius: inherit;
-        pointer-events: none;
-      }
-    }
-
-    &.static {
-      cursor: default;
-
-      &:hover {
-        transform: none;
-        box-shadow: none;
-      }
-    }
-
-    .tag-label {
-      display: inline-block;
-      white-space: nowrap;
-      font-weight: inherit;
-    }
-
-    .close-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 14px;
-      height: 14px;
-      padding: 0;
-      margin-left: 4px;
-      border: none;
-      border-radius: 50%;
-      background-color: var(--bg-color);
-      color: inherit;
-      cursor: pointer;
-      transition: all 0.15s ease-in-out;
-
-      svg {
-        width: 10px;
-        height: 10px;
-        stroke-width: 1.5;
-      }
-    }
-
-    &.white-bg .close-button {
-      background: rgba(0, 0, 0, 0.08);
-
-      &:hover {
-        background: rgba(0, 0, 0, 0.15);
-      }
-
-      &:active {
-        background: rgba(0, 0, 0, 0.2);
-      }
-    }
-  }
-
-  @keyframes fadeOut {
-    from {
-      opacity: 1;
-      transform: scale(1);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-  }
-
-  .tag-chip.removing {
-    animation: fadeOut 0.2s ease-out forwards;
-  }
-
-  .tag-chip:focus-visible {
-    outline: 2px solid #4CAF50;
-    outline-offset: 2px;
-  }
-
-  .close-button:focus-visible {
-    outline: 2px solid #4CAF50;
-    outline-offset: 1px;
-  }
-
-  @media (max-width: 768px) {
-    .tag-chip {
-      padding: 2px 6px;
-      font-size: 10px;
-
-      .close-button {
-        width: 6px;
-        height: 6px;
-
-        svg {
-          width: 9px;
-          height: 9px;
+    @each $color-name in "black", "white", "green", "light-green", "brown", "light-brown", "purple", "light-purple", "yellow", "light-yellow" {
+        .bg-#{$color-name} {
+            --bg-color: var(--#{$color-name}-color);
         }
-      }
+
+        .text-#{$color-name} {
+            --text-color: var(--#{$color-name}-color);
+        }
     }
-  }
+
+    .tag-container {
+        display: inline-block;
+    }
+
+    .not-closable {
+        cursor: pointer;
+        border: 1.5px solid var(--text-color) !important;
+    }
+
+    .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-weight: 500;
+        font-size: 11px;
+        line-height: 1.1;
+        position: relative;
+        overflow: hidden;
+        user-select: none;
+        min-height: 22px;
+        box-sizing: border-box;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: all 0.15s ease-in-out;
+
+        &.static {
+            pointer-events: none;
+            border: none !important;
+
+            .close-button {
+                pointer-events: none;
+                cursor: default;
+            }
+        }
+
+        .tag-close {
+            cursor: pointer;
+        }
+
+        .close-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            margin-left: 4px;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            background-color: var(--bg-color);
+            color: inherit;
+            transition: all 0.15s ease-in-out;
+
+            svg {
+                width: 12px;
+                height: 12px;
+                stroke-width: 1.5;
+            }
+
+            &:hover {
+                background: rgba(0, 0, 0, 0.1);
+            }
+
+            &:active {
+                background: rgba(0, 0, 0, 0.2);
+            }
+
+            &:focus-visible {
+                outline: 2px solid #4CAF50;
+                outline-offset: 1px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .tag-chip {
+                padding: 1px 2px;
+                font-size: 8px;
+
+                .close-button {
+                    width: 10px;
+                    height: 10px;
+
+                    svg {
+                        width: 6px;
+                        height: 6px;
+                    }
+                }
+            }
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        to {
+            opacity: 0.7;
+            transform: scale(1);
+        }
+    }
