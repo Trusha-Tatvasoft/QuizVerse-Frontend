@@ -19,6 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
+import { TablePaginationConfig } from '../../../utils/constants';
 
 @Component({
   selector: 'app-data-table',
@@ -40,15 +41,15 @@ import { MatCardModule } from '@angular/material/card';
 export class TableComponent implements OnInit, OnChanges {
   @Input() columns: ColumnDef[] = [];
   @Input() dataSource: TableData[] = [];
-  @Input() totalItems = 0;
-  @Input() pageSize = 10;
-  @Input() pageSizeOptions: number[] = [5, 10, 20];
+  @Input() totalItems = TablePaginationConfig.TotalItems;
+  @Input() pageSize = TablePaginationConfig.PageSize;
+  @Input() pageSizeOptions: number[] = TablePaginationConfig.PageSizeOptions;
   @Input() actionIcons: ActionIcon[] = [];
   @Input() noDataMessage?: string;
   @Input() columnTemplates: { [key: string]: TemplateRef<any> } = {};
-
   @Input() tableTitle?: string;
   @Input() tableDescription?: string;
+  @Input() applyPaginator: boolean = true;
 
   @Output() pageChange = new EventEmitter<{ pageIndex: number; pageSize: number }>();
   @Output() sortChange = new EventEmitter<{ active: string; direction: string }>();
@@ -70,7 +71,7 @@ export class TableComponent implements OnInit, OnChanges {
     }
 
     if (this.dataSource && Array.isArray(this.dataSource)) {
-      this.showPaginator = this.dataSource.length > 0;
+      this.showPaginator = this.totalItems > this.pageSize;
     }
   }
 
