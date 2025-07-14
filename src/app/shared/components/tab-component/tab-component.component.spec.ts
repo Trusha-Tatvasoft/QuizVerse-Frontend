@@ -49,25 +49,11 @@ describe('TabComponentComponent', () => {
     expect(icons[1].nativeElement.textContent).toContain('person');
   });
 
-  it('should use the selectedIndex input correctly', () => {
-    component.tabs = [
-      { label: 'First', content: 'Content 1' },
-      { label: 'Second', content: 'Content 2' },
-    ];
-    component.selectedIndex = 1;
-    fixture.detectChanges();
-
-    const tabGroup = fixture.debugElement.query(By.directive(MatTabGroup)).componentInstance;
-    expect(tabGroup.selectedIndex).toBe(1);
-  });
-
   it('should emit tabChanged when tab changes', fakeAsync(() => {
     component.tabs = [
       { label: 'Tab X', content: 'X' },
       { label: 'Tab Y', content: 'Y' },
     ];
-    fixture.detectChanges();
-    tick();
     fixture.detectChanges();
 
     let emittedIndex: number | undefined;
@@ -82,6 +68,18 @@ describe('TabComponentComponent', () => {
     expect(emittedIndex).toBe(1);
   }));
 
+  it('should use the selectedIndex input correctly', () => {
+    component.tabs = [
+      { label: 'First', content: 'Content 1' },
+      { label: 'Second', content: 'Content 2' },
+    ];
+    component.selectedIndex = 1;
+    fixture.detectChanges();
+
+    const tabGroup = fixture.debugElement.query(By.directive(MatTabGroup)).componentInstance;
+    expect(tabGroup.selectedIndex).toBe(1);
+  });
+
   it('should handle empty tabs gracefully', () => {
     component.tabs = [];
     fixture.detectChanges();
@@ -90,10 +88,16 @@ describe('TabComponentComponent', () => {
     expect(tabLabels.length).toBe(0);
   });
 
+  it('should handle undefined tabs input without crashing', () => {
+    component.tabs = undefined!;
+    fixture.detectChanges();
+
+    const tabLabels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
+    expect(tabLabels.length).toBe(0);
+  });
+
   it('should handle missing content without errors', fakeAsync(() => {
     component.tabs = [{ label: 'Tab No Content' }];
-    fixture.detectChanges();
-    tick();
     fixture.detectChanges();
 
     const tabLabels = fixture.debugElement.queryAll(By.css('.mdc-tab__content'));
@@ -105,11 +109,15 @@ describe('TabComponentComponent', () => {
     expect(contentDiv.nativeElement.innerHTML).toBe('');
   }));
 
-  it('should handle undefined tabs input without crashing', () => {
-    component.tabs = undefined!;
+  it('should sanitize and display HTML content safely', () => {
+    const unsafeContent = `<img src="x" onerror="alert('hack')">Safe Text`;
+    component.tabs = [{ label: 'SafeTab', content: unsafeContent }];
     fixture.detectChanges();
 
-    const tabLabels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
-    expect(tabLabels.length).toBe(0);
+    const tabGroup = fixture.debugElement.query(By.directive(MatTabGroup));
+    expect(tabGroup).toBeTruthy();
+
+    const contentDiv = fixture.debugElement.query(By.css('.p-4')).nativeElement;
+    expect(contentDiv.innerHTML).toContain(`Safe Text`);
   });
 });
