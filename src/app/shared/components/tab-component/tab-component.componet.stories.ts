@@ -58,6 +58,7 @@ export const SimpleContentTabs: Story = {
 
 export const DashboardContentTabs: Story = {
   args: {
+    selectedIndex: 1,
     tabs: [
       {
         label: 'Stats',
