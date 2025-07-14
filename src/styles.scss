@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'tailwindcss';
-
+@import url('../src/assets/scss/utils/_variable.scss');
 :root {
   --global-primary-color: #9333ea;
   --global-secondary-color: #2563eb;
