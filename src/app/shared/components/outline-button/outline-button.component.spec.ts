@@ -14,15 +14,18 @@ describe('OutlineButtonComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CommonModule, MatIconModule, OutlineButtonComponent],
     }).compileComponents();
+
     fixture = TestBed.createComponent(OutlineButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
+  // Basic test to ensure the component instance is created
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
+  // Should render the given label text
   it('should display label text', () => {
     component.config.label = 'Test Outline Button';
     fixture.detectChanges();
@@ -30,6 +33,7 @@ describe('OutlineButtonComponent', () => {
     expect(label?.nativeElement.textContent).toContain('Test Outline Button');
   });
 
+  // Should show image if matIcon is empty and imageSrc is defined
   it('should show image if matIcon is not provided but imageSrc is', () => {
     component.config.label = 'Image Test';
     component.config.matIcon = '';
@@ -40,6 +44,7 @@ describe('OutlineButtonComponent', () => {
     expect(img.nativeElement.src).toContain('https://example.com/icon.png');
   });
 
+  // Should emit the event if not disabled
   it('should emit event on click when not disabled', () => {
     const spy = jest.spyOn(component.buttonClicked, 'emit');
     component.config.isDisabled = false;
@@ -49,6 +54,7 @@ describe('OutlineButtonComponent', () => {
     expect(spy).toHaveBeenCalledWith(expect.any(MouseEvent));
   });
 
+  // Should not emit event if disabled
   it('should not emit event when disabled', () => {
     const spy = jest.spyOn(component.buttonClicked, 'emit');
     component.config.isDisabled = true;
@@ -58,6 +64,7 @@ describe('OutlineButtonComponent', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
+  // Icon should appear before label when position is left
   it('should set icon to left when imagePosition is left', () => {
     component.config.label = 'Left Icon';
     component.config.imagePosition = 'left';
@@ -67,13 +74,12 @@ describe('OutlineButtonComponent', () => {
     const icon = fixture.debugElement.query(By.css('mat-icon'));
     const label = fixture.debugElement.query(By.css('.flex div'));
     const flexContainer = fixture.debugElement.query(By.css('.flex')).nativeElement;
-    expect(icon).toBeTruthy();
-    expect(label).toBeTruthy();
     const iconIndex = Array.from(flexContainer.children).indexOf(icon.nativeElement);
     const labelIndex = Array.from(flexContainer.children).indexOf(label.nativeElement);
     expect(iconIndex).toBeLessThan(labelIndex);
   });
 
+  // Image should appear before label when position is left
   it('should set image to left when imagePosition is left', () => {
     component.config.label = 'Left Image';
     component.config.imagePosition = 'left';
@@ -83,22 +89,24 @@ describe('OutlineButtonComponent', () => {
     const img = fixture.debugElement.query(By.css('img'));
     const label = fixture.debugElement.query(By.css('.flex div'));
     const flexContainer = fixture.debugElement.query(By.css('.flex')).nativeElement;
-    expect(img).toBeTruthy();
-    expect(label).toBeTruthy();
     const imgIndex = Array.from(flexContainer.children).indexOf(img.nativeElement);
     const labelIndex = Array.from(flexContainer.children).indexOf(label.nativeElement);
     expect(imgIndex).toBeLessThan(labelIndex);
   });
 
+  // Should fallback to default font weight when fontWeight is undefined/invalid
   it('should handle undefined or invalid fontWeight with default value', () => {
     component.config.fontWeight = undefined as any;
     expect(component.validFontWeight).toBe('400');
+
     component.config.fontWeight = -1;
     expect(component.validFontWeight).toBe('-1');
+
     component.config.fontWeight = 0;
     expect(component.validFontWeight).toBe('0');
   });
 
+  // Should apply the type attribute correctly when type is 'reset'
   it('should use correct button type for reset', () => {
     component.config.type = 'reset';
     fixture.detectChanges();
@@ -106,12 +114,14 @@ describe('OutlineButtonComponent', () => {
     expect(button.attributes['type']).toBe('reset');
   });
 
+  // Should apply outline-button class
   it('should apply outline-button class and Tailwind styles', () => {
     fixture.detectChanges();
     const button = fixture.debugElement.query(By.css('button'));
     expect(button.nativeElement).toHaveClass('outline-button');
   });
 
+  // Should apply correct image styling when imageSrc is set
   it('should apply correct image size and styles', () => {
     component.config.imageSrc = 'https://example.com/icon.png';
     component.config.label = 'Test';
@@ -123,13 +133,7 @@ describe('OutlineButtonComponent', () => {
     expect(img.nativeElement).toHaveClass('object-contain');
   });
 
-  it('should set --outline-primary CSS variable to AppColors.globalPrimaryColor on init', () => {
-    const mockColor = '#3f51b5';
-    (AppColors as any).globalPrimaryColor = mockColor;
-    component.ngOnInit();
-    expect(document.documentElement.style.getPropertyValue('--outline-primary')).toBe(mockColor);
-  });
-
+  // Should reflect disabled attribute on the DOM
   it('should apply disabled attribute correctly', () => {
     component.config.isDisabled = true;
     fixture.detectChanges();

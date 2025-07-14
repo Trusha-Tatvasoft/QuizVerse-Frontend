@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { OutlineButtonComponent } from './outline-button.component';
 
+// Storybook metadata for OutlineButton component
 const meta: Meta<OutlineButtonComponent> = {
   title: 'Components/OutlineButton',
   component: OutlineButtonComponent,
@@ -31,6 +32,7 @@ const meta: Meta<OutlineButtonComponent> = {
 export default meta;
 type Story = StoryObj<OutlineButtonComponent>;
 
+// Default button with standard configuration
 export const Default: Story = {
   args: {
     outlineButtonConfig: {
@@ -43,6 +45,35 @@ export const Default: Story = {
   },
 };
 
+// Button with secondary variant
+export const SecondaryVariant: Story = {
+  args: {
+    outlineButtonConfig: {
+      label: 'Secondary Button',
+      imagePosition: 'left',
+      fontWeight: 500,
+      isDisabled: false,
+      type: 'button',
+      variant: 'secondary',
+    },
+  },
+};
+
+// Button with gradient variant
+export const GradientVariant: Story = {
+  args: {
+    outlineButtonConfig: {
+      label: 'Gradient Button',
+      imagePosition: 'left',
+      fontWeight: 500,
+      isDisabled: false,
+      type: 'button',
+      variant: 'gradient',
+    },
+  },
+};
+
+// Outline button with a left-aligned icon
 export const LeftIcon: Story = {
   args: {
     outlineButtonConfig: {
@@ -54,6 +85,7 @@ export const LeftIcon: Story = {
   },
 };
 
+// Outline button with a right-aligned icon
 export const RightIcon: Story = {
   args: {
     outlineButtonConfig: {
@@ -64,6 +96,7 @@ export const RightIcon: Story = {
   },
 };
 
+// Outline button showing a custom image instead of an icon
 export const WithImage: Story = {
   args: {
     outlineButtonConfig: {
@@ -73,6 +106,7 @@ export const WithImage: Story = {
   },
 };
 
+// Outline button with icon only (no label)
 export const IconOnly: Story = {
   args: {
     outlineButtonConfig: {
@@ -83,6 +117,7 @@ export const IconOnly: Story = {
   },
 };
 
+// Outline button with outlined icon only (no label)
 export const OutlineIconOnly: Story = {
   args: {
     outlineButtonConfig: {
@@ -93,6 +128,7 @@ export const OutlineIconOnly: Story = {
   },
 };
 
+// Disabled state of the outline button
 export const Disabled: Story = {
   args: {
     outlineButtonConfig: {
@@ -102,6 +138,7 @@ export const Disabled: Story = {
   },
 };
 
+// Outline button with bold text using custom font weight
 export const FontWeight: Story = {
   args: {
     outlineButtonConfig: {

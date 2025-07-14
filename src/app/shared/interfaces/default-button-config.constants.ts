@@ -9,4 +9,5 @@ export const DEFAULT_BUTTON_CONFIG: Required<ButtonConfig> = {
   fontWeight: 500,
   type: 'button',
   iconFontSet: 'material-icons',
+  variant: 'primary',
 };

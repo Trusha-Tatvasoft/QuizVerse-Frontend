@@ -7,4 +7,5 @@ export interface ButtonConfig {
   fontWeight?: number;
   type?: 'button' | 'submit' | 'reset';
   iconFontSet?: 'material-icons-outlined' | 'material-icons';
+  variant?: 'primary' | 'secondary' | 'gradient';
 }

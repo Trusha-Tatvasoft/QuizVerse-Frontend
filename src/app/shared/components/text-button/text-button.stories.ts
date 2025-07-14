@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TextButtonComponent } from './text-button.component';
 
+// Meta configuration for TextButtonComponent in Storybook
 const meta: Meta<TextButtonComponent> = {
   title: 'Components/TextButton',
   component: TextButtonComponent,
@@ -19,7 +20,7 @@ const meta: Meta<TextButtonComponent> = {
   argTypes: {
     textButtonConfig: {
       control: 'object',
-      description: 'Configuration object for the filled button',
+      description: 'Configuration object for the text button',
     },
     buttonClicked: {
       action: 'clicked',
@@ -31,6 +32,7 @@ const meta: Meta<TextButtonComponent> = {
 export default meta;
 type Story = StoryObj<TextButtonComponent>;
 
+// Default text button
 export const Default: Story = {
   args: {
     textButtonConfig: {
@@ -43,6 +45,35 @@ export const Default: Story = {
   },
 };
 
+// Button with secondary variant
+export const SecondaryVariant: Story = {
+  args: {
+    textButtonConfig: {
+      label: 'Secondary Button',
+      imagePosition: 'left',
+      fontWeight: 500,
+      isDisabled: false,
+      type: 'button',
+      variant: 'secondary',
+    },
+  },
+};
+
+// Button with gradient variant
+export const GradientVariant: Story = {
+  args: {
+    textButtonConfig: {
+      label: 'Gradient Button',
+      imagePosition: 'left',
+      fontWeight: 500,
+      isDisabled: false,
+      type: 'button',
+      variant: 'gradient',
+    },
+  },
+};
+
+// Text button with left-positioned icon
 export const LeftIcon: Story = {
   args: {
     textButtonConfig: {
@@ -54,6 +85,7 @@ export const LeftIcon: Story = {
   },
 };
 
+// Text button with right-positioned icon
 export const RightIcon: Story = {
   args: {
     textButtonConfig: {
@@ -64,6 +96,7 @@ export const RightIcon: Story = {
   },
 };
 
+// Text button using an image instead of an icon
 export const WithImage: Story = {
   args: {
     textButtonConfig: {
@@ -73,6 +106,7 @@ export const WithImage: Story = {
   },
 };
 
+// Text button with only icon and no label
 export const IconOnly: Story = {
   args: {
     textButtonConfig: {
@@ -83,6 +117,7 @@ export const IconOnly: Story = {
   },
 };
 
+// Text button with only outlined icon
 export const OutlineIconOnly: Story = {
   args: {
     textButtonConfig: {
@@ -93,6 +128,7 @@ export const OutlineIconOnly: Story = {
   },
 };
 
+// Disabled state for text button
 export const Disabled: Story = {
   args: {
     textButtonConfig: {
@@ -102,6 +138,7 @@ export const Disabled: Story = {
   },
 };
 
+// Text button with bold font weight
 export const FontWeight: Story = {
   args: {
     textButtonConfig: {

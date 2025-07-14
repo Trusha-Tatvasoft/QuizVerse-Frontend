@@ -11,6 +11,7 @@ describe('TextButtonComponent', () => {
   let component: TextButtonComponent;
   let fixture: ComponentFixture<TextButtonComponent>;
 
+  // Setup the component and module before each test
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CommonModule, MatIconModule, TextButtonComponent],
@@ -21,16 +22,19 @@ describe('TextButtonComponent', () => {
     fixture.detectChanges();
   });
 
+  // Component creation test
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
+  // Default config check
   it('should apply default config values from DEFAULT_BUTTON_CONFIG', () => {
     component.textButtonConfig = {};
     component.ngOnInit();
     expect(component.config).toEqual(DEFAULT_BUTTON_CONFIG);
   });
 
+  // Merging input config with default config
   it('should merge textButtonConfig with DEFAULT_BUTTON_CONFIG', () => {
     component.textButtonConfig = { label: 'Custom', type: 'submit' };
     component.ngOnInit();
@@ -41,6 +45,7 @@ describe('TextButtonComponent', () => {
     });
   });
 
+  // Displaying label
   it('should display label correctly', () => {
     component.textButtonConfig = { label: 'Click Me' };
     component.ngOnInit();
@@ -49,6 +54,7 @@ describe('TextButtonComponent', () => {
     expect(labelElement?.nativeElement.textContent).toContain('Click Me');
   });
 
+  // Should show image when icon is not provided
   it('should display image when matIcon is not provided but imageSrc is', () => {
     component.textButtonConfig = {
       matIcon: '',
@@ -62,6 +68,7 @@ describe('TextButtonComponent', () => {
     expect(image.nativeElement.src).toContain('https://example.com/icon.png');
   });
 
+  // mat-icon should have priority over imageSrc
   it('should prioritize mat-icon over imageSrc when both are provided', () => {
     component.textButtonConfig = {
       matIcon: 'home',
@@ -77,6 +84,7 @@ describe('TextButtonComponent', () => {
     expect(image).toBeNull();
   });
 
+  // Click event should be emitted if not disabled
   it('should emit onClick when button is clicked and not disabled', () => {
     const spy = jest.spyOn(component.buttonClicked, 'emit');
     component.textButtonConfig = { isDisabled: false };
@@ -87,6 +95,7 @@ describe('TextButtonComponent', () => {
     expect(spy).toHaveBeenCalledWith(expect.any(MouseEvent));
   });
 
+  // Click event should NOT emit if disabled
   it('should not emit onClick when disabled', () => {
     const spy = jest.spyOn(component.buttonClicked, 'emit');
     component.textButtonConfig = { isDisabled: true };
@@ -97,6 +106,7 @@ describe('TextButtonComponent', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
+  // Only icon should render if label is empty
   it('should render only icon when label is empty and matIcon is set', () => {
     component.textButtonConfig = { label: '', matIcon: 'star', iconFontSet: 'material-icons' };
     component.ngOnInit();
@@ -107,6 +117,7 @@ describe('TextButtonComponent', () => {
     expect(fixture.debugElement.query(By.css('.flex div'))).toBeNull();
   });
 
+  // Only image should render if label is empty
   it('should render only image when label is empty and imageSrc is set', () => {
     component.textButtonConfig = {
       label: '',
@@ -121,6 +132,7 @@ describe('TextButtonComponent', () => {
     expect(fixture.debugElement.query(By.css('.flex div'))).toBeNull();
   });
 
+  // Button type should be submit if passed
   it('should use correct button type for submit', () => {
     component.textButtonConfig = { type: 'submit' };
     component.ngOnInit();
@@ -129,6 +141,7 @@ describe('TextButtonComponent', () => {
     expect(button.attributes['type']).toBe('submit');
   });
 
+  // Button type should be reset if passed
   it('should use correct button type for reset', () => {
     component.textButtonConfig = { type: 'reset' };
     component.ngOnInit();
@@ -137,6 +150,7 @@ describe('TextButtonComponent', () => {
     expect(button.attributes['type']).toBe('reset');
   });
 
+  // Font weight should apply correctly to label
   it('should apply font weight correctly', () => {
     component.textButtonConfig = { fontWeight: 600, label: 'Test' };
     component.ngOnInit();
@@ -146,6 +160,7 @@ describe('TextButtonComponent', () => {
     expect(label?.nativeElement.style.fontWeight).toBe('600');
   });
 
+  // mat-icon should appear after label if iconPosition is right
   it('should render mat-icon on right when imagePosition is right', () => {
     component.textButtonConfig = {
       matIcon: 'add',
@@ -158,13 +173,12 @@ describe('TextButtonComponent', () => {
     const icon = fixture.debugElement.query(By.css('mat-icon'));
     const label = fixture.debugElement.query(By.css('.flex div'));
     const flexContainer = fixture.debugElement.query(By.css('.flex')).nativeElement;
-    expect(icon).toBeTruthy();
-    expect(label).toBeTruthy();
     const iconIndex = Array.from(flexContainer.children).indexOf(icon.nativeElement);
     const labelIndex = Array.from(flexContainer.children).indexOf(label.nativeElement);
     expect(iconIndex).toBeGreaterThan(labelIndex);
   });
 
+  // Image should appear after label if iconPosition is right
   it('should render image on right when imagePosition is right', () => {
     component.textButtonConfig = {
       imageSrc: 'https://example.com/icon.png',
@@ -177,13 +191,12 @@ describe('TextButtonComponent', () => {
     const image = fixture.debugElement.query(By.css('img'));
     const label = fixture.debugElement.query(By.css('.flex div'));
     const flexContainer = fixture.debugElement.query(By.css('.flex')).nativeElement;
-    expect(image).toBeTruthy();
-    expect(label).toBeTruthy();
     const imageIndex = Array.from(flexContainer.children).indexOf(image.nativeElement);
     const labelIndex = Array.from(flexContainer.children).indexOf(label.nativeElement);
     expect(imageIndex).toBeGreaterThan(labelIndex);
   });
 
+  // Class should apply correctly
   it('should apply text-button class and Tailwind styles', () => {
     component.textButtonConfig = { label: 'Test' };
     component.ngOnInit();
@@ -192,15 +205,16 @@ describe('TextButtonComponent', () => {
     expect(button.nativeElement).toHaveClass('text-button');
   });
 
+  // CSS class check for mat-icon
   it('should apply correct icon size and styles', () => {
     component.textButtonConfig = { matIcon: 'home', label: 'Test' };
     component.ngOnInit();
     fixture.detectChanges();
     const icon = fixture.debugElement.query(By.css('mat-icon'));
     expect(icon.nativeElement).toHaveClass('button-icon');
-    expect(icon.nativeElement.classList).toContain('button-icon');
   });
 
+  // No content should render if everything is missing
   it('should not render content when label, imageSrc, and matIcon are empty', () => {
     component.textButtonConfig = { label: '', imageSrc: '', matIcon: '' };
     component.ngOnInit();
@@ -210,6 +224,7 @@ describe('TextButtonComponent', () => {
     expect(fixture.debugElement.query(By.css('mat-icon'))).toBeNull();
   });
 
+  // White-space label should be treated as empty
   it('should treat whitespace-only label as empty', () => {
     component.textButtonConfig = { label: '   ', matIcon: 'star', iconFontSet: 'material-icons' };
     component.ngOnInit();
@@ -220,12 +235,14 @@ describe('TextButtonComponent', () => {
     expect(fixture.debugElement.query(By.css('.flex div'))).toBeNull();
   });
 
+  // Font weight default fallback
   it('should default fontWeight to 400 when not provided or invalid', () => {
     component.textButtonConfig = {};
     component.ngOnInit();
     expect(component.validFontWeight).toBe('500');
   });
 
+  // Font set check
   it('should set correct fontSet attribute on mat-icon', () => {
     component.textButtonConfig = {
       matIcon: 'star',
@@ -238,6 +255,7 @@ describe('TextButtonComponent', () => {
     expect(icon.nativeElement.getAttribute('ng-reflect-font-set')).toBe('material-icons-outlined');
   });
 
+  // Disabled attribute check
   it('should add disabled attribute when isDisabled is true', () => {
     component.textButtonConfig = { isDisabled: true };
     component.ngOnInit();
@@ -246,6 +264,7 @@ describe('TextButtonComponent', () => {
     expect(button.nativeElement.disabled).toBe(true);
   });
 
+  // Button type fallback from default config
   it('should use type from DEFAULT_BUTTON_CONFIG if not provided', () => {
     component.textButtonConfig = {};
     component.ngOnInit();
@@ -254,6 +273,7 @@ describe('TextButtonComponent', () => {
     expect(button.attributes['type']).toBe(DEFAULT_BUTTON_CONFIG.type);
   });
 
+  // Should still fallback to icon if only icon is set
   it('should fallback to icon if label is missing and matIcon is set', () => {
     component.textButtonConfig = { label: '', matIcon: 'home' };
     component.ngOnInit();

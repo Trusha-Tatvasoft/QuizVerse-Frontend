@@ -19,10 +19,12 @@ describe('FilledButtonComponent', () => {
     fixture.detectChanges();
   });
 
+  // Basic component initialization
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
+  // Label rendering
   it('should display label text', () => {
     component.config.label = 'Test Button';
     fixture.detectChanges();
@@ -30,6 +32,7 @@ describe('FilledButtonComponent', () => {
     expect(label?.nativeElement.textContent).toContain('Test Button');
   });
 
+  // Image rendering when matIcon is not provided
   it('should show image if matIcon is not provided but imageSrc is', () => {
     component.config.label = 'Image Test';
     component.config.matIcon = '';
@@ -40,6 +43,7 @@ describe('FilledButtonComponent', () => {
     expect(img.nativeElement.src).toContain('https://example.com/icon.png');
   });
 
+  // Event emission when button is clicked and not disabled
   it('should emit event on click when not disabled', () => {
     const spy = jest.spyOn(component.buttonClicked, 'emit');
     component.config.isDisabled = false;
@@ -49,6 +53,7 @@ describe('FilledButtonComponent', () => {
     expect(spy).toHaveBeenCalledWith(expect.any(MouseEvent));
   });
 
+  // Event should not emit when button is disabled
   it('should not emit event when disabled', () => {
     const spy = jest.spyOn(component.buttonClicked, 'emit');
     component.config.isDisabled = true;
@@ -58,6 +63,7 @@ describe('FilledButtonComponent', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
+  // Render only icon if label is empty
   it('should render only icon when label is empty and matIcon is set', () => {
     component.config.label = '';
     component.config.matIcon = 'star';
@@ -69,6 +75,7 @@ describe('FilledButtonComponent', () => {
     expect(fixture.debugElement.query(By.css('.flex div'))).toBeNull();
   });
 
+  // Render only image if label is empty
   it('should render only image when label is empty and imageSrc is set', () => {
     component.config.label = '';
     component.config.matIcon = '';
@@ -80,6 +87,7 @@ describe('FilledButtonComponent', () => {
     expect(fixture.debugElement.query(By.css('.flex div'))).toBeNull();
   });
 
+  // Check icon left position
   it('should set icon to left when imagePosition is left', () => {
     component.config.label = 'Left Icon';
     component.config.imagePosition = 'left';
@@ -89,13 +97,12 @@ describe('FilledButtonComponent', () => {
     const icon = fixture.debugElement.query(By.css('mat-icon'));
     const label = fixture.debugElement.query(By.css('.flex div'));
     const flexContainer = fixture.debugElement.query(By.css('.flex')).nativeElement;
-    expect(icon).toBeTruthy();
-    expect(label).toBeTruthy();
     const iconIndex = Array.from(flexContainer.children).indexOf(icon.nativeElement);
     const labelIndex = Array.from(flexContainer.children).indexOf(label.nativeElement);
     expect(iconIndex).toBeLessThan(labelIndex);
   });
 
+  // Check icon right position
   it('should set icon to right when imagePosition is right', () => {
     component.config.label = 'Right Icon';
     component.config.imagePosition = 'right';
@@ -105,13 +112,12 @@ describe('FilledButtonComponent', () => {
     const icon = fixture.debugElement.query(By.css('mat-icon'));
     const label = fixture.debugElement.query(By.css('.flex div'));
     const flexContainer = fixture.debugElement.query(By.css('.flex')).nativeElement;
-    expect(icon).toBeTruthy();
-    expect(label).toBeTruthy();
     const iconIndex = Array.from(flexContainer.children).indexOf(icon.nativeElement);
     const labelIndex = Array.from(flexContainer.children).indexOf(label.nativeElement);
     expect(iconIndex).toBeGreaterThan(labelIndex);
   });
 
+  // Check image left position
   it('should set image to left when imagePosition is left', () => {
     component.config.label = 'Left Image';
     component.config.imagePosition = 'left';
@@ -121,13 +127,12 @@ describe('FilledButtonComponent', () => {
     const img = fixture.debugElement.query(By.css('img'));
     const label = fixture.debugElement.query(By.css('.flex div'));
     const flexContainer = fixture.debugElement.query(By.css('.flex')).nativeElement;
-    expect(img).toBeTruthy();
-    expect(label).toBeTruthy();
     const imgIndex = Array.from(flexContainer.children).indexOf(img.nativeElement);
     const labelIndex = Array.from(flexContainer.children).indexOf(label.nativeElement);
     expect(imgIndex).toBeLessThan(labelIndex);
   });
 
+  // Check image right position
   it('should set image to right when imagePosition is right', () => {
     component.config.label = 'Right Image';
     component.config.imagePosition = 'right';
@@ -137,13 +142,12 @@ describe('FilledButtonComponent', () => {
     const img = fixture.debugElement.query(By.css('img'));
     const label = fixture.debugElement.query(By.css('.flex div'));
     const flexContainer = fixture.debugElement.query(By.css('.flex')).nativeElement;
-    expect(img).toBeTruthy();
-    expect(label).toBeTruthy();
     const imgIndex = Array.from(flexContainer.children).indexOf(img.nativeElement);
     const labelIndex = Array.from(flexContainer.children).indexOf(label.nativeElement);
     expect(imgIndex).toBeGreaterThan(labelIndex);
   });
 
+  // Check if font weight is applied correctly
   it('should apply font weight correctly', () => {
     component.config.fontWeight = 600;
     fixture.detectChanges();
@@ -152,6 +156,7 @@ describe('FilledButtonComponent', () => {
     expect(label?.nativeElement.style.fontWeight).toBe('600');
   });
 
+  // Validate default and invalid font weight fallback
   it('should handle undefined or invalid fontWeight with default value', () => {
     component.config.fontWeight = undefined as any;
     expect(component.validFontWeight).toBe('400');
@@ -161,6 +166,7 @@ describe('FilledButtonComponent', () => {
     expect(component.validFontWeight).toBe('0');
   });
 
+  // Check button type as submit
   it('should use correct button type for submit', () => {
     component.config.type = 'submit';
     fixture.detectChanges();
@@ -168,6 +174,7 @@ describe('FilledButtonComponent', () => {
     expect(button.attributes['type']).toBe('submit');
   });
 
+  // Check button type as reset
   it('should use correct button type for reset', () => {
     component.config.type = 'reset';
     fixture.detectChanges();
@@ -175,6 +182,7 @@ describe('FilledButtonComponent', () => {
     expect(button.attributes['type']).toBe('reset');
   });
 
+  // Ensure nothing renders when all display content is empty
   it('should not render content when label, imageSrc, and matIcon are empty', () => {
     component.config.label = '';
     component.config.imageSrc = '';
@@ -185,6 +193,7 @@ describe('FilledButtonComponent', () => {
     expect(fixture.debugElement.query(By.css('mat-icon'))).toBeNull();
   });
 
+  // Check disabled button attribute
   it('should apply disabled attribute correctly', () => {
     component.config.isDisabled = true;
     fixture.detectChanges();

@@ -1,3 +1,4 @@
+<!-- Text Button Component -->
 <button
   [attr.type]="config.type"
   [disabled]="config.isDisabled"
@@ -5,8 +6,14 @@
   class="text-button"
 >
   <div class="flex items-center gap-2">
+    <!-- container for icon on left -->
     <ng-container *ngIf="isIconLeft">
-      <mat-icon *ngIf="config.matIcon" [fontSet]="config.iconFontSet" class="button-icon">
+      <mat-icon
+        *ngIf="config.matIcon"
+        [fontSet]="config.iconFontSet"
+        class="button-icon"
+        [ngClass]="config.variant"
+      >
         {{ config.matIcon }}
       </mat-icon>
       <img
@@ -17,10 +24,23 @@
       />
     </ng-container>
 
-    <div [style.fontWeight]="validFontWeight" *ngIf="hasLabel">{{ config.label }}</div>
+    <div
+      [style.fontWeight]="validFontWeight"
+      *ngIf="hasLabel"
+      [ngClass]="{ 'gradient-text': isGradientText }"
+      [ngClass]="config.variant"
+    >
+      {{ config.label }}
+    </div>
 
+    <!-- container for icon on right -->
     <ng-container *ngIf="isIconRight">
-      <mat-icon *ngIf="config.matIcon" [fontSet]="config.iconFontSet" class="button-icon">
+      <mat-icon
+        *ngIf="config.matIcon"
+        [fontSet]="config.iconFontSet"
+        class="button-icon"
+        [ngClass]="config.variant"
+      >
         {{ config.matIcon }}
       </mat-icon>
       <img
@@ -31,8 +51,14 @@
       />
     </ng-container>
 
+    <!-- container for only icon -->
     <ng-container *ngIf="!hasLabel">
-      <mat-icon *ngIf="config.matIcon" [fontSet]="config.iconFontSet" class="button-icon">
+      <mat-icon
+        *ngIf="config.matIcon"
+        [fontSet]="config.iconFontSet"
+        class="button-icon"
+        [ngClass]="config.variant"
+      >
         {{ config.matIcon }}
       </mat-icon>
       <img

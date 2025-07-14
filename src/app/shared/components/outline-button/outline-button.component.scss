@@ -3,7 +3,6 @@
 .outline-button {
   @apply bg-white border text-sm font-medium rounded-lg px-5 py-2.5 flex items-center justify-center gap-2 transition-all duration-200;
 
-  color: var(--outline-primary);
   border: 1px solid #d1d5db;
   border-color: #d1d5db;
 
@@ -38,4 +37,20 @@
   width: 20px;
   height: 20px;
   object-fit: contain;
+}
+
+.primary {
+  color: var(--global-primary-color);
+}
+
+.secondary {
+  color: var(--global-secondary-color);
+}
+
+.gradient {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }

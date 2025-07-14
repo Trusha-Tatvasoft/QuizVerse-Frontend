@@ -2,6 +2,11 @@
 :root {
   --global-primary-color: #9333ea;
   --global-secondary-color: #2563eb;
+  --gradient: linear-gradient(
+    90deg,
+    var(--global-primary-color) 12%,
+    var(--global-secondary-color) 63%
+  );
 }
 
 @import 'tailwindcss';

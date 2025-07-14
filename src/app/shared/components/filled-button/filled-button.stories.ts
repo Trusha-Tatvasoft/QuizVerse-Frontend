@@ -31,6 +31,7 @@ const meta: Meta<FilledButtonComponent> = {
 export default meta;
 type Story = StoryObj<FilledButtonComponent>;
 
+/** Default button with basic config */
 export const Default: Story = {
   args: {
     filledButtonConfig: {
@@ -43,6 +44,35 @@ export const Default: Story = {
   },
 };
 
+/** Button with secondary variant */
+export const SecondaryVariant: Story = {
+  args: {
+    filledButtonConfig: {
+      label: 'Secondary Button',
+      imagePosition: 'left',
+      fontWeight: 500,
+      isDisabled: false,
+      type: 'button',
+      variant: 'secondary',
+    },
+  },
+};
+
+/** Button with gardient background */
+export const GradientVariant: Story = {
+  args: {
+    filledButtonConfig: {
+      label: 'Gradient Button',
+      imagePosition: 'left',
+      fontWeight: 500,
+      isDisabled: false,
+      type: 'button',
+      variant: 'gradient',
+    },
+  },
+};
+
+/** Button with icon on the left side */
 export const LeftIcon: Story = {
   args: {
     filledButtonConfig: {
@@ -54,6 +84,7 @@ export const LeftIcon: Story = {
   },
 };
 
+/** Button with icon on the right side */
 export const RightIcon: Story = {
   args: {
     filledButtonConfig: {
@@ -64,6 +95,7 @@ export const RightIcon: Story = {
   },
 };
 
+/** Button with an image instead of icon */
 export const WithImage: Story = {
   args: {
     filledButtonConfig: {
@@ -73,6 +105,7 @@ export const WithImage: Story = {
   },
 };
 
+/** Icon-only button (no label) */
 export const IconOnly: Story = {
   args: {
     filledButtonConfig: {
@@ -83,6 +116,7 @@ export const IconOnly: Story = {
   },
 };
 
+/** Icon-only button using outlined Material icon */
 export const OutlineIconOnly: Story = {
   args: {
     filledButtonConfig: {
@@ -93,6 +127,7 @@ export const OutlineIconOnly: Story = {
   },
 };
 
+/** Disabled button to demonstrate disabled state styles */
 export const Disabled: Story = {
   args: {
     filledButtonConfig: {
@@ -102,6 +137,7 @@ export const Disabled: Story = {
   },
 };
 
+/** Button with heavier font weight (bold) */
 export const FontWeight: Story = {
   args: {
     filledButtonConfig: {
