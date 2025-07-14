@@ -6,6 +6,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 
+/**
+ * Storybook configuration for SearchInputComponent.
+ * Defines visual and interactive states for different placeholder and border styles,
+ * allowing isolated testing and documentation of the search input component.
+ */
 const meta: Meta<SearchInputComponent> = {
   title: 'Components/SearchInput',
   component: SearchInputComponent,
@@ -17,18 +22,27 @@ const meta: Meta<SearchInputComponent> = {
       ],
     }),
   ],
+
+  /**
+   * Shared render function to display the SearchInputComponent with dynamic args.
+   * Includes live display of the current control value for visual verification.
+   */
   render: (args) => {
     const control = new FormControl('');
     return {
       props: {
         ...args,
         control,
+        /**
+         * Emitted when a search is triggered within the component.
+         * Note: Console logging is acceptable in Storybook for developer visibility.
+         */
         search: (query: string) => {
           console.log('Search emitted:', query);
         },
       },
       template: `
-        <div style="padding: 10px 0px; text-align: center;">
+        <div style="padding: 10px 0; text-align: center;">
           <app-search-input
             [placeholder]="placeholder"
             [control]="control"
@@ -44,6 +58,10 @@ const meta: Meta<SearchInputComponent> = {
       `,
     };
   },
+
+  /**
+   * argTypes for controlling and documenting dynamic inputs in Storybook.
+   */
   argTypes: {
     placeholder: {
       control: 'text',
@@ -61,6 +79,9 @@ const meta: Meta<SearchInputComponent> = {
 export default meta;
 type Story = StoryObj<SearchInputComponent>;
 
+/**
+ * SearchInputComponent Story: Quizzes
+ */
 export const Quizzes: Story = {
   args: {
     placeholder: 'Search quizzes...',
@@ -68,12 +89,18 @@ export const Quizzes: Story = {
   },
 };
 
+/**
+ * SearchInputComponent Story: Users
+ */
 export const Users: Story = {
   args: {
     placeholder: 'Search users...',
   },
 };
 
+/**
+ * SearchInputComponent Story: Reports
+ */
 export const Reports: Story = {
   args: {
     placeholder: 'Search reports...',
@@ -81,6 +108,9 @@ export const Reports: Story = {
   },
 };
 
+/**
+ * SearchInputComponent Story: Battles
+ */
 export const Battles: Story = {
   args: {
     placeholder: 'Search battles...',
@@ -88,6 +118,9 @@ export const Battles: Story = {
   },
 };
 
+/**
+ * SearchInputComponent Story: Questions
+ */
 export const Questions: Story = {
   args: {
     placeholder: 'Search questions...',
@@ -95,6 +128,9 @@ export const Questions: Story = {
   },
 };
 
+/**
+ * SearchInputComponent Story: Difficulties
+ */
 export const Difficulties: Story = {
   args: {
     placeholder: 'Search difficulties...',
