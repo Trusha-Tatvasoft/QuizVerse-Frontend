@@ -9,3 +9,5 @@ export type TagColor =
   | 'lightBrown'
   | 'lightPurple'
   | 'lightYellow';
+
+export type TagType = 'selectable' | 'static';

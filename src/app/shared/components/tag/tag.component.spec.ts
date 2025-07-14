@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { TagComponent, TagInputConfig } from './tag.component';
+import { TagComponent } from './tag.component';
+import { TagInputConfig } from '../../interfaces/tag-component.interface';
 
 describe('TagComponent', () => {
   let component: TagComponent;
@@ -14,7 +15,7 @@ describe('TagComponent', () => {
     isSelected: false,
     hasBorder: true,
     backgroundColor: 'lightGreen',
-    textColor: 'black'
+    textColor: 'black',
   };
 
   beforeEach(async () => {
@@ -46,7 +47,7 @@ describe('TagComponent', () => {
       type: 'selectable',
       isSelected: false,
       id: 'sel-1',
-      label: 'Selectable Tag'
+      label: 'Selectable Tag',
     };
     fixture.detectChanges();
 
@@ -68,7 +69,7 @@ describe('TagComponent', () => {
       type: 'selectable',
       isSelected: true,
       id: 'sel-1',
-      label: 'Closeable Tag'
+      label: 'Closeable Tag',
     };
     fixture.detectChanges();
 
@@ -98,12 +99,12 @@ describe('TagComponent', () => {
     expect(closeBtn).not.toBeNull();
 
     closeBtn!.triggerEventHandler('click', {
-      stopPropagation: () => { }
+      stopPropagation: () => {},
     });
 
     expect(closeSpy).toHaveBeenCalledWith({
       id: 'closable-1',
-      label: 'Close Me'
+      label: 'Close Me',
     });
   });
 
@@ -111,7 +112,7 @@ describe('TagComponent', () => {
     component.tagConfig = {
       ...defaultConfig,
       type: 'selectable',
-      isSelected: true
+      isSelected: true,
     };
     fixture.detectChanges();
 
@@ -125,7 +126,7 @@ describe('TagComponent', () => {
   it('should apply static and not-closable classes when type is static', () => {
     component.tagConfig = {
       ...defaultConfig,
-      type: 'static'
+      type: 'static',
     };
     fixture.detectChanges();
 
@@ -137,7 +138,7 @@ describe('TagComponent', () => {
   it('should apply bordered class when isBorder is true', () => {
     component.tagConfig = {
       ...defaultConfig,
-      hasBorder: true
+      hasBorder: true,
     };
     fixture.detectChanges();
 
@@ -148,7 +149,7 @@ describe('TagComponent', () => {
   it('should not apply bordered class when isBorder is false', () => {
     component.tagConfig = {
       ...defaultConfig,
-      hasBorder: false
+      hasBorder: false,
     };
     fixture.detectChanges();
 

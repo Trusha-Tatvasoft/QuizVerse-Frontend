@@ -1,5 +1,4 @@
-import { TagColor } from '../../utils/types/tag-color.type';
-import { TagType } from '../components/tag/tag.component';
+import { TagColor, TagType } from '../../utils/types/tag-component.type';
 
 export interface TagInputConfig {
   id: string;

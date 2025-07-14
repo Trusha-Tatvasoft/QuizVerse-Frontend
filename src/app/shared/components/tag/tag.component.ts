@@ -1,9 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TagInputConfig } from '../../interfaces/tag.interface';
-import { TagColor } from '../../../utils/types/tag-color.type';
-
-export type TagType = 'selectable' | 'static';
+import { TagInputConfig } from '../../interfaces/tag-component.interface';
+import { TagColor } from '../../../utils/types/tag-component.type';
 
 @Component({
   selector: 'app-tag',
