@@ -1,22 +1,111 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'tailwindcss';
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@import url('../src/assets/scss/utils/_variable.scss');
+:root {
+  --global-primary-color: #9333ea;
+  --global-secondary-color: #2563eb;
 }
 
-body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #f8fafc;
-  color: #1f2937;
-  line-height: 1.6;
+//Search Bar styles
+.search-field {
+  width: 100%;
+  --mat-form-field-container-height: 40px;
+
+  .search-icon {
+    color: #d3d3d3;
+  }
+
+  .mdc-text-field:hover {
+    border: 2px solid var(--global-primary-color);
+  }
+
+  .mdc-text-field {
+    border: 1px solid #d3d3d3;
+    border-radius: 8px;
+  }
+
+  .mat-mdc-text-field-input::placeholder {
+    color: #d3d3d3;
+    opacity: 1;
+  }
+
+  .mat-mdc-form-field-infix {
+    padding: 10px 0 !important;
+  }
 }
 
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+.search-purple {
+  .mdc-text-field:hover {
+    border: 2px solid var(--global-primary-color);
+  }
+
+  .mdc-text-field.mdc-text-field--focused {
+    border: 2px solid var(--global-primary-color);
+  }
+}
+
+.search-black {
+  .mdc-text-field:hover {
+    border: 2px solid #000000;
+  }
+  .mdc-text-field.mdc-text-field--focused {
+    border: 2px solid #000000;
+  }
+}
+
+.mdc-notched-outline__trailing,
+.mdc-notched-outline__leading {
+  border: none !important;
+}
+
+//Tab Component Bar styles
+.mat-mdc-tab-group {
+  .mat-mdc-tab-header {
+    justify-content: flex-start;
+    background: transparent;
+    border-bottom: none;
+  }
+
+  .mat-mdc-tab-label-container {
+    border-bottom: none;
+    padding-bottom: 5px;
+  }
+
+  .mat-mdc-tab-list {
+    flex-grow: 0;
+  }
+
+  .mat-mdc-tab-labels {
+    gap: 8px; // adds clean spacing between tabs
+  }
+
+  .mdc-tab {
+    padding: 6px 12px !important;
+    border-radius: 5px;
+    height: auto;
+    width: fit-content;
+    font-size: 14px;
+    font-weight: 400;
+    transition:
+      background-color 0s,
+      color 0s;
+    color: #a7b1c0; // slate-700
+
+    .mat-icon {
+      margin-right: 8px;
+      font-size: 20px;
+      padding-top: 2px;
+    }
+  }
+
+  .mdc-tab--active {
+    background-color: white;
+    color: #000000;
+    font-weight: 500;
+  }
+
+  .mdc-tab-indicator {
+    display: none !important;
+  }
 }
