@@ -1,14 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConfirmationDialogComponent } from './confirmation-dialog.component';
 import { By } from '@angular/platform-browser';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
 
-describe('ConfirmationDialogComponent', () => {
+describe('ConfirmationDialogComponent (Jest)', () => {
   let component: ConfirmationDialogComponent;
   let fixture: ComponentFixture<ConfirmationDialogComponent>;
+  let dialogRefMock: { close: jest.Mock };
 
   const mockData = {
     title: 'Delete Category',
@@ -19,17 +19,20 @@ describe('ConfirmationDialogComponent', () => {
   };
 
   beforeEach(async () => {
+    dialogRefMock = {
+      close: jest.fn(),
+    };
+
     await TestBed.configureTestingModule({
       imports: [ConfirmationDialogComponent, CommonModule, MatDialogModule, MatButtonModule],
-      providers: [{ provide: MAT_DIALOG_DATA, useValue: mockData }],
+      providers: [
+        { provide: MAT_DIALOG_DATA, useValue: mockData },
+        { provide: MatDialogRef, useValue: dialogRefMock },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConfirmationDialogComponent);
     component = fixture.componentInstance;
-
-    jest.spyOn(component.confirm, 'emit');
-    jest.spyOn(component.cancel, 'emit');
-
     fixture.detectChanges();
   });
 
@@ -40,25 +43,24 @@ describe('ConfirmationDialogComponent', () => {
   it('should render title, message, and buttons correctly', () => {
     const titleEl = fixture.nativeElement.querySelector('h2');
     const msgEl = fixture.nativeElement.querySelector('.message-text');
-    const cancelBtn = fixture.nativeElement.querySelector('button:nth-child(1)');
-    const confirmBtn = fixture.nativeElement.querySelector('button:nth-child(2)');
+    const buttons = fixture.nativeElement.querySelectorAll('button');
 
     expect(titleEl.textContent).toContain(mockData.title);
     expect(msgEl.textContent).toContain(mockData.message);
-    expect(cancelBtn.textContent).toContain('Cancel');
-    expect(confirmBtn.textContent).toContain('Delete');
+    expect(buttons[0].textContent).toContain('Cancel');
+    expect(buttons[1].textContent).toContain('Delete');
   });
 
-  it('should emit cancel event when cancel button is clicked', () => {
-    const cancelBtn = fixture.debugElement.query(By.css('button:nth-child(1)'));
+  it('should call dialogRef.close(false) when cancel button is clicked', () => {
+    const cancelBtn = fixture.debugElement.queryAll(By.css('button'))[0];
     cancelBtn.triggerEventHandler('click', null);
-    expect(component.cancel.emit).toHaveBeenCalled();
+    expect(dialogRefMock.close).toHaveBeenCalledWith(false);
   });
 
-  it('should emit confirm event when confirm button is clicked', () => {
-    const confirmBtn = fixture.debugElement.query(By.css('button:nth-child(2)'));
+  it('should call dialogRef.close(true) when confirm button is clicked', () => {
+    const confirmBtn = fixture.debugElement.queryAll(By.css('button'))[1];
     confirmBtn.triggerEventHandler('click', null);
-    expect(component.confirm.emit).toHaveBeenCalled();
+    expect(dialogRefMock.close).toHaveBeenCalledWith(true);
   });
 
   it('should show image if imageUrl is provided', () => {

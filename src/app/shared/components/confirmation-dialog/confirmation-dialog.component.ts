@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ConfirmationDialogData } from '../../interfaces/constants.static';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { ConfirmationDialogData } from '../../interfaces/confirmation-dialog.interface';
 
 @Component({
   selector: 'app-confirmation-dialog',
@@ -12,8 +12,16 @@ import { CommonModule } from '@angular/common';
   styleUrl: './confirmation-dialog.component.scss',
 })
 export class ConfirmationDialogComponent {
-  @Output() confirm = new EventEmitter<void>();
-  @Output() cancel = new EventEmitter<void>();
+  constructor(
+    public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData,
+  ) {}
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData) {}
+  onCancelClick(): void {
+    this.dialogRef.close(false);
+  }
+
+  onConfirmClick(): void {
+    this.dialogRef.close(true);
+  }
 }

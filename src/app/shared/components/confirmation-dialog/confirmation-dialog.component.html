@@ -11,10 +11,10 @@
   </mat-dialog-content>
 
   <mat-dialog-actions>
-    <button mat-button (click)="cancel.emit()">
+    <button mat-button (click)="onCancelClick()">
       {{ data.cancelText || 'Cancel' }}
     </button>
-    <button mat-flat-button color="warn" (click)="confirm.emit()">
+    <button mat-flat-button color="warn" (click)="onConfirmClick()">
       {{ data.confirmText || 'Delete' }}
     </button>
   </mat-dialog-actions>

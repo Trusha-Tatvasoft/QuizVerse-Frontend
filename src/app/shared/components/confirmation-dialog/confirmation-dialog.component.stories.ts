@@ -4,7 +4,7 @@ import { moduleMetadata } from '@storybook/angular';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { ConfirmationDialogData } from '../../interfaces/constants.static';
+import { ConfirmationDialogData } from '../../interfaces/confirmation-dialog.interface';
 
 export default {
   title: 'Dialogs/ConfirmationDialog',
@@ -16,7 +16,7 @@ export default {
       providers: [
         {
           provide: MatDialogRef,
-          useValue: { close: () => {} },
+          useValue: { close: (value: boolean) => console.log('Dialog closed with:', value) },
         },
         {
           provide: MAT_DIALOG_DATA,
@@ -25,22 +25,19 @@ export default {
       ],
     }),
   ],
-  argTypes: {
-    confirm: { action: 'confirm clicked' },
-    cancel: { action: 'cancel clicked' },
-  },
 } as Meta<ConfirmationDialogComponent>;
 
 const Template: StoryFn = (args: any) => ({
   component: ConfirmationDialogComponent,
   props: {
     data: args.data,
-    confirm: args.confirm,
-    cancel: args.cancel,
   },
   providers: [
     { provide: MAT_DIALOG_DATA, useValue: args.data },
-    { provide: MatDialogRef, useValue: { close: () => {} } },
+    {
+      provide: MatDialogRef,
+      useValue: { close: (value: boolean) => console.log('Dialog closed with:', value) },
+    },
   ],
 });
 
