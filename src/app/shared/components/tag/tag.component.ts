@@ -1,30 +1,16 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-export type TagColor =
-  | 'black' | 'white' | 'lightYellow' | 'brown' | 'lightOrange'
-  | 'lightRed' | 'red' | 'lightGrey' | 'grey'
-  | 'lightGreen' | 'green' | 'lightPurple' | 'purple';
+import { TagInputConfig } from '../../interfaces/tag.interface';
+import { TagColor } from '../../../utils/types/tag-color.type';
 
 export type TagType = 'selectable' | 'static';
-
-export interface TagInputConfig {
-  id: string;
-  label: string;
-  type: TagType;
-  isSelected: boolean;
-  hasBorder: boolean;
-  backgroundColor: TagColor;
-  textColor: TagColor;
-}
 
 @Component({
   selector: 'app-tag',
   imports: [CommonModule],
   templateUrl: './tag.component.html',
-  styleUrls: ['./tag.component.scss']
+  styleUrls: ['./tag.component.scss'],
 })
-
 export class TagComponent {
   @Input() tagConfig: TagInputConfig = {
     id: '',
@@ -33,7 +19,7 @@ export class TagComponent {
     isSelected: false,
     hasBorder: false,
     backgroundColor: 'black',
-    textColor: 'white'
+    textColor: 'white',
   };
   @Output() tagSelected = new EventEmitter<{ id: string; label: string; isSelected: boolean }>();
   @Output() tagClosed = new EventEmitter<{ id: string; label: string }>();
@@ -50,13 +36,12 @@ export class TagComponent {
       this.tagSelected.emit({
         id: this.tagConfig.id,
         label: this.tagConfig.label,
-        isSelected: true
+        isSelected: true,
       });
-    }
-    else {
+    } else {
       this.tagClosed.emit({
         id: this.tagConfig.id,
-        label: this.tagConfig.label
+        label: this.tagConfig.label,
       });
     }
   }
@@ -86,7 +71,7 @@ export class TagComponent {
   }
 
   private formatColor(color: TagColor): string {
-    return color.replace(/[A-Z]/g, match => '-' + match.toLowerCase());
+    return color.replace(/[A-Z]/g, (match) => '-' + match.toLowerCase());
   }
 
   private getBackgroundClass(): string {
