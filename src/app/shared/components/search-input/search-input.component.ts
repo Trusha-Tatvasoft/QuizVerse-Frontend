@@ -13,6 +13,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 
+/**
+ * SearchInputComponent
+ * ---------------------
+ * Reusable search input with Material styling and reactive form support.
+ */
+
 @Component({
   selector: 'app-search-input',
   standalone: true,
@@ -21,10 +27,16 @@ import { ReactiveFormsModule, FormControl } from '@angular/forms';
   styleUrls: ['./search-input.component.scss'],
 })
 export class SearchInputComponent implements OnInit, OnChanges {
-  @Input() placeholder?: string;
+  /** Placeholder text for the input */
+  @Input() placeholder!: string;
+
+  /** Reactive form control for the input */
   @Input() control!: FormControl;
+
+  /** Optional CSS class for border styling */
   @Input() borderClass?: string;
 
+  /** Emits trimmed input value on change */
   @Output() search = new EventEmitter<string>();
 
   ngOnInit(): void {
@@ -35,20 +47,20 @@ export class SearchInputComponent implements OnInit, OnChanges {
     this.ensureDefaults();
   }
 
+  /** Sets defaults if values are not provided */
   ensureDefaults() {
     if (this.placeholder === undefined || this.placeholder === null) {
       this.placeholder = 'Search...';
     }
-
     if (!this.control) {
       this.control = new FormControl('');
     }
-
     if (!this.borderClass) {
       this.borderClass = 'search-purple';
     }
   }
 
+  /** Emits the search value on input change */
   onInputChange(event: Event): void {
     const value = (event.target as HTMLInputElement).value.trim();
     this.search.emit(value);
