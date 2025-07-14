@@ -4,7 +4,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { By } from '@angular/platform-browser';
 import '@testing-library/jest-dom';
-import { ButtonConfig } from '../../interfaces/button-config.interface';
 import { DEFAULT_BUTTON_CONFIG } from '../../interfaces/default-button-config.constants';
 
 describe('TextButtonComponent', () => {

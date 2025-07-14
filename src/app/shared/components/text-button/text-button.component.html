@@ -27,8 +27,7 @@
     <div
       [style.fontWeight]="validFontWeight"
       *ngIf="hasLabel"
-      [ngClass]="{ 'gradient-text': isGradientText }"
-      [ngClass]="config.variant"
+      [ngClass]="[config.variant, isGradientText ? 'gradient-text' : '']"
     >
       {{ config.label }}
     </div>

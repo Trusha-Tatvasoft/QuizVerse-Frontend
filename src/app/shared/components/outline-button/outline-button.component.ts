@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { AppColors } from '../../../utils/constants';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonConfig } from '../../interfaces/button-config.interface';
 import { DEFAULT_BUTTON_CONFIG } from '../../interfaces/default-button-config.constants';

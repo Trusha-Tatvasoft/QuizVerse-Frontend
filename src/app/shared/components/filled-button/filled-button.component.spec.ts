@@ -4,7 +4,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { By } from '@angular/platform-browser';
 import '@testing-library/jest-dom';
-import { AppColors } from '../../../utils/constants';
 
 describe('FilledButtonComponent', () => {
   let component: FilledButtonComponent;
