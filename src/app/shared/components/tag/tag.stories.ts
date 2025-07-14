@@ -12,8 +12,8 @@ const meta: Meta<TagComponent> = {
     }),
   ],
   argTypes: {
-    onSelect: { action: 'Tag selected' },
-    onClose: { action: 'Tag closed' },
+    tagSelected: { action: 'Tag selected' },
+    tagClosed: { action: 'Tag closed' },
   },
 };
 
@@ -29,6 +29,7 @@ export const Static: Story = {
       label: 'Static Tag',
       type: 'static',
       isSelected: false,
+      hasBorder: false,
       backgroundColor: 'lightGreen',
       textColor: 'green',
     },
@@ -36,12 +37,13 @@ export const Static: Story = {
 };
 
 export const Selectable: Story = {
-  name: 'Selectable (Unselected)',
+  name: 'Selectable',
   args: {
     tagConfig: {
       id: 'tag-selectable',
       label: 'Selectable',
       type: 'selectable',
+      hasBorder: true,
       isSelected: false,
       backgroundColor: 'white',
       textColor: 'black',
