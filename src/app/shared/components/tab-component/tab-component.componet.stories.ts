@@ -2,17 +2,26 @@ import { Meta, StoryObj, applicationConfig } from '@storybook/angular';
 import { importProvidersFrom } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
-import { TabComponentComponent } from './tab-component.component';
+import { TabComponent } from './tab-component.component';
+import { TabInput } from '../../interfaces/tab-component.interface';
 
-const meta: Meta<TabComponentComponent> = {
+/**
+ * Storybook configuration for TabComponent.
+ * Documents and visually tests tab structures with HTML content, icons, and dynamic variations.
+ */
+const meta: Meta<TabComponent> = {
   title: 'Components/CommonTab',
-  component: TabComponentComponent,
+  component: TabComponent,
   tags: ['autodocs'],
   decorators: [
     applicationConfig({
       providers: [importProvidersFrom(MatTabsModule, MatIconModule)],
     }),
   ],
+
+  /**
+   * argTypes for controlling and documenting dynamic inputs in Storybook.
+   */
   argTypes: {
     selectedIndex: {
       control: { type: 'number', min: 0 },
@@ -22,8 +31,12 @@ const meta: Meta<TabComponentComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<TabComponentComponent>;
+type Story = StoryObj<TabComponent>;
 
+/**
+ * TabComponent Story: SimpleContentTabs
+ * Demonstrates basic tabs with HTML content and optional icons.
+ */
 export const SimpleContentTabs: Story = {
   args: {
     selectedIndex: 0,
@@ -38,7 +51,7 @@ export const SimpleContentTabs: Story = {
             <p class="mt-2 text-blue-600">You can use basic HTML tags and Tailwind classes.</p>
           </div>
         `,
-      },
+      } as TabInput,
       {
         label: 'About',
         content: `
@@ -51,11 +64,15 @@ export const SimpleContentTabs: Story = {
             </ul>
           </div>
         `,
-      },
+      } as TabInput,
     ],
   },
 };
 
+/**
+ * TabComponent Story: DashboardContentTabs
+ * Demonstrates tabs used in dashboards with analytics and activity sections.
+ */
 export const DashboardContentTabs: Story = {
   args: {
     selectedIndex: 1,
@@ -75,7 +92,7 @@ export const DashboardContentTabs: Story = {
             </div>
           </div>
         `,
-      },
+      } as TabInput,
       {
         label: 'Activity',
         icon: 'timeline',
@@ -87,11 +104,15 @@ export const DashboardContentTabs: Story = {
             <p class="mt-2 text-sm text-gray-600">Recent user activity</p>
           </div>
         `,
-      },
+      } as TabInput,
     ],
   },
 };
 
+/**
+ * TabComponent Story: FormContentTabs
+ * Demonstrates forms within tab structures for login and registration flows.
+ */
 export const FormContentTabs: Story = {
   args: {
     tabs: [
@@ -113,7 +134,7 @@ export const FormContentTabs: Story = {
             </button>
           </div>
         `,
-      },
+      } as TabInput,
       {
         label: 'Register',
         icon: 'person_add',
@@ -137,11 +158,15 @@ export const FormContentTabs: Story = {
             </button>
           </div>
         `,
-      },
+      } as TabInput,
     ],
   },
 };
 
+/**
+ * TabComponent Story: NoIcons
+ * Demonstrates tabs without using icons to keep the UI clean.
+ */
 export const NoIcons: Story = {
   args: {
     selectedIndex: 0,
@@ -159,7 +184,7 @@ export const NoIcons: Story = {
             </ul>
           </div>
         `,
-      },
+      } as TabInput,
       {
         label: 'Second Tab',
         content: `
@@ -171,7 +196,7 @@ export const NoIcons: Story = {
             </div>
           </div>
         `,
-      },
+      } as TabInput,
     ],
   },
 };

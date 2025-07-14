@@ -1,26 +1,28 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { TabComponentComponent } from './tab-component.component';
+import { TabComponent } from './tab-component.component';
 import { By } from '@angular/platform-browser';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 
-describe('TabComponentComponent', () => {
-  let component: TabComponentComponent;
-  let fixture: ComponentFixture<TabComponentComponent>;
+describe('TabComponent', () => {
+  let component: TabComponent;
+  let fixture: ComponentFixture<TabComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatTabsModule, MatIconModule, TabComponentComponent],
+      imports: [MatTabsModule, MatIconModule, TabComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TabComponentComponent);
+    fixture = TestBed.createComponent(TabComponent);
     component = fixture.componentInstance;
   });
 
+  // Test: Component should be created successfully
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
+  // Test: Should render the provided tabs with correct labels
   it('should render the provided tabs with labels', fakeAsync(() => {
     component.tabs = [
       { label: 'Tab 1', content: '<span>Content 1</span>' },
@@ -36,6 +38,7 @@ describe('TabComponentComponent', () => {
     expect(tabLabels[1].nativeElement.textContent).toContain('Tab 2');
   }));
 
+  // Test: Should render icons when provided with the tabs
   it('should render icons when provided', () => {
     component.tabs = [
       { label: 'Tab A', icon: 'home', content: '<span>Content A</span>' },
@@ -49,6 +52,7 @@ describe('TabComponentComponent', () => {
     expect(icons[1].nativeElement.textContent).toContain('person');
   });
 
+  // Test: Should emit tabChanged event when tab changes
   it('should emit tabChanged when tab changes', fakeAsync(() => {
     component.tabs = [
       { label: 'Tab X', content: 'X' },
@@ -68,6 +72,7 @@ describe('TabComponentComponent', () => {
     expect(emittedIndex).toBe(1);
   }));
 
+  // Test: Should respect selectedIndex input correctly
   it('should use the selectedIndex input correctly', () => {
     component.tabs = [
       { label: 'First', content: 'Content 1' },
@@ -80,6 +85,7 @@ describe('TabComponentComponent', () => {
     expect(tabGroup.selectedIndex).toBe(1);
   });
 
+  // Test: Should handle empty tabs array gracefully
   it('should handle empty tabs gracefully', () => {
     component.tabs = [];
     fixture.detectChanges();
@@ -88,6 +94,7 @@ describe('TabComponentComponent', () => {
     expect(tabLabels.length).toBe(0);
   });
 
+  // Test: Should handle undefined tabs input safely without crashing
   it('should handle undefined tabs input without crashing', () => {
     component.tabs = undefined!;
     fixture.detectChanges();
@@ -96,6 +103,7 @@ describe('TabComponentComponent', () => {
     expect(tabLabels.length).toBe(0);
   });
 
+  // Test: Should handle missing content in tab without errors
   it('should handle missing content without errors', fakeAsync(() => {
     component.tabs = [{ label: 'Tab No Content' }];
     fixture.detectChanges();
@@ -109,6 +117,7 @@ describe('TabComponentComponent', () => {
     expect(contentDiv.nativeElement.innerHTML).toBe('');
   }));
 
+  // Test: Should sanitize and safely display provided HTML content
   it('should sanitize and display HTML content safely', () => {
     const unsafeContent = `<img src="x" onerror="alert('hack')">Safe Text`;
     component.tabs = [{ label: 'SafeTab', content: unsafeContent }];
