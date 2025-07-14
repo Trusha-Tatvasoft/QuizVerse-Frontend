@@ -27,14 +27,10 @@ import { ReactiveFormsModule, FormControl } from '@angular/forms';
   styleUrls: ['./search-input.component.scss'],
 })
 export class SearchInputComponent implements OnInit, OnChanges {
-  /** Placeholder text for the input */
-  @Input() placeholder!: string;
-
-  /** Reactive form control for the input */
-  @Input() control!: FormControl;
-
-  /** Optional CSS class for border styling */
-  @Input() borderClass?: string;
+  /** Input Decorators **/
+  @Input() placeholder!: string; /** Placeholder text for the input */
+  @Input() control!: FormControl; /** Reactive form control for the input */
+  @Input() borderClass?: string; /** Optional CSS class for border styling */
 
   /** Emits trimmed input value on change */
   @Output() search = new EventEmitter<string>();
