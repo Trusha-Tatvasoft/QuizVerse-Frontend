@@ -1,54 +1,60 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 export type TagColor =
   | 'black' | 'white' | 'lightYellow' | 'brown' | 'lightOrange'
   | 'lightRed' | 'red' | 'lightGrey' | 'grey'
   | 'lightGreen' | 'green' | 'lightPurple' | 'purple';
 
 export type TagType = 'selectable' | 'static';
+
 export interface TagInputConfig {
   id: string;
   label: string;
   type: TagType;
   isSelected: boolean;
+  hasBorder: boolean;
   backgroundColor: TagColor;
   textColor: TagColor;
 }
+
 @Component({
   selector: 'app-tag',
   imports: [CommonModule],
   templateUrl: './tag.component.html',
   styleUrls: ['./tag.component.scss']
 })
+
 export class TagComponent {
   @Input() tagConfig: TagInputConfig = {
     id: '',
     label: '',
     type: 'static',
     isSelected: false,
+    hasBorder: false,
     backgroundColor: 'black',
     textColor: 'white'
   };
+  @Output() tagSelected = new EventEmitter<{ id: string; label: string; isSelected: boolean }>();
+  @Output() tagClosed = new EventEmitter<{ id: string; label: string }>();
 
-  @Output() onSelect = new EventEmitter<{ id: string; label: string; isSelected: boolean }>();
-  @Output() onClose = new EventEmitter<{ id: string; label: string }>();
-
-  onTagClick(): void {
-    if (this.tagConfig.type === 'selectable' && !this.tagConfig.isSelected) {
-      this.tagConfig.isSelected = true;
-      this.onSelect.emit({
+  onTagClick(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    if (this.tagConfig.type !== 'selectable') {
+      return;
+    }
+    this.tagConfig.isSelected = !this.tagConfig.isSelected;
+    if (this.tagConfig.isSelected) {
+      this.tagSelected.emit({
         id: this.tagConfig.id,
         label: this.tagConfig.label,
         isSelected: true
       });
     }
-  }
-
-  onRemoveClick(event: Event): void {
-    event.stopPropagation();
-    if (this.tagConfig.type === 'selectable' && this.tagConfig.isSelected) {
-      this.tagConfig.isSelected = false;
-      this.onClose.emit({
+    else {
+      this.tagClosed.emit({
         id: this.tagConfig.id,
         label: this.tagConfig.label
       });
@@ -73,6 +79,7 @@ export class TagComponent {
     if (this.isClosable) classes.push('closable', 'selected');
     if (!this.isClosable) classes.push('not-closable');
     if (this.isStatic) classes.push('static');
+    if (this.tagConfig.hasBorder) classes.push('bordered');
     classes.push(this.getBackgroundClass());
     classes.push(this.getTextClass());
     return classes;
