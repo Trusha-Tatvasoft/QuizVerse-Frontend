@@ -21,31 +21,29 @@ import { TabInput, TabView } from '../../interfaces/tab-component.interface';
   styleUrls: ['./tab-component.component.scss'],
 })
 export class TabComponent {
-  /** Dynamic tabs input: array of label, icon, and HTML content. Defaults to empty array if undefined. */
+  /** Input Decorators **/
   @Input() set tabs(value: TabInput[] | undefined) {
     this._tabs = (value ?? []).map((tab) => ({
       label: tab.label,
       icon: tab.icon,
       safeContent: tab.content ? this.sanitizer.bypassSecurityTrustHtml(tab.content) : undefined,
     }));
-  }
+  } /** Dynamic tabs input: array of label, icon, and HTML content. Defaults to empty array if undefined. */
+  @Input() selectedIndex: number = 0; /** Initially selected tab index */
+
+  /** Emits the new selected index when the tab changes */
+  @Output() tabChanged = new EventEmitter<number>();
+
+  /** Backing field for tabs */
+  private _tabs: TabView[] = [];
+
+  /** DomSanitizer to safely inject HTML into tabs */
+  constructor(private readonly sanitizer: DomSanitizer) {}
 
   /** Getter for processed tabs with safe HTML content for rendering in the template. */
   get tabs(): TabView[] {
     return this._tabs;
   }
-
-  /** Backing field for tabs */
-  private _tabs: TabView[] = [];
-
-  /** Initially selected tab index */
-  @Input() selectedIndex: number = 0;
-
-  /** Emits the new selected index when the tab changes */
-  @Output() tabChanged = new EventEmitter<number>();
-
-  /** DomSanitizer to safely inject HTML into tabs */
-  constructor(private readonly sanitizer: DomSanitizer) {}
 
   /** Emits `tabChanged` with the selected tab index when user switches tabs */
   onTabChange(index: number) {
