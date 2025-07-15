@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ButtonConfig } from '../../interfaces/button-config.interface';
 import { DEFAULT_BUTTON_CONFIG } from '../../interfaces/default-button-config.constants';
 import { ElementRef } from '@angular/core';
@@ -17,8 +17,7 @@ export class TextButtonComponent {
   @Input() textButtonConfig: ButtonConfig = {};
   @Output() buttonClicked = new EventEmitter<Event>();
   config: Required<ButtonConfig> = { ...DEFAULT_BUTTON_CONFIG };
-
-  constructor(private readonly elRef: ElementRef) {}
+  private readonly elRef = inject(ElementRef);
 
   ngOnInit() {
     this.config = { ...DEFAULT_BUTTON_CONFIG, ...this.textButtonConfig };

@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,8 +16,7 @@ export class FilledButtonComponent {
   @Input() filledButtonConfig: ButtonConfig = {};
   @Output() buttonClicked = new EventEmitter<Event>();
   config: Required<ButtonConfig> = { ...DEFAULT_BUTTON_CONFIG };
-
-  constructor(private readonly elRef: ElementRef) {}
+  private readonly elRef = inject(ElementRef);
 
   ngOnInit() {
     this.config = { ...DEFAULT_BUTTON_CONFIG, ...this.filledButtonConfig };
