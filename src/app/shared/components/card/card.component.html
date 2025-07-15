@@ -1,0 +1,26 @@
+<mat-card class="stats-card">
+  <mat-card-content>
+    <div class="card-header">
+      <div class="card-title-section">
+        <h3 class="card-title">{{ cardConfig.title }}</h3>
+        <div class="card-value" [ngClass]="valueColorClass">
+          {{ cardConfig.value }}
+        </div>
+        <p class="card-subtitle" *ngIf="cardConfig.subtitle" [ngClass]="subtitleColorClass">
+          {{ cardConfig.subtitle }}
+        </p>
+      </div>
+
+      <div class="card-right-section" *ngIf="hasRightElement">
+        <div class="card-icon" *ngIf="showIcon" [ngClass]="iconColorClass">
+          <mat-icon>{{ cardConfig.icon }}</mat-icon>
+        </div>
+
+        <!-- add currently this -->
+        <div class="card-tag" *ngIf="showTag">
+          <app-tag [tagConfig]="cardConfig.tag!"></app-tag>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
