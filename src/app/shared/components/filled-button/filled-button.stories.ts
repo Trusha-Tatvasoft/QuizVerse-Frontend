@@ -143,6 +143,7 @@ export const FontWeight: Story = {
     filledButtonConfig: {
       label: 'Bold Button',
       fontWeight: 800,
+      type: 'submit',
     },
   },
 };

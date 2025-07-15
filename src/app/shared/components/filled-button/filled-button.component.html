@@ -1,5 +1,5 @@
 <button
-  [attr.type]="config.type"
+  [type]="config.type"
   [disabled]="config.isDisabled"
   [ngClass]="config.variant"
   (click)="!config.isDisabled && buttonClicked.emit($event)"
