@@ -1,4 +1,3 @@
-<!-- Filled Button Component -->
 <button
   [attr.type]="config.type"
   [disabled]="config.isDisabled"
@@ -7,7 +6,6 @@
   class="filled-button"
 >
   <div class="button-content flex items-center justify-center gap-2">
-    <!-- container for icon on left -->
     <ng-container *ngIf="isIconLeft">
       <mat-icon *ngIf="config.matIcon" [fontSet]="config.iconFontSet" class="button-icon">{{
         config.matIcon
@@ -19,10 +17,7 @@
         class="button-image"
       />
     </ng-container>
-
-    <div [style.fontWeight]="validFontWeight" *ngIf="hasLabel">{{ config.label }}</div>
-
-    <!-- container for icon on right -->
+    <div *ngIf="hasLabel">{{ config.label }}</div>
     <ng-container *ngIf="isIconRight">
       <mat-icon *ngIf="config.matIcon" [fontSet]="config.iconFontSet" class="button-icon">{{
         config.matIcon
@@ -34,8 +29,6 @@
         class="button-image"
       />
     </ng-container>
-
-    <!-- container for only icon -->
     <ng-container *ngIf="!hasLabel">
       <mat-icon *ngIf="config.matIcon" [fontSet]="config.iconFontSet" class="button-icon">{{
         config.matIcon

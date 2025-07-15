@@ -1,17 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ButtonConfig } from '../../interfaces/button-config.interface';
 import { DEFAULT_BUTTON_CONFIG } from '../../interfaces/default-button-config.constants';
 
-/**
- * Filled Button Component
- * ------------------------
- * Reusable filled button component that displays a filled button.
- * The background changes based on the project's primary and secondary colors.
- * Displays only icon, only label, or both, with left or right positioning based on input.
- */
 @Component({
   selector: 'app-filled-button',
   standalone: true,
@@ -20,18 +13,15 @@ import { DEFAULT_BUTTON_CONFIG } from '../../interfaces/default-button-config.co
   styleUrls: ['./filled-button.component.scss'],
 })
 export class FilledButtonComponent {
-  // Input config to customize the button
   @Input() filledButtonConfig: ButtonConfig = {};
-
-  // Emits event when button is clicked
   @Output() buttonClicked = new EventEmitter<Event>();
-
-  // Merged config with default values to ensure all fields are defined
   config: Required<ButtonConfig> = { ...DEFAULT_BUTTON_CONFIG };
 
+  constructor(private readonly elRef: ElementRef) {}
+
   ngOnInit() {
-    // Merge incoming config with defaults
     this.config = { ...DEFAULT_BUTTON_CONFIG, ...this.filledButtonConfig };
+    this.elRef.nativeElement.style.setProperty('--font-weight', this.validFontWeight);
   }
 
   // Returns font weight as string for inline styling

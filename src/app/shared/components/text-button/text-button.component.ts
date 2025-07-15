@@ -4,14 +4,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonConfig } from '../../interfaces/button-config.interface';
 import { DEFAULT_BUTTON_CONFIG } from '../../interfaces/default-button-config.constants';
+import { ElementRef } from '@angular/core';
 
-/**
- * Text Button Component
- * ------------------------
- * Reusable text button component that displays a button with only text and white background.
- * The label color is black.
- * Supports icon, label, and their left/right positioning based on configuration.
- */
 @Component({
   selector: 'app-text-button',
   standalone: true,
@@ -20,19 +14,15 @@ import { DEFAULT_BUTTON_CONFIG } from '../../interfaces/default-button-config.co
   styleUrl: './text-button.component.scss',
 })
 export class TextButtonComponent {
-  /** Input configuration to control icon, label, positioning, and styles */
   @Input() textButtonConfig: ButtonConfig = {};
-
-  /** Emits an event when the button is clicked */
   @Output() buttonClicked = new EventEmitter<Event>();
-
-  /** Final config with defaults merged from input */
   config: Required<ButtonConfig> = { ...DEFAULT_BUTTON_CONFIG };
 
-  /** Lifecycle method to merge default and custom config */
+  constructor(private readonly elRef: ElementRef) {}
+
   ngOnInit() {
     this.config = { ...DEFAULT_BUTTON_CONFIG, ...this.textButtonConfig };
-    // this.setOutlineTextColor();
+    this.elRef.nativeElement.style.setProperty('--font-weight', this.validFontWeight);
   }
 
   /** Returns the valid font weight as string, defaults to 400 */

@@ -2,9 +2,9 @@
 
 .outline-button {
   @apply bg-white border text-sm font-medium rounded-lg px-5 py-2.5 flex items-center justify-center gap-2 transition-all duration-200;
-
   border: 1px solid #d1d5db;
   border-color: #d1d5db;
+  font-weight: var(--font-weight);
 
   &:hover:not(:disabled) {
     background-color: #eeeeee;

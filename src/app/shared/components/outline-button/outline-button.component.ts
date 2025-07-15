@@ -1,17 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonConfig } from '../../interfaces/button-config.interface';
 import { DEFAULT_BUTTON_CONFIG } from '../../interfaces/default-button-config.constants';
 
-/**
- * Outline Button Component
- * ------------------------
- * Reusable outline button component that displays a button with outline and white background.
- * The label color changes based on the project's primary color.
- * Supports icon, label, and their left/right positioning based on configuration.
- */
 @Component({
   selector: 'app-outline-button',
   standalone: true,
@@ -20,18 +13,15 @@ import { DEFAULT_BUTTON_CONFIG } from '../../interfaces/default-button-config.co
   styleUrl: './outline-button.component.scss',
 })
 export class OutlineButtonComponent {
-  /** Input configuration to control icon, label, positioning, and styles */
   @Input() outlineButtonConfig: ButtonConfig = {};
-
-  /** Emits click event when the button is clicked and not disabled */
   @Output() buttonClicked = new EventEmitter<Event>();
-
-  /** Final merged configuration with default values */
   config: Required<ButtonConfig> = { ...DEFAULT_BUTTON_CONFIG };
 
-  /** OnInit lifecycle to merge user config and apply global styles */
+  constructor(private readonly elRef: ElementRef) {}
+
   ngOnInit() {
     this.config = { ...DEFAULT_BUTTON_CONFIG, ...this.outlineButtonConfig };
+    this.elRef.nativeElement.style.setProperty('--font-weight', this.validFontWeight);
   }
 
   /** Converts fontWeight number to string; defaults to '400' if not provided */

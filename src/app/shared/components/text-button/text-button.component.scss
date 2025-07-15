@@ -2,6 +2,7 @@
 
 .text-button {
   @apply bg-white text-sm font-medium rounded-lg px-5 py-2.5 flex items-center justify-center gap-2 transition-all duration-200;
+  font-weight: var(--font-weight);
 
   &:hover:not(:disabled) {
     background-color: #eeeeee;
