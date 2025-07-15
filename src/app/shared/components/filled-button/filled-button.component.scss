@@ -1,36 +1,3 @@
-@import 'tailwindcss';
-
-.filled-button {
-  @apply text-white font-medium rounded-lg text-sm px-5 py-2.5;
-  cursor: pointer;
-  font-weight: var(--font-weight);
-  opacity: 1;
-  transition:
-    opacity 0.2s ease,
-    cursor 0.2s ease;
-
-  &.primary {
-    background: var(--global-primary-color);
-  }
-
-  &.secondary {
-    background: var(--global-secondary-color);
-  }
-
-  &.gradient {
-    background: var(--gradient);
-  }
-
-  &:hover:not(:disabled) {
-    opacity: 0.85;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-}
-
 .button-icon,
 .button-image {
   width: 20px;
