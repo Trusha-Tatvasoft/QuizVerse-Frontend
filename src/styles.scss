@@ -1,9 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'tailwindcss';
-@import url('../src/assets/scss/utils/_variable.scss');
 :root {
+  --black-color: #0f172a;
+  --white-color: #f8fafc;
+  --green-color: #166534;
+  --brown-color: #c16a6a;
+  --purple-color: #6b21a8;
+  --yellow-color: #854d0e;
+
+  --light-green-color: #dcfce7;
+  --light-brown-color: #fee2e2;
+  --light-purple-color: #f3e8ff;
+  --light-yellow-color: #fef9c3;
+
   --global-primary-color: #9333ea;
   --global-secondary-color: #2563eb;
+  --gradient: linear-gradient(
+    90deg,
+    var(--global-primary-color) 12%,
+    var(--global-secondary-color) 63%
+  );
 }
 
 //Search Bar styles
@@ -106,5 +122,79 @@
 
   .mdc-tab-indicator {
     display: none !important;
+  }
+}
+
+// Shared filled button styles
+.filled-button {
+  @apply text-white font-medium rounded-lg text-sm px-5 py-2.5;
+  cursor: pointer;
+  font-weight: var(--font-weight);
+  opacity: 1;
+  transition:
+    opacity 0.2s ease,
+    cursor 0.2s ease;
+
+  &.primary {
+    background: var(--global-primary-color);
+  }
+
+  &.secondary {
+    background: var(--global-secondary-color);
+  }
+
+  &.gradient {
+    background: var(--gradient);
+  }
+
+  &:hover:not(:disabled) {
+    opacity: 0.85;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+// Shared outline button styles
+.outline-button {
+  @apply bg-white border text-sm font-medium rounded-lg px-5 py-2.5 flex items-center justify-center gap-2 transition-all duration-200;
+  border: 1px solid #d1d5db;
+  border-color: #d1d5db;
+  font-weight: var(--font-weight);
+
+  &:hover:not(:disabled) {
+    background-color: #eeeeee;
+    opacity: 0.85;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+// Shared text button styles
+.text-button {
+  @apply bg-white text-sm font-medium rounded-lg px-5 py-2.5 flex items-center justify-center gap-2 transition-all duration-200;
+  font-weight: var(--font-weight);
+
+  &:hover:not(:disabled) {
+    background-color: #eeeeee;
+    opacity: 0.85;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
   }
 }
