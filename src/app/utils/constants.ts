@@ -35,9 +35,6 @@ export const AppColors = {
   financialSubtitleColor: '#047857',
 
   darkText: '#333',
-
-  globalPrimaryColor: '#9333ea',
-  globalSecondaryColor: '#2563eb',
 };
 
 export const TablePaginationConfig = {
