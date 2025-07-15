@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'tailwindcss';
+
 :root {
   --black-color: #0f172a;
   --white-color: #f8fafc;
@@ -15,6 +16,7 @@
 
   --global-primary-color: #9333ea;
   --global-secondary-color: #2563eb;
+
   --gradient: linear-gradient(
     90deg,
     var(--global-primary-color) 12%,
@@ -64,6 +66,7 @@
   .mdc-text-field:hover {
     border: 2px solid #000000;
   }
+
   .mdc-text-field.mdc-text-field--focused {
     border: 2px solid #000000;
   }
@@ -196,5 +199,113 @@
 
   &:not(:disabled) {
     cursor: pointer;
+  }
+}
+
+//profile-menu
+.profile-menu {
+  .profile-menu-xp {
+    display: none;
+
+    @media (max-width: 767px) {
+      display: block;
+      display: flex;
+      justify-content: center;
+      padding: 1rem 0rem;
+    }
+  }
+  .mat-mdc-menu-content {
+    width: 220px;
+    background-color: white;
+    padding: 0.25rem;
+
+    .mat-mdc-menu-item:not([disabled]):hover {
+      background-color: #bdd2e73b;
+    }
+  }
+
+  .logout-item {
+    border-top: 1px solid #e0e0e0;
+    color: red;
+
+    .mat-icon {
+      color: red !important;
+    }
+
+    &:hover {
+      color: black;
+
+      .mat-icon {
+        color: black !important;
+      }
+    }
+  }
+}
+
+.xp-section {
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 175px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 15px;
+  gap: 1rem;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient);
+    opacity: 0.15;
+    z-index: -1;
+  }
+
+  .xp-label {
+    font-size: 15px;
+    font-weight: 600;
+    flex: none;
+  }
+
+  mat-progress-bar {
+    width: 60%;
+  }
+}
+
+//progress-bar
+.custom-xp-bar {
+  height: 10px !important;
+  border-radius: 15px;
+  background-color: white; // Optional: gives a soft gray track
+
+  .mdc-linear-progress__bar {
+    height: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .mdc-linear-progress__bar-inner {
+    border-top: none !important;
+    height: 100%;
+    background-color: black !important;
+  }
+
+  .mdc-linear-progress__buffer-bar {
+    flex: 0 1 100%;
+    transition: flex-basis 250ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
+    background-color: white;
+  }
+}
+
+.notification-wrapper {
+  position: relative;
+
+  app-text-button {
+    .text-button {
+      padding: 10px !important;
+    }
   }
 }

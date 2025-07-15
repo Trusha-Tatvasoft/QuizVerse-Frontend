@@ -1,0 +1,152 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  position: relative;
+  height: 65px;
+  gap: 1rem;
+
+  .logo-big,
+  .logo-small {
+    height: 40px;
+  }
+
+  @media (min-width: 768px) {
+    .logo-small {
+      display: none;
+    }
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-width: 90px;
+
+    .toggle-btn {
+      display: none;
+
+      @media (max-width: 768px) {
+        display: inline-flex;
+      }
+    }
+  }
+
+  &__center {
+    display: flex;
+    padding-top: inherit;
+    flex: 1 1 auto;
+    justify-content: center;
+    min-width: 10px;
+
+    app-search-input {
+      width: 100%;
+      max-width: 400px;
+
+      // @media screen and (max-width: 767px) {
+      //   display: none;
+      // }
+    }
+  }
+
+  &__right,
+  &__guest {
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      :hover {
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 2px;
+      }
+    }
+  }
+
+  .notification-wrapper {
+    position: relative;
+
+    app-text-button {
+      .text-button {
+        padding: 0px !important;
+      }
+    }
+
+    .badge {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: bold;
+
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .notification-dropdown {
+      position: absolute;
+      right: 0;
+      top: 45px;
+      width: 240px;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      z-index: 10;
+      padding: 1rem;
+      font-size: 14px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .xp-main {
+      display: none;
+    }
+  }
+
+  .profile-button {
+    border: none;
+    background: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 50%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem 0.5rem;
+    .logo-big {
+      display: none;
+    }
+
+    .logo-small {
+      display: block;
+    }
+  }
+}

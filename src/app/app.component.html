@@ -1,1 +1,6 @@
-<h1 class="text-3xl font-bold">Hello world!</h1>
+<h1 class="text-3xl font-bold underline">Hello world!</h1>
+<app-navbar [isLogin]="false"></app-navbar>
+
+<app-navbar [isLogin]="true" [isAdmin]="false" [currentXp]="1800" [xpLimit]="3000"></app-navbar>
+
+<app-navbar [isLogin]="true" [isAdmin]="true" [currentXp]="3000" [xpLimit]="4000"></app-navbar>

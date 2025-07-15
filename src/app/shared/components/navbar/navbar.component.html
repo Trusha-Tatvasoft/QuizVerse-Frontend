@@ -1,0 +1,86 @@
+<p>navbar works!</p>
+<header class="navbar">
+  <!-- LEFT -->
+  <div class="navbar__left">
+    <button *ngIf="isLogin" mat-icon-button class="toggle-btn" aria-label="Toggle Sidebar">
+      <mat-icon fontSet="material-icons-outlined">menu</mat-icon>
+    </button>
+    <img src="assets/images/logo-to-be-changed.png" class="logo-big" alt="Logo" />
+    <img src="assets/images/logo-small.png" class="logo-small" alt="Logo" />
+  </div>
+
+  <!-- CENTER -->
+  <div class="navbar__center" *ngIf="isLogin">
+    <app-search-input
+      [placeholder]="'Search quizzes, users, topics...'"
+      (search)="onSearch($event)"
+    ></app-search-input>
+  </div>
+
+  <!-- RIGHT (LOGGED IN) -->
+  <div class="navbar__right" *ngIf="isLogin">
+    <!-- Notifications -->
+    <div class="notification-wrapper">
+      <app-text-button
+        [textButtonConfig]="textButton"
+        (buttonClicked)="toggleNotifications()"
+      ></app-text-button>
+
+      <span class="badge">3</span>
+
+      <div class="notification-dropdown" *ngIf="showNotifications">
+        <p>No new notifications.</p>
+      </div>
+    </div>
+
+    <!-- XP -->
+    <div class="xp-main">
+      <div class="xp-section" *ngIf="!isAdmin">
+        <div class="xp-label">XP: {{ currentXp }}</div>
+
+        <mat-progress-bar
+          mode="determinate"
+          [value]="getXpProgress()"
+          class="custom-xp-bar"
+        ></mat-progress-bar>
+      </div>
+    </div>
+
+    <!-- Profile Icon -->
+    <button class="profile-button" [matMenuTriggerFor]="menu">
+      <img [src]="profileImageUrl" alt="Profile" />
+    </button>
+
+    <mat-menu #menu="matMenu" class="profile-menu">
+      <div class="profile-menu-xp" *ngIf="!isAdmin">
+        <div class="xp-section">
+          <div class="xp-label">XP: {{ currentXp }}</div>
+
+          <mat-progress-bar
+            mode="determinate"
+            [value]="getXpProgress()"
+            class="custom-xp-bar"
+          ></mat-progress-bar>
+        </div>
+      </div>
+      <button mat-menu-item>
+        <mat-icon fontSet="material-icons-outlined">person</mat-icon>
+        <span>Profile</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon fontSet="material-icons-outlined">settings</mat-icon>
+        <span>Settings</span>
+      </button>
+      <button mat-menu-item class="logout-item">
+        <mat-icon>logout</mat-icon>
+        <span>Sign out</span>
+      </button>
+    </mat-menu>
+  </div>
+
+  <!-- RIGHT (GUEST) -->
+  <div class="navbar__guest" *ngIf="!isLogin">
+    <app-text-button [textButtonConfig]="signInButton"></app-text-button>
+    <app-filled-button [filledButtonConfig]="getStartedButton"></app-filled-button>
+  </div>
+</header>
