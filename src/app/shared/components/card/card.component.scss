@@ -1,0 +1,135 @@
+.text-black {
+  color: var(--black-color);
+}
+.text-white {
+  color: var(--white-color);
+}
+.text-green {
+  color: var(--green-color);
+}
+.text-brown {
+  color: var(--brown-color);
+}
+.text-purple {
+  color: var(--purple-color);
+}
+.text-yellow {
+  color: var(--yellow-color);
+}
+
+.stats-card {
+  border-radius: 12px;
+  padding: 15px;
+  border: 1px solid #e2e8f0;
+  min-height: 125px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .mat-mdc-card-content {
+    padding: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    min-height: 100%;
+  }
+
+  @media (max-width: 768px) {
+    padding: 12px;
+    min-height: 90px;
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.card-title-section {
+  flex: 1;
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 400;
+    color: #64748b;
+    margin-bottom: 5px;
+
+    @media (max-width: 768px) {
+      font-size: 12px;
+      margin-bottom: 3.5px;
+    }
+  }
+
+  .card-value {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 2px;
+
+    @media (max-width: 768px) {
+      font-size: 21px;
+      margin-bottom: 1.5px;
+    }
+  }
+
+  .card-subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.2;
+
+    @media (max-width: 768px) {
+      font-size: 10.5px;
+    }
+  }
+}
+
+.card-right-section {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+}
+
+.card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+
+  .mat-icon {
+    font-size: 35px;
+    width: 35px;
+    height: 35px;
+
+    @media (max-width: 768px) {
+      font-size: 30px;
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.card-tag {
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  letter-spacing: 0.5px;
+
+  span {
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    padding: 4px 8px;
+    font-size: 10.5px;
+  }
+}
