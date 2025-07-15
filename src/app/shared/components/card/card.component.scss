@@ -1,3 +1,22 @@
+.text-black {
+  color: var(--black-color);
+}
+.text-white {
+  color: var(--white-color);
+}
+.text-green {
+  color: var(--green-color);
+}
+.text-brown {
+  color: var(--brown-color);
+}
+.text-purple {
+  color: var(--purple-color);
+}
+.text-yellow {
+  color: var(--yellow-color);
+}
+
 .stats-card {
   border-radius: 12px;
   padding: 15px;
@@ -97,7 +116,7 @@
   }
 }
 
-.card-status {
+.card-tag {
   padding: 6px 12px;
   border-radius: 16px;
   font-size: 14px;

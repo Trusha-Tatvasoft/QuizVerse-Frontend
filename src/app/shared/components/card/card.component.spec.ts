@@ -1,13 +1,35 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CardComponent } from './card.component';
+import { CardInputConfig } from '../../interfaces/card-component.interface';
+import { TagComponent } from '../tag/tag.component';
+import { By } from '@angular/platform-browser';
 
 describe('CardComponent', () => {
   let component: CardComponent;
   let fixture: ComponentFixture<CardComponent>;
 
+  const mockConfig: CardInputConfig = {
+    title: 'Revenue',
+    value: '$18,420',
+    subtitle: 'Monthly Income',
+    icon: 'star',
+    tag: {
+      id: '1',
+      label: 'Live',
+      type: 'static',
+      isSelected: false,
+      hasBorder: false,
+      backgroundColor: 'lightPurple',
+      textColor: 'purple',
+    },
+    subtitleColor: 'purple',
+    valueColor: 'black',
+    iconColor: 'purple',
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CardComponent],
+      imports: [CardComponent, TagComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CardComponent);
@@ -15,18 +37,13 @@ describe('CardComponent', () => {
     fixture.detectChanges();
   });
 
-  function hexToRgb(hex: string): string {
-    hex = hex.replace('#', '');
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-    return `rgb(${r}, ${g}, ${b})`;
-  }
-
   describe('Rendering content', () => {
     it('should display the provided title and value on the card', () => {
-      component.title = 'Revenue';
-      component.value = '$18,420';
+      component.cardConfig = {
+        ...mockConfig,
+        title: 'Revenue',
+        value: '$18,420',
+      };
       fixture.detectChanges();
 
       const titleEl = fixture.nativeElement.querySelector('.card-title');
@@ -37,36 +54,68 @@ describe('CardComponent', () => {
     });
 
     it('should display the subtitle with the correct color when provided', () => {
-      component.subtitle = 'Monthly Income';
-      component.subtitleColor = 'green';
+      component.cardConfig = {
+        ...mockConfig,
+        subtitle: 'Monthly Income',
+        subtitleColor: 'green',
+      };
       fixture.detectChanges();
 
       const subtitleEl = fixture.nativeElement.querySelector('.card-subtitle');
+      expect(subtitleEl).toBeTruthy();
       expect(subtitleEl.textContent).toContain('Monthly Income');
-      expect(subtitleEl.style.color).toBe(hexToRgb(component.resolvedSubtitleColor));
+      expect(subtitleEl.classList).toContain('text-green');
     });
 
     it('should not display subtitle element if no subtitle is set', () => {
-      component.subtitle = '';
+      component.cardConfig = {
+        ...mockConfig,
+        subtitle: '',
+      };
       fixture.detectChanges();
 
       const subtitleEl = fixture.nativeElement.querySelector('.card-subtitle');
       expect(subtitleEl).toBeNull();
     });
 
-    it('should display the status text when status is set', () => {
-      component.status = 'Live';
+    it('should render the <app-tag> when tag is provided', () => {
+      component.cardConfig = {
+        ...mockConfig,
+        tag: {
+          id: '123',
+          label: 'Featured',
+          type: 'static',
+          isSelected: false,
+          hasBorder: false,
+          backgroundColor: 'lightPurple',
+          textColor: 'purple',
+        },
+      };
       fixture.detectChanges();
 
-      const statusEl = fixture.nativeElement.querySelector('.card-status');
-      expect(statusEl.textContent).toContain('Live');
+      const tagEl = fixture.debugElement.query(By.css('app-tag'));
+      expect(tagEl).toBeTruthy();
+    });
+
+    it('should not render the <app-tag> when tag is null', () => {
+      component.cardConfig = {
+        ...mockConfig,
+        tag: null as any,
+      };
+      fixture.detectChanges();
+
+      const tagEl = fixture.debugElement.query(By.css('app-tag'));
+      expect(tagEl).toBeNull();
     });
   });
 
-  describe('Icon and status visibility logic', () => {
-    it('should show the icon when an icon is set and no status is provided', () => {
-      component.icon = 'star';
-      component.status = '';
+  describe('Icon and Tag visibility logic', () => {
+    it('should show the icon when icon is set and tag is not provided', () => {
+      component.cardConfig = {
+        ...mockConfig,
+        icon: 'star',
+        tag: null as any,
+      };
       fixture.detectChanges();
 
       const iconEl = fixture.nativeElement.querySelector('mat-icon');
@@ -75,9 +124,20 @@ describe('CardComponent', () => {
       expect(iconEl.textContent).toContain('star');
     });
 
-    it('should hide the icon if a status is provided', () => {
-      component.icon = 'star';
-      component.status = 'active';
+    it('should hide the icon when tag is provided', () => {
+      component.cardConfig = {
+        ...mockConfig,
+        icon: 'star',
+        tag: {
+          id: '1',
+          label: 'Live',
+          type: 'static',
+          isSelected: false,
+          hasBorder: false,
+          backgroundColor: 'lightPurple',
+          textColor: 'purple',
+        },
+      };
       fixture.detectChanges();
 
       const iconEl = fixture.nativeElement.querySelector('mat-icon');
@@ -85,64 +145,77 @@ describe('CardComponent', () => {
       expect(iconEl).toBeNull();
     });
 
-    it('should correctly determine whether the card has a right-side element (icon or status)', () => {
-      component.icon = 'info';
-      expect(component.hasRightElement).toBe(true);
+    it('should correctly determine hasRightElement when icon is present', () => {
+      component.cardConfig = {
+        ...mockConfig,
+        icon: 'info',
+        tag: null as any,
+      };
+      fixture.detectChanges();
 
-      component.icon = '';
-      component.status = 'active';
       expect(component.hasRightElement).toBe(true);
+    });
 
-      component.status = '';
+    it('should correctly determine hasRightElement when tag is present', () => {
+      component.cardConfig = {
+        ...mockConfig,
+        icon: '',
+        tag: {
+          id: '2',
+          label: 'Beta',
+          type: 'static',
+          isSelected: false,
+          hasBorder: false,
+          backgroundColor: 'lightPurple',
+          textColor: 'purple',
+        },
+      };
+      fixture.detectChanges();
+
+      expect(component.hasRightElement).toBe(true);
+    });
+
+    it('should return false for hasRightElement when both icon and tag are missing', () => {
+      component.cardConfig = {
+        ...mockConfig,
+        icon: '',
+        tag: null as any,
+      };
+      fixture.detectChanges();
+
       expect(component.hasRightElement).toBe(false);
     });
   });
 
-  describe('Color logic and resolution', () => {
-    it('should resolve subtitle color correctly from the predefined color map', () => {
-      const colorName = 'blue';
-      component.subtitleColor = colorName;
-
-      const expectedColor = component['colorMap'][colorName];
-      expect(component.resolvedSubtitleColor).toBe(expectedColor);
-    });
-
-    it('should use the default subtitle color if an invalid color name is provided', () => {
-      component.subtitleColor = 'invalid' as any;
-      const fallbackColor = component['colorMap']['purple'];
-      expect(component.resolvedSubtitleColor).toBe(fallbackColor);
-    });
-
-    it('should resolve valueColor and backgroundColor using the color map', () => {
-      component.valueColor = 'red';
-      component.backgroundColor = 'yellow';
-
-      const colorMap = component['colorMap'];
-
-      expect(component.resolvedValueColor).toBe(colorMap['red']);
-      expect(component.resolvedBackgroundColor).toBe(colorMap['yellow']);
-    });
-
-    it('should convert subtitle color into rgba format with 10% opacity for status background', () => {
-      component.subtitleColor = 'green';
-
-      const expectedHex = component['colorMap']['green'];
-      const rgb = hexToRgb(expectedHex).replace(/^rgb\(|\)$/g, '');
-      const expectedRgba = `rgba(${rgb}, 0.1)`;
-
-      const actualRgba = component.getStatusBackgroundColor();
-      expect(actualRgba).toBe(expectedRgba);
-    });
-
-    it('should apply background color to the card element based on resolved background color', () => {
-      component.backgroundColor = 'purple';
+  describe('Color class logic', () => {
+    it('should compute the correct CSS class for subtitle color', () => {
+      component.cardConfig = {
+        ...mockConfig,
+        subtitleColor: 'green',
+      };
       fixture.detectChanges();
 
-      const cardEl = fixture.nativeElement.querySelector('mat-card');
-      const computedStyle = getComputedStyle(cardEl);
-      const expectedRgb = hexToRgb(component.resolvedBackgroundColor);
+      expect(component.subtitleColorClass).toBe('text-green');
+    });
 
-      expect(computedStyle.backgroundColor).toBe(expectedRgb);
+    it('should compute the correct CSS class for value color', () => {
+      component.cardConfig = {
+        ...mockConfig,
+        valueColor: 'red',
+      };
+      fixture.detectChanges();
+
+      expect(component.valueColorClass).toBe('text-red');
+    });
+
+    it('should compute the correct CSS class for icon color', () => {
+      component.cardConfig = {
+        ...mockConfig,
+        iconColor: 'blue',
+      };
+      fixture.detectChanges();
+
+      expect(component.iconColorClass).toBe('text-blue');
     });
   });
 });

@@ -8,6 +8,7 @@ import { CardComponent } from './card.component';
 export default {
   title: 'Components/Data Card',
   component: CardComponent,
+  tags: ['autodocs'],
   decorators: [
     moduleMetadata({
       imports: [CommonModule, MatCardModule, MatIconModule],
@@ -21,32 +22,57 @@ const Template: StoryFn<Partial<CardComponent>> = (args: Partial<CardComponent>)
 
 export const Default = Template.bind({});
 Default.args = {
-  title: 'Platform Fee',
-  value: '15%',
-  status: 'Active',
-  subtitle: 'Standard rate',
-  valueColor: 'black',
-  subtitleColor: 'green',
-  backgroundColor: 'white',
+  cardConfig: {
+    title: 'Platform Fee',
+    value: '15%',
+    subtitle: 'Standard rate',
+    valueColor: 'black',
+    subtitleColor: 'purple',
+    icon: 'person_add',
+    iconColor: 'purple',
+    tag: {
+      id: 'status-down',
+      label: 'Active',
+      type: 'static',
+      isSelected: false,
+      hasBorder: false,
+      backgroundColor: 'lightPurple',
+      textColor: 'purple',
+    },
+  },
 };
 
-export const WithStatus = Template.bind({});
-WithStatus.args = {
-  title: 'Server Health',
-  value: 'Critical',
-  status: 'Down',
-  valueColor: 'black',
-  subtitleColor: 'purple',
-  backgroundColor: 'white',
+export const WithTag = Template.bind({});
+WithTag.args = {
+  cardConfig: {
+    title: 'Server Health',
+    value: 'Critical',
+    subtitle: 'System failure',
+    valueColor: 'black',
+    subtitleColor: 'green',
+    icon: '',
+    iconColor: 'purple',
+    tag: {
+      id: 'status-down',
+      label: 'Down',
+      type: 'static',
+      isSelected: false,
+      hasBorder: false,
+      backgroundColor: 'lightGreen',
+      textColor: 'green',
+    },
+  },
 };
 
-export const WithoutStatus = Template.bind({});
-WithoutStatus.args = {
-  title: 'Total Users',
-  value: '12,543',
-  subtitle: '+5.2% from last month',
-  icon: 'person_add',
-  valueColor: 'black',
-  subtitleColor: 'orange',
-  backgroundColor: 'white',
+export const WithIcon = Template.bind({});
+WithIcon.args = {
+  cardConfig: {
+    title: 'Total Users',
+    value: '12,543',
+    subtitle: '+5.2% from last month',
+    valueColor: 'black',
+    subtitleColor: 'yellow',
+    icon: 'person_add',
+    iconColor: 'yellow',
+  },
 };
