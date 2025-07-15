@@ -1,0 +1,21 @@
+<div class="main-dialog-content">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>{{ data.title }}</h2>
+  </div>
+
+  <mat-dialog-content class="dialog-content">
+    <div class="image-wrapper" *ngIf="data.imageUrl">
+      <img [src]="data.imageUrl" alt="Icon" />
+    </div>
+    <p class="message-text">{{ data.message }}</p>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button (click)="onCancelClick()">
+      {{ data.cancelText || 'Cancel' }}
+    </button>
+    <button mat-flat-button color="warn" (click)="onConfirmClick()">
+      {{ data.confirmText || 'Delete' }}
+    </button>
+  </mat-dialog-actions>
+</div>
