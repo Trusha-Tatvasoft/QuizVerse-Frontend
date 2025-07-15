@@ -1,85 +1,101 @@
-import { Meta, StoryObj, moduleMetadata } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { TableComponent } from './table.component';
-import { TablePaginationConfig } from '../../../utils/constants';
-import { ColumnDef, TableData, ActionIcon } from '../../interfaces/table.interface';
+import { moduleMetadata } from '@storybook/angular';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
+import {
+  categoryColumns,
+  categoryData,
+  questionPoolColumns,
+  questionPoolData,
+  profileColumns,
+  profileData,
+  tagColumns,
+  tagData,
+  actionIcons,
+  mixedColumns,
+  mixedData,
+} from './table-mock-data';
 
 const meta: Meta<TableComponent> = {
   title: 'Components/Table',
+  decorators: [moduleMetadata({ imports: [MatButtonModule, MatIconModule] })],
   component: TableComponent,
-  decorators: [
-    moduleMetadata({
-      imports: [],
-    }),
-  ],
-  parameters: {
-    docs: {
-      description: {
-        component: `
-The \`TableComponent\` is a reusable Angular Material table that supports:
-- Custom columns (text, tag, button, profile, currency, category)
-- Sortable headers
-- Action buttons
-- Pagination
-- Custom templates per column
-        `,
-      },
-    },
-  },
   tags: ['autodocs'],
 };
 
 export default meta;
 type Story = StoryObj<TableComponent>;
 
-const mockColumns: ColumnDef[] = [
-  {
-    key: 'name',
-    label: 'Name',
-    type: 'text',
-    isSortable: true,
-  },
-  {
-    key: 'status',
-    label: 'Status',
-    type: 'tag',
-  },
-];
-
-const mockData: TableData[] = [
-  { name: 'John Doe', status: 'Active' },
-  { name: 'Jane Smith', status: 'Inactive' },
-  { name: 'Mark Wilson', status: 'Pending' },
-];
-
-const mockActions: ActionIcon[] = [
-  {
-    icon: 'edit',
-    action: 'edit',
-    color: '#1976d2',
-    tooltip: 'Edit User',
-  },
-];
-
-export const BasicTable: Story = {
-  name: 'Basic Table with Text and Tags',
+export const CategoryIconOnly: Story = {
+  name: 'Category Icon',
   args: {
-    columns: mockColumns,
-    dataSource: mockData,
-    totalItems: mockData.length,
-    pageSize: TablePaginationConfig.PageSize,
-    pageSizeOptions: TablePaginationConfig.PageSizeOptions,
-    actionIcons: mockActions,
-    tableTitle: 'User List',
-    tableDescription: 'A basic table showing users with status tags.',
-    noDataMessage: 'No users found.',
+    tableTitle: 'Category Table',
+    tableDescription: 'Shows quizzes with associated category and icons.',
+    columns: categoryColumns,
+    dataSource: categoryData,
+    totalItems: 2,
+    pageSize: 5,
+    pageSizeOptions: [5, 10],
     applyPaginator: true,
   },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'This is a basic table setup using the `TableComponent` with tag and text columns, sortable headers, and a simple action icon.',
-      },
-    },
+};
+
+export const QuestionPoolOnly: Story = {
+  name: 'Question Pool',
+  args: {
+    tableTitle: 'Question Pool Table',
+    tableDescription: 'Displays quizzes with a list of questions and answers.',
+    columns: questionPoolColumns,
+    dataSource: questionPoolData,
+    totalItems: 2,
+    pageSize: 5,
+    pageSizeOptions: [5, 10],
+    applyPaginator: true,
+  },
+};
+
+export const ProfileOnly: Story = {
+  name: 'Profile',
+  args: {
+    tableTitle: 'User Profile Table',
+    tableDescription: 'Displays user information with avatars.',
+    columns: profileColumns,
+    dataSource: profileData,
+    totalItems: profileData.length,
+    pageSize: 5,
+    pageSizeOptions: [5, 10],
+    applyPaginator: true,
+  },
+};
+
+export const StaticTagsOnly: Story = {
+  name: 'Static Tags',
+  args: {
+    tableTitle: 'User & Quiz Status',
+    tableDescription:
+      'Shows static tags for user roles, statuses, difficulty levels, and attempts.',
+    columns: tagColumns,
+    dataSource: tagData,
+    totalItems: tagData.length,
+    pageSize: 5,
+    pageSizeOptions: [5, 10],
+    applyPaginator: false,
+  },
+};
+
+export const MixedDataTable: Story = {
+  name: 'Mix Column',
+  args: {
+    tableTitle: 'User Purchase Summary',
+    tableDescription: 'Shows user info, purchase price (currency), and date with edit action.',
+    columns: mixedColumns,
+    dataSource: mixedData,
+    actionIcons: actionIcons,
+    totalItems: mixedData.length,
+    pageSize: 5,
+    pageSizeOptions: [5, 10],
+    applyPaginator: false,
   },
 };

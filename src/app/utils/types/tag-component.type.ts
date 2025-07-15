@@ -5,9 +5,11 @@ export type TagColor =
   | 'brown'
   | 'purple'
   | 'yellow'
+  | 'orange'
   | 'lightGreen'
   | 'lightBrown'
   | 'lightPurple'
-  | 'lightYellow';
+  | 'lightYellow'
+  | 'lightOrange';
 
 export type TagType = 'selectable' | 'static';

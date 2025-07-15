@@ -3,11 +3,11 @@ export interface ColumnDef {
   label: string;
   type: 'text' | 'tag' | 'button' | 'profile' | 'category' | 'question-pool';
   pipe?: 'date' | 'currency';
-  pipeArgs?: [currencyCode?: string, display?: string | boolean, digits?: string];  // args like ['USD', 'symbol', '1.2-2'] or ['yyyy-MM-dd']
+  pipeArgs?: [currencyCode?: string, display?: string | boolean, digits?: string]; // args like ['USD', 'symbol', '1.2-2'] or ['yyyy-MM-dd']
   align?: 'left' | 'right' | 'center';
   isSortable?: boolean;
-  class?: string;         // for text type 
-  textKey?: string;       // text input with tag (optional)
+  class?: 'text-bold' | 'text-muted' | 'text-success' | 'text-failed'; // for text class - bold / muted
+  textKey?: string; // text input with tag (optional)
 }
 
 export interface TableData {
@@ -24,11 +24,4 @@ export interface ActionIcon {
 export interface CurrencyValue {
   amount: number;
   currencyCode?: string;
-}
-
-export interface TableColumn {
-  key: string;
-  pipe?: 'currency' | 'date';
-  pipeArgs?: [currencyCode?: string, display?: string | boolean, digits?: string];
-  class?: string;
 }

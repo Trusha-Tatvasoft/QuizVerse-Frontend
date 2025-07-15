@@ -20,50 +20,68 @@
           <th
             mat-header-cell
             *matHeaderCellDef
-            mat-sort-header="column.key"
+            [mat-sort-header]="column.key"
             class="table-column-heading"
           >
             {{ column.label }}
           </th>
         </ng-container>
 
-        <!-- Fallback plain header - without the sorting - column header -->
+        <!-- plain header - without the sorting - column header -->
         <ng-template #plainHeader>
           <th mat-header-cell *matHeaderCellDef class="table-column-heading">
             {{ column.label }}
           </th>
         </ng-template>
 
-        <td mat-cell *matCellDef="let row">
+        <td mat-cell *matCellDef="let row" [ngClass]="column.class">
           <ng-container [ngSwitch]="column.type">
             <!-- Text Type -->
-            <!-- optional date/currency pipe also style class -->
             <ng-container *ngSwitchCase="'text'">
-              <span [ngClass]="column.class">
+              <span>
                 <ng-container [ngSwitch]="column.pipe">
+                  <!-- Currency Pipe -->
                   <ng-container *ngSwitchCase="'currency'">
+                    <span>
+                      <ng-container *ngIf="getAmount(row[column.key]) !== null; else noValue">
+                        {{
+                          getAmount(row[column.key])
+                            | currency
+                              : getCurrencyCodeFinal(row[column.key], column)
+                              : getCurrencyDisplay(column)
+                              : getCurrencyDigits(column)
+                        }}
+                      </ng-container>
+                      <ng-template #noValue>-</ng-template>
+                    </span>
+                  </ng-container>
+
+                  <!-- Date Pipe -->
+                  <ng-container *ngSwitchCase="'date'">
                     {{
                       row[column.key]
-                        | currency
-                          : column.pipeArgs?.[0] || 'USD'
-                          : column.pipeArgs?.[1] || 'symbol'
-                          : column.pipeArgs?.[2] || '1.2-2'
+                        ? (row[column.key] | date: column.pipeArgs?.[0] || 'yyyy-MM-dd')
+                        : '-'
                     }}
                   </ng-container>
-                  <ng-container *ngSwitchCase="'date'">
-                    {{ row[column.key] | date: column.pipeArgs?.[0] || 'yyyy-MM-dd' }}
-                  </ng-container>
+
+                  <!-- Default Text -->
                   <ng-container *ngSwitchDefault>
-                    {{ row[column.key] }}
+                    {{ row[column.key] ?? '-' }}
                   </ng-container>
                 </ng-container>
               </span>
             </ng-container>
 
             <!-- Tag Type -->
-            <mat-chip *ngSwitchCase="'tag'" selected>
-              {{ row[column.key] }}
-            </mat-chip>
+            <ng-container *ngIf="column.type === 'tag'">
+              <div class="d-flex align-items-center gap-1">
+                <app-tag [tagConfig]="row[column.key]?.tagConfig"></app-tag>
+                <span *ngIf="row[column.key]?.extraText" class="tag-extra-text">
+                  {{ row[column.key]?.extraText }}
+                </span>
+              </div>
+            </ng-container>
 
             <!-- Button Type -->
             <button *ngSwitchCase="'button'" mat-button (click)="onActionClick(column.key, row)">
@@ -81,26 +99,23 @@
               </div>
             </ng-container>
 
-            <!-- Currency Type -->
-            <ng-container *ngSwitchCase="'currency'">
-              <span class="text-success">
-                {{
-                  row[column.key]?.amount
-                    | currency: row[column.key]?.currencyCode || 'USD' : 'symbol' : '1.2-2'
-                }}
-              </span>
-            </ng-container>
-
             <!-- Category Type -->
             <ng-container *ngSwitchCase="'category'">
-              <div style="display: flex; align-items: center; gap: 8px">
-                <mat-icon
-                  [ngClass]="column.iconClass || ''"
-                  [color]="column.iconColor || undefined"
-                >
+              <div class="category-cell">
+                <mat-icon fontSet="material-icons-outlined">
                   {{ row[column.key]?.icon }}
                 </mat-icon>
                 <span>{{ row[column.key]?.name }}</span>
+              </div>
+            </ng-container>
+
+            <!-- Question Pool Type -->
+            <ng-container *ngSwitchCase="'question-pool'">
+              <div class="question-pool-container" *ngIf="row[column.key]?.length > 0">
+                <div class="question-card" *ngFor="let item of row[column.key]">
+                  <p class="question-text">{{ item.question }}</p>
+                  <p class="correct-answer">Correct: {{ item.correctAnswer }}</p>
+                </div>
               </div>
             </ng-container>
           </ng-container>
@@ -118,7 +133,7 @@
             [matTooltip]="icon.tooltip || icon.action"
             (click)="onActionClick(icon.action, row)"
           >
-            <mat-icon>{{ icon.icon }}</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">{{ icon.icon }}</mat-icon>
           </button>
         </td>
       </ng-container>
@@ -126,10 +141,9 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns" class="table-header-row"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns" class="table-row"></tr>
 
+      <!-- Message shown when no data present in table -->
       <tr class="table-row" *matNoDataRow>
-        <td [attr.colspan]="displayedColumns.length" class="no-data-message">
-          {{ noDataMessage || 'No data available.' }}
-        </td>
+        <td [attr.colspan]="displayedColumns.length" class="no-data-message">No data available.</td>
       </tr>
     </table>
   </div>

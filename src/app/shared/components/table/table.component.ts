@@ -5,13 +5,17 @@ import {
   EventEmitter,
   ViewChild,
   OnInit,
-  TemplateRef,
   SimpleChanges,
   OnChanges,
 } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { ColumnDef, TableData, ActionIcon } from '../../interfaces/table.interface';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
+import {
+  ColumnDef,
+  TableData,
+  ActionIcon,
+  CurrencyValue,
+} from '../../interfaces/table-component.interface';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,6 +24,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
 import { TablePaginationConfig } from '../../../utils/constants';
+import { TagComponent } from '../tag/tag.component';
 
 @Component({
   selector: 'app-data-table',
@@ -36,6 +41,7 @@ import { TablePaginationConfig } from '../../../utils/constants';
     MatTooltipModule,
     MatChipsModule,
     MatCardModule,
+    TagComponent,
   ],
 })
 export class TableComponent implements OnInit, OnChanges {
@@ -45,8 +51,6 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() pageSize = TablePaginationConfig.PageSize;
   @Input() pageSizeOptions: number[] = TablePaginationConfig.PageSizeOptions;
   @Input() actionIcons: ActionIcon[] = [];
-  @Input() noDataMessage?: string;
-  @Input() columnTemplates: { [key: string]: TemplateRef<any> } = {};
   @Input() tableTitle?: string;
   @Input() tableDescription?: string;
   @Input() applyPaginator: boolean = true;
@@ -75,7 +79,7 @@ export class TableComponent implements OnInit, OnChanges {
     }
   }
 
-  private setDisplayedColumns(): void {
+  public setDisplayedColumns(): void {
     const updatedColumns = this.columns.map((col) => ({
       ...col,
       isSortable: col.isSortable ?? false,
@@ -89,15 +93,38 @@ export class TableComponent implements OnInit, OnChanges {
     }
   }
 
-  onPageChange(event: any) {
+  onPageChange(event: PageEvent) {
     this.pageChange.emit({ pageIndex: event.pageIndex, pageSize: event.pageSize });
   }
 
-  onSortChange(sort: any) {
+  onSortChange(sort: Sort) {
     this.sortChange.emit({ active: sort.active, direction: sort.direction });
   }
 
   onActionClick(action: string, row: TableData) {
     this.actionClick.emit({ action, row });
+  }
+
+  getAmount(value: CurrencyValue | number | null | undefined): number | null {
+    if (typeof value === 'number') return value;
+    if (value && typeof value === 'object' && 'amount' in value) return value.amount;
+    return null;
+  }
+
+  getCurrencyCodeFinal(
+    value: CurrencyValue | number | null | undefined,
+    column: ColumnDef,
+  ): string {
+    return (
+      column.pipeArgs?.[0] || (typeof value === 'object' ? value?.currencyCode : undefined) || 'USD'
+    );
+  }
+
+  getCurrencyDisplay(column: ColumnDef): string | boolean {
+    return column.pipeArgs?.[1] ?? 'symbol';
+  }
+
+  getCurrencyDigits(column: ColumnDef): string {
+    return column.pipeArgs?.[2] || '1.2-2';
   }
 }
