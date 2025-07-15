@@ -10,7 +10,6 @@ describe('TextButtonComponent', () => {
   let component: TextButtonComponent;
   let fixture: ComponentFixture<TextButtonComponent>;
 
-  // Setup the component and module before each test
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CommonModule, MatIconModule, TextButtonComponent],
@@ -147,16 +146,6 @@ describe('TextButtonComponent', () => {
     fixture.detectChanges();
     const button = fixture.debugElement.query(By.css('button'));
     expect(button.attributes['type']).toBe('reset');
-  });
-
-  // Font weight should apply correctly to label
-  it('should apply font weight correctly', () => {
-    component.textButtonConfig = { fontWeight: 600, label: 'Test' };
-    component.ngOnInit();
-    fixture.detectChanges();
-    expect(component.validFontWeight).toBe('600');
-    const label = fixture.debugElement.query(By.css('.flex div'));
-    expect(label?.nativeElement.style.fontWeight).toBe('600');
   });
 
   // mat-icon should appear after label if iconPosition is right

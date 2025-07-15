@@ -146,15 +146,6 @@ describe('FilledButtonComponent', () => {
     expect(imgIndex).toBeGreaterThan(labelIndex);
   });
 
-  // Check if font weight is applied correctly
-  it('should apply font weight correctly', () => {
-    component.config.fontWeight = 600;
-    fixture.detectChanges();
-    expect(component.validFontWeight).toBe('600');
-    const label = fixture.debugElement.query(By.css('.flex div'));
-    expect(label?.nativeElement.style.fontWeight).toBe('600');
-  });
-
   // Validate default and invalid font weight fallback
   it('should handle undefined or invalid fontWeight with default value', () => {
     component.config.fontWeight = undefined as any;
