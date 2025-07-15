@@ -84,9 +84,25 @@
             </ng-container>
 
             <!-- Button Type -->
-            <button *ngSwitchCase="'button'" mat-button (click)="onActionClick(column.key, row)">
-              {{ row[column.key] }}
-            </button>
+            <ng-container *ngSwitchCase="'button'">
+              <ng-container *ngIf="row[column.key]?.length > 0">
+                <div class="action-icons">
+                  <app-text-button
+                    *ngFor="let action of row[column.key]"
+                    [textButtonConfig]="{
+                      matIcon: action,
+                      iconFontSet: 'material-icons-outlined',
+                      variant: 'secondary',
+                      type: 'button',
+                      imagePosition: 'left',
+                      isDisabled: false,
+                      label: '',
+                    }"
+                    (click)="onActionClick(action, row)"
+                  ></app-text-button>
+                </div>
+              </ng-container>
+            </ng-container>
 
             <!-- Profile Type -->
             <ng-container *ngSwitchCase="'profile'">
@@ -119,22 +135,6 @@
               </div>
             </ng-container>
           </ng-container>
-        </td>
-      </ng-container>
-
-      <!-- Actions Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef class="table-column-heading">Actions</th>
-        <td mat-cell *matCellDef="let row" class="mat-column-actions">
-          <button
-            *ngFor="let icon of actionIcons"
-            mat-icon-button
-            [ngStyle]="{ color: icon.color }"
-            [matTooltip]="icon.tooltip || icon.action"
-            (click)="onActionClick(icon.action, row)"
-          >
-            <mat-icon fontSet="material-icons-outlined">{{ icon.icon }}</mat-icon>
-          </button>
         </td>
       </ng-container>
 

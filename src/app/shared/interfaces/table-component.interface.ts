@@ -1,3 +1,4 @@
+// Defines structure for table columns, including type, label, formatting, alignment, and sorting]
 export interface ColumnDef {
   key: string;
   label: string;
@@ -14,13 +15,7 @@ export interface TableData {
   [key: string]: unknown; // Dynamic key-value pairs for table rows
 }
 
-export interface ActionIcon {
-  icon: string;
-  tooltip?: string;
-  action: string;
-  color?: string;
-}
-
+// Represents a currency value with optional currency code
 export interface CurrencyValue {
   amount: number;
   currencyCode?: string;

@@ -60,6 +60,13 @@
         border-bottom: 1px solid #e2e8f0;
       }
 
+      .action-icons {
+        display: flex;
+        gap: 2px;
+        justify-content: start;
+        align-items: start;
+      }
+
       .table-column-heading {
         color: #64748b;
         font-weight: 500;

@@ -3,12 +3,7 @@ import { TableComponent } from './table.component';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { By } from '@angular/platform-browser';
-import {
-  ColumnDef,
-  TableData,
-  ActionIcon,
-  CurrencyValue,
-} from '../../interfaces/table-component.interface';
+import { ColumnDef, CurrencyValue } from '../../interfaces/table-component.interface';
 import { SimpleChange } from '@angular/core';
 
 describe('TableComponent', () => {
@@ -26,19 +21,6 @@ describe('TableComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should set displayedColumns including actions when actionIcons are present', () => {
-    component.columns = [
-      { key: 'name', label: 'Name', type: 'text' },
-      { key: 'email', label: 'Email', type: 'text' },
-    ];
-    component.actionIcons = [{ icon: 'edit', action: 'edit' }];
-    component.ngOnInit();
-
-    expect(component.displayedColumns).toContain('name');
-    expect(component.displayedColumns).toContain('email');
-    expect(component.displayedColumns).toContain('actions');
   });
 
   it('should handle page change and emit output', () => {
@@ -179,7 +161,6 @@ describe('TableComponent', () => {
       { key: 'name', label: 'Name', type: 'text' },
       { key: 'email', label: 'Email', type: 'text' },
     ];
-    component.actionIcons = [];
 
     const changes = {
       columns: new SimpleChange(null, component.columns, true),
@@ -196,19 +177,6 @@ describe('TableComponent', () => {
 
     const changes = {
       dataSource: new SimpleChange(null, component.dataSource, true),
-    };
-
-    const spy = jest.spyOn<TableComponent, 'setDisplayedColumns'>(component, 'setDisplayedColumns');
-    component.ngOnChanges(changes);
-
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('should call setDisplayedColumns when actionIcons change', () => {
-    component.actionIcons = [{ icon: 'edit', action: 'edit' }];
-
-    const changes = {
-      actionIcons: new SimpleChange(null, component.actionIcons, true),
     };
 
     const spy = jest.spyOn<TableComponent, 'setDisplayedColumns'>(component, 'setDisplayedColumns');

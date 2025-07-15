@@ -10,12 +10,7 @@ import {
 } from '@angular/core';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
-import {
-  ColumnDef,
-  TableData,
-  ActionIcon,
-  CurrencyValue,
-} from '../../interfaces/table-component.interface';
+import { ColumnDef, TableData, CurrencyValue } from '../../interfaces/table-component.interface';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,6 +20,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
 import { TablePaginationConfig } from '../../../utils/constants';
 import { TagComponent } from '../tag/tag.component';
+import { TextButtonComponent } from '../text-button/text-button.component';
 
 @Component({
   selector: 'app-data-table',
@@ -42,6 +38,7 @@ import { TagComponent } from '../tag/tag.component';
     MatChipsModule,
     MatCardModule,
     TagComponent,
+    TextButtonComponent,
   ],
 })
 export class TableComponent implements OnInit, OnChanges {
@@ -50,7 +47,6 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() totalItems = TablePaginationConfig.TotalItems;
   @Input() pageSize = TablePaginationConfig.PageSize;
   @Input() pageSizeOptions: number[] = TablePaginationConfig.PageSizeOptions;
-  @Input() actionIcons: ActionIcon[] = [];
   @Input() tableTitle?: string;
   @Input() tableDescription?: string;
   @Input() applyPaginator: boolean = true;
@@ -69,11 +65,13 @@ export class TableComponent implements OnInit, OnChanges {
     this.setDisplayedColumns();
   }
 
+  // Update columns and displayed column keys if input data or columns change
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['dataSource'] || changes['columns'] || changes['actionIcons']) {
+    if (changes['dataSource'] || changes['columns']) {
       this.setDisplayedColumns();
     }
 
+    // Determine whether to show paginator based on data size
     if (this.dataSource && Array.isArray(this.dataSource)) {
       this.showPaginator = this.totalItems > this.pageSize;
     }
@@ -82,15 +80,11 @@ export class TableComponent implements OnInit, OnChanges {
   public setDisplayedColumns(): void {
     const updatedColumns = this.columns.map((col) => ({
       ...col,
-      isSortable: col.isSortable ?? false,
+      isSortable: col.isSortable ?? false, // Default sorting for column set to false if undefined
     }));
 
     this.columns = updatedColumns;
     this.displayedColumns = updatedColumns.map((col) => col.key);
-
-    if (this.actionIcons?.length) {
-      this.displayedColumns.push('actions');
-    }
   }
 
   onPageChange(event: PageEvent) {
@@ -105,12 +99,18 @@ export class TableComponent implements OnInit, OnChanges {
     this.actionClick.emit({ action, row });
   }
 
+  /**
+   * Extracts amount value from a number or CurrencyValue object
+   */
   getAmount(value: CurrencyValue | number | null | undefined): number | null {
     if (typeof value === 'number') return value;
     if (value && typeof value === 'object' && 'amount' in value) return value.amount;
     return null;
   }
 
+  /**
+   * Determines currency code to use for currency pipe
+   */
   getCurrencyCodeFinal(
     value: CurrencyValue | number | null | undefined,
     column: ColumnDef,
@@ -120,10 +120,16 @@ export class TableComponent implements OnInit, OnChanges {
     );
   }
 
+  /**
+   * Determines currency display option (e.g. symbol/code)
+   */
   getCurrencyDisplay(column: ColumnDef): string | boolean {
     return column.pipeArgs?.[1] ?? 'symbol';
   }
 
+  /**
+   * Determines currency digits info (e.g. 1.2-2)
+   */
   getCurrencyDigits(column: ColumnDef): string {
     return column.pipeArgs?.[2] || '1.2-2';
   }

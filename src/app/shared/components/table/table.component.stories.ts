@@ -3,6 +3,7 @@ import { TableComponent } from './table.component';
 import { moduleMetadata } from '@storybook/angular';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { TablePaginationConfig } from '../../../utils/constants';
 
 import {
   categoryColumns,
@@ -13,7 +14,6 @@ import {
   profileData,
   tagColumns,
   tagData,
-  actionIcons,
   mixedColumns,
   mixedData,
 } from './table-mock-data';
@@ -28,6 +28,7 @@ const meta: Meta<TableComponent> = {
 export default meta;
 type Story = StoryObj<TableComponent>;
 
+// Category Only - uses type: 'category'
 export const CategoryIconOnly: Story = {
   name: 'Category Icon',
   args: {
@@ -35,13 +36,14 @@ export const CategoryIconOnly: Story = {
     tableDescription: 'Shows quizzes with associated category and icons.',
     columns: categoryColumns,
     dataSource: categoryData,
-    totalItems: 2,
-    pageSize: 5,
-    pageSizeOptions: [5, 10],
+    totalItems: categoryData.length,
+    pageSize: TablePaginationConfig.PageSize,
+    pageSizeOptions: TablePaginationConfig.PageSizeOptions,
     applyPaginator: true,
   },
 };
 
+// Question Pool Only - uses type: 'question-pool'
 export const QuestionPoolOnly: Story = {
   name: 'Question Pool',
   args: {
@@ -49,13 +51,14 @@ export const QuestionPoolOnly: Story = {
     tableDescription: 'Displays quizzes with a list of questions and answers.',
     columns: questionPoolColumns,
     dataSource: questionPoolData,
-    totalItems: 2,
-    pageSize: 5,
-    pageSizeOptions: [5, 10],
+    totalItems: questionPoolData.length,
+    pageSize: TablePaginationConfig.PageSize,
+    pageSizeOptions: TablePaginationConfig.PageSizeOptions,
     applyPaginator: true,
   },
 };
 
+// Profile Only - uses type: 'profile'
 export const ProfileOnly: Story = {
   name: 'Profile',
   args: {
@@ -64,12 +67,13 @@ export const ProfileOnly: Story = {
     columns: profileColumns,
     dataSource: profileData,
     totalItems: profileData.length,
-    pageSize: 5,
-    pageSizeOptions: [5, 10],
+    pageSize: TablePaginationConfig.PageSize,
+    pageSizeOptions: TablePaginationConfig.PageSizeOptions,
     applyPaginator: true,
   },
 };
 
+// Static Tags Only - uses type: 'tag'
 export const StaticTagsOnly: Story = {
   name: 'Static Tags',
   args: {
@@ -79,12 +83,13 @@ export const StaticTagsOnly: Story = {
     columns: tagColumns,
     dataSource: tagData,
     totalItems: tagData.length,
-    pageSize: 5,
-    pageSizeOptions: [5, 10],
+    pageSize: TablePaginationConfig.PageSize,
+    pageSizeOptions: TablePaginationConfig.PageSizeOptions,
     applyPaginator: false,
   },
 };
 
+// Mixed Data Table - uses multiple types: 'profile', 'text', 'currency', 'date', 'button', also classes like text-bold etc
 export const MixedDataTable: Story = {
   name: 'Mix Column',
   args: {
@@ -92,10 +97,9 @@ export const MixedDataTable: Story = {
     tableDescription: 'Shows user info, purchase price (currency), and date with edit action.',
     columns: mixedColumns,
     dataSource: mixedData,
-    actionIcons: actionIcons,
     totalItems: mixedData.length,
-    pageSize: 5,
-    pageSizeOptions: [5, 10],
+    pageSize: TablePaginationConfig.PageSize,
+    pageSizeOptions: TablePaginationConfig.PageSizeOptions,
     applyPaginator: false,
   },
 };

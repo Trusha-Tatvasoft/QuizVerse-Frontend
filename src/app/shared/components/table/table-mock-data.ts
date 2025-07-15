@@ -1,4 +1,4 @@
-import { ColumnDef, TableData, ActionIcon } from '../../interfaces/table-component.interface';
+import { ColumnDef, TableData } from '../../interfaces/table-component.interface';
 
 // 1. Category
 export const categoryColumns: ColumnDef[] = [
@@ -179,15 +179,6 @@ export const tagData: TableData[] = [
 ];
 
 // 5. Mixed data
-export const actionIcons: ActionIcon[] = [
-  {
-    action: 'edit',
-    icon: 'edit_square',
-    color: '#000000',
-    tooltip: 'Edit User',
-  },
-];
-
 export const mixedColumns: ColumnDef[] = [
   { key: 'name', label: 'Name', type: 'text', class: 'text-bold' },
   { key: 'email', label: 'Email', type: 'text', class: 'text-muted' },
@@ -206,6 +197,11 @@ export const mixedColumns: ColumnDef[] = [
     pipe: 'date',
     pipeArgs: ['yyyy-MM-dd'],
   },
+  {
+    key: 'actions',
+    label: 'Actions',
+    type: 'button',
+  },
 ];
 
 export const mixedData: TableData[] = [
@@ -214,11 +210,13 @@ export const mixedData: TableData[] = [
     email: 'jane.doe@example.com',
     price: { amount: 499.99, currencyCode: 'INR' },
     purchasedOn: '2024-12-01T00:00:00.000Z',
+    actions: ['visibility', 'edit', 'delete'],
   },
   {
     name: 'John Smith',
     email: 'john.smith@example.com',
     price: { amount: 299.5, currencyCode: 'INR' },
     purchasedOn: '2024-11-20T00:00:00.000Z',
+    actions: ['visibility', 'edit', 'delete'],
   },
 ];
