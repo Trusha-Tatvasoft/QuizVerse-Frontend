@@ -1,8 +1,6 @@
 <div class="tag-container">
   <div [ngClass]="chipClasses" (click)="onTagClick()">
     <span class="tag-label">{{ tagConfig.label }}</span>
-    <span *ngIf="isClosable" class="tag-close" (click)="onTagClick($event)">
-      &times;
-    </span>
+    <span *ngIf="isClosable" class="tag-close" (click)="onTagClick($event)"> &times; </span>
   </div>
 </div>

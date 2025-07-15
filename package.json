@@ -51,6 +51,7 @@
     "@storybook/addon-onboarding": "^9.0.15",
     "@storybook/angular": "^9.0.15",
     "@types/jasmine": "~5.1.0",
+    "@types/jest": "^30.0.0",
     "angular-eslint": "20.1.1",
     "eslint": "^9.29.0",
     "husky": "^9.1.7",
