@@ -1,0 +1,85 @@
+.sidebar-container {
+  height: 100vh;
+
+  .sidebar {
+    width: 280px;
+    border-right: 1px solid var(--global-primary-border-color);
+    border-radius: 0px;
+    overflow: hidden;
+
+    &.sidebar-mobile {
+      background-color: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(16px);
+    }
+
+    .sidebar-nav {
+      padding: 15px;
+      overflow: hidden;
+
+      .sidebar-item {
+        border-radius: 8px;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease,
+          border-color 0.3s ease;
+        margin: 5px auto;
+        height: 40px;
+        cursor: pointer;
+        color: var(--gray-color);
+
+        &.active {
+          background: var(--highlight-gradient);
+          border-right: 2px solid var(--global-primary-color);
+
+          .sidebar-icon,
+          .sidebar-label {
+            color: var(--global-primary-color);
+            font-weight: 500;
+          }
+        }
+
+        &.admin-active {
+          background: linear-gradient(
+            to right,
+            rgba(var(--global-admin-primary-color-rgb), 0.15),
+            rgba(var(--global-admin-secondary-color-rgb), 0.15)
+          );
+          border-right: 2px solid var(--global-admin-primary-color);
+
+          .sidebar-icon,
+          .sidebar-label {
+            color: var(--global-admin-primary-color);
+            font-weight: 500;
+          }
+        }
+
+        &:not(.active):hover {
+          background-color: #f1f3f5;
+
+          .sidebar-icon,
+          .sidebar-label {
+            color: var(--dark-gray-color);
+          }
+        }
+
+        .sidebar-icon {
+          color: var(--gray-color);
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+          margin-right: 16px;
+        }
+
+        .sidebar-label {
+          color: var(--gray-color);
+          font-size: 14px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .mat-mdc-list-item.mat-mdc-list-item-interactive:hover::before {
+  background-color: transparent !important;
+}

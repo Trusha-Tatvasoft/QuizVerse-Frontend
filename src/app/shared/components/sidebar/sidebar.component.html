@@ -1,0 +1,26 @@
+<mat-sidenav-container class="sidebar-container">
+  <mat-sidenav
+    #sidenav
+    [mode]="sidenavMode"
+    [opened]="isOpen"
+    class="sidebar"
+    [class.sidebar-mobile]="isMobile"
+    fixedInViewport="true"
+    fixedTopGap="65"
+  >
+    <mat-nav-list class="sidebar-nav">
+      <ng-container *ngFor="let item of sidebarItems">
+        <mat-list-item
+          disableRipple
+          class="sidebar-item"
+          [class.active]="isActive(item.route || '')"
+          [class.admin-active]="isActive(item.route || '') && role === 'admin'"
+          (click)="navigateTo(item.route || '')"
+        >
+          <mat-icon matListItemIcon class="sidebar-icon">{{ item.icon }}</mat-icon>
+          <span matListItemTitle class="sidebar-label">{{ item.label }}</span>
+        </mat-list-item>
+      </ng-container>
+    </mat-nav-list>
+  </mat-sidenav>
+</mat-sidenav-container>
