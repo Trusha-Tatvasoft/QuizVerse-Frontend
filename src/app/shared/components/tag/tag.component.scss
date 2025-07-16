@@ -1,5 +1,5 @@
 @each $color-name in 'black', 'white', 'green', 'light-green', 'brown', 'light-brown', 'purple',
-  'light-purple', 'yellow', 'light-yellow'
+  'light-purple', 'yellow', 'light-yellow', 'orange', 'light-orange'
 {
   .bg-#{$color-name} {
     --bg-color: var(--#{$color-name}-color);
