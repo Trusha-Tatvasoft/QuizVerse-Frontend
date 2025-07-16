@@ -32,9 +32,7 @@ export class ProgressBarComponent {
 
   //validation for percentage value
   get validPercentage(): number {
-    if (this.percentage > 100) return 100;
-    else if (this.percentage < 0) return 0;
-    else return this.percentage;
+    return Math.min(100, Math.max(0, this.percentage));
   }
 
   //set CSS variables for progress bar
