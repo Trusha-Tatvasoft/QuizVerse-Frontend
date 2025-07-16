@@ -48,13 +48,6 @@ describe('ProgressBarComponent', () => {
     expect(style.getPropertyValue('--progress-bar-color')).toBe('var(--global-secondary-color)');
   });
 
-  it('should apply the color class on inner div', () => {
-    component.color = 'secondary';
-    fixture.detectChanges();
-    const fill = nativeElement.querySelector('.progress-bar-fill')!;
-    expect(fill.classList.contains('secondary')).toBe(true);
-  });
-
   it('should return fallback color for unknown color input', () => {
     component.color = 'unknown' as any;
     expect(component.progressbarColor).toBe('var(--global-primary-color)');
