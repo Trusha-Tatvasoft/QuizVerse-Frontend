@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { OutlineButtonComponent } from '../outline-button/outline-button.component';
 import { FilledButtonComponent } from '../filled-button/filled-button.component';
+import { mockDataDialog } from './confirmation-dialog-mock-data';
 
 describe('ConfirmationDialogComponent (Jest)', () => {
   let component: ConfirmationDialogComponent;
@@ -13,19 +14,7 @@ describe('ConfirmationDialogComponent (Jest)', () => {
   let dialogRefMock: { close: jest.Mock };
 
   // Mock input data used to simulate different dialog states
-  const mockData = {
-    title: 'Delete Category',
-    message: 'Are you sure you want to delete this category?',
-    confirmButtonConfig: {
-      label: 'Delete',
-      variant: 'primary',
-    },
-    cancelButtonConfig: {
-      label: 'Cancel',
-      variant: 'secondary',
-    },
-    imageUrl: 'assets/images/alert-triangle.svg',
-  };
+  const mockData = mockDataDialog;
 
   beforeEach(async () => {
     // Mock MatDialogRef with jest function to observe close calls

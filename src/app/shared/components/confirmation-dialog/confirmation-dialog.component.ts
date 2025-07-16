@@ -7,15 +7,6 @@ import { ConfirmationDialogData } from '../../interfaces/confirmation-dialog.int
 import { OutlineButtonComponent } from '../outline-button/outline-button.component';
 import { FilledButtonComponent } from '../filled-button/filled-button.component';
 
-/**
- * A reusable, flexible confirmation dialog component.
- * Accepts a title, message, optional image, and customizable button configs.
- *
- * Usage:
- * Inject via MatDialog and provide `ConfirmationDialogData` as data.
- * The dialog returns `true` if confirmed, `false` if cancelled.
- */
-
 @Component({
   selector: 'app-confirmation-dialog',
   standalone: true,
@@ -34,31 +25,22 @@ export class ConfirmationDialogComponent {
     public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData,
   ) {
-    // Apply default labels and variants if not provided
+    // Set default button labels and variants
     this.data = applyDefaultDialogConfig(data);
   }
 
-  /**
-   * Triggered when the cancel button is clicked.
-   * Closes the dialog with `false` (cancel action).
-   */
+  // Close dialog with false on cancel
   onCancelClick(): void {
     this.dialogRef.close(false);
   }
 
-  /**
-   * Triggered when the confirm button is clicked.
-   * Closes the dialog with `true` (confirm action).
-   */
+  // Close dialog with true on confirm
   onConfirmClick(): void {
     this.dialogRef.close(true);
   }
 }
 
-/**
- * Utility to apply default values for button labels and variants.
- * Ensures graceful fallback when button config is partially missing.
- */
+// Set fallback values for button configs
 function applyDefaultDialogConfig(data: ConfirmationDialogData): ConfirmationDialogData {
   return {
     ...data,
