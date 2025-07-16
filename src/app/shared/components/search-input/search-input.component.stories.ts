@@ -38,7 +38,7 @@ const meta: Meta<SearchInputComponent> = {
          * Note: Console logging is acceptable in Storybook for developer visibility.
          */
         search: (query: string) => {
-          console.log('Search emitted:', query);
+          // console.log('Search emitted:', query);
         },
       },
       template: `

@@ -1,1 +1,30 @@
-<p>login works!</p>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div class="input-group">
+    <mat-icon>mail</mat-icon>
+    <input
+      id="email"
+      formControlName="email"
+      type="email"
+      placeholder="john@example.com"
+      required
+    />
+  </div>
+  <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
+    Please enter a valid email.
+  </div>
+
+  <div class="input-group">
+    <mat-icon>lock</mat-icon>
+    <input id="password" formControlName="password" type="password" placeholder="••••••" required />
+  </div>
+  <div
+    *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+    class="error"
+  >
+    Password is required.
+  </div>
+
+  <a class="forgot-password" href="#">Forgot password?</a>
+
+  <app-filled-button [filledButtonConfig]="signInButton"></app-filled-button>
+</form>
