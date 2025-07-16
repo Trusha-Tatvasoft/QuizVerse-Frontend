@@ -21,27 +21,22 @@ describe('ProgressBarComponent', () => {
 
   it('should set default percentage and color', () => {
     expect(component.percentage).toBe(50);
-    expect(component.color).toBe('primary');
+    expect(component.theme).toBe('primary');
   });
 
   it('should return correct CSS variable for primary', () => {
-    component.color = 'primary';
+    component.theme = 'primary';
     expect(component.progressbarColor).toBe('var(--global-primary-color)');
   });
 
   it('should return correct CSS variable for secondary', () => {
-    component.color = 'secondary';
+    component.theme = 'secondary';
     expect(component.progressbarColor).toBe('var(--global-secondary-color)');
-  });
-
-  it('should return correct CSS variable for black', () => {
-    component.color = 'black';
-    expect(component.progressbarColor).toBe('var(--black-color)');
   });
 
   it('should set CSS variables on ngOnInit', () => {
     component.percentage = 75;
-    component.color = 'secondary';
+    component.theme = 'secondary';
     component.ngOnInit();
     const style = nativeElement.style;
     expect(style.getPropertyValue('--progress-bar-percentage')).toBe('75%');
@@ -49,7 +44,22 @@ describe('ProgressBarComponent', () => {
   });
 
   it('should return fallback color for unknown color input', () => {
-    component.color = 'unknown' as any;
+    component.theme = 'unknown' as any;
     expect(component.progressbarColor).toBe('var(--global-primary-color)');
+  });
+
+  it('should clamp percentage > 100 to 100 via validPercentage', () => {
+    component.percentage = 150;
+    expect(component.validPercentage).toBe(100);
+  });
+
+  it('should clamp percentage < 0 to 0 via validPercentage', () => {
+    component.percentage = -20;
+    expect(component.validPercentage).toBe(0);
+  });
+
+  it('should return same percentage if between 0 and 100', () => {
+    component.percentage = 42;
+    expect(component.validPercentage).toBe(42);
   });
 });

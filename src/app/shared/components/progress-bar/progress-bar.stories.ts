@@ -12,9 +12,9 @@ const meta: Meta<ProgressBarComponent> = {
     percentage: {
       control: { type: 'range', min: 0, max: 100 },
     },
-    color: {
+    theme: {
       control: 'radio',
-      options: ['primary', 'secondary', 'black'],
+      options: ['primary', 'secondary'],
     },
   },
 };
@@ -25,13 +25,13 @@ type Story = StoryObj<ProgressBarComponent>;
 export const Default: Story = {
   args: {
     percentage: 25,
-    color: 'primary',
+    theme: 'primary',
   },
   render: (args) => ({
     props: args,
     template: `
         <div style="min-width: 300px;">
-          <app-progress-bar [percentage]="percentage" [color]="color"></app-progress-bar>
+          <app-progress-bar [percentage]="percentage" [theme]="theme"></app-progress-bar>
         </div>
       `,
   }),
@@ -40,13 +40,13 @@ export const Default: Story = {
 export const Secondary: Story = {
   args: {
     percentage: 75,
-    color: 'secondary',
+    theme: 'secondary',
   },
   render: (args) => ({
     props: args,
     template: `
         <div style="min-width: 300px;">
-          <app-progress-bar [percentage]="percentage" [color]="color"></app-progress-bar>
+          <app-progress-bar [percentage]="percentage" [theme]="theme"></app-progress-bar>
         </div>
       `,
   }),
