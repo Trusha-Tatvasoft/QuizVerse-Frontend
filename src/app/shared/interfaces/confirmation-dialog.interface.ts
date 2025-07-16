@@ -1,7 +1,9 @@
+import { ButtonConfig } from './button-config.interface';
+
 export interface ConfirmationDialogData {
   title: string;
   message: string;
-  confirmText?: string;
-  cancelText?: string;
-  imageUrl?: string; //optional
+  confirmButtonConfig: ButtonConfig;
+  cancelButtonConfig: ButtonConfig;
+  imageUrl?: string;
 }
