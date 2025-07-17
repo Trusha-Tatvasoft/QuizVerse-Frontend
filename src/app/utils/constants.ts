@@ -80,8 +80,8 @@ export const blue: TagInputConfig = {
   id: '0',
   label: 'info',
   type: 'static' as TagType,
-  backgroundColor: 'blue' as TagColor,
-  textColor: 'lightblue' as TagColor,
+  backgroundColor: 'lightBlue' as TagColor,
+  textColor: 'blue' as TagColor,
   isSelected: false,
   hasBorder: true,
 };

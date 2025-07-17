@@ -2,23 +2,23 @@ import { Meta, StoryObj } from '@storybook/angular';
 import { NavbarComponent } from './navbar.component';
 import { blue, yellow } from '../../../utils/constants';
 
-// ✅ Standalone components don't need moduleMetadata unless using non-standalone children
+// Standalone components don't need moduleMetadata unless using non-standalone children
 export default {
-  title: 'Shared/Navbar',
+  title: 'Layout/Navbar',
   component: NavbarComponent,
   tags: ['autodocs'],
 } as Meta<NavbarComponent>;
 
 type Story = StoryObj<NavbarComponent>;
 
-// 🧑‍💻 1. User Logged In (non-admin) with Notifications
+// User Logged In (non-admin) with Notifications
 export const LoggedInUserWithNotifications: Story = {
   args: {
     isLogin: true,
     isAdmin: false,
     currentXp: 500,
     xpLimit: 1000,
-    notificationCount: 3,
+    notificationCount: 1,
     notifications: [
       {
         id: '1',
@@ -26,7 +26,6 @@ export const LoggedInUserWithNotifications: Story = {
         message: 'You have earned a new badge for completing a quiz.',
         timeAgo: '2m ago',
         read: false,
-        type: 'info',
         tagConfig: blue,
       },
       {
@@ -35,26 +34,25 @@ export const LoggedInUserWithNotifications: Story = {
         message: 'Don’t forget to finish your weekly challenge.',
         timeAgo: '1h ago',
         read: true,
-        type: 'warning',
         tagConfig: yellow,
       },
     ],
   },
 };
 
-// 👮‍♂️ 2. Admin Logged In
+// Admin Logged In
 export const LoggedInAdmin: Story = {
   args: {
     isLogin: true,
     isAdmin: true,
     currentXp: 700,
     xpLimit: 1000,
-    notificationCount: 2,
+    notificationCount: 0,
     notifications: [],
   },
 };
 
-// 🙅‍♂️ 3. Guest User (Not Logged In)
+// Guest User (Not Logged In)
 export const GuestView: Story = {
   args: {
     isLogin: false,
@@ -64,7 +62,7 @@ export const GuestView: Story = {
   },
 };
 
-// 📭 4. Logged In User without Notifications
+// Logged In User without Notifications
 export const LoggedInUserNoNotifications: Story = {
   args: {
     isLogin: true,

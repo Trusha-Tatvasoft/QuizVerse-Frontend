@@ -1,4 +1,4 @@
-import { ButtonConfig } from '../interfaces/button-config.interface';
+import { ButtonConfig } from '../../../shared/interfaces/button-config.interface';
 
 export const TEXT_BUTTON_CONFIG: ButtonConfig = {
   label: '',

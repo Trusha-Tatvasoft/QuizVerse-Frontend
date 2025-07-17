@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { TextButtonComponent } from '../text-button/text-button.component';
-import { FilledButtonComponent } from '../filled-button/filled-button.component';
+import { TextButtonComponent } from '../../../shared/components/text-button/text-button.component';
+import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
 import {
   DELETE_BUTTON_CONFIG,
   GET_STARTED_BUTTON_CONFIG,
@@ -15,11 +15,11 @@ import {
   TEXT_BUTTON_CONFIG,
   VIEW_ALL_DETAILS_BUTTON_CONFIG,
   VIEW_DETAILS_BUTTON_CONFIG,
-} from '../../configs/navbar.component.config';
-import { TagComponent } from '../tag/tag.component';
-import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
-import { OutlineButtonComponent } from '../outline-button/outline-button.component';
-import { Notifications } from '../../interfaces/navbar.component.interface';
+} from '../configs/navbar.component.config';
+import { TagComponent } from '../../../shared/components/tag/tag.component';
+import { ProgressBarComponent } from '../../../shared/components/progress-bar/progress-bar.component';
+import { OutlineButtonComponent } from '../../../shared/components/outline-button/outline-button.component';
+import { Notifications } from '../interfaces/navbar.component.interface';
 
 @Component({
   selector: 'app-navbar',
