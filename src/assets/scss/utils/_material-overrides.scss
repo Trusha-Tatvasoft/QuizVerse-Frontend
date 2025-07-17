@@ -48,3 +48,8 @@
     display: none !important;
   }
 }
+
+// Removes default hover background for custom sidebar styling
+.no-hover-before .mat-mdc-list-item.mat-mdc-list-item-interactive:hover::before {
+  background-color: transparent !important;
+}

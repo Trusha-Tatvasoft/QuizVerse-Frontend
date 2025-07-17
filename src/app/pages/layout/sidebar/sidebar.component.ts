@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
@@ -6,7 +6,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { SidebarItem } from '../../interfaces/sidebar-component.interface';
+import { SidenavMode, UserType } from '../../../utils/types/sidebar-component.type';
+import { SidebarItem } from '../../../shared/interfaces/sidebar-component.interface';
 
 @Component({
   selector: 'app-sidebar',
@@ -23,16 +24,16 @@ import { SidebarItem } from '../../interfaces/sidebar-component.interface';
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent implements OnInit {
+  @Input() sidebarItems: SidebarItem[] = [];
+  @Input() role: UserType = 'user';
+
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
   isMobile: boolean = false;
   isOpen: boolean = true;
-  sidenavMode: 'side' | 'over' = 'side';
+  sidenavMode: SidenavMode = 'side';
 
-  @Input() sidebarItems: SidebarItem[] = [];
-  @Input() role: 'user' | 'admin' = 'user';
-
-  constructor(private readonly router: Router) {}
+  private readonly router = inject(Router);
 
   ngOnInit(): void {
     this.setSidenavMode(window.innerWidth);

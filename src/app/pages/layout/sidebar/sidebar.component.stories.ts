@@ -1,7 +1,7 @@
 import { Meta, StoryObj, applicationConfig } from '@storybook/angular';
 import { SidebarComponent } from './sidebar.component';
 import { provideRouter } from '@angular/router';
-import { SidebarItem } from '../../interfaces/sidebar-component.interface';
+import { SidebarItem } from '../../../shared/interfaces/sidebar-component.interface';
 
 const dummyComponent = class {};
 

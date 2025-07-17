@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SidebarComponent } from './sidebar.component';
 import { Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
-import { SidebarItem } from '../../interfaces/sidebar-component.interface';
+import { SidebarItem } from '../../../shared/interfaces/sidebar-component.interface';
 import { MatSidenav } from '@angular/material/sidenav';
 
 const mockSidebarItems: SidebarItem[] = [

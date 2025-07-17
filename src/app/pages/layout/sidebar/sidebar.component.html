@@ -1,4 +1,4 @@
-<mat-sidenav-container class="sidebar-container">
+<mat-sidenav-container class="sidebar-container no-hover-before">
   <mat-sidenav
     #sidenav
     [mode]="sidenavMode"
@@ -6,7 +6,6 @@
     class="sidebar"
     [class.sidebar-mobile]="isMobile"
     fixedInViewport="true"
-    fixedTopGap="65"
   >
     <mat-nav-list class="sidebar-nav">
       <ng-container *ngFor="let item of sidebarItems">
