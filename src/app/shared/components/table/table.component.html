@@ -1,0 +1,168 @@
+<mat-card class="data-table-card mat-elevation-z2">
+  <!-- Optional Header -->
+  @if (tableTitle || tableDescription) {
+    <div class="table-header mb-4">
+      @if (tableTitle) {
+        <h2>{{ tableTitle }}</h2>
+      }
+      @if (tableDescription) {
+        <p>{{ tableDescription }}</p>
+      }
+    </div>
+  }
+
+  <!-- Table -->
+  <div class="table-responsive">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      matSort
+      (matSortChange)="onSortChange($event)"
+      class="full-width-table mat-elevation-z1"
+    >
+      <!-- Dynamic Columns -->
+      @for (column of columns; track column.key) {
+        <ng-container [matColumnDef]="column.key">
+          @if (column.isSortable) {
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              [mat-sort-header]="column.key"
+              class="table-column-heading"
+            >
+              {{ column.label }}
+            </th>
+          } @else {
+            <th mat-header-cell *matHeaderCellDef class="table-column-heading">
+              {{ column.label }}
+            </th>
+          }
+
+          <td mat-cell *matCellDef="let row" [ngClass]="column.class">
+            @switch (column.type) {
+              @case ('text') {
+                <span>
+                  @switch (column.pipe) {
+                    @case ('currency') {
+                      <span>
+                        @if (getAmount(row[column.key]) !== null) {
+                          {{
+                            getAmount(row[column.key])
+                              | currency
+                                : getCurrencyCodeFinal(row[column.key], column)
+                                : getCurrencyDisplay(column)
+                                : getCurrencyDigits(column)
+                          }}
+                        } @else {
+                          -
+                        }
+                      </span>
+                    }
+                    @case ('date') {
+                      {{
+                        row[column.key]
+                          ? (row[column.key] | date: column.pipeArgs?.[0] || 'yyyy-MM-dd')
+                          : '-'
+                      }}
+                    }
+                    @default {
+                      {{ row[column.key] ?? '-' }}
+                    }
+                  }
+                </span>
+              }
+
+              @case ('button') {
+                @if (row[column.key]?.length > 0) {
+                  <div class="action-icons">
+                    @for (action of row[column.key]; track action) {
+                      <app-text-button
+                        [textButtonConfig]="{
+                          matIcon: action,
+                          iconFontSet: 'material-icons-outlined',
+                          variant: 'secondary',
+                          type: 'button',
+                          imagePosition: 'left',
+                          isDisabled: false,
+                          label: '',
+                        }"
+                        (click)="onActionClick(action, row)"
+                      ></app-text-button>
+                    }
+                  </div>
+                }
+              }
+
+              @case ('profile') {
+                <div class="profile-cell">
+                  <img [src]="row[column.key].image" alt="{{ row[column.key].name }}" />
+                  <div class="info">
+                    <div class="name">{{ row[column.key].name }}</div>
+                    <div class="email">{{ row[column.key].email }}</div>
+                  </div>
+                </div>
+              }
+
+              @case ('category') {
+                <div class="category-cell">
+                  <mat-icon fontSet="material-icons-outlined">
+                    {{ row[column.key]?.icon }}
+                  </mat-icon>
+                  <span>{{ row[column.key]?.name }}</span>
+                </div>
+              }
+
+              @case ('question-pool') {
+                @if (row[column.key]?.length > 0) {
+                  <div class="question-pool-container">
+                    @for (item of row[column.key]; track item.question) {
+                      <div class="question-card">
+                        <p class="question-text">{{ item.question }}</p>
+                        <p class="correct-answer">Correct: {{ item.correctAnswer }}</p>
+                      </div>
+                    }
+                  </div>
+                }
+              }
+
+              @default {
+                @if (column.type === 'tag') {
+                  <div class="d-flex align-items-center gap-1">
+                    <app-tag [tagConfig]="row[column.key]?.tagConfig"></app-tag>
+                    @if (row[column.key]?.extraText) {
+                      <span class="tag-extra-text">
+                        {{ row[column.key]?.extraText }}
+                      </span>
+                    }
+                  </div>
+                }
+              }
+            }
+          </td>
+        </ng-container>
+      }
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="table-header-row"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" class="table-row"></tr>
+
+      <!-- Message shown when no data present in table -->
+      <tr class="table-row" *matNoDataRow>
+        <td [attr.colspan]="displayedColumns.length" class="no-data-message">No data available.</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Paginator -->
+  @if (showPaginator && applyPaginator) {
+    <div class="pagination-container">
+      <mat-paginator
+        class="custom-paginator"
+        [length]="totalItems"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [showFirstLastButtons]="true"
+        (page)="onPageChange($event)"
+      ></mat-paginator>
+    </div>
+  }
+</mat-card>
