@@ -26,59 +26,6 @@
   );
 }
 
-//Search Bar styles
-.search-field {
-  width: 100%;
-  --mat-form-field-container-height: 40px;
-
-  .search-icon {
-    color: #d3d3d3;
-  }
-
-  .mdc-text-field:hover {
-    border: 2px solid var(--global-primary-color);
-  }
-
-  .mdc-text-field {
-    border: 1px solid #d3d3d3;
-    border-radius: 8px;
-  }
-
-  .mat-mdc-text-field-input::placeholder {
-    color: #d3d3d3;
-    opacity: 1;
-  }
-
-  .mat-mdc-form-field-infix {
-    padding: 10px 0 !important;
-  }
-}
-
-.search-purple {
-  .mdc-text-field:hover {
-    border: 2px solid var(--global-primary-color);
-  }
-
-  .mdc-text-field.mdc-text-field--focused {
-    border: 2px solid var(--global-primary-color);
-  }
-}
-
-.search-black {
-  .mdc-text-field:hover {
-    border: 2px solid #000000;
-  }
-
-  .mdc-text-field.mdc-text-field--focused {
-    border: 2px solid #000000;
-  }
-}
-
-.mdc-notched-outline__trailing,
-.mdc-notched-outline__leading {
-  border: none !important;
-}
-
 //Tab Component Bar styles
 .mat-mdc-tab-group {
   .mat-mdc-tab-header {
@@ -97,7 +44,7 @@
   }
 
   .mat-mdc-tab-labels {
-    gap: 8px; // adds clean spacing between tabs
+    gap: 8px;
   }
 
   .mdc-tab {
@@ -110,7 +57,7 @@
     transition:
       background-color 0s,
       color 0s;
-    color: #a7b1c0; // slate-700
+    color: #a7b1c0;
 
     .mat-icon {
       margin-right: 8px;
