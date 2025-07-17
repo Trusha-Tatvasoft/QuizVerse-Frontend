@@ -1,0 +1,55 @@
+//Tab Component Bar styles
+.mat-mdc-tab-group {
+  .mat-mdc-tab-header {
+    justify-content: flex-start;
+    background: transparent;
+    border-bottom: none;
+  }
+
+  .mat-mdc-tab-label-container {
+    border-bottom: none;
+    padding-bottom: 5px;
+  }
+
+  .mat-mdc-tab-list {
+    flex-grow: 0;
+  }
+
+  .mat-mdc-tab-labels {
+    gap: 8px; // adds clean spacing between tabs
+  }
+
+  .mdc-tab {
+    padding: 6px 12px !important;
+    border-radius: 5px;
+    height: auto;
+    width: fit-content;
+    font-size: 14px;
+    font-weight: 400;
+    transition:
+      background-color 0s,
+      color 0s;
+    color: #a7b1c0; // slate-700
+
+    .mat-icon {
+      margin-right: 8px;
+      font-size: 20px;
+      padding-top: 2px;
+    }
+  }
+
+  .mdc-tab--active {
+    background-color: white;
+    color: #000000;
+    font-weight: 500;
+  }
+
+  .mdc-tab-indicator {
+    display: none !important;
+  }
+}
+
+// Removes default hover background for custom sidebar styling
+.no-hover-before .mat-mdc-list-item.mat-mdc-list-item-interactive:hover::before {
+  background-color: transparent !important;
+}

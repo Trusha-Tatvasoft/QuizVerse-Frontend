@@ -6,10 +6,38 @@
   --purple-color: #6b21a8;
   --yellow-color: #854d0e;
   --orange-color: #b05e3e;
+  --gray-color: #4b5563;
 
   --light-green-color: #dcfce7;
   --light-brown-color: #fee2e2;
   --light-purple-color: #f3e8ff;
   --light-yellow-color: #fef9c3;
   --light-orange-color: #ffedd5;
+
+  --dark-gray-color: #111827;
+
+  --global-primary-color: #9333ea;
+  --global-secondary-color: #2563eb;
+
+  --gradient: linear-gradient(
+    90deg,
+    var(--global-primary-color) 12%,
+    var(--global-secondary-color) 63%
+  );
+
+  --global-primary-color-rgb: 147, 51, 234;
+  --global-secondary-color-rgb: 37, 99, 235;
+
+  --highlight-gradient: linear-gradient(
+    to right,
+    rgba(var(--global-primary-color-rgb), 0.1),
+    rgba(var(--global-secondary-color-rgb), 0.1)
+  );
+
+  --global-primary-border-color: #e9d5ff;
+
+  --global-admin-primary-color: #b91c1c;
+
+  --global-admin-primary-color-rgb: 255, 99, 71;
+  --global-admin-secondary-color-rgb: 255, 140, 0;
 }
