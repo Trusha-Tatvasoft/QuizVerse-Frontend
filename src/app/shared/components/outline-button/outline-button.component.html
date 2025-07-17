@@ -5,56 +5,35 @@
   class="outline-button"
 >
   <div class="flex items-center gap-2">
-    <ng-container *ngIf="isIconLeft">
-      <mat-icon
-        *ngIf="config.matIcon"
-        [fontSet]="config.iconFontSet"
-        class="button-icon"
-        [ngClass]="config.variant"
-      >
-        {{ config.matIcon }}
-      </mat-icon>
-      <img
-        *ngIf="!config.matIcon && config.imageSrc"
-        [src]="config.imageSrc"
-        alt="button icon"
-        class="w-5 h-5 object-contain"
-      />
-    </ng-container>
-    <div *ngIf="hasLabel" [ngClass]="config.variant">
-      {{ config.label }}
-    </div>
-    <ng-container *ngIf="isIconRight">
-      <mat-icon
-        *ngIf="config.matIcon"
-        [fontSet]="config.iconFontSet"
-        class="button-icon"
-        [ngClass]="config.variant"
-      >
-        {{ config.matIcon }}
-      </mat-icon>
-      <img
-        *ngIf="!config.matIcon && config.imageSrc"
-        [src]="config.imageSrc"
-        alt="button icon"
-        class="w-5 h-5 object-contain"
-      />
-    </ng-container>
-    <ng-container *ngIf="!hasLabel">
-      <mat-icon
-        *ngIf="config.matIcon"
-        [fontSet]="config.iconFontSet"
-        class="button-icon"
-        [ngClass]="config.variant"
-      >
-        {{ config.matIcon }}
-      </mat-icon>
-      <img
-        *ngIf="!config.matIcon && config.imageSrc"
-        [src]="config.imageSrc"
-        alt="button icon"
-        class="w-5 h-5 object-contain"
-      />
-    </ng-container>
+    @if (isIconLeft) {
+      @if (config.matIcon) {
+        <mat-icon [fontSet]="config.iconFontSet" class="button-icon" [ngClass]="config.variant">
+          {{ config.matIcon }}
+        </mat-icon>
+      } @else if (config.imageSrc) {
+        <img [src]="config.imageSrc" alt="button icon" class="w-5 h-5 object-contain" />
+      }
+    }
+    @if (hasLabel) {
+      <div [ngClass]="config.variant">{{ config.label }}</div>
+    }
+    @if (isIconRight) {
+      @if (config.matIcon) {
+        <mat-icon [fontSet]="config.iconFontSet" class="button-icon" [ngClass]="config.variant">
+          {{ config.matIcon }}
+        </mat-icon>
+      } @else if (config.imageSrc) {
+        <img [src]="config.imageSrc" alt="button icon" class="w-5 h-5 object-contain" />
+      }
+    }
+    @if (!hasLabel) {
+      @if (config.matIcon) {
+        <mat-icon [fontSet]="config.iconFontSet" class="button-icon" [ngClass]="config.variant">
+          {{ config.matIcon }}
+        </mat-icon>
+      } @else if (config.imageSrc) {
+        <img [src]="config.imageSrc" alt="button icon" class="w-5 h-5 object-contain" />
+      }
+    }
   </div>
 </button>
