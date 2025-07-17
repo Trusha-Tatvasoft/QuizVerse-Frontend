@@ -1,9 +1,15 @@
 <mat-card class="data-table-card mat-elevation-z2">
   <!-- Optional Header -->
-  <div *ngIf="tableTitle || tableDescription" class="table-header mb-4">
-    <h2 *ngIf="tableTitle">{{ tableTitle }}</h2>
-    <p *ngIf="tableDescription">{{ tableDescription }}</p>
-  </div>
+  @if (tableTitle || tableDescription) {
+    <div class="table-header mb-4">
+      @if (tableTitle) {
+        <h2>{{ tableTitle }}</h2>
+      }
+      @if (tableDescription) {
+        <p>{{ tableDescription }}</p>
+      }
+    </div>
+  }
 
   <!-- Table -->
   <div class="table-responsive">
@@ -15,128 +21,126 @@
       class="full-width-table mat-elevation-z1"
     >
       <!-- Dynamic Columns -->
-      <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
-        <ng-container *ngIf="column.isSortable; else plainHeader">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            [mat-sort-header]="column.key"
-            class="table-column-heading"
-          >
-            {{ column.label }}
-          </th>
-        </ng-container>
+      @for (column of columns; track column.key) {
+        <ng-container [matColumnDef]="column.key">
+          @if (column.isSortable) {
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              [mat-sort-header]="column.key"
+              class="table-column-heading"
+            >
+              {{ column.label }}
+            </th>
+          } @else {
+            <th mat-header-cell *matHeaderCellDef class="table-column-heading">
+              {{ column.label }}
+            </th>
+          }
 
-        <!-- plain header - without the sorting - column header -->
-        <ng-template #plainHeader>
-          <th mat-header-cell *matHeaderCellDef class="table-column-heading">
-            {{ column.label }}
-          </th>
-        </ng-template>
-
-        <td mat-cell *matCellDef="let row" [ngClass]="column.class">
-          <ng-container [ngSwitch]="column.type">
-            <!-- Text Type -->
-            <ng-container *ngSwitchCase="'text'">
-              <span>
-                <ng-container [ngSwitch]="column.pipe">
-                  <!-- Currency Pipe -->
-                  <ng-container *ngSwitchCase="'currency'">
-                    <span>
-                      <ng-container *ngIf="getAmount(row[column.key]) !== null; else noValue">
-                        {{
-                          getAmount(row[column.key])
-                            | currency
-                              : getCurrencyCodeFinal(row[column.key], column)
-                              : getCurrencyDisplay(column)
-                              : getCurrencyDigits(column)
-                        }}
-                      </ng-container>
-                      <ng-template #noValue>-</ng-template>
-                    </span>
-                  </ng-container>
-
-                  <!-- Date Pipe -->
-                  <ng-container *ngSwitchCase="'date'">
-                    {{
-                      row[column.key]
-                        ? (row[column.key] | date: column.pipeArgs?.[0] || 'yyyy-MM-dd')
-                        : '-'
-                    }}
-                  </ng-container>
-
-                  <!-- Default Text -->
-                  <ng-container *ngSwitchDefault>
-                    {{ row[column.key] ?? '-' }}
-                  </ng-container>
-                </ng-container>
-              </span>
-            </ng-container>
-
-            <!-- Tag Type -->
-            <ng-container *ngIf="column.type === 'tag'">
-              <div class="d-flex align-items-center gap-1">
-                <app-tag [tagConfig]="row[column.key]?.tagConfig"></app-tag>
-                <span *ngIf="row[column.key]?.extraText" class="tag-extra-text">
-                  {{ row[column.key]?.extraText }}
+          <td mat-cell *matCellDef="let row" [ngClass]="column.class">
+            @switch (column.type) {
+              @case ('text') {
+                <span>
+                  @switch (column.pipe) {
+                    @case ('currency') {
+                      <span>
+                        @if (getAmount(row[column.key]) !== null) {
+                          {{
+                            getAmount(row[column.key])
+                              | currency
+                                : getCurrencyCodeFinal(row[column.key], column)
+                                : getCurrencyDisplay(column)
+                                : getCurrencyDigits(column)
+                          }}
+                        } @else {
+                          -
+                        }
+                      </span>
+                    }
+                    @case ('date') {
+                      {{
+                        row[column.key]
+                          ? (row[column.key] | date: column.pipeArgs?.[0] || 'yyyy-MM-dd')
+                          : '-'
+                      }}
+                    }
+                    @default {
+                      {{ row[column.key] ?? '-' }}
+                    }
+                  }
                 </span>
-              </div>
-            </ng-container>
+              }
 
-            <!-- Button Type -->
-            <ng-container *ngSwitchCase="'button'">
-              <ng-container *ngIf="row[column.key]?.length > 0">
-                <div class="action-icons">
-                  <app-text-button
-                    *ngFor="let action of row[column.key]"
-                    [textButtonConfig]="{
-                      matIcon: action,
-                      iconFontSet: 'material-icons-outlined',
-                      variant: 'secondary',
-                      type: 'button',
-                      imagePosition: 'left',
-                      isDisabled: false,
-                      label: '',
-                    }"
-                    (click)="onActionClick(action, row)"
-                  ></app-text-button>
+              @case ('button') {
+                @if (row[column.key]?.length > 0) {
+                  <div class="action-icons">
+                    @for (action of row[column.key]; track action) {
+                      <app-text-button
+                        [textButtonConfig]="{
+                          matIcon: action,
+                          iconFontSet: 'material-icons-outlined',
+                          variant: 'secondary',
+                          type: 'button',
+                          imagePosition: 'left',
+                          isDisabled: false,
+                          label: '',
+                        }"
+                        (click)="onActionClick(action, row)"
+                      ></app-text-button>
+                    }
+                  </div>
+                }
+              }
+
+              @case ('profile') {
+                <div class="profile-cell">
+                  <img [src]="row[column.key].image" alt="{{ row[column.key].name }}" />
+                  <div class="info">
+                    <div class="name">{{ row[column.key].name }}</div>
+                    <div class="email">{{ row[column.key].email }}</div>
+                  </div>
                 </div>
-              </ng-container>
-            </ng-container>
+              }
 
-            <!-- Profile Type -->
-            <ng-container *ngSwitchCase="'profile'">
-              <div class="profile-cell">
-                <img [src]="row[column.key].image" alt="{{ row[column.key].name }}" />
-                <div class="info">
-                  <div class="name">{{ row[column.key].name }}</div>
-                  <div class="email">{{ row[column.key].email }}</div>
+              @case ('category') {
+                <div class="category-cell">
+                  <mat-icon fontSet="material-icons-outlined">
+                    {{ row[column.key]?.icon }}
+                  </mat-icon>
+                  <span>{{ row[column.key]?.name }}</span>
                 </div>
-              </div>
-            </ng-container>
+              }
 
-            <!-- Category Type -->
-            <ng-container *ngSwitchCase="'category'">
-              <div class="category-cell">
-                <mat-icon fontSet="material-icons-outlined">
-                  {{ row[column.key]?.icon }}
-                </mat-icon>
-                <span>{{ row[column.key]?.name }}</span>
-              </div>
-            </ng-container>
+              @case ('question-pool') {
+                @if (row[column.key]?.length > 0) {
+                  <div class="question-pool-container">
+                    @for (item of row[column.key]; track item.question) {
+                      <div class="question-card">
+                        <p class="question-text">{{ item.question }}</p>
+                        <p class="correct-answer">Correct: {{ item.correctAnswer }}</p>
+                      </div>
+                    }
+                  </div>
+                }
+              }
 
-            <!-- Question Pool Type -->
-            <ng-container *ngSwitchCase="'question-pool'">
-              <div class="question-pool-container" *ngIf="row[column.key]?.length > 0">
-                <div class="question-card" *ngFor="let item of row[column.key]">
-                  <p class="question-text">{{ item.question }}</p>
-                  <p class="correct-answer">Correct: {{ item.correctAnswer }}</p>
-                </div>
-              </div>
-            </ng-container>
-          </ng-container>
-        </td>
-      </ng-container>
+              @default {
+                @if (column.type === 'tag') {
+                  <div class="d-flex align-items-center gap-1">
+                    <app-tag [tagConfig]="row[column.key]?.tagConfig"></app-tag>
+                    @if (row[column.key]?.extraText) {
+                      <span class="tag-extra-text">
+                        {{ row[column.key]?.extraText }}
+                      </span>
+                    }
+                  </div>
+                }
+              }
+            }
+          </td>
+        </ng-container>
+      }
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns" class="table-header-row"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns" class="table-row"></tr>
@@ -149,7 +153,7 @@
   </div>
 
   <!-- Paginator -->
-  <div *ngIf="showPaginator && applyPaginator">
+  @if (showPaginator && applyPaginator) {
     <div class="pagination-container">
       <mat-paginator
         class="custom-paginator"
@@ -158,8 +162,7 @@
         [pageSizeOptions]="pageSizeOptions"
         [showFirstLastButtons]="true"
         (page)="onPageChange($event)"
-      >
-      </mat-paginator>
+      ></mat-paginator>
     </div>
-  </div>
+  }
 </mat-card>
