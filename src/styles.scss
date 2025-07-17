@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+// @import url('../src/assets/scss/utils/_variable.scss');
 @import 'tailwindcss';
 :root {
   --black-color: #0f172a;
@@ -30,6 +31,7 @@
     justify-content: flex-start;
     background: transparent;
     border-bottom: none;
+    margin-bottom: 15px;
   }
 
   .mat-mdc-tab-label-container {
@@ -58,16 +60,18 @@
     color: #a7b1c0;
 
     .mat-icon {
-      margin-right: 8px;
+      margin-right: 5px;
       font-size: 20px;
-      padding-top: 2px;
+      padding-top: 1px;
     }
   }
 
   .mdc-tab--active {
     background-color: white;
-    color: #000000;
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .mdc-tab-indicator {

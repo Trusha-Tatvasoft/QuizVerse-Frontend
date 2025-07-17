@@ -1,21 +1,17 @@
-import { SafeHtml } from '@angular/platform-browser';
+import { Type } from '@angular/core';
 
 /**
- * Represents the input structure for each tab in TabComponent.
- * Used when configuring tabs dynamically with optional icon and raw HTML string.
+ * LazyTab
+ * -------
+ * Interface representing a single tab configuration for lazy loading.
+ * - id: Unique tab identifier.
+ * - label: Display label for the tab.
+ * - icon: Optional Material icon for the tab.
+ * - loadChildren: Function returning a Promise resolving to the component Type for lazy loading.
  */
-export interface TabInput {
-  label: string; // Display label for the tab
-  icon?: string; // Optional Material icon name for the tab
-  content?: string; // Raw HTML content as a string (unsafe by default)
-}
-
-/**
- * Represents the view structure for each tab after content sanitization.
- * Used internally for rendering safe HTML with Angular.
- */
-export interface TabView {
-  label: string; // Display label for the tab
-  icon?: string; // Optional Material icon name for the tab
-  safeContent?: SafeHtml; // Sanitized HTML content safe for rendering
+export interface LazyTab {
+  id: string;
+  label: string;
+  icon?: string;
+  loadChildren?: () => Promise<Type<any>>; // Dynamic import function for lazy loading
 }

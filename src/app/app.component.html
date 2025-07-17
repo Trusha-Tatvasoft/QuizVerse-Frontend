@@ -1,1 +1,21 @@
-<h1 class="text-3xl font-bold">Hello world!</h1>
+<h1 class="text-3xl font-bold text-center my-4">Welcome to QuizVerse!</h1>
+<div class="bg-gray-200 p-4">
+  <app-common-tab [tabs]="tabs" [selectedIndex]="selectedIndex" (tabChanged)="onTabChanged($event)">
+    <ng-template tabContent="filled-button">
+      <div class="text-center text-gray-600 mt-8 italic text-lg max-w-xl mx-auto">
+        <app-filled-button [filledButtonConfig]="playButton"></app-filled-button>
+        <img src="assets/images/alert-triangle.svg" alt="Quote Icon" class="inline-block ml-2" />
+      </div>
+    </ng-template>
+    <ng-template tabContent="static-quote">
+      <div class="text-center text-gray-600 mt-8 italic text-lg max-w-xl mx-auto">
+        "Empowering learning through structured, reusable UI components."
+        <img
+          src="assets/images/logo-to-be-changed.png"
+          alt="Quote Icon"
+          class="inline-block ml-2"
+        />
+      </div>
+    </ng-template>
+  </app-common-tab>
+</div>
