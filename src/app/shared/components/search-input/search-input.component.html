@@ -1,4 +1,4 @@
-<mat-form-field appearance="outline" class="search-field" [ngClass]="borderClass">
+<!-- <mat-form-field appearance="outline" class="search-field" [ngClass]="borderClass">
   <mat-icon matPrefix class="search-icon">search</mat-icon>
   <input
     matInput
@@ -7,4 +7,18 @@
     (input)="onInputChange($event)"
     type="text"
   />
-</mat-form-field>
+</mat-form-field> -->
+
+<div class="custom-search-wrapper" [ngClass]="borderClass">
+  <div class="search-input-box">
+    <mat-icon class="search-icon">search</mat-icon>
+    <input
+      matInput
+      class="custom-input"
+      [placeholder]="placeholder"
+      [formControl]="control"
+      (input)="onInputChange($event)"
+      type="text"
+    />
+  </div>
+</div>
