@@ -6,10 +6,12 @@
 
   <!-- Main Content Section -->
   <mat-dialog-content class="dialog-content">
-    <!-- Optional image if imageUrl is provided -->
-    <div class="image-wrapper" *ngIf="data.imageUrl">
-      <img [src]="data.imageUrl" alt="Icon" />
-    </div>
+    @if (data.imageUrl) {
+      <!-- Optional image if imageUrl is provided -->
+      <div class="image-wrapper">
+        <img [src]="data.imageUrl" alt="Icon" />
+      </div>
+    }
 
     <!-- Message Paragraph -->
     <p class="message-text">{{ data.message }}</p>

@@ -9,12 +9,16 @@
   --purple-color: #6b21a8;
   --yellow-color: #854d0e;
   --orange-color: #b05e3e;
+  --blue-color: #1e3a8a;
+  --red-color: #b91c1c;
 
   --light-green-color: #dcfce7;
   --light-brown-color: #fee2e2;
   --light-purple-color: #f3e8ff;
   --light-yellow-color: #fef9c3;
   --light-orange-color: #ffedd5;
+  --light-blue-color: #bfdbfe;
+  --light-red-color: #fecaca;
 
   --global-primary-color: #9333ea;
   --global-secondary-color: #2563eb;
@@ -151,7 +155,25 @@
   }
 }
 
-//profile-menu
+//navbar header
+.navbar {
+  // notification-wrapper
+  .notification-wrapper {
+    app-text-button {
+      .text-button {
+        padding: 10px !important;
+      }
+    }
+  }
+
+  &__guest {
+    app-text-button,
+    app-filled-button {
+      min-width: fit-content;
+    }
+  }
+}
+
 .profile-menu {
   .profile-menu-xp {
     display: none;
@@ -163,6 +185,7 @@
       padding: 1rem 0rem;
     }
   }
+
   .mat-mdc-menu-content {
     width: 220px;
     background-color: white;
@@ -191,6 +214,7 @@
   }
 }
 
+// xp-section
 .xp-section {
   position: relative;
   overflow: hidden;
@@ -218,43 +242,12 @@
     font-weight: 600;
     flex: none;
   }
-
-  mat-progress-bar {
-    width: 60%;
-  }
 }
 
-//progress-bar
+// progress-bar
 .custom-xp-bar {
   height: 10px !important;
   border-radius: 15px;
-  background-color: white; // Optional: gives a soft gray track
-
-  .mdc-linear-progress__bar {
-    height: 100%;
-    border-radius: 5px;
-    overflow: hidden;
-  }
-
-  .mdc-linear-progress__bar-inner {
-    border-top: none !important;
-    height: 100%;
-    background-color: black !important;
-  }
-
-  .mdc-linear-progress__buffer-bar {
-    flex: 0 1 100%;
-    transition: flex-basis 250ms 0ms cubic-bezier(0.4, 0, 0.6, 1);
-    background-color: white;
-  }
-}
-
-.notification-wrapper {
-  position: relative;
-
-  app-text-button {
-    .text-button {
-      padding: 10px !important;
-    }
-  }
+  background-color: white;
+  width: 100%;
 }

@@ -1,25 +1,26 @@
+// Main Navbar Layout
 .navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 2rem;
-  background-color: #ffffff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  position: relative;
   height: 65px;
   gap: 1rem;
+  box-shadow: 7px 5px 10px rgba(0, 0, 0, 0.1);
+  padding: 0rem 2rem;
 
+  // Logo Styling
   .logo-big,
   .logo-small {
-    height: 40px;
+    height: 40px; // standard logo height
   }
 
   @media (min-width: 768px) {
     .logo-small {
-      display: none;
+      display: none; // hide small logo on desktop
     }
   }
 
+  // Left Section (Logo + Toggle)
   &__left {
     display: flex;
     align-items: center;
@@ -30,14 +31,14 @@
       display: none;
 
       @media (max-width: 768px) {
-        display: inline-flex;
+        display: inline-flex; // show toggle on mobile
       }
     }
   }
 
+  // Center Section (Search Input)
   &__center {
     display: flex;
-    padding-top: inherit;
     flex: 1 1 auto;
     justify-content: center;
     min-width: 10px;
@@ -45,13 +46,14 @@
     app-search-input {
       width: 100%;
       max-width: 400px;
+    }
 
-      // @media screen and (max-width: 767px) {
-      //   display: none;
-      // }
+    @media (max-width: 500px) {
+      display: none; // hide on small screens
     }
   }
 
+  // Right & Guest Section (Profile, XP, etc.)
   &__right,
   &__guest {
     min-width: 100px;
@@ -72,14 +74,9 @@
     }
   }
 
+  // Notifications Wrapper
   .notification-wrapper {
     position: relative;
-
-    app-text-button {
-      .text-button {
-        padding: 0px !important;
-      }
-    }
 
     .badge {
       position: absolute;
@@ -87,37 +84,57 @@
       right: -6px;
       background-color: red;
       color: white;
-      border-radius: 50%;
       font-size: 12px;
       font-weight: bold;
-
-      width: 20px;
-      height: 20px;
+      min-width: 20px;
+      min-height: 20px;
+      padding: 0 4px;
+      border-radius: 99px; // pill shape
       display: flex;
       align-items: center;
       justify-content: center;
+      line-height: 1;
+      white-space: nowrap;
     }
 
-    .notification-dropdown {
-      position: absolute;
-      right: 0;
-      top: 45px;
-      width: 240px;
-      background: white;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-      z-index: 10;
-      padding: 1rem;
-      font-size: 14px;
+    .notification-inner {
+      max-height: 400px;
+      overflow-y: auto;
+
+      scrollbar-width: thin; // Firefox
+      scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+
+      // Chrome, Edge, Safari
+      &::-webkit-scrollbar {
+        width: 4px; // thinner scrollbar
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+      }
+    }
+
+    .notification-box {
+      @media (max-width: 500px) {
+        width: 350px;
+        right: -50px; // adjust box position on mobile
+      }
     }
   }
 
+  // XP Section Hidden on Mobile
   @media screen and (max-width: 767px) {
     .xp-main {
       display: none;
     }
   }
 
+  // Profile Button (Avatar)
   .profile-button {
     border: none;
     background: none;
@@ -139,10 +156,13 @@
     }
   }
 
+  // Mobile Responsive Styles
   @media (max-width: 768px) {
     padding: 1rem 0.5rem;
+    gap: 0;
+
     .logo-big {
-      display: none;
+      display: none; // hide big logo on mobile
     }
 
     .logo-small {

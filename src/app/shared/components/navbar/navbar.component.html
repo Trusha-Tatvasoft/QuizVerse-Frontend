@@ -1,86 +1,151 @@
-<p>navbar works!</p>
-<header class="navbar">
-  <!-- LEFT -->
+<header class="navbar top-0 fixed left-0 w-full z-50 bg-white/30 backdrop-blur-lg shadow-sm">
+  <!-- Left Section: Logo + Sidebar toggle -->
   <div class="navbar__left">
-    <button *ngIf="isLogin" mat-icon-button class="toggle-btn" aria-label="Toggle Sidebar">
-      <mat-icon fontSet="material-icons-outlined">menu</mat-icon>
-    </button>
-    <img src="assets/images/logo-to-be-changed.png" class="logo-big" alt="Logo" />
-    <img src="assets/images/logo-small.png" class="logo-small" alt="Logo" />
+    @if (isLogin) {
+      <button mat-icon-button class="toggle-btn" aria-label="Toggle Sidebar">
+        <mat-icon fontSet="material-icons-outlined">menu</mat-icon>
+      </button>
+    }
+    <img src="assets/images/logo-to-be-changed-removebg.png" class="logo-big" alt="Logo" />
+    <img src="assets/images/logo-small-removebg.png" class="logo-small" alt="Logo" />
   </div>
 
-  <!-- CENTER -->
-  <div class="navbar__center" *ngIf="isLogin">
-    <app-search-input
-      [placeholder]="'Search quizzes, users, topics...'"
-      (search)="onSearch($event)"
-    ></app-search-input>
-  </div>
+  <!-- Right Section: Authenticated User Content -->
+  @if (isLogin) {
+    <div class="navbar__right">
+      <!-- Notifications -->
+      <div class="notification-wrapper">
+        <app-text-button
+          [textButtonConfig]="textButton"
+          (buttonClicked)="toggleNotifications()"
+          class="wrapper-text-button"
+        >
+        </app-text-button>
 
-  <!-- RIGHT (LOGGED IN) -->
-  <div class="navbar__right" *ngIf="isLogin">
-    <!-- Notifications -->
-    <div class="notification-wrapper">
-      <app-text-button
-        [textButtonConfig]="textButton"
-        (buttonClicked)="toggleNotifications()"
-      ></app-text-button>
+        <span class="badge">{{ notificationCount > 99 ? '99+' : notificationCount }}</span>
 
-      <span class="badge">3</span>
+        @if (showNotifications) {
+          <div
+            class="notification-box absolute right-0 border-1 border-gray-200 top-12 w-100 bg-white shadow-lg rounded-lg z-10 text-sm"
+          >
+            <!-- Notification Header -->
+            <div class="p-4 border-b-2 border-gray-200 pb-1 flex-col gap-2 flex">
+              <div class="flex justify-between items-center">
+                <div class="flex gap-2 flex-col">
+                  <p class="font-semibold text-base">Notifications</p>
+                </div>
+                <div class="flex items-center gap-1" style="min-width: 245px">
+                  <app-text-button [textButtonConfig]="markAsAllReadButton"></app-text-button>
+                  <app-text-button [textButtonConfig]="viewAllButton"></app-text-button>
+                </div>
+              </div>
+              <span class="text-sm text-gray-500 pb-1"
+                >You have {{ notificationCount }} unread notifications</span
+              >
+            </div>
 
-      <div class="notification-dropdown" *ngIf="showNotifications">
-        <p>No new notifications.</p>
+            <!-- Notification List -->
+            <div class="notification-inner">
+              @if (notifications.length === 0) {
+                <div class="p-4">
+                  <p class="text-gray-500 text-center text-sm mt-2">No new notifications.</p>
+                </div>
+              }
+
+              @for (notif of notifications; track notif.id) {
+                <div
+                  class="border-b border-gray-100 px-4 py-2"
+                  [ngClass]="
+                    notif.read ? 'bg-white' : 'hover:bg-gray-50 transition-colors bg-blue-50/50'
+                  "
+                >
+                  <!-- Notification Title Row -->
+                  <div class="flex justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="font-medium">{{ notif.title }}</span>
+                      @if (!notif.read) {
+                        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                      }
+                    </div>
+                    <div class="flex items-center gap-1">
+                      <app-text-button [textButtonConfig]="markAsReadButton"></app-text-button>
+                      <app-text-button [textButtonConfig]="deleteButton"></app-text-button>
+                    </div>
+                  </div>
+
+                  <!-- Message -->
+                  <p class="text-[13px] text-gray-700 mt-1">{{ notif.message }}</p>
+
+                  <!-- Footer -->
+                  <div class="flex justify-between items-center mt-1.5">
+                    <span class="text-[11px] text-gray-500">{{ notif.timeAgo }}</span>
+                    <app-tag [tagConfig]="notif.tagConfig"></app-tag>
+                  </div>
+
+                  <!-- View Details Button -->
+                  <div class="py-3">
+                    <app-outline-button
+                      [outlineButtonConfig]="viewDetailsButton"
+                    ></app-outline-button>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
       </div>
+
+      <!-- XP Bar -->
+      <div class="xp-main">
+        @if (!isAdmin) {
+          <div class="xp-section">
+            <div class="xp-label">XP: {{ currentXp }}</div>
+            <app-progress-bar
+              class="custom-xp-bar"
+              [percentage]="(currentXp / xpLimit) * 100"
+            ></app-progress-bar>
+          </div>
+        }
+      </div>
+
+      <!-- Profile Menu -->
+      <button class="profile-button" [matMenuTriggerFor]="menu">
+        <img [src]="profileImageUrl" alt="Profile" />
+      </button>
+
+      <mat-menu #menu="matMenu" class="profile-menu">
+        @if (!isAdmin) {
+          <div class="profile-menu-xp">
+            <div class="xp-section">
+              <div class="xp-label">XP: {{ currentXp }}</div>
+              <app-progress-bar
+                class="custom-xp-bar"
+                [percentage]="(currentXp / xpLimit) * 100"
+              ></app-progress-bar>
+            </div>
+          </div>
+        }
+        <button mat-menu-item>
+          <mat-icon fontSet="material-icons-outlined">person</mat-icon>
+          <span>Profile</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon fontSet="material-icons-outlined">settings</mat-icon>
+          <span>Settings</span>
+        </button>
+        <button mat-menu-item class="logout-item">
+          <mat-icon>logout</mat-icon>
+          <span>Sign out</span>
+        </button>
+      </mat-menu>
     </div>
+  }
 
-    <!-- XP -->
-    <div class="xp-main">
-      <div class="xp-section" *ngIf="!isAdmin">
-        <div class="xp-label">XP: {{ currentXp }}</div>
-
-        <mat-progress-bar
-          mode="determinate"
-          [value]="getXpProgress()"
-          class="custom-xp-bar"
-        ></mat-progress-bar>
-      </div>
+  <!-- Right Section: Guest View -->
+  @if (!isLogin) {
+    <div class="navbar__guest">
+      <app-text-button [textButtonConfig]="signInButton"></app-text-button>
+      <app-filled-button [filledButtonConfig]="getStartedButton"></app-filled-button>
     </div>
-
-    <!-- Profile Icon -->
-    <button class="profile-button" [matMenuTriggerFor]="menu">
-      <img [src]="profileImageUrl" alt="Profile" />
-    </button>
-
-    <mat-menu #menu="matMenu" class="profile-menu">
-      <div class="profile-menu-xp" *ngIf="!isAdmin">
-        <div class="xp-section">
-          <div class="xp-label">XP: {{ currentXp }}</div>
-
-          <mat-progress-bar
-            mode="determinate"
-            [value]="getXpProgress()"
-            class="custom-xp-bar"
-          ></mat-progress-bar>
-        </div>
-      </div>
-      <button mat-menu-item>
-        <mat-icon fontSet="material-icons-outlined">person</mat-icon>
-        <span>Profile</span>
-      </button>
-      <button mat-menu-item>
-        <mat-icon fontSet="material-icons-outlined">settings</mat-icon>
-        <span>Settings</span>
-      </button>
-      <button mat-menu-item class="logout-item">
-        <mat-icon>logout</mat-icon>
-        <span>Sign out</span>
-      </button>
-    </mat-menu>
-  </div>
-
-  <!-- RIGHT (GUEST) -->
-  <div class="navbar__guest" *ngIf="!isLogin">
-    <app-text-button [textButtonConfig]="signInButton"></app-text-button>
-    <app-filled-button [filledButtonConfig]="getStartedButton"></app-filled-button>
-  </div>
+  }
 </header>
