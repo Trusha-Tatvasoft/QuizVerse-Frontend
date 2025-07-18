@@ -1,0 +1,24 @@
+<mat-tab-group (selectedTabChange)="onTabChange($event)" [selectedIndex]="selectedIndex">
+  @for (tab of tabs; track tab.id; let i = $index) {
+    <mat-tab>
+      <ng-template mat-tab-label>
+        @if (tab.icon) {
+          <mat-icon class="mr-2">{{ tab.icon }}</mat-icon>
+        }
+        {{ tab.label }}
+      </ng-template>
+
+      @if (selectedIndex === i) {
+        @let component = getLoadedComponent(tab.id);
+        @if (tab.loadChildren && component) {
+          <ng-container *ngComponentOutlet="component"></ng-container>
+        }
+
+        @let template = getTemplate(tab.id);
+        @if (!tab.loadChildren && template) {
+          <ng-container *ngTemplateOutlet="template"></ng-container>
+        }
+      }
+    </mat-tab>
+  }
+</mat-tab-group>
