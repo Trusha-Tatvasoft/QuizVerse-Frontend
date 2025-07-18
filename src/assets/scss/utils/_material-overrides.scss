@@ -1,9 +1,10 @@
-//Tab Component Bar styles
+// Tab Component styles
 .mat-mdc-tab-group {
   .mat-mdc-tab-header {
     justify-content: flex-start;
     background: transparent;
     border-bottom: none;
+    margin-bottom: 15px;
   }
 
   .mat-mdc-tab-label-container {
@@ -16,7 +17,22 @@
   }
 
   .mat-mdc-tab-labels {
-    gap: 8px; // adds clean spacing between tabs
+    gap: 6px;
+  }
+
+  .mat-mdc-tab .mdc-tab__ripple::before,
+  .mat-mdc-tab .mdc-tab__ripple::after {
+    background-color: transparent !important;
+  }
+
+  .mat-mdc-tab-group.mat-mdc-tab-group {
+    --mdc-ripple-color: transparent;
+    --mdc-ripple-hover-opacity: 0;
+    --mdc-ripple-press-opacity: 0;
+  }
+
+  .mat-mdc-tab-labels .mdc-tab .mat-ripple-element {
+    display: none !important;
   }
 
   .mdc-tab {
@@ -29,19 +45,31 @@
     transition:
       background-color 0s,
       color 0s;
-    color: #a7b1c0; // slate-700
+
+    .mdc-tab__content {
+      justify-content: center !important;
+    }
+
+    .mdc-tab__text-label {
+      text-align: center !important;
+      width: 100%;
+      margin-bottom: 0 !important;
+      color: #848b96;
+    }
 
     .mat-icon {
-      margin-right: 8px;
+      margin-right: 5px;
       font-size: 20px;
-      padding-top: 2px;
+      padding-top: 1px;
     }
   }
 
   .mdc-tab--active {
     background-color: white;
-    color: #000000;
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .mdc-tab-indicator {
@@ -52,4 +80,29 @@
 // Removes default hover background for custom sidebar styling
 .no-hover-before .mat-mdc-list-item.mat-mdc-list-item-interactive:hover::before {
   background-color: transparent !important;
+}
+
+// profile-menu
+.profile-menu {
+  .mat-mdc-menu-content {
+    width: 220px;
+    background-color: white;
+    padding: 0.25rem;
+
+    .mat-mdc-menu-item:not([disabled]):hover {
+      background-color: #bdd2e73b;
+    }
+  }
+
+  .logout-item {
+    .mat-icon {
+      color: red !important;
+    }
+
+    &:hover {
+      .mat-icon {
+        color: black !important;
+      }
+    }
+  }
 }
