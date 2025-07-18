@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { LoginComponent } from './login.component';
+import { RegisterComponent } from './register.component';
 
-describe('LoginComponent', () => {
-  let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
+describe('RegisterComponent', () => {
+  let component: RegisterComponent;
+  let fixture: ComponentFixture<RegisterComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LoginComponent],
+      imports: [RegisterComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(LoginComponent);
+    fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -22,15 +22,16 @@ describe('LoginComponent', () => {
 
   // Test: Should mark form as touched if invalid on submit
   it('should mark form as touched if invalid on submit', () => {
-    const spy = jest.spyOn(component.loginForm, 'markAllAsTouched');
+    const formSpy = jest.spyOn(component.registerForm, 'markAllAsTouched');
     component.onSubmit();
-    expect(spy).toHaveBeenCalled();
+    expect(formSpy).toHaveBeenCalled();
   });
 
   // Test: Should simulate loading and stop after timeout on valid submit
-  it('should simulate loading and stop after timeout on valid submit', fakeAsync(() => {
-    component.loginForm.setValue({
-      email: 'john@example.com',
+  it('should simulate loading and log form values on valid submit', fakeAsync(() => {
+    component.registerForm.setValue({
+      fullName: 'New User',
+      email: 'new@example.com',
       password: 'password123',
     });
 
@@ -40,8 +41,9 @@ describe('LoginComponent', () => {
     tick(1000);
 
     expect(component.isLoading).toBe(false);
-    expect(component.loginForm.value).toEqual({
-      email: 'john@example.com',
+    expect(component.registerForm.value).toEqual({
+      fullName: 'New User',
+      email: 'new@example.com',
       password: 'password123',
     });
   }));
@@ -60,13 +62,14 @@ describe('LoginComponent', () => {
 
   // Test: Should initialize form fields correctly
   it('should initialize form fields correctly', () => {
-    const controls = component.loginForm.controls;
+    const controls = component.registerForm.controls;
+    expect(controls['fullName']).toBeDefined();
     expect(controls['email']).toBeDefined();
     expect(controls['password']).toBeDefined();
   });
 
-  // Test: Should display the correct sign-in button label
-  it('should display the correct sign-in button label', () => {
-    expect(component.signInButton.label).toBe('Sign In');
+  // Test: Should display the correct register button label
+  it('should display the correct register button label', () => {
+    expect(component.registerButton.label).toBe('Create An Account');
   });
 });

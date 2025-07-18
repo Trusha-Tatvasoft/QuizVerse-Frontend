@@ -15,4 +15,8 @@ export const TabLazyComponentMap: Record<string, () => Promise<Type<any>>> = {
     import('../shared/components/filled-button/filled-button.component').then(
       (m) => m.FilledButtonComponent,
     ),
+  'login-form': () =>
+    import('../core/auth/components/login/login.component').then((m) => m.LoginComponent),
+  'register-form': () =>
+    import('../core/auth/components/register/register.component').then((m) => m.RegisterComponent),
 };

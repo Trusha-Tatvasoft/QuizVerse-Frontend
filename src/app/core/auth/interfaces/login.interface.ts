@@ -1,4 +1,7 @@
-export interface loginDTO {
-    email: string;
-    password: string
+/**
+ * Interface for login credentials
+ */
+export interface LoginCredentials {
+  email: string;
+  password: string;
 }
