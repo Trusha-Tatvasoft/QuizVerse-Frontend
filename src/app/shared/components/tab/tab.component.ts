@@ -19,12 +19,6 @@ import { LazyTab } from '../../interfaces/tab-component.interface';
 
 /**
  * Directive for projecting content into specific tabs.
- *
- * Usage:
- * <ng-template tabContent="tabId">
- *   <!-- Your content here -->
- * </ng-template>
- *
  * The directive associates template content with a specific tab ID.
  */
 @Directive({
@@ -40,7 +34,6 @@ export class TabContentDirective {
  * Reusable tab component that supports:
  * - Lazy-loaded component tabs (dynamic)
  * - Static content projection (via ng-template)
- * - Works in both application and Storybook environments
  */
 @Component({
   selector: 'app-common-tab',
@@ -52,10 +45,7 @@ export class TabContentDirective {
 export class TabComponent implements AfterContentInit, AfterContentChecked {
   @Input() tabs: LazyTab[] = []; // Array of tab definitions
   @Input() selectedIndex = 0; // Currently selected tab index
-  /**
-   * Optional templates input specifically for Storybook compatibility.
-   */
-  @Input() templates?: { [key: string]: TemplateRef<any> };
+  @Input() templates?: { [key: string]: TemplateRef<any> }; // Optional templates input specifically for Storybook compatibility.
 
   @Output() tabChanged = new EventEmitter<number>(); // Event emitted when the active tab changes
 
@@ -104,7 +94,6 @@ export class TabComponent implements AfterContentInit, AfterContentChecked {
     this.selectedIndex = event.index;
     this.tabChanged.emit(event.index);
 
-    // Lazy load the component if needed
     const tab = this.tabs[event.index];
     if (tab?.loadChildren && !this.loadedComponents.has(tab.id)) {
       const component = await tab.loadChildren();

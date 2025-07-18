@@ -4,11 +4,9 @@
 @import '../src/assets/scss/utils/variable';
 @import '../src/assets/scss/utils/material-overrides';
 
-// * {
-//   box-sizing: border-box;
-//   margin: 0;
-//   padding: 0;
-// } because of these tailwind css margin padding is not working
+* {
+  box-sizing: border-box;
+}
 
 // Shared filled button styles
 .filled-button {
