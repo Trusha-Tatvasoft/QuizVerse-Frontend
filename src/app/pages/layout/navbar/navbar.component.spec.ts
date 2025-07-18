@@ -170,23 +170,4 @@ describe('NavbarComponent', () => {
     const viewDetailsButton = fixture.debugElement.query(By.css('app-outline-button'));
     expect(viewDetailsButton).toBeTruthy();
   });
-
-  // // Shows XP inside the profile menu for non-admin users
-  // it('should render XP section in profile menu for non-admin users', async () => {
-  //   component.isLogin = true;
-  //   component.isAdmin = false;
-  //   component.currentXp = 700;
-  //   component.xpLimit = 1000;
-  //   fixture.detectChanges();
-
-  //   const triggerButton = fixture.debugElement.query(By.css('.profile-button'));
-  //   triggerButton.nativeElement.click();
-  //   fixture.detectChanges();
-
-  //   await fixture.whenStable();
-
-  //   const menuXp = document.querySelector('.profile-menu-xp .xp-label') as HTMLElement;
-  //   expect(menuXp).toBeTruthy();
-  //   expect(menuXp.textContent).toContain('XP: 700');
-  // });
 });
