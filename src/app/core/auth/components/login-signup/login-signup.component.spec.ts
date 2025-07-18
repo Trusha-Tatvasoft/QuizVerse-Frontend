@@ -4,7 +4,7 @@ import {
   GOOGLE_BUTTON_CONFIG,
   FACEBOOK_BUTTON_CONFIG,
   LOGIN_SIGNUP_TABS_CONFIG,
-} from '../../configs/login-signUp.component.config';
+} from '../../configs/login-signup.component.config';
 import { By } from '@angular/platform-browser';
 
 describe('LoginSignupComponent', () => {

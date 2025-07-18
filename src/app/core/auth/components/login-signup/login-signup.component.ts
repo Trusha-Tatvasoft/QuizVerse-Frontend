@@ -4,7 +4,7 @@ import {
   FACEBOOK_BUTTON_CONFIG,
   GOOGLE_BUTTON_CONFIG,
   LOGIN_SIGNUP_TABS_CONFIG,
-} from '../../configs/login-signUp.component.config';
+} from '../../configs/login-signup.component.config';
 import { TabComponent } from '../../../../shared/components/tab/tab.component';
 
 /**

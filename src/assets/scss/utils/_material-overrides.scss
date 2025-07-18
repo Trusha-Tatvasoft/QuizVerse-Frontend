@@ -82,6 +82,31 @@
   background-color: transparent !important;
 }
 
+// profile-menu
+.profile-menu {
+  .mat-mdc-menu-content {
+    width: 220px;
+    background-color: white;
+    padding: 0.25rem;
+
+    .mat-mdc-menu-item:not([disabled]):hover {
+      background-color: #bdd2e73b;
+    }
+  }
+
+  .logout-item {
+    .mat-icon {
+      color: red !important;
+    }
+
+    &:hover {
+      .mat-icon {
+        color: black !important;
+      }
+    }
+  }
+}
+
 // Login SignUp Page Tabs Override
 .login-signup-tabs .mat-mdc-tab-list {
   background: #f1f5f9 !important;
