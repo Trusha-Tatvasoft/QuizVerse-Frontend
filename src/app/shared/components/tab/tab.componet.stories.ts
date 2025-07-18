@@ -10,7 +10,6 @@ import { ButtonConfig } from '../../interfaces/button-config.interface';
  * Example dynamic components to simulate dynamic tab loading in Storybook.
  */
 @Component({
-  standalone: true,
   selector: 'app-user-profile-tab',
   template: `<div class="p-4 bg-blue-50 rounded-lg">
     <h3 class="text-blue-600 font-bold">User Profile</h3>
@@ -20,7 +19,6 @@ import { ButtonConfig } from '../../interfaces/button-config.interface';
 class UserProfileTabComponent {}
 
 @Component({
-  standalone: true,
   selector: 'app-settings-tab',
   template: `<div class="p-4 bg-green-50 rounded-lg">
     <h3 class="text-green-600 font-bold">Settings</h3>
@@ -35,7 +33,6 @@ class SettingsTabComponent {}
  */
 
 @Component({
-  standalone: true,
   selector: 'app-storybook-tab-host',
   imports: [CommonModule, TabComponent, TabContentDirective, FilledButtonComponent],
   template: `

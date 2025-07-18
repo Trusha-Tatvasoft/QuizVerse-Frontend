@@ -21,7 +21,6 @@ import { ReactiveFormsModule, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-search-input',
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule],
   templateUrl: './search-input.component.html',
   styleUrls: ['./search-input.component.scss'],

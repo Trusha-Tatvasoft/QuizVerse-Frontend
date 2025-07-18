@@ -111,7 +111,6 @@ describe('TabComponent', () => {
           <ng-template tabContent="tab2">Content 2</ng-template>
         </app-common-tab>
       `,
-      standalone: true,
       imports: [TabComponent, TabContentDirective],
     })
     class TestHostComponent {
@@ -152,7 +151,6 @@ describe('TabComponent', () => {
           <ng-template tabContent="tabB">Content B</ng-template>
         </app-common-tab>
       `,
-      standalone: true,
       imports: [TabComponent, TabContentDirective],
     })
     class DynamicHostComponent {
@@ -233,7 +231,6 @@ describe('TabComponent', () => {
           <ng-template tabContent="tab1">Content 1</ng-template>
         </app-common-tab>
       `,
-      standalone: true,
       imports: [TabComponent, TabContentDirective],
     })
     class TemplateHostComponent {
@@ -257,7 +254,6 @@ describe('TabComponent', () => {
           <ng-template tabContent="staticTab">Static Content</ng-template>
         </app-common-tab>
       `,
-      standalone: true,
       imports: [TabComponent, TabContentDirective],
     })
     class MixedHostComponent {
@@ -315,7 +311,6 @@ describe('TabComponent', () => {
           }
         </app-common-tab>
       `,
-      standalone: true,
       imports: [TabComponent, TabContentDirective, CommonModule],
     })
     class DynamicHost {
