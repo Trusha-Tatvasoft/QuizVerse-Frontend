@@ -1,3 +1,6 @@
+import { TagInputConfig } from '../shared/interfaces/tag-component.interface';
+import { TagColor, TagType } from './types/tag-component.type';
+
 export const AppColors = {
   adminBackgroundColor: 'linear-gradient(to right, #fff4f2, #fffaf6)',
   adminTextColor: 'rgb(153 27 27 / var(--tw-text-opacity, 1))',
@@ -41,4 +44,44 @@ export const TablePaginationConfig = {
   PageSize: 5,
   TotalItems: 0,
   PageSizeOptions: [5, 10, 20],
+};
+
+export const yellow: TagInputConfig = {
+  id: '0',
+  label: 'warning',
+  type: 'static' as TagType,
+  backgroundColor: 'lightYellow' as TagColor,
+  textColor: 'yellow' as TagColor,
+  isSelected: false,
+  hasBorder: true,
+};
+
+export const green: TagInputConfig = {
+  id: '0',
+  label: 'success',
+  type: 'static' as TagType,
+  backgroundColor: 'lightGreen' as TagColor,
+  textColor: 'green' as TagColor,
+  isSelected: false,
+  hasBorder: true,
+};
+
+export const red: TagInputConfig = {
+  id: '0',
+  label: 'error',
+  type: 'static' as TagType,
+  backgroundColor: 'lightRed' as TagColor,
+  textColor: 'red' as TagColor,
+  isSelected: false,
+  hasBorder: true,
+};
+
+export const blue: TagInputConfig = {
+  id: '0',
+  label: 'info',
+  type: 'static' as TagType,
+  backgroundColor: 'lightBlue' as TagColor,
+  textColor: 'blue' as TagColor,
+  isSelected: false,
+  hasBorder: true,
 };

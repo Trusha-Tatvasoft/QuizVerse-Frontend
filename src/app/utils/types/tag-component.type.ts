@@ -6,10 +6,14 @@ export type TagColor =
   | 'purple'
   | 'yellow'
   | 'orange'
+  | 'blue'
+  | 'red'
   | 'lightGreen'
   | 'lightBrown'
   | 'lightPurple'
   | 'lightYellow'
-  | 'lightOrange';
+  | 'lightOrange'
+  | 'lightBlue'
+  | 'lightRed';
 
 export type TagType = 'selectable' | 'static';
