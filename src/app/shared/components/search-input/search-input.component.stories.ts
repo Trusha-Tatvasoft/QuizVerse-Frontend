@@ -33,12 +33,9 @@ const meta: Meta<SearchInputComponent> = {
       props: {
         ...args,
         control,
-        /**
-         * Emitted when a search is triggered within the component.
-         * Note: Console logging is acceptable in Storybook for developer visibility.
-         */
+
         search: (query: string) => {
-          // console.log('Search emitted:', query);
+          //Emitted when a search is triggered within the component.
         },
       },
       template: `
@@ -79,9 +76,7 @@ const meta: Meta<SearchInputComponent> = {
 export default meta;
 type Story = StoryObj<SearchInputComponent>;
 
-/**
- * SearchInputComponent Story: Quizzes
- */
+// SearchInputComponent Story: Quizzes
 export const Quizzes: Story = {
   args: {
     placeholder: 'Search quizzes...',
@@ -89,18 +84,14 @@ export const Quizzes: Story = {
   },
 };
 
-/**
- * SearchInputComponent Story: Users
- */
+//SearchInputComponent Story: Users
 export const Users: Story = {
   args: {
     placeholder: 'Search users...',
   },
 };
 
-/**
- * SearchInputComponent Story: Reports
- */
+// SearchInputComponent Story: Reports
 export const Reports: Story = {
   args: {
     placeholder: 'Search reports...',
@@ -108,9 +99,7 @@ export const Reports: Story = {
   },
 };
 
-/**
- * SearchInputComponent Story: Battles
- */
+//SearchInputComponent Story: Battles
 export const Battles: Story = {
   args: {
     placeholder: 'Search battles...',
@@ -118,9 +107,7 @@ export const Battles: Story = {
   },
 };
 
-/**
- * SearchInputComponent Story: Questions
- */
+// SearchInputComponent Story: Questions
 export const Questions: Story = {
   args: {
     placeholder: 'Search questions...',
@@ -128,9 +115,7 @@ export const Questions: Story = {
   },
 };
 
-/**
- * SearchInputComponent Story: Difficulties
- */
+// SearchInputComponent Story: Difficulties
 export const Difficulties: Story = {
   args: {
     placeholder: 'Search difficulties...',
