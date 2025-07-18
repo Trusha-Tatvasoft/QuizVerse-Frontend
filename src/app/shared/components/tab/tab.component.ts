@@ -12,6 +12,7 @@ import {
   ChangeDetectorRef,
   AfterContentChecked,
   Inject,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -27,7 +28,7 @@ import { LazyTab } from '../../interfaces/tab-component.interface';
 })
 export class TabContentDirective {
   @Input('tabContent') tabId!: string;
-  @Inject(TemplateRef) templateRef!: TemplateRef<any>; // Template reference for the content to be projected into the tab
+  templateRef = inject(TemplateRef<any>);
 }
 
 /**
@@ -54,7 +55,7 @@ export class TabComponent implements AfterContentInit, AfterContentChecked {
 
   @ContentChildren(TabContentDirective) tabContentDirectives!: QueryList<TabContentDirective>; // Query list of all projected tab content directives
 
-  @Inject(ChangeDetectorRef) cdr: ChangeDetectorRef; // Inject ChangeDetectorRef for manual change detection
+  cdr = inject(ChangeDetectorRef); // Inject ChangeDetectorRef for manual change detection
 
   /**
    * Loads the initial tab component if it's a lazy-loaded tab
