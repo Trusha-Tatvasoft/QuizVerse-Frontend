@@ -1,0 +1,27 @@
+export enum Navigations {
+  Login = 'login',
+  ForgetPassword = 'forgot-password',
+  ResetPasswordLink = 'reset-password-link',
+
+  User = 'user',
+  Dashboard = '',
+  BrowseQuizzes = 'browse-quizzes',
+  Battles = 'battles',
+  Tournaments = 'tournaments',
+  Leaderboards = 'leaderboards',
+  Profile = 'profile',
+
+  Admin = 'admin',
+  Users = 'user-management',
+  Quizzes = 'quiz-management',
+  Categories = 'quiz-categories',
+  Difficulties = 'difficulty-levels',
+  BattlesAdmin = 'battle-management',
+  QuestionPool = 'questions-pool',
+  QuestionDifficulty = 'question-difficulty',
+  EmailTemplates = 'email-templates',
+  Settings = 'platform-settings',
+  AiConfig = 'ai',
+  Finance = 'financial-management',
+  Notifications = 'notification-center',
+}
