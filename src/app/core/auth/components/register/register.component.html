@@ -1,10 +1,13 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  @for (field of loginFields; track field.name) {
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  @for (field of registerFields; track field.name) {
     <div class="form-field">
       <label [for]="field.name">{{ field.label }}</label>
       <div class="input-group">
         <mat-icon fontSet="material-icons-outlined">
           @switch (field.name) {
+            @case ('fullName') {
+              account_circle
+            }
             @case ('email') {
               mail
             }
@@ -23,25 +26,27 @@
       </div>
     </div>
 
-    @if (loginForm.get(field.name)?.invalid && loginForm.get(field.name)?.touched) {
+    @if (registerForm.get(field.name)?.invalid && registerForm.get(field.name)?.touched) {
       <div class="error">
-        @if (loginForm.get(field.name)?.hasError('required')) {
+        @if (registerForm.get(field.name)?.hasError('required')) {
           {{ field.label }} is required.
         }
-        @if (loginForm.get(field.name)?.hasError('email')) {
+        @if (registerForm.get(field.name)?.hasError('email')) {
           Please enter a valid email.
+        }
+        @if (registerForm.get(field.name)?.hasError('minlength')) {
+          {{ field.label }} must be at least
+          {{ registerForm.get(field.name)?.errors?.['minlength'].requiredLength }} characters.
         }
       </div>
     }
   }
 
-  <a class="forgot-password" href="#">Forgot password?</a>
-
   @if (errorMessage) {
     <div class="error">{{ errorMessage }}</div>
   }
 
-  <app-filled-button [filledButtonConfig]="buttonConfig" class="signin-button">
+  <app-filled-button [filledButtonConfig]="buttonConfig" class="signup-button">
     @if (isLoading) {
       <span class="loader"></span>
     }

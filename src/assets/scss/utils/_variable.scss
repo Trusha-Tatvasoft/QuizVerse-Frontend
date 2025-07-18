@@ -40,4 +40,16 @@
 
   --global-admin-primary-color-rgb: 255, 99, 71;
   --global-admin-secondary-color-rgb: 255, 140, 0;
+
+  --global-bg-purple: #f5f3ff;
+  --global-bg-blue: #eff6ff;
+  --global-bg-indigo: #eef2ff;
+
+  //this background-color will be used in all the pages
+  --global-bg-gradient: linear-gradient(
+    to bottom right,
+    var(--global-bg-purple),
+    var(--global-bg-blue),
+    var(--global-bg-indigo)
+  );
 }

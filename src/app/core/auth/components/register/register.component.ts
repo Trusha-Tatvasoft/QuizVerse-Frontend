@@ -1,55 +1,62 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ButtonConfig } from '../../../../shared/interfaces/button-config.interface';
-import { LoginCredentials } from '../../interfaces/login.interface';
-import { LOGIN_FORM_FIELDS, SIGNIN_BUTTON_CONFIG } from '../../configs/login.component.config';
+import { RegisterCredentials } from '../../interfaces/register.interface';
+import {
+  REGISTER_BUTTON_CONFIG,
+  REGISTER_FORM_FIELDS,
+} from '../../configs/register.component.config';
 
 /**
- * Login component handling:
+ * Register component handling:
  * - Reactive form setup and validation
  * - Loading state management
- * - Submission of login credentials
+ * - Submission of registration credentials
  */
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     FilledButtonComponent,
     CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatIconModule,
     MatProgressSpinnerModule,
   ],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss'],
 })
-export class LoginComponent {
+export class RegisterComponent {
   private readonly fb = inject(FormBuilder); // Inject FormBuilder for reactive form
-
-  loginFields = LOGIN_FORM_FIELDS; // Form field configurations
-  loginForm: FormGroup; // Reactive form instance
+  registerFields = REGISTER_FORM_FIELDS; // Form field configurations
+  registerForm: FormGroup; // Reactive form instance
   isLoading = false; // Loading state
   errorMessage = ''; // Error message
-  signInButton = SIGNIN_BUTTON_CONFIG; // Sign-in button configuration
+  registerButton = REGISTER_BUTTON_CONFIG; // Register button configuration
 
   /**
    * Returns button config with dynamic disabled state based on loading
    */
   get buttonConfig(): ButtonConfig {
     return {
-      ...this.signInButton,
+      ...this.registerButton,
       isDisabled: this.isLoading,
     };
   }
 
   constructor() {
-    // Initialize form with controls based on LOGIN_FORM_FIELDS
-    this.loginForm = this.fb.group(
-      this.loginFields.reduce(
+    // Initialize form with controls based on REGISTER_FORM_FIELDS
+    this.registerForm = this.fb.group(
+      this.registerFields.reduce(
         (acc, field) => {
           acc[field.name] = ['', field.validators];
           return acc;
@@ -65,17 +72,18 @@ export class LoginComponent {
    * - Sets loading state and simulates processing delay
    */
   onSubmit(): void {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
       return;
     }
 
     this.isLoading = true;
     this.errorMessage = '';
 
-    const credentials: LoginCredentials = {
-      email: this.loginForm.value.email,
-      password: this.loginForm.value.password,
+    const credentials: RegisterCredentials = {
+      fullName: this.registerForm.value.fullName,
+      email: this.registerForm.value.email,
+      password: this.registerForm.value.password,
     };
 
     setTimeout(() => {

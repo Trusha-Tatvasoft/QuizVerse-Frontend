@@ -1,5 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
-// @import url('../src/assets/scss/utils/_variable.scss');
 @import 'tailwindcss';
 @import '../src/assets/scss/utils/variable';
 @import '../src/assets/scss/utils/material-overrides';
@@ -79,5 +78,30 @@
 
   &:not(:disabled) {
     cursor: pointer;
+  }
+}
+
+// login-signup page buttons
+.social-buttons-container {
+  .social-buttons {
+    .social-button {
+      button {
+        width: 100% !important;
+      }
+    }
+  }
+}
+
+// login component buttons
+.signin-button {
+  button {
+    width: 100%;
+  }
+}
+
+// register component buttons
+.signup-button {
+  button {
+    width: 100%;
   }
 }

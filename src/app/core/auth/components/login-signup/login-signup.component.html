@@ -1,0 +1,49 @@
+<div class="auth-main-container">
+  <div class="back-link-container">
+    <a href="/" class="back-link">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      Back to QuizVerse
+    </a>
+  </div>
+  <div class="auth-card">
+    <div class="logo">
+      <span>Q</span>
+    </div>
+    <div class="auth-header">
+      <h1>Welcome to QuizVerse</h1>
+      <p class="subtext">Sign in by your account or create a new one</p>
+    </div>
+
+    <app-common-tab [tabs]="tabs" [selectedIndex]="selectedIndex" class="login-signup-tabs">
+    </app-common-tab>
+
+    <div class="divider-container">
+      <div class="divider">
+        <span>Or continue with</span>
+      </div>
+    </div>
+    <div class="social-buttons-container">
+      <div class="social-buttons">
+        <app-outline-button
+          [outlineButtonConfig]="googleButton"
+          class="social-button"
+        ></app-outline-button>
+        <app-outline-button
+          [outlineButtonConfig]="facebookButton"
+          class="social-button"
+        ></app-outline-button>
+      </div>
+    </div>
+  </div>
+</div>
