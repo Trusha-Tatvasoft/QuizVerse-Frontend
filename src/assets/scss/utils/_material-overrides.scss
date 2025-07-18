@@ -53,3 +53,28 @@
 .no-hover-before .mat-mdc-list-item.mat-mdc-list-item-interactive:hover::before {
   background-color: transparent !important;
 }
+
+// profile-menu
+.profile-menu {
+  .mat-mdc-menu-content {
+    width: 220px;
+    background-color: white;
+    padding: 0.25rem;
+
+    .mat-mdc-menu-item:not([disabled]):hover {
+      background-color: #bdd2e73b;
+    }
+  }
+
+  .logout-item {
+    .mat-icon {
+      color: red !important;
+    }
+
+    &:hover {
+      .mat-icon {
+        color: black !important;
+      }
+    }
+  }
+}

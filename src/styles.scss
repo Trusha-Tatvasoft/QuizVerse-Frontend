@@ -113,30 +113,12 @@
     }
   }
 
-  .mat-mdc-menu-content {
-    width: 220px;
-    background-color: white;
-    padding: 0.25rem;
-
-    .mat-mdc-menu-item:not([disabled]):hover {
-      background-color: #bdd2e73b;
-    }
-  }
-
   .logout-item {
     border-top: 1px solid #e0e0e0;
     color: red;
 
-    .mat-icon {
-      color: red !important;
-    }
-
     &:hover {
       color: black;
-
-      .mat-icon {
-        color: black !important;
-      }
     }
   }
 }
