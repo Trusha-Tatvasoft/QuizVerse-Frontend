@@ -28,8 +28,8 @@
         @if (loginForm.get(field.name)?.hasError('required')) {
           {{ field.label }} is required.
         }
-        @if (loginForm.get(field.name)?.hasError('email')) {
-          Please enter a valid email.
+        @if (loginForm.get(field.name)?.hasError('pattern')) {
+          Please enter a valid email format.
         }
       </div>
     }

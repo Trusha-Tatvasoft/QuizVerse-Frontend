@@ -42,16 +42,6 @@ export class RegisterComponent {
   errorMessage = ''; // Error message
   registerButton = REGISTER_BUTTON_CONFIG; // Register button configuration
 
-  /**
-   * Returns button config with dynamic disabled state based on loading
-   */
-  get buttonConfig(): ButtonConfig {
-    return {
-      ...this.registerButton,
-      isDisabled: this.isLoading,
-    };
-  }
-
   constructor() {
     // Initialize form with controls based on REGISTER_FORM_FIELDS
     this.registerForm = this.fb.group(
@@ -63,6 +53,16 @@ export class RegisterComponent {
         {} as Record<string, any>,
       ),
     );
+  }
+
+  /**
+   * Returns button config with dynamic disabled state based on loading
+   */
+  get buttonConfig(): ButtonConfig {
+    return {
+      ...this.registerButton,
+      isDisabled: this.isLoading,
+    };
   }
 
   /**

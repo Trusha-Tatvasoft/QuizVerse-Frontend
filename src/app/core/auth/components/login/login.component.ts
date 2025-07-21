@@ -35,16 +35,6 @@ export class LoginComponent {
   errorMessage = ''; // Error message
   signInButton = SIGNIN_BUTTON_CONFIG; // Sign-in button configuration
 
-  /**
-   * Returns button config with dynamic disabled state based on loading
-   */
-  get buttonConfig(): ButtonConfig {
-    return {
-      ...this.signInButton,
-      isDisabled: this.isLoading,
-    };
-  }
-
   constructor() {
     // Initialize form with controls based on LOGIN_FORM_FIELDS
     this.loginForm = this.fb.group(
@@ -56,6 +46,16 @@ export class LoginComponent {
         {} as Record<string, any>,
       ),
     );
+  }
+
+  /**
+   * Returns button config with dynamic disabled state based on loading
+   */
+  get buttonConfig(): ButtonConfig {
+    return {
+      ...this.signInButton,
+      isDisabled: this.isLoading,
+    };
   }
 
   /**

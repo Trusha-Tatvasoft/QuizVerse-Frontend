@@ -31,8 +31,8 @@
         @if (registerForm.get(field.name)?.hasError('required')) {
           {{ field.label }} is required.
         }
-        @if (registerForm.get(field.name)?.hasError('email')) {
-          Please enter a valid email.
+        @if (registerForm.get(field.name)?.hasError('pattern')) {
+          Please enter a valid email format.
         }
         @if (registerForm.get(field.name)?.hasError('minlength')) {
           {{ field.label }} must be at least

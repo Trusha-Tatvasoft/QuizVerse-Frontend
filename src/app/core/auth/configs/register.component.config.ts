@@ -28,7 +28,10 @@ export const REGISTER_FORM_FIELDS: DynamicFormField[] = [
     label: 'Email',
     type: 'email',
     placeholder: 'john@example.com',
-    validators: [Validators.required, Validators.email],
+    validators: [
+      Validators.required,
+      Validators.pattern(/^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/),
+    ],
   },
   {
     name: 'password',
