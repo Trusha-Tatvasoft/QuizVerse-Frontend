@@ -22,7 +22,6 @@ import {
  */
 @Component({
   selector: 'app-register',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     FilledButtonComponent,

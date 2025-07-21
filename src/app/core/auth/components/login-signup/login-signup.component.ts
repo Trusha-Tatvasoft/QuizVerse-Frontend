@@ -14,7 +14,6 @@ import { TabComponent } from '../../../../shared/components/tab/tab.component';
  */
 @Component({
   selector: 'app-login-signup',
-  standalone: true,
   imports: [OutlineButtonComponent, TabComponent],
   templateUrl: './login-signup.component.html',
   styleUrl: './login-signup.component.scss',
