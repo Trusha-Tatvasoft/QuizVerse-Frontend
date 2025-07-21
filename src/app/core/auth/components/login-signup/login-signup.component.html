@@ -1,0 +1,38 @@
+<div class="auth-main-container">
+  <div class="back-link-container">
+    <a href="/" class="back-link">
+      <img src="assets/images/back-arrow.svg" alt="Back" class="back-arrow-icon" />
+      Back to QuizVerse
+    </a>
+  </div>
+  <div class="auth-card">
+    <div class="logo">
+      <span>Q</span>
+    </div>
+    <div class="auth-header">
+      <h1>Welcome to QuizVerse</h1>
+      <p class="subtext">Sign in by your account or create a new one</p>
+    </div>
+
+    <app-common-tab [tabs]="tabs" [selectedIndex]="selectedIndex" class="login-signup-tabs">
+    </app-common-tab>
+
+    <div class="divider-container">
+      <div class="divider">
+        <span>Or continue with</span>
+      </div>
+    </div>
+    <div class="social-buttons-container">
+      <div class="social-buttons">
+        <app-outline-button
+          [outlineButtonConfig]="googleButton"
+          class="social-button"
+        ></app-outline-button>
+        <app-outline-button
+          [outlineButtonConfig]="facebookButton"
+          class="social-button"
+        ></app-outline-button>
+      </div>
+    </div>
+  </div>
+</div>
