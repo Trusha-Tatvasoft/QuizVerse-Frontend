@@ -1,0 +1,137 @@
+.auth-main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: var(--global-bg-gradient);
+  padding: 1rem;
+}
+
+.back-link-container {
+  width: 100%;
+  max-width: 28rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  margin-bottom: 1.25rem;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--global-primary-color);
+
+    .back-arrow-icon {
+      transform: translateX(-2px);
+      content: url('/assets/images/back-arrow-hover.svg');
+      height: 1.1rem;
+      width: 1.1rem;
+    }
+  }
+
+  .back-arrow-icon {
+    width: 1rem;
+    height: 1rem;
+    margin-top: 2px;
+    transition: transform 0.2s ease;
+  }
+}
+
+.auth-card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  width: 100%;
+  max-width: 28rem;
+  padding: 1.5rem;
+  text-align: center;
+
+  .logo {
+    span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      background: var(--gradient);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    }
+  }
+
+  @media (max-width: 320px) {
+    padding: 1.5rem 0.75rem;
+  }
+}
+
+.auth-header {
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    margin-bottom: 0.5rem;
+    background: var(--gradient); /* Purple gradient */
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 600;
+  }
+
+  .subtext {
+    color: #4b5563;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  color: #4b5563;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #d1d5db;
+  }
+
+  &::before {
+    margin-right: 0.75rem;
+  }
+
+  &::after {
+    margin-left: 0.75rem;
+  }
+}
+
+.social-buttons-container {
+  width: 100%;
+
+  .social-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 0.75rem;
+    width: 100%;
+
+    .social-button {
+      flex: 1 1 50%;
+      min-width: 0;
+    }
+  }
+}

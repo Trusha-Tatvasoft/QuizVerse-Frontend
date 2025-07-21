@@ -166,3 +166,28 @@
     width: 182.14px;
   }
 }
+
+// login-signup page buttons
+.social-buttons-container {
+  .social-buttons {
+    .social-button {
+      button {
+        width: 100% !important;
+      }
+    }
+  }
+}
+
+// login component buttons
+.signin-button {
+  button {
+    width: 100%;
+  }
+}
+
+// register component buttons
+.signup-button {
+  button {
+    width: 100%;
+  }
+}

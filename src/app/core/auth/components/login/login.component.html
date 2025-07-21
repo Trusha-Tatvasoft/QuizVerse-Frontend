@@ -1,1 +1,49 @@
-<p>login works!</p>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  @for (field of loginFields; track field.name) {
+    <div class="form-field">
+      <label [for]="field.name">{{ field.label }}</label>
+      <div class="input-group">
+        <mat-icon fontSet="material-icons-outlined">
+          @switch (field.name) {
+            @case ('email') {
+              mail
+            }
+            @case ('password') {
+              lock
+            }
+          }
+        </mat-icon>
+        <input
+          [id]="field.name"
+          [type]="field.type"
+          [formControlName]="field.name"
+          [placeholder]="field.placeholder"
+          required
+        />
+      </div>
+    </div>
+
+    @if (loginForm.get(field.name)?.invalid && loginForm.get(field.name)?.touched) {
+      <div class="error">
+        @if (loginForm.get(field.name)?.hasError('required')) {
+          {{ field.label }} is required.
+        }
+        @if (loginForm.get(field.name)?.hasError('pattern')) {
+          Please enter a valid email format.
+        }
+      </div>
+    }
+  }
+
+  <a class="forgot-password" href="#">Forgot password?</a>
+
+  @if (errorMessage) {
+    <div class="error">{{ errorMessage }}</div>
+  }
+
+  <app-filled-button [filledButtonConfig]="buttonConfig" class="signin-button">
+    @if (isLoading) {
+      <span class="loader"></span>
+    }
+  </app-filled-button>
+</form>

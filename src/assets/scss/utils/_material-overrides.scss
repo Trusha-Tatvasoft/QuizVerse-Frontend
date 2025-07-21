@@ -106,3 +106,16 @@
     }
   }
 }
+
+// Login SignUp Page Tabs Override
+.login-signup-tabs .mat-mdc-tab-list {
+  background: #f1f5f9 !important;
+  border-radius: 0.5rem !important;
+  padding: 0.25rem !important;
+  width: 100% !important;
+  height: 40px !important;
+
+  .mat-mdc-tab-labels {
+    height: 32px !important;
+  }
+}
