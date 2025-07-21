@@ -21,7 +21,11 @@ export const REGISTER_FORM_FIELDS: DynamicFormField[] = [
     label: 'Full Name',
     type: 'text',
     placeholder: 'John Doe',
-    validators: [Validators.required, Validators.minLength(3)],
+    validators: [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.pattern(/^(?!\s)[\s\S]+$/),
+    ],
   },
   {
     name: 'email',
@@ -30,7 +34,7 @@ export const REGISTER_FORM_FIELDS: DynamicFormField[] = [
     placeholder: 'john@example.com',
     validators: [
       Validators.required,
-      Validators.pattern(/^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/),
+      Validators.pattern(/^[^\s][a-zA-Z0-9._%+-]*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/),
     ],
   },
   {
@@ -38,6 +42,9 @@ export const REGISTER_FORM_FIELDS: DynamicFormField[] = [
     label: 'Password',
     type: 'password',
     placeholder: '••••••',
-    validators: [Validators.required, Validators.minLength(6)],
+    validators: [
+      Validators.required,
+      Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/),
+    ],
   },
 ];

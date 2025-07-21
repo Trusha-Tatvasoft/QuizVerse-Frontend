@@ -31,12 +31,25 @@
         @if (registerForm.get(field.name)?.hasError('required')) {
           {{ field.label }} is required.
         }
-        @if (registerForm.get(field.name)?.hasError('pattern')) {
-          Please enter a valid email format.
-        }
+      </div>
+      <div class="error">
         @if (registerForm.get(field.name)?.hasError('minlength')) {
           {{ field.label }} must be at least
-          {{ registerForm.get(field.name)?.errors?.['minlength'].requiredLength }} characters.
+          {{ registerForm.get(field.name)?.errors?.['minlength']?.requiredLength }} characters.
+        }
+      </div>
+      <div class="error">
+        @if (registerForm.get(field.name)?.hasError('pattern')) {
+          @if (field.name === 'email') {
+            Please enter a valid email format.
+          }
+          @if (field.name === 'password') {
+            Password must be at least 8 characters long and include uppercase, lowercase, number,
+            and special character.
+          }
+          @if (field.name === 'fullName') {
+            Full Name should not start with a space.
+          }
         }
       </div>
     }

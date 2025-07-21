@@ -32,7 +32,7 @@ describe('RegisterComponent', () => {
     component.registerForm.setValue({
       fullName: 'New User',
       email: 'new@example.com',
-      password: 'password123',
+      password: 'Password@123',
     });
 
     component.onSubmit();
@@ -44,7 +44,7 @@ describe('RegisterComponent', () => {
     expect(component.registerForm.value).toEqual({
       fullName: 'New User',
       email: 'new@example.com',
-      password: 'password123',
+      password: 'Password@123',
     });
   }));
 

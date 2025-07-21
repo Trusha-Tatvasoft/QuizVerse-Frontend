@@ -23,7 +23,7 @@ export const LOGIN_FORM_FIELDS: DynamicFormField[] = [
     placeholder: 'john@example.com',
     validators: [
       Validators.required,
-      Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,4}$/),
+      Validators.pattern(/^[^\s][a-zA-Z0-9._%+-]*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/),
     ],
   },
   {
