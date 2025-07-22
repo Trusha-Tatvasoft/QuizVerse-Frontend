@@ -1,6 +1,14 @@
+import {
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
 import { Navigations } from '../shared/enums/navigation';
 import { TagInputConfig } from '../shared/interfaces/tag-component.interface';
 import { TagColor, TagType } from './types/tag-component.type';
+
+export const SNACKBAR_DURATION = 5000;
+export const SNACKBAR_HORIZONTAL_POSITION: MatSnackBarHorizontalPosition = 'end';
+export const SNACKBAR_VERTICAL_POSITION: MatSnackBarVerticalPosition = 'bottom';
 
 export const AppColors = {
   adminBackgroundColor: 'linear-gradient(to right, #fff4f2, #fffaf6)',
