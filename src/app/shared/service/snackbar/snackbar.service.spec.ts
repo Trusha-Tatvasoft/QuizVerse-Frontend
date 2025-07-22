@@ -79,14 +79,6 @@ describe('SnackbarService', () => {
       }),
     );
   });
-
-  it('should dismiss snackbar after 5 seconds', () => {
-    jest.useFakeTimers();
-    service.dismiss();
-    jest.advanceTimersByTime(5000);
-    expect(matSnackBarMock.dismiss).toHaveBeenCalled();
-    jest.useRealTimers();
-  });
 });
 
 describe('SnackbarComponent', () => {

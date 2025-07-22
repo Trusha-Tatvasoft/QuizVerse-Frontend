@@ -59,8 +59,4 @@ export class SnackbarService {
       panelClass: [...this.defaultConfig.panelClass!, ...panelClass],
     });
   }
-
-  dismiss() {
-    this.snackBar.dismiss();
-  }
 }
