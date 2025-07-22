@@ -131,42 +131,48 @@
   border-radius: 5px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   border: 1px solid #e2e2e2;
+
   --mdc-snackbar-container-shape: 12px;
   --mdc-snackbar-supporting-text-font:
     ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
 
   .mat-mdc-snackbar-surface {
-    background-color: white !important;
+    background-color: inherit !important;
     box-shadow: none !important;
     line-height: 1.4rem !important;
   }
 
-  @media screen and (max-width: 550px) {
+  @media screen and (max-width: 599px) {
     width: calc(100% - 40px);
     max-width: 90%;
   }
 }
 
 .styled-snackbar {
-  color: #111;
   font-family: system-ui, sans-serif;
-  font-size: 14px;
 }
 
-.success-snackbar {
-  --mdc-snackbar-supporting-text-color: #16a34a;
+.success,
+.error,
+.info,
+.warning {
+  --mdc-snackbar-supporting-text-color: white;
 }
 
-.error-snackbar {
-  --mdc-snackbar-supporting-text-color: #dc2626;
+.success {
+  background-color: var(--color-success) !important;
 }
 
-.warning-snackbar {
-  --mdc-snackbar-supporting-text-color: #ca8a04;
+.error {
+  background-color: var(--color-error) !important;
 }
 
-.info-snackbar {
-  --mdc-snackbar-supporting-text-color: #2563eb;
+.warning {
+  background-color: var(--color-warn) !important;
+}
+
+.info {
+  background-color: var(--color-info) !important;
 }
 
 @keyframes slideInFromBottomRight {

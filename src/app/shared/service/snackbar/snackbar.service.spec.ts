@@ -31,7 +31,7 @@ describe('SnackbarService', () => {
       SnackbarComponent,
       expect.objectContaining({
         data: { title: 'Success Title', message: 'Success Message' },
-        panelClass: expect.arrayContaining(['styled-snackbar', 'success-snackbar']),
+        panelClass: expect.arrayContaining(['styled-snackbar', 'success']),
       }),
     );
   });
@@ -42,7 +42,7 @@ describe('SnackbarService', () => {
       SnackbarComponent,
       expect.objectContaining({
         data: { title: 'Error Title', message: 'Error Message' },
-        panelClass: expect.arrayContaining(['styled-snackbar', 'error-snackbar']),
+        panelClass: expect.arrayContaining(['styled-snackbar', 'error']),
       }),
     );
   });
@@ -53,7 +53,7 @@ describe('SnackbarService', () => {
       SnackbarComponent,
       expect.objectContaining({
         data: { title: 'Warning Title', message: 'Warning Message' },
-        panelClass: expect.arrayContaining(['styled-snackbar', 'warning-snackbar']),
+        panelClass: expect.arrayContaining(['styled-snackbar', 'warning']),
       }),
     );
   });
@@ -64,7 +64,7 @@ describe('SnackbarService', () => {
       SnackbarComponent,
       expect.objectContaining({
         data: { title: 'Info Title', message: 'Info Message' },
-        panelClass: expect.arrayContaining(['styled-snackbar', 'info-snackbar']),
+        panelClass: expect.arrayContaining(['styled-snackbar', 'info']),
       }),
     );
   });
@@ -80,9 +80,12 @@ describe('SnackbarService', () => {
     );
   });
 
-  it('should dismiss snackbar', () => {
+  it('should dismiss snackbar after 5 seconds', () => {
+    jest.useFakeTimers();
     service.dismiss();
+    jest.advanceTimersByTime(5000);
     expect(matSnackBarMock.dismiss).toHaveBeenCalled();
+    jest.useRealTimers();
   });
 });
 
@@ -118,10 +121,11 @@ describe('SnackbarComponent', () => {
   });
 
   it('should render title and message', () => {
-    const title = el.query(By.css('.font-semibold')).nativeElement.textContent;
-    const message = el.query(By.css('.text-sm.text-gray-700')).nativeElement.textContent;
-    expect(title).toContain(defaultData.title);
-    expect(message).toContain(defaultData.message);
+    const titleEl = el.query(By.css('.font-bold.text-base'));
+    const messageEls = el.queryAll(By.css('.text-base'));
+
+    expect(titleEl.nativeElement.textContent).toContain(defaultData.title);
+    expect(messageEls[1].nativeElement.textContent).toContain(defaultData.message);
   });
 
   it('should only render title if message is missing', () => {
