@@ -13,8 +13,8 @@ import {
   template: `
     <div class="flex flex-col whitespace-pre-line">
       <div>
-        <span class="font-semibold text-sm mb-1 block">{{ data.title }}</span>
-        <span *ngIf="data.message" class="text-sm text-gray-700">{{ data.message }}</span>
+        <span class="font-bold text-base mb-1 block">{{ data.title }}</span>
+        <span *ngIf="data.message" class="text-base">{{ data.message }}</span>
       </div>
     </div>
   `,
@@ -37,19 +37,19 @@ export class SnackbarService {
   };
 
   showSuccess(title: string, message?: string) {
-    this.openSnackbar(title, message, ['success-snackbar']);
+    this.openSnackbar(title, message, ['success']);
   }
 
   showError(title: string, message?: string) {
-    this.openSnackbar(title, message, ['error-snackbar']);
+    this.openSnackbar(title, message, ['error']);
   }
 
   showWarning(title: string, message?: string) {
-    this.openSnackbar(title, message, ['warning-snackbar']);
+    this.openSnackbar(title, message, ['warning']);
   }
 
   showInfo(title: string, message?: string) {
-    this.openSnackbar(title, message, ['info-snackbar']);
+    this.openSnackbar(title, message, ['info']);
   }
 
   private openSnackbar(title: string, message?: string, panelClass: string[] = []) {
