@@ -7,7 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ButtonConfig } from '../../../../shared/interfaces/button-config.interface';
 import { LoginCredentials } from '../../interfaces/login.interface';
 import { LOGIN_FORM_FIELDS, SIGNIN_BUTTON_CONFIG } from '../../configs/login.component.config';
-
+import { TogglePasswordDirective } from '../toggle-password.directive';
 /**
  * Login component handling:
  * - Reactive form setup and validation
@@ -22,9 +22,10 @@ import { LOGIN_FORM_FIELDS, SIGNIN_BUTTON_CONFIG } from '../../configs/login.com
     CommonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    TogglePasswordDirective,
   ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  styleUrls: ['./login.component.scss', '../login-signup/login-signup.component.scss'],
 })
 export class LoginComponent {
   private readonly fb = inject(FormBuilder); // Inject FormBuilder for reactive form

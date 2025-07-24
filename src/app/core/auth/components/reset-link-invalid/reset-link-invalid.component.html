@@ -1,0 +1,52 @@
+<div class="auth-main-container">
+  <!-- Back to Sign In link -->
+  <div class="back-link-container">
+    <a href="/login" class="back-link">
+      <img src="assets/images/back-arrow.svg" alt="Back" class="back-arrow-icon" />
+      Back to Sign In
+    </a>
+  </div>
+
+  <!-- Auth card container -->
+  <div class="auth-card">
+    <!-- Error icon at the top -->
+    <div class="logo pb-4">
+      <mat-icon fontSet="material-icons-outlined">error_outline</mat-icon>
+    </div>
+
+    <!-- Header text -->
+    <div class="auth-header">
+      <h1>Invalid or Expired Link</h1>
+      <p class="subtext">This password reset link is invalid or has expired</p>
+    </div>
+
+    <!-- Message explaining why the link is invalid -->
+    <div class="error-message mb-5">
+      <p>Password reset links expire after 15 minutes for security purposes.</p>
+    </div>
+
+    <!-- Button to request a new reset link -->
+    <div class="pb-3">
+      <app-filled-button
+        class="signin-button"
+        [filledButtonConfig]="NewResetLinkButton"
+        (buttonClicked)="onRequestNewResetLink()"
+      >
+        @if (isLoading) {
+          <span class="loader"></span>
+        }
+      </app-filled-button>
+    </div>
+
+    <!-- Button to go back to the sign-in page -->
+    <app-outline-button
+      [outlineButtonConfig]="BackToSignInButton"
+      class="signin-button"
+      (buttonClicked)="onBackToSignInClick()"
+    >
+      @if (isLoading) {
+        <span class="loader"></span>
+      }
+    </app-outline-button>
+  </div>
+</div>

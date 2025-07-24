@@ -22,7 +22,18 @@
           [formControlName]="field.name"
           [placeholder]="field.placeholder"
           required
+          #passwordInput
         />
+        @if (field.type === 'password') {
+          <button
+            mat-icon-button
+            type="button"
+            class="visibility-toggle"
+            [appTogglePassword]="passwordInput"
+          >
+            <mat-icon>visibility_off</mat-icon>
+          </button>
+        }
       </div>
     </div>
 
@@ -44,8 +55,12 @@
             Please enter a valid email format.
           }
           @if (field.name === 'password') {
-            Password must be at least 8 characters long and include uppercase, lowercase, number,
-            and special character.
+            @if (registerForm.get('password')?.value?.includes(' ')) {
+              Password cannot contain spaces.
+            } @else {
+              Password must be at least 8 characters long and include uppercase, lowercase, number,
+              and special character.
+            }
           }
           @if (field.name === 'fullName') {
             Full Name should not start with a space.

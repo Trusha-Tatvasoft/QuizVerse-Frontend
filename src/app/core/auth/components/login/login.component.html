@@ -19,7 +19,18 @@
           [formControlName]="field.name"
           [placeholder]="field.placeholder"
           required
+          #passwordInput
         />
+        @if (field.type === 'password') {
+          <button
+            mat-icon-button
+            type="button"
+            class="visibility-toggle"
+            [appTogglePassword]="passwordInput"
+          >
+            <mat-icon>visibility_off</mat-icon>
+          </button>
+        }
       </div>
     </div>
 
@@ -35,7 +46,7 @@
     }
   }
 
-  <a class="forgot-password" href="#">Forgot password?</a>
+  <a class="forgot-password" href="/forgot-password">Forgot password?</a>
 
   @if (errorMessage) {
     <div class="error">{{ errorMessage }}</div>

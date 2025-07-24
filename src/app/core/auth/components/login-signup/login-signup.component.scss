@@ -50,12 +50,13 @@
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   width: 100%;
-  max-width: 28rem;
+  max-width: 29rem;
   padding: 1.5rem;
   text-align: center;
 
   .logo {
-    span {
+    span,
+    mat-icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -133,5 +134,20 @@
       flex: 1 1 50%;
       min-width: 0;
     }
+  }
+}
+
+.input-group {
+  position: relative;
+
+  .visibility-toggle {
+    position: absolute;
+    right: 0px;
+    top: 59%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1;
   }
 }

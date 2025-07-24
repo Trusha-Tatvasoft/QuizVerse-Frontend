@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,6 +12,7 @@ import {
   REGISTER_BUTTON_CONFIG,
   REGISTER_FORM_FIELDS,
 } from '../../configs/register.component.config';
+import { TogglePasswordDirective } from '../toggle-password.directive';
 
 /**
  * Register component handling:
@@ -30,9 +30,10 @@ import {
     MatInputModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    TogglePasswordDirective,
   ],
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  styleUrls: ['./register.component.scss', '../login-signup/login-signup.component.scss'],
 })
 export class RegisterComponent {
   private readonly fb = inject(FormBuilder); // Inject FormBuilder for reactive form
