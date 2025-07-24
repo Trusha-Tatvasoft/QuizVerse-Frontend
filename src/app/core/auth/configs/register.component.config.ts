@@ -44,6 +44,7 @@ export const REGISTER_FORM_FIELDS: DynamicFormField[] = [
     placeholder: '••••••',
     validators: [
       Validators.required,
+      Validators.pattern(/^\S*$/),
       Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/),
     ],
   },
