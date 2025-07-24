@@ -185,3 +185,39 @@
     width: 100%;
   }
 }
+
+// action buttons of table
+app-data-table {
+  .table-responsive {
+    .action-icons {
+      gap: 5px !important;
+      .text-button {
+        padding: 8px !important;
+        .secondary {
+          color: #424242;
+        }
+      }
+    }
+
+    .mat-mdc-cell.mat-column-actions {
+      padding-left: 8px !important;
+    }
+  }
+}
+
+//User Management Buttons
+.user-management {
+  .user-management-toolbar {
+    .user-management-btns {
+      .add-user,
+      .export-users {
+        flex: 1 1 50%;
+        min-width: 0;
+        button {
+          width: 100% !important;
+          white-space: nowrap !important;
+        }
+      }
+    }
+  }
+}

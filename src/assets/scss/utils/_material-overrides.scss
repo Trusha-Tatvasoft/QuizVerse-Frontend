@@ -119,3 +119,102 @@
     height: 32px !important;
   }
 }
+
+//#region Dropdown Styles
+/* drop Down Styles */
+.mat-mdc-form-field.mat-mdc-form-field-type-mat-select {
+  font-family: 'Segoe UI', sans-serif;
+  border: 1px solid #d3d3d3 !important;
+  border-radius: 8px !important;
+  width: 100%;
+  &:focus {
+    border: 2px solid var(--global-primary-color) !important;
+    border-radius: 8px !important;
+  }
+
+  &:hover {
+    border: 2px solid var(--global-primary-color) !important;
+    border-radius: 8px !important;
+  }
+}
+
+.mat-mdc-form-field-type-mat-select .mdc-text-field {
+  height: 40px !important;
+  padding-inline: 8px !important;
+}
+
+.mat-mdc-select-panel {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  background-color: #ffffff !important;
+  padding: 4px 0 !important;
+}
+
+.mat-mdc-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+  padding: 10px 16px;
+  border-radius: 4px !important;
+  margin: 2px 4px;
+}
+
+.mat-mdc-option.mdc-list-item {
+  padding-left: 38px !important;
+  min-height: 35px !important;
+  font-size: 14px !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(
+    .mat-mdc-option-multiple
+  ) {
+  padding-left: 0px !important;
+  background-color: #e7eaec !important;
+}
+
+.mat-mdc-option .mat-pseudo-checkbox {
+  order: -1;
+  margin: 0;
+}
+
+.mat-mdc-option .mat-pseudo-checkbox-minimal {
+  margin-left: 10px !important;
+}
+
+.mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after {
+  height: 4px !important;
+  width: 10px !important;
+}
+
+.mdc-text-field--outlined .mat-mdc-form-field-infix {
+  padding-top: 8px !important;
+  padding-inline: 8px !important;
+}
+
+.mat-mdc-form-field-subscript-wrapper,
+.mat-mdc-form-field-bottom-align::before {
+  height: 0px !important;
+}
+
+.mdc-notched-outline__trailing,
+.mdc-notched-outline__leading {
+  border: none !important;
+}
+
+.mat-mdc-select-value {
+  color: #1a1b1f !important;
+  font-weight: 400 !important;
+  font-size: 14px;
+}
+
+.mat-mdc-select-arrow svg {
+  fill: #1a1b1f !important;
+}
+
+.cdk-overlay-pane {
+  margin: 5px 0px;
+}
+//#endregion

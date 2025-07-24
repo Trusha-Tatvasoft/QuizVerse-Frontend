@@ -15,7 +15,7 @@
     }
 
     .search-icon {
-      color: #d3d3d3;
+      color: #bbbbbb;
       margin-right: 8px;
       margin-top: 5px;
       font-size: 20px;
@@ -27,9 +27,10 @@
       outline: none;
       font-size: 14px;
       background: transparent;
+      margin-bottom: 2px;
 
       &::placeholder {
-        color: #d3d3d3;
+        color: #bbbbbb;
       }
     }
   }
