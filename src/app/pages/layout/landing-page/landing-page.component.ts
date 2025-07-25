@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
 import { OutlineButtonComponent } from '../../../shared/components/outline-button/outline-button.component';
 import { MatIcon } from '@angular/material/icon';
@@ -15,7 +15,9 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { Navigations } from '../../../shared/enums/navigation';
 import { LandingPageDataService } from '../../../services/user/landing-page/landing-page-data.service';
 import { LandingPageStats } from '../../../shared/interfaces/landing-page-stats.interface';
-import { PlateformName } from '../../../utils/constants';
+import { PlateformName, PlatformMessages } from '../../../utils/constants';
+import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-landing-page',
@@ -23,9 +25,10 @@ import { PlateformName } from '../../../utils/constants';
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.scss',
 })
-export class LandingPageComponent implements OnInit {
+export class LandingPageComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly landingPageDataService = inject(LandingPageDataService);
+  private readonly snackbarService = inject(SnackbarService);
 
   landingPageContent = LANDING_PAGE_CONTENT;
   quizFeatures = FEATURES;
@@ -34,29 +37,43 @@ export class LandingPageComponent implements OnInit {
   joinPlatFormButton = JOIN_PLATFORM_BUTTON;
   plateformName = PlateformName;
   stats: LandingPageStats;
+  private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
     this.loadLandingPageStats();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   private loadLandingPageStats(): void {
-    this.landingPageDataService.getStats().subscribe({
-      next: (response) => {
-        this.stats = response.data;
-        const formattedStats = [
-          this.formatCount(this.stats.activePlayer),
-          this.formatCount(this.stats.quizCreated),
-          this.formatCount(this.stats.questionAns),
-        ];
-        formattedStats.forEach((val, index) => {
-          if (this.landingPageContent.stats[index]) {
-            this.landingPageContent.stats[index].value = val;
-          }
-        });
-        this.landingPageContent.quote = this.stats.quote;
-      },
-      error: (err) => {},
-    });
+    this.landingPageDataService
+      .getStats()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.stats = response.data;
+          const formattedStats = [
+            this.formatCount(this.stats.activePlayer),
+            this.formatCount(this.stats.quizCreated),
+            this.formatCount(this.stats.questionAns),
+          ];
+          formattedStats.forEach((val, index) => {
+            if (this.landingPageContent.stats[index]) {
+              this.landingPageContent.stats[index].value = val;
+            }
+          });
+          this.landingPageContent.quote = this.stats.quote;
+        },
+        error: (err) => {
+          this.snackbarService.showError(
+            PlatformMessages.errorMessage,
+            err.error?.message || PlatformMessages.errorTitle,
+          );
+        },
+      });
   }
 
   private formatCount(num: number): string {

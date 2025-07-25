@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoaderComponent } from './loader.component';
-import { LoaderService } from '../../services/loader/loader.service';
+import { LoaderService } from '../../service/loader/loader.service';
 import { BehaviorSubject } from 'rxjs';
 import { By } from '@angular/platform-browser';
 
