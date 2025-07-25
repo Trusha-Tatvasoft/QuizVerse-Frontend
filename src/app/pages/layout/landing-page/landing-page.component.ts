@@ -12,6 +12,10 @@ import {
   START_PLAY_BUTTON,
 } from '../configs/landing-page.component.config';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { Navigations } from '../../../shared/enums/navigation';
+import { LandingPageDataService } from '../../../services/user/landing-page/landing-page-data.service';
+import { LandingPageStats } from '../../../shared/interfaces/landing-page-stats.interface';
+import { PlateformName } from '../../../utils/constants';
 
 @Component({
   selector: 'app-landing-page',
@@ -19,20 +23,59 @@ import { NavbarComponent } from '../navbar/navbar.component';
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.scss',
 })
-export class LandingPageComponent {
+export class LandingPageComponent implements OnInit {
+  private readonly router = inject(Router);
+  private readonly landingPageDataService = inject(LandingPageDataService);
+
   landingPageContent = LANDING_PAGE_CONTENT;
   quizFeatures = FEATURES;
   startPlayButton = START_PLAY_BUTTON;
   browseQuizButton = BROWSE_QUIZZES_BUTTON;
   joinPlatFormButton = JOIN_PLATFORM_BUTTON;
+  plateformName = PlateformName;
+  stats: LandingPageStats;
 
-  private readonly router = inject(Router);
-
-  browseQuiz() {
-    this.router.navigateByUrl('/');
+  ngOnInit(): void {
+    this.loadLandingPageStats();
   }
 
-  playQuiz() {
-    this.router.navigateByUrl('/');
+  private loadLandingPageStats(): void {
+    this.landingPageDataService.getStats().subscribe({
+      next: (response) => {
+        this.stats = response.data;
+        const formattedStats = [
+          this.formatCount(this.stats.activePlayer),
+          this.formatCount(this.stats.quizCreated),
+          this.formatCount(this.stats.questionAns),
+        ];
+        formattedStats.forEach((val, index) => {
+          if (this.landingPageContent.stats[index]) {
+            this.landingPageContent.stats[index].value = val;
+          }
+        });
+        this.landingPageContent.quote = this.stats.quote;
+      },
+      error: (err) => {},
+    });
+  }
+
+  private formatCount(num: number): string {
+    if (num >= 1000000) {
+      return `${Math.floor(num / 1000000)}M+`;
+    } else if (num >= 1000) {
+      return `${Math.floor(num / 1000)}K+`;
+    } else if (num >= 100) {
+      return `${Math.floor(num / 100) * 100}+`;
+    } else {
+      return `${num}`;
+    }
+  }
+
+  browseQuizRedirect() {
+    this.router.navigate([Navigations.BrowseQuizzes]);
+  }
+
+  loginRedirect(): void {
+    this.router.navigate([Navigations.Login]);
   }
 }

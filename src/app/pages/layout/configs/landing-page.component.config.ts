@@ -34,6 +34,7 @@ export const FEATURES = [
     icon: 'track_changes',
   },
 ];
+
 export const START_PLAY_BUTTON: ButtonConfig = {
   label: 'Start Playing Now',
   matIcon: 'play_arrow',

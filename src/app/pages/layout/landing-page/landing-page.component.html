@@ -16,19 +16,21 @@
       <div class="cta-buttons">
         <app-filled-button
           [filledButtonConfig]="startPlayButton"
-          (buttonClicked)="playQuiz()"
+          (buttonClicked)="loginRedirect()"
         ></app-filled-button>
         <app-outline-button
           [outlineButtonConfig]="browseQuizButton"
-          (buttonClicked)="browseQuiz()"
+          (buttonClicked)="browseQuizRedirect()"
         ></app-outline-button>
       </div>
     </div>
     <div class="landing-stats">
-      <div class="stat-box" *ngFor="let stat of landingPageContent.stats">
-        <div class="stat-value">{{ stat.value }}</div>
-        <div class="stat-label">{{ stat.label }}</div>
-      </div>
+      @for (stat of landingPageContent.stats; track stat.label) {
+        <div class="stat-box">
+          <div class="stat-value">{{ stat.value }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+        </div>
+      }
     </div>
     <div class="feature-section">
       <div class="feature-header">
@@ -57,7 +59,7 @@
         </p>
         <app-outline-button
           [outlineButtonConfig]="joinPlatFormButton"
-          (buttonClicked)="playQuiz()"
+          (buttonClicked)="loginRedirect()"
         ></app-outline-button>
       </div>
     </div>
@@ -65,8 +67,8 @@
       <div class="footer-container">
         <div class="footer-brand">
           <div class="brand-logo">
-            <div class="logo-icon">Q</div>
-            <span class="brand-name">QuizVerse</span>
+            <div class="logo-icon">{{ plateformName.charAt(0) }}</div>
+            <span class="brand-name">{{ plateformName }}</span>
           </div>
           <p class="brand-description">
             The ultimate platform for interactive learning and knowledge competition.

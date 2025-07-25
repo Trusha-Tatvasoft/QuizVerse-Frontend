@@ -181,3 +181,5 @@ export const NavigationItems = {
     },
   ],
 };
+
+export const PlateformName = 'QuizVerse';

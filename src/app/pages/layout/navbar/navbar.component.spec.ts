@@ -4,6 +4,7 @@ import { NavbarComponent } from './navbar.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { yellow } from '../../../utils/constants';
 import { mockDataNotifications } from './navbar-mock-data';
+import { Navigations } from '../../../shared/enums/navigation';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -169,5 +170,65 @@ describe('NavbarComponent', () => {
 
     const viewDetailsButton = fixture.debugElement.query(By.css('app-outline-button'));
     expect(viewDetailsButton).toBeTruthy();
+  });
+
+  it('should close sidebar if window is resized below 1024px on init', () => {
+    component['previousWidth'] = 1200; // simulate desktop width
+    window.innerWidth = 768; // simulate tablet/mobile width
+
+    const closeSpy = jest.spyOn(component.closeSidebar, 'emit');
+    component.ngOnInit();
+
+    expect(component.menuOpen).toBe(false);
+    expect(closeSpy).toHaveBeenCalled();
+  });
+
+  it('should call checkWindowSize and emit closeSidebar on resize', () => {
+    component['previousWidth'] = 1200;
+    const closeSpy = jest.spyOn(component.closeSidebar, 'emit');
+
+    // Simulate a small screen resize
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 800 });
+
+    component.onWindowResize();
+
+    expect(closeSpy).toHaveBeenCalled();
+    expect(component.menuOpen).toBe(false);
+  });
+
+  it('should emit openSidebar when toggling menuOpen from false to true', () => {
+    component.menuOpen = false;
+    const openSpy = jest.spyOn(component.openSidebar, 'emit');
+    component.toggleSidebar();
+    expect(component.menuOpen).toBe(true);
+    expect(openSpy).toHaveBeenCalled();
+  });
+
+  it('should emit closeSidebar when toggling menuOpen from true to false', () => {
+    component.menuOpen = true;
+    const closeSpy = jest.spyOn(component.closeSidebar, 'emit');
+    component.toggleSidebar();
+    expect(component.menuOpen).toBe(false);
+    expect(closeSpy).toHaveBeenCalled();
+  });
+
+  it('should close sidebar and emit event when sidebarClosedByBackdrop is called', () => {
+    component.menuOpen = true;
+    const closeSpy = jest.spyOn(component.closeSidebar, 'emit');
+    component.sidebarClosedByBackdrop();
+    expect(component.menuOpen).toBe(false);
+    expect(closeSpy).toHaveBeenCalled();
+  });
+
+  it('should navigate to BrowseQuizzes on browseQuizRedirect()', () => {
+    const navSpy = jest.spyOn(component['router'], 'navigate');
+    component.browseQuizRedirect();
+    expect(navSpy).toHaveBeenCalledWith([Navigations.BrowseQuizzes]);
+  });
+
+  it('should navigate to Login on loginRedirect()', () => {
+    const navSpy = jest.spyOn(component['router'], 'navigate');
+    component.loginRedirect();
+    expect(navSpy).toHaveBeenCalledWith([Navigations.Login]);
   });
 });

@@ -3,7 +3,8 @@ import { LandingPageComponent } from './pages/layout/landing-page/landing-page.c
 
 export const routes: Routes = [
   {
-    path: '**',
+    path: '',
     component: LandingPageComponent,
+    pathMatch: 'full',
   },
 ];
