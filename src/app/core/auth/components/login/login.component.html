@@ -1,52 +1,51 @@
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   @for (field of loginFields; track field.name) {
-    <div class="form-field">
-      <label [for]="field.name">{{ field.label }}</label>
-      <div class="input-group">
-        <mat-icon fontSet="material-icons-outlined">
-          @switch (field.name) {
-            @case ('email') {
-              mail
-            }
-            @case ('password') {
-              lock
-            }
-          }
-        </mat-icon>
+    <div class="form-field pb-3">
+      <mat-label>{{ field.label }}</mat-label>
+
+      <mat-form-field appearance="outline" class="full-width" [floatLabel]="'auto'">
+        <mat-icon fontSet="material-icons-outlined" matPrefix>{{
+          field.icon || 'person'
+        }}</mat-icon>
+
         <input
+          #fieldRef
+          matInput
           [id]="field.name"
           [type]="field.type"
           [formControlName]="field.name"
           [placeholder]="field.placeholder"
+          [autocomplete]="field.name === 'password' ? 'current-password' : 'email'"
           required
-          #passwordInput
         />
+
         @if (field.type === 'password') {
           <button
             mat-icon-button
+            matSuffix
             type="button"
-            class="visibility-toggle"
-            [appTogglePassword]="passwordInput"
+            [appTogglePassword]="fieldRef"
+            aria-label="Toggle password visibility"
           >
-            <mat-icon>visibility_off</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">visibility_off</mat-icon>
           </button>
         }
-      </div>
+
+        @if (loginForm.get(field.name)?.invalid && loginForm.get(field.name)?.touched) {
+          <mat-error>
+            @if (loginForm.get(field.name)?.hasError('required')) {
+              {{ field.validationMessages?.['required'] || field.label + ' is required.' }}
+            } @else if (loginForm.get(field.name)?.hasError('pattern')) {
+              {{ field.validationMessages?.['pattern'] || 'Invalid format.' }}
+            }
+          </mat-error>
+        }
+      </mat-form-field>
     </div>
-
-    @if (loginForm.get(field.name)?.invalid && loginForm.get(field.name)?.touched) {
-      <div class="error">
-        @if (loginForm.get(field.name)?.hasError('required')) {
-          {{ field.label }} is required.
-        }
-        @if (loginForm.get(field.name)?.hasError('pattern')) {
-          Please enter a valid email format.
-        }
-      </div>
-    }
   }
-
-  <a class="forgot-password" href="/forgot-password">Forgot password?</a>
+  <div class="flex justify-end items-center mb-3">
+    <a class="forgot-password" routerLink="/forgot-password">Forgot password?</a>
+  </div>
 
   @if (errorMessage) {
     <div class="error">{{ errorMessage }}</div>

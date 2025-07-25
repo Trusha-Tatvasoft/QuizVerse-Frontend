@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -12,6 +12,8 @@ import {
   FORGOT_PASSWORD_FORM_FIELDS,
   SEND_RESET_LINK_CONFIG,
 } from '../../configs/forgot-password.component.config';
+import { Navigations } from '../../../../shared/enums/navigation';
+import { MatFormField, MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-forgot-password',
@@ -21,6 +23,9 @@ import {
     ReactiveFormsModule,
     CommonModule,
     MatProgressSpinnerModule,
+    MatFormField,
+    MatInputModule,
+    RouterLink,
   ],
   templateUrl: './forgot-password.component.html',
   styleUrls: [
@@ -32,21 +37,16 @@ import {
 export class ForgotPasswordComponent {
   // Dependency injection for FormBuilder
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
 
-  // Form field configuration
   forgotPasswordFields = FORGOT_PASSWORD_FORM_FIELDS;
-
-  // Reactive form instance
   forgotPasswordForm: FormGroup;
+  sendResetLinkButton = SEND_RESET_LINK_CONFIG;
 
-  // UI state variables
   isLoading = false;
   errorMessage = '';
 
-  // Button configuration
-  sendResetLinkButton = SEND_RESET_LINK_CONFIG;
-
-  constructor(private readonly router: Router) {
+  constructor() {
     // Initialize reactive form using field config and validators
     this.forgotPasswordForm = this.fb.group(
       this.forgotPasswordFields.reduce(
@@ -87,7 +87,7 @@ export class ForgotPasswordComponent {
     }, 1000);
 
     // Navigate to confirmation page with email in state
-    this.router.navigate(['/reset-password-link-success'], {
+    this.router.navigate([Navigations.ResetPasswordLinkSuccess], {
       state: { email: credentials.email },
     });
   }

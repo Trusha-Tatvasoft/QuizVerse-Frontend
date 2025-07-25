@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import {
   BACK_TO_SIGNIN_CONFIG,
@@ -7,11 +7,11 @@ import {
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import { OutlineButtonComponent } from '../../../../shared/components/outline-button/outline-button.component';
 import { Navigations } from '../../../../shared/enums/navigation';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-reset-link-send-successfully',
-  imports: [MatIconModule, FilledButtonComponent, OutlineButtonComponent],
+  imports: [MatIconModule, FilledButtonComponent, OutlineButtonComponent, RouterLink],
   templateUrl: './reset-link-send-successfully.component.html',
   styleUrls: [
     './reset-link-send-successfully.component.scss',
@@ -19,6 +19,8 @@ import { Router, RouterModule } from '@angular/router';
   ],
 })
 export class ResetLinkSendSuccessfullyComponent {
+  private readonly router = inject(Router);
+
   // Email address passed from previous route state
   @Input() email: string;
 
@@ -28,12 +30,6 @@ export class ResetLinkSendSuccessfullyComponent {
 
   // Loading state for the buttons
   isLoading = false;
-
-  // Route path used for navigation
-  name = Navigations.ForgetPassword;
-
-  // Injecting Angular Router
-  constructor(private readonly router: Router) {}
 
   // OnInit lifecycle hook to extract email from navigation state
   ngOnInit() {

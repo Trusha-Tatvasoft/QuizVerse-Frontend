@@ -6,6 +6,7 @@ import {
   LOGIN_SIGNUP_TABS_CONFIG,
 } from '../../configs/login-signup.component.config';
 import { TabComponent } from '../../../../shared/components/tab/tab.component';
+import { RouterLink } from '@angular/router';
 
 /**
  * Login/Signup container component
@@ -14,7 +15,7 @@ import { TabComponent } from '../../../../shared/components/tab/tab.component';
  */
 @Component({
   selector: 'app-login-signup',
-  imports: [OutlineButtonComponent, TabComponent],
+  imports: [OutlineButtonComponent, TabComponent, RouterLink],
   templateUrl: './login-signup.component.html',
   styleUrl: './login-signup.component.scss',
 })

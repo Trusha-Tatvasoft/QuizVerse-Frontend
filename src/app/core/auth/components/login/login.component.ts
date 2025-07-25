@@ -8,6 +8,7 @@ import { ButtonConfig } from '../../../../shared/interfaces/button-config.interf
 import { LoginCredentials } from '../../interfaces/login.interface';
 import { LOGIN_FORM_FIELDS, SIGNIN_BUTTON_CONFIG } from '../../configs/login.component.config';
 import { TogglePasswordDirective } from '../toggle-password.directive';
+import { MatFormField, MatInputModule } from '@angular/material/input';
 /**
  * Login component handling:
  * - Reactive form setup and validation
@@ -23,6 +24,8 @@ import { TogglePasswordDirective } from '../toggle-password.directive';
     MatIconModule,
     MatProgressSpinnerModule,
     TogglePasswordDirective,
+    MatInputModule,
+    MatFormField,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss', '../login-signup/login-signup.component.scss'],

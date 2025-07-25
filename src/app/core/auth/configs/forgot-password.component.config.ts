@@ -15,9 +15,14 @@ export const FORGOT_PASSWORD_FORM_FIELDS: DynamicFormField[] = [
     label: 'Email Address',
     type: 'email',
     placeholder: 'john@example.com',
+    icon: 'mail',
     validators: [
       Validators.required,
       Validators.pattern(/^[^\s][a-zA-Z0-9._%+-]*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/),
     ],
+    validationMessages: {
+      required: 'Email is required.',
+      pattern: 'Please enter a valid email address.',
+    },
   },
 ];

@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
@@ -12,8 +12,11 @@ import {
 } from '../../configs/reset-password.component.config';
 import { ResetCredential } from '../../interfaces/reset-password.interface';
 import { TogglePasswordDirective } from '../toggle-password.directive';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
+  standalone: true,
   selector: 'app-reset-password',
   imports: [
     CommonModule,
@@ -22,6 +25,9 @@ import { TogglePasswordDirective } from '../toggle-password.directive';
     MatProgressSpinnerModule,
     FilledButtonComponent,
     TogglePasswordDirective,
+    RouterLink,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   templateUrl: './reset-password.component.html',
   styleUrls: [
@@ -33,35 +39,38 @@ import { TogglePasswordDirective } from '../toggle-password.directive';
 export class ResetPasswordComponent {
   // Dependency injection using inject API
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
 
   // Form configuration fields and UI state
   resetFields = RESET_PASSWORD_FOEM_FIELD;
   resetForm: FormGroup;
-  isLoading = false;
-  errorMessage = '';
   sendResetLinkButton = SEND_RESET_LINK_CONFIG;
 
-  // Control map for toggling password visibility
-  hidePasswordMap: Record<string, boolean> = {};
+  isLoading = false;
+  errorMessage = '';
 
   // Constructor to initialize form controls and validators
-  constructor(private readonly router: Router) {
+  constructor() {
     const formControls = this.resetFields.reduce(
       (acc, field) => {
         acc[field.name] = ['', field.validators];
-
-        if (field.type === 'password') {
-          this.hidePasswordMap[field.name] = true;
-        }
-
         return acc;
       },
       {} as Record<string, any>,
     );
 
     this.resetForm = this.fb.group(formControls, {
-      validators: this.passwordMatchValidator.bind(this),
+      validators: this.passwordMatchValidator,
     });
+
+    // Add listener to revalidate when password changes
+    this.resetForm.get('password')?.valueChanges.subscribe(() => {
+      this.resetForm.get('confirmPassword')?.updateValueAndValidity();
+    });
+  }
+
+  trackByField(index: number, field: any): string {
+    return field.name;
   }
 
   // Returns button configuration with loading state
@@ -77,11 +86,6 @@ export class ResetPasswordComponent {
     const password = formGroup.get('password')?.value;
     const confirmPassword = formGroup.get('confirmPassword')?.value;
     return password === confirmPassword ? null : { passwordMismatch: true };
-  }
-
-  // Toggle password visibility per input field
-  togglePasswordVisibility(fieldName: string): void {
-    this.hidePasswordMap[fieldName] = !this.hidePasswordMap[fieldName];
   }
 
   // Form submit handler

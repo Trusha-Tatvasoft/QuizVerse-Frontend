@@ -11,26 +11,26 @@ export const routes: Routes = [
   {
     path: Navigations.Login,
     component: LoginSignupComponent,
-    pathMatch: 'full',
+    title: 'Quizeverse | Login',
   },
   {
     path: Navigations.ForgetPassword,
     component: ForgotPasswordComponent,
-    pathMatch: 'full',
+    title: 'Quizeverse | Forgot Password',
   },
   {
     path: Navigations.ResetPasswordLinkSuccess,
     component: ResetLinkSendSuccessfullyComponent,
-    pathMatch: 'full',
+    title: 'Quizeverse | Link Sent',
   },
   {
     path: Navigations.ResetLinkInvalid,
     component: ResetLinkInvalidComponent,
-    pathMatch: 'full',
+    title: 'Quizeverse | Invalid Link',
   },
   {
     path: Navigations.ResetPassword,
     component: ResetPasswordComponent,
-    pathMatch: 'full',
+    title: 'Quizeverse | Reset Password',
   },
 ];

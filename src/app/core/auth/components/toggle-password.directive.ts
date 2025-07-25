@@ -1,4 +1,4 @@
-import { Directive, Input, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { Directive, Input, HostListener, ElementRef, Renderer2, inject } from '@angular/core';
 
 @Directive({
   selector: '[appTogglePassword]', // Directive selector to be used in templates
@@ -6,12 +6,10 @@ import { Directive, Input, HostListener, ElementRef, Renderer2 } from '@angular/
 export class TogglePasswordDirective {
   @Input('appTogglePassword') targetInput!: HTMLInputElement; // Input target input element to toggle
 
-  private show = false; // Flag to track visibility state
+  private readonly el = inject(ElementRef);
+  private readonly renderer = inject(Renderer2);
 
-  constructor(
-    private readonly el: ElementRef,
-    private readonly renderer: Renderer2,
-  ) {} // Inject ElementRef and Renderer2
+  private show = false; // Flag to track visibility state
 
   @HostListener('click')
   toggle(): void {
