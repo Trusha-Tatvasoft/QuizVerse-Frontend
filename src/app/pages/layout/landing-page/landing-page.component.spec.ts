@@ -7,9 +7,10 @@ import { OutlineButtonComponent } from '../../../shared/components/outline-butto
 import { CommonModule } from '@angular/common';
 import { By } from '@angular/platform-browser';
 import { FEATURES, LANDING_PAGE_CONTENT } from '../configs/landing-page.component.config';
-import { of } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { LandingPageDataService } from '../../../services/user/landing-page/landing-page-data.service';
 import { LandingPageStats } from '../../../shared/interfaces/landing-page-stats.interface';
+import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 
 describe('LandingPageComponent (Jest)', () => {
   let component: LandingPageComponent;
@@ -39,6 +40,7 @@ describe('LandingPageComponent (Jest)', () => {
       providers: [
         provideRouter([]),
         { provide: LandingPageDataService, useValue: mockLandingPageDataService },
+        { provide: SnackbarService, useValue: { showError: jest.fn() } },
       ],
     }).compileComponents();
 
@@ -68,6 +70,37 @@ describe('LandingPageComponent (Jest)', () => {
     expect(component.stats).toEqual(mockStats);
     const active = component.landingPageContent.stats.find((s) => s.label === 'Active Players')!;
     expect(active.value).toBe('5K+');
+  });
+
+  it('should format numbers correctly', () => {
+    const result = (component as any).formatCount;
+    expect(result(50)).toBe('50');
+    expect(result(250)).toBe('200+');
+    expect(result(1200)).toBe('1K+');
+    expect(result(2500000)).toBe('2M+');
+    expect(result(999)).toBe('900+'); // Edge case
+    expect(result(1000)).toBe('1K+'); // Exact boundary
+  });
+
+  it('should complete destroy$ subject on destroy', () => {
+    const destroy$ = (component as any).destroy$ as Subject<void>;
+    const completeSpy = jest.spyOn(destroy$, 'complete');
+    component.ngOnDestroy();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should skip assigning stat if index is missing in content', () => {
+    component.landingPageContent.stats = [];
+    mockLandingPageDataService.getStats.mockReturnValueOnce(
+      of({ result: true, statusCode: 200, message: 'ok', data: mockStats }),
+    );
+    component['loadLandingPageStats']();
+    expect(component.landingPageContent.stats[0]).toBeUndefined();
+  });
+
+  it('should show platform first letter as logo', () => {
+    const logo = fixture.nativeElement.querySelector('.logo-icon');
+    expect(logo.textContent.trim()).toBe('Q');
   });
 
   it('should render the updated landing quote', () => {
@@ -107,23 +140,23 @@ describe('LandingPageComponent (Jest)', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['browse-quizzes']);
   });
 
-  it('should format number correctly (formatCount)', () => {
-    const result = (component as any).formatCount;
-    expect(result(50)).toBe('50');
-    expect(result(250)).toBe('200+');
-    expect(result(1200)).toBe('1K+');
-    expect(result(2500000)).toBe('2M+');
-  });
-
-  it('should show platform first letter as logo', () => {
-    const logo = fixture.nativeElement.querySelector('.logo-icon');
-    expect(logo.textContent.trim()).toBe('Q');
-  });
-
   it('should trigger click events via DOM for buttons', () => {
     const browseBtn = fixture.debugElement.query(By.css('app-outline-button'));
     const spy = jest.spyOn(component, 'browseQuizRedirect');
     browseBtn.triggerEventHandler('buttonClicked');
     expect(spy).toHaveBeenCalled();
+  });
+
+  it('should show error snackbar when getStats fails', () => {
+    const snackbarSpy = jest.spyOn(TestBed.inject(SnackbarService), 'showError');
+    mockLandingPageDataService.getStats.mockReturnValueOnce(
+      throwError(() => ({
+        error: { message: 'Server error' },
+      })),
+    );
+    fixture = TestBed.createComponent(LandingPageComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    expect(snackbarSpy).toHaveBeenCalledWith('Something went wrong.', 'Server error');
   });
 });

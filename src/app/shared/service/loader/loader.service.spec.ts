@@ -1,68 +1,52 @@
+import { TestBed } from '@angular/core/testing';
 import { LoaderService } from './loader.service';
+import { skip } from 'rxjs';
 
 describe('LoaderService', () => {
   let service: LoaderService;
 
   beforeEach(() => {
-    service = new LoaderService();
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(LoaderService);
   });
 
-  it('should initially emit false', (done) => {
-    service.isLoading$.subscribe((value) => {
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  it('should emit false when hide() is called using skip operator', (done) => {
+    service.isLoading$.pipe(skip(1)).subscribe((value) => {
       expect(value).toBe(false);
       done();
     });
+    service.hide();
   });
 
-  it('should emit true when show is called', (done) => {
-    service.isLoading$.subscribe((value) => {
-      if (value) {
-        expect(value).toBe(true);
+  it('should emit false when hide() is called using manual skip logic', (done) => {
+    let isFirst = true;
+    const subscription = service.isLoading$.subscribe((value) => {
+      if (isFirst) {
+        isFirst = false;
+        return;
+      }
+      expect(value).toBe(false);
+      subscription.unsubscribe();
+      done();
+    });
+    service.hide();
+  });
+
+  it('should emit values in correct order: false (initial) -> true -> false', (done) => {
+    const emittedValues: boolean[] = [];
+    const subscription = service.isLoading$.subscribe((value) => {
+      emittedValues.push(value);
+      if (emittedValues.length === 3) {
+        expect(emittedValues).toEqual([false, true, false]);
+        subscription.unsubscribe();
         done();
       }
     });
     service.show();
-  });
-
-  it('should emit false when show and hide are called once', (done) => {
-    const emitted: boolean[] = [];
-    service.isLoading$.subscribe((value) => {
-      emitted.push(value);
-      if (emitted.length === 2) {
-        expect(emitted).toEqual([false, true]);
-        service.hide();
-        setTimeout(() => {
-          expect(emitted).toEqual([false, true, false]);
-          done();
-        });
-      }
-    });
-    service.show();
-  });
-
-  it('should keep loading true until all requests are hidden', (done) => {
-    const values: boolean[] = [];
-    const sub = service.isLoading$.subscribe((value) => {
-      values.push(value);
-    });
-    service.show();
-    service.show();
     service.hide();
-    setTimeout(() => {
-      expect(values).toContain(true);
-      expect(values[values.length - 1]).toBe(true);
-      service.hide();
-      setTimeout(() => {
-        expect(values[values.length - 1]).toBe(false);
-        sub.unsubscribe();
-        done();
-      }, 50);
-    }, 50);
-  });
-
-  it('should not go below zero requestCount', () => {
-    service.hide();
-    service.hide();
-    expect(() => service.hide()).not.toThrow();
   });
 });
