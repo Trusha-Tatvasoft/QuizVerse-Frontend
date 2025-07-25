@@ -17,7 +17,8 @@ import { LandingPageDataService } from '../../../services/user/landing-page/land
 import { LandingPageStats } from '../../../shared/interfaces/landing-page-stats.interface';
 import { PlateformName, PlatformMessages } from '../../../utils/constants';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
-import { Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
+import { LoaderService } from '../../../shared/service/loader/loader.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -29,6 +30,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly landingPageDataService = inject(LandingPageDataService);
   private readonly snackbarService = inject(SnackbarService);
+  private readonly loaderService = inject(LoaderService);
 
   landingPageContent = LANDING_PAGE_CONTENT;
   quizFeatures = FEATURES;
@@ -49,9 +51,13 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   }
 
   private loadLandingPageStats(): void {
+    this.loaderService.show();
     this.landingPageDataService
       .getStats()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.loaderService.hide()),
+      )
       .subscribe({
         next: (response) => {
           this.stats = response.data;
