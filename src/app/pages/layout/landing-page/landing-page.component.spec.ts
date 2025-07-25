@@ -66,7 +66,6 @@ describe('LandingPageComponent (Jest)', () => {
   it('should call getStats and update landing page stats', () => {
     expect(mockLandingPageDataService.getStats).toHaveBeenCalled();
     expect(component.stats).toEqual(mockStats);
-
     const active = component.landingPageContent.stats.find((s) => s.label === 'Active Players')!;
     expect(active.value).toBe('5K+');
   });

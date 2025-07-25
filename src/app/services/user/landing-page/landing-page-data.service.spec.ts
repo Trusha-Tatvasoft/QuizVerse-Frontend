@@ -45,10 +45,8 @@ describe('LandingPageDataService', () => {
       expect(response).toEqual(MOCK_LANDING_STATS);
       done();
     });
-
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.LandingPageData}`);
     expect(req.request.method).toBe('GET');
-
     req.flush(MOCK_LANDING_STATS);
   });
 });
