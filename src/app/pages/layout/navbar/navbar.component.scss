@@ -5,19 +5,37 @@
   justify-content: space-between;
   height: 65px;
   gap: 1rem;
-  box-shadow: 7px 5px 10px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--global-primary-border-color);
   padding: 0rem 2rem;
 
-  // Logo Styling
-  .logo-big,
-  .logo-small {
-    height: 50px; // standard logo height
+  .logo-big {
+    height: 50px;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1;
   }
 
-  @media (min-width: 768px) {
-    .logo-small {
-      display: none; // hide small logo on desktop
-    }
+  .logo-small {
+    background: var(--gradient);
+    color: white;
+    font-weight: bold;
+    font-size: 1.125rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-big {
+    line-height: 1;
+    height: auto;
   }
 
   // Left Section (Logo + Toggle)
@@ -30,7 +48,7 @@
     .toggle-btn {
       display: none;
 
-      @media (max-width: 768px) {
+      @media (max-width: 1023px) {
         display: inline-flex; // show toggle on mobile
       }
     }
@@ -125,6 +143,10 @@
         right: -50px; // adjust box position on mobile
       }
     }
+
+    .text-button {
+      background-color: transparent;
+    }
   }
 
   // XP Section Hidden on Mobile
@@ -162,11 +184,14 @@
     gap: 0;
 
     .logo-big {
-      display: none; // hide big logo on mobile
+      display: none;
     }
+  }
 
-    .logo-small {
-      display: block;
+  .notification-hover {
+    button:hover {
+      background-color: #f9fbfd !important;
+      transition: background-color 0.3s ease;
     }
   }
 }

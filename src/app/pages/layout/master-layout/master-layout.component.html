@@ -1,0 +1,19 @@
+<app-navbar
+  [isLogin]="isLogin"
+  [currentXp]="currentXp"
+  [xpLimit]="xpLimit"
+  [notificationCount]="notificationCount"
+  [notifications]="notifications"
+  (openSidebar)="handleSidebarOpen()"
+  (closeSidebar)="handleSidebarClose()"
+></app-navbar>
+<div class="layout-container">
+  <app-sidebar
+    [sidebarItems]="sidebarItems"
+    [role]="role"
+    (sidebarClosed)="handleSidebarClosedByBackdrop()"
+  ></app-sidebar>
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
