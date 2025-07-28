@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Navigations } from './shared/enums/navigation';
 
+import { LandingPageComponent } from './pages/layout/landing-page/landing-page.component';
 import { LoginSignupComponent } from './core/auth/components/login-signup/login-signup.component';
 import { ForgotPasswordComponent } from './core/auth/components/forgot-password/forgot-password.component';
 import { ResetLinkSendSuccessfullyComponent } from './core/auth/components/reset-link-send-successfully/reset-link-send-successfully.component';
@@ -8,6 +9,11 @@ import { ResetLinkInvalidComponent } from './core/auth/components/reset-link-inv
 import { ResetPasswordComponent } from './core/auth/components/reset-password/reset-password.component';
 
 export const routes: Routes = [
+  {
+    path: '',
+    component: LandingPageComponent,
+    pathMatch: 'full',
+  },
   {
     path: Navigations.Login,
     component: LoginSignupComponent,

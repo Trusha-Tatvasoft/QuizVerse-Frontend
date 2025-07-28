@@ -5,7 +5,6 @@ import { Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
-import { ButtonConfig } from '../../../../shared/interfaces/button-config.interface';
 import {
   RESET_PASSWORD_FOEM_FIELD,
   SEND_RESET_LINK_CONFIG,
@@ -14,9 +13,9 @@ import { ResetCredential } from '../../interfaces/reset-password.interface';
 import { TogglePasswordDirective } from '../toggle-password.directive';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { LoaderService } from '../../../../shared/service/loader/loader.service';
 
 @Component({
-  standalone: true,
   selector: 'app-reset-password',
   imports: [
     CommonModule,
@@ -37,19 +36,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   ],
 })
 export class ResetPasswordComponent {
-  // Dependency injection using inject API
-  private readonly fb = inject(FormBuilder);
-  private readonly router = inject(Router);
+  private readonly fb = inject(FormBuilder); // For creating form group
+  private readonly router = inject(Router); // For navigation if needed
+  private readonly loaderService = inject(LoaderService); // For managing loading state
 
-  // Form configuration fields and UI state
   resetFields = RESET_PASSWORD_FOEM_FIELD;
   resetForm: FormGroup;
   sendResetLinkButton = SEND_RESET_LINK_CONFIG;
 
-  isLoading = false;
   errorMessage = '';
 
-  // Constructor to initialize form controls and validators
+  // Initializes form controls and attaches validator
   constructor() {
     const formControls = this.resetFields.reduce(
       (acc, field) => {
@@ -63,39 +60,47 @@ export class ResetPasswordComponent {
       validators: this.passwordMatchValidator,
     });
 
-    // Add listener to revalidate when password changes
+    // Updates confirmPassword validation if password changes
     this.resetForm.get('password')?.valueChanges.subscribe(() => {
       this.resetForm.get('confirmPassword')?.updateValueAndValidity();
     });
   }
 
+  // Tracks form fields by name to optimize rendering
   trackByField(index: number, field: any): string {
     return field.name;
   }
 
-  // Returns button configuration with loading state
-  get buttonConfig(): ButtonConfig {
-    return {
-      ...this.sendResetLinkButton,
-      isDisabled: this.isLoading,
-    };
-  }
-
-  // Form-level custom validator to check if passwords match
+  // Validates if password and confirmPassword match
   passwordMatchValidator(formGroup: FormGroup): { [key: string]: boolean } | null {
     const password = formGroup.get('password')?.value;
-    const confirmPassword = formGroup.get('confirmPassword')?.value;
-    return password === confirmPassword ? null : { passwordMismatch: true };
+    const confirmPassword = formGroup.get('confirmPassword');
+    if (!confirmPassword) return null;
+
+    const confirmControl = confirmPassword;
+    const errors = confirmControl.errors || {};
+
+    if (password !== confirmControl.value) {
+      errors['passwordMismatch'] = true;
+      confirmControl.setErrors(errors);
+    } else {
+      if (errors['passwordMismatch']) {
+        delete errors['passwordMismatch'];
+        confirmControl.setErrors(Object.keys(errors).length ? errors : null);
+      }
+    }
+
+    return null;
   }
 
-  // Form submit handler
+  // Handles form submission and simulates API call
   onSubmit(): void {
     if (this.resetForm.invalid) {
       this.resetForm.markAllAsTouched();
       return;
     }
 
-    this.isLoading = true;
+    this.loaderService.show();
     this.errorMessage = '';
 
     const credentials: ResetCredential = {
@@ -104,8 +109,8 @@ export class ResetPasswordComponent {
     };
 
     setTimeout(() => {
-      this.isLoading = false;
-      // Handle API integration here
+      this.loaderService.hide();
+      // API integration goes here
     }, 1000);
   }
 }

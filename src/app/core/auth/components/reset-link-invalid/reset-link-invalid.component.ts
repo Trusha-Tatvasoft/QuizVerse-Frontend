@@ -8,6 +8,7 @@ import { Navigations } from '../../../../shared/enums/navigation';
 import { Router, RouterLink } from '@angular/router';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import { OutlineButtonComponent } from '../../../../shared/components/outline-button/outline-button.component';
+import { LoaderService } from '../../../../shared/service/loader/loader.service';
 
 @Component({
   selector: 'app-reset-link-invalid',
@@ -17,14 +18,10 @@ import { OutlineButtonComponent } from '../../../../shared/components/outline-bu
 })
 export class ResetLinkInvalidComponent {
   private readonly router = inject(Router);
+  private readonly loaderService = inject(LoaderService);
 
-  // Button config for requesting new reset link
   NewResetLinkButton = NEW_RESET_LINK_BUTTON;
-  // Button config to go back to sign in
   BackToSignInButton = BACK_TO_SIGNIN_BUTTON;
-
-  // Loading state for showing spinners
-  isLoading = false;
 
   // Navigate to forgot password screen to request new reset link
   onRequestNewResetLink(): void {

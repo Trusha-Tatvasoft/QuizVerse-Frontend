@@ -9,7 +9,7 @@ export const TEXT_BUTTON_CONFIG: ButtonConfig = {
 };
 
 export const SIGN_IN_BUTTON_CONFIG: ButtonConfig = {
-  label: 'Sign out',
+  label: 'Sign In',
 };
 
 export const GET_STARTED_BUTTON_CONFIG: ButtonConfig = {

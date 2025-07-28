@@ -6,7 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
-import { ButtonConfig } from '../../../../shared/interfaces/button-config.interface';
 import { ForgotCredential } from '../../interfaces/forgot.interface';
 import {
   FORGOT_PASSWORD_FORM_FIELDS,
@@ -14,9 +13,11 @@ import {
 } from '../../configs/forgot-password.component.config';
 import { Navigations } from '../../../../shared/enums/navigation';
 import { MatFormField, MatInputModule } from '@angular/material/input';
+import { LoaderService } from '../../../../shared/service/loader/loader.service';
 
 @Component({
   selector: 'app-forgot-password',
+  standalone: true,
   imports: [
     MatIconModule,
     FilledButtonComponent,
@@ -35,19 +36,17 @@ import { MatFormField, MatInputModule } from '@angular/material/input';
   ],
 })
 export class ForgotPasswordComponent {
-  // Dependency injection for FormBuilder
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly loaderService = inject(LoaderService);
 
   forgotPasswordFields = FORGOT_PASSWORD_FORM_FIELDS;
   forgotPasswordForm: FormGroup;
   sendResetLinkButton = SEND_RESET_LINK_CONFIG;
-
-  isLoading = false;
   errorMessage = '';
 
   constructor() {
-    // Initialize reactive form using field config and validators
+    // Build reactive form using config field definitions and validators
     this.forgotPasswordForm = this.fb.group(
       this.forgotPasswordFields.reduce(
         (acc, field) => {
@@ -59,34 +58,25 @@ export class ForgotPasswordComponent {
     );
   }
 
-  // Computed property for disabling button when loading
-  get buttonConfig(): ButtonConfig {
-    return {
-      ...this.sendResetLinkButton,
-      isDisabled: this.isLoading,
-    };
-  }
-
-  // Handle form submission logic
   onSubmit(): void {
     if (this.forgotPasswordForm.invalid) {
-      this.forgotPasswordForm.markAllAsTouched();
+      this.forgotPasswordForm.markAllAsTouched(); // Show validation errors
       return;
     }
 
-    this.isLoading = true;
+    this.loaderService.show(); // Show global loader
     this.errorMessage = '';
 
     const credentials: ForgotCredential = {
       email: this.forgotPasswordForm.value.email,
     };
 
-    // Simulate server request delay
+    // Simulate backend delay then hide loader
     setTimeout(() => {
-      this.isLoading = false;
+      this.loaderService.hide();
     }, 1000);
 
-    // Navigate to confirmation page with email in state
+    // Navigate to success page with email in router state
     this.router.navigate([Navigations.ResetPasswordLinkSuccess], {
       state: { email: credentials.email },
     });

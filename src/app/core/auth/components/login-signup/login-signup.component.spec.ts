@@ -15,8 +15,8 @@ describe('LoginSignupComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LoginSignupComponent], // standalone component
-      providers: [provideRouter([])], // provide empty routes for RouterLink
+      imports: [LoginSignupComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginSignupComponent);
@@ -25,18 +25,22 @@ describe('LoginSignupComponent', () => {
     fixture.detectChanges();
   });
 
+  // Should create the component instance
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  // Should match Google button configuration with expected constant
   it('should have correct Google button config', () => {
     expect(component.googleButton).toEqual(GOOGLE_BUTTON_CONFIG);
   });
 
+  // Should match Facebook button configuration with expected constant
   it('should have correct Facebook button config', () => {
     expect(component.facebookButton).toEqual(FACEBOOK_BUTTON_CONFIG);
   });
 
+  // Should initialize tabs with correct values and order
   it('should have correct tabs config', () => {
     expect(component.tabs).toEqual(LOGIN_SIGNUP_TABS_CONFIG);
     expect(component.tabs.length).toBe(2);
@@ -46,10 +50,12 @@ describe('LoginSignupComponent', () => {
     expect(component.tabs[1].label).toBe('Sign Up');
   });
 
+  // Should initialize selectedIndex to 0 (Sign In)
   it('should initialize selectedIndex to 0', () => {
     expect(component.selectedIndex).toBe(0);
   });
 
+  // Should render tab labels for Sign In and Sign Up
   it('should render tab labels correctly', () => {
     const tabLabels = fixture.debugElement.queryAll(By.css('.mdc-tab__content'));
     const labels = tabLabels.map((el) => el.nativeElement.textContent.trim());
@@ -57,6 +63,7 @@ describe('LoginSignupComponent', () => {
     expect(labels).toContain('Sign Up');
   });
 
+  // Should update selectedIndex when user switches tab
   it('should update selectedIndex on tab change', () => {
     component.selectedIndex = 1;
     fixture.detectChanges();

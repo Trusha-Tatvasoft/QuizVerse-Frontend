@@ -1,71 +1,72 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { LoginComponent } from './login.component';
+import { provideRouter } from '@angular/router';
+import { LoaderService } from '../../../../shared/service/loader/loader.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  let loaderService: LoaderService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LoginComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
+    loaderService = TestBed.inject(LoaderService);
     fixture.detectChanges();
   });
 
-  // Test: Should create the component
+  // Should create the component
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  // Test: Should mark form as touched if invalid on submit
+  // Should mark form as touched if invalid on submit
   it('should mark form as touched if invalid on submit', () => {
-    const spy = jest.spyOn(component.loginForm, 'markAllAsTouched');
+    const markSpy = jest.spyOn(component.loginForm, 'markAllAsTouched');
+    const loaderSpy = jest.spyOn(loaderService, 'show');
+
     component.onSubmit();
-    expect(spy).toHaveBeenCalled();
+
+    expect(markSpy).toHaveBeenCalled();
+    expect(loaderSpy).not.toHaveBeenCalled();
   });
 
-  // Test: Should simulate loading and stop after timeout on valid submit
-  it('should simulate loading and stop after timeout on valid submit', fakeAsync(() => {
+  // Should show loader and stop it after timeout on valid submit
+  it('should show loader and stop it after timeout on valid submit', fakeAsync(() => {
+    const showSpy = jest.spyOn(loaderService, 'show');
+    const hideSpy = jest.spyOn(loaderService, 'hide');
+
     component.loginForm.setValue({
       email: 'john@example.com',
       password: 'password123',
     });
 
     component.onSubmit();
-    expect(component.isLoading).toBe(true);
+
+    expect(showSpy).toHaveBeenCalled();
 
     tick(1000);
 
-    expect(component.isLoading).toBe(false);
+    expect(hideSpy).toHaveBeenCalled();
     expect(component.loginForm.value).toEqual({
       email: 'john@example.com',
       password: 'password123',
     });
   }));
 
-  // Test: Should disable the button when loading
-  it('should disable the button when loading', () => {
-    component.isLoading = true;
-    expect(component.buttonConfig.isDisabled).toBe(true);
-  });
-
-  // Test: Should enable the button when not loading
-  it('should enable the button when not loading', () => {
-    component.isLoading = false;
-    expect(component.buttonConfig.isDisabled).toBe(false);
-  });
-
-  // Test: Should initialize form fields correctly
+  // Should initialize form fields correctly
   it('should initialize form fields correctly', () => {
     const controls = component.loginForm.controls;
     expect(controls['email']).toBeDefined();
     expect(controls['password']).toBeDefined();
   });
 
-  // Test: Should display the correct sign-in button label
+  // Should display the correct sign-in button label
   it('should display the correct sign-in button label', () => {
     expect(component.signInButton.label).toBe('Sign In');
   });

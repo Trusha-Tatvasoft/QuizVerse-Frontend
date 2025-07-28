@@ -7,7 +7,6 @@
     </a>
   </div>
 
-  <!-- Auth card container -->
   <div class="auth-card">
     <!-- Error icon at the top -->
     <div class="logo pb-4">
@@ -32,9 +31,6 @@
         [filledButtonConfig]="NewResetLinkButton"
         (buttonClicked)="onRequestNewResetLink()"
       >
-        @if (isLoading) {
-          <span class="loader"></span>
-        }
       </app-filled-button>
     </div>
 
@@ -44,9 +40,6 @@
       class="signin-button"
       (buttonClicked)="onBackToSignInClick()"
     >
-      @if (isLoading) {
-        <span class="loader"></span>
-      }
     </app-outline-button>
   </div>
 </div>

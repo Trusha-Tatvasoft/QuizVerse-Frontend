@@ -8,6 +8,7 @@ import { FilledButtonComponent } from '../../../../shared/components/filled-butt
 import { OutlineButtonComponent } from '../../../../shared/components/outline-button/outline-button.component';
 import { Navigations } from '../../../../shared/enums/navigation';
 import { Router, RouterLink } from '@angular/router';
+import { LoaderService } from '../../../../shared/service/loader/loader.service';
 
 @Component({
   selector: 'app-reset-link-send-successfully',
@@ -20,6 +21,7 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class ResetLinkSendSuccessfullyComponent {
   private readonly router = inject(Router);
+  private readonly loaderService = inject(LoaderService);
 
   // Email address passed from previous route state
   @Input() email: string;
@@ -27,9 +29,6 @@ export class ResetLinkSendSuccessfullyComponent {
   // Button configurations
   loginButton = BACK_TO_SIGNIN_CONFIG;
   sendAnotherEmailButton = SEND_ANOTHER_EMAIL_CONFIG;
-
-  // Loading state for the buttons
-  isLoading = false;
 
   // OnInit lifecycle hook to extract email from navigation state
   ngOnInit() {

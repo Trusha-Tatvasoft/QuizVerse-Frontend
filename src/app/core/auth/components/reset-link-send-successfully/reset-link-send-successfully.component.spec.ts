@@ -9,7 +9,7 @@ describe('ResetLinkSendSuccessfullyComponent', () => {
   let router: Router;
 
   beforeEach(async () => {
-    // Mock window.history.state with test email
+    // Mock window.history.state to simulate passed email value
     Object.defineProperty(window, 'history', {
       writable: true,
       value: {
@@ -21,14 +21,14 @@ describe('ResetLinkSendSuccessfullyComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [ResetLinkSendSuccessfullyComponent],
-      providers: [provideRouter([])], //  Using dummy routes
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ResetLinkSendSuccessfullyComponent);
     component = fixture.componentInstance;
 
     router = TestBed.inject(Router);
-    jest.spyOn(router, 'navigate'); //  Spy on real router
+    jest.spyOn(router, 'navigate');
 
     fixture.detectChanges();
   });
@@ -37,40 +37,40 @@ describe('ResetLinkSendSuccessfullyComponent', () => {
     jest.clearAllMocks();
   });
 
+  // Should create the component
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
+  // Should initialize email from window.history.state
   it('should initialize email from window.history.state', () => {
     component.ngOnInit();
     expect(component.email).toBe('test@example.com');
   });
 
+  // Should navigate to ForgotPassword on "Send Another Email" click
   it('should navigate to ForgotPassword on "Send Another Email" click', () => {
     component.onSendAnotherEmailClick();
     expect(router.navigate).toHaveBeenCalledWith([Navigations.ForgetPassword]);
   });
 
+  // Should navigate to Login on "Sign In" click
   it('should navigate to Login on "Sign In" click', () => {
     component.onSignInClick();
     expect(router.navigate).toHaveBeenCalledWith([Navigations.Login]);
   });
 
-  it('should have isLoading initially false', () => {
-    expect(component.isLoading).toBe(false);
-  });
-
+  // Should have defined button configurations
   it('should have defined button configs', () => {
     expect(component.loginButton).toBeDefined();
     expect(component.sendAnotherEmailButton).toBeDefined();
   });
 
+  // Should set email as empty string if email is not provided in state
   it('should set email as empty string if email is not provided in state', () => {
     Object.defineProperty(window, 'history', {
       writable: true,
-      value: {
-        state: {},
-      },
+      value: { state: {} },
     });
 
     const newFixture = TestBed.createComponent(ResetLinkSendSuccessfullyComponent);

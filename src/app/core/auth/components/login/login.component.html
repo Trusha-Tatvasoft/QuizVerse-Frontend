@@ -1,6 +1,6 @@
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   @for (field of loginFields; track field.name) {
-    <div class="form-field pb-3">
+    <div class="form-field">
       <mat-label>{{ field.label }}</mat-label>
 
       <mat-form-field appearance="outline" class="full-width" [floatLabel]="'auto'">
@@ -51,9 +51,5 @@
     <div class="error">{{ errorMessage }}</div>
   }
 
-  <app-filled-button [filledButtonConfig]="buttonConfig" class="signin-button">
-    @if (isLoading) {
-      <span class="loader"></span>
-    }
-  </app-filled-button>
+  <app-filled-button [filledButtonConfig]="signInButton" class="signin-button"> </app-filled-button>
 </form>

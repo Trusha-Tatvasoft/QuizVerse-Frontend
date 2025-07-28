@@ -7,7 +7,6 @@
     </a>
   </div>
 
-  <!-- Auth card displaying confirmation message -->
   <div class="auth-card">
     <!-- Icon representing success -->
     <div class="logo pb-4">
@@ -47,9 +46,6 @@
         [outlineButtonConfig]="sendAnotherEmailButton"
         (buttonClicked)="onSendAnotherEmailClick()"
       >
-        @if (isLoading) {
-          <span class="loader"></span>
-        }
       </app-outline-button>
     </div>
 
@@ -59,9 +55,6 @@
       class="signin-button"
       (buttonClicked)="onSignInClick()"
     >
-      @if (isLoading) {
-        <span class="loader"></span>
-      }
     </app-filled-button>
   </div>
 </div>

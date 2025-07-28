@@ -50,9 +50,6 @@
     <div class="error">{{ errorMessage }}</div>
   }
 
-  <app-filled-button [filledButtonConfig]="buttonConfig" class="signup-button">
-    @if (isLoading) {
-      <span class="loader"></span>
-    }
+  <app-filled-button [filledButtonConfig]="registerButton" class="signup-button">
   </app-filled-button>
 </form>

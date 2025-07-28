@@ -2,6 +2,10 @@ import { Navigations } from '../shared/enums/navigation';
 import { TagInputConfig } from '../shared/interfaces/tag-component.interface';
 import { TagColor, TagType } from './types/tag-component.type';
 
+export const SNACKBAR_DURATION = 5000;
+export const SNACKBAR_HORIZONTAL_POSITION = 'end';
+export const SNACKBAR_VERTICAL_POSITION = 'bottom';
+
 export const AppColors = {
   adminBackgroundColor: 'linear-gradient(to right, #fff4f2, #fffaf6)',
   adminTextColor: 'rgb(153 27 27 / var(--tw-text-opacity, 1))',
@@ -180,4 +184,11 @@ export const NavigationItems = {
       route: `${Navigations.Admin}/${Navigations.Notifications}`,
     },
   ],
+};
+
+export const PlateformName = 'QuizVerse';
+
+export const PlatformMessages = {
+  errorTitle: `Error!`,
+  errorMessage: `Something went wrong.`,
 };

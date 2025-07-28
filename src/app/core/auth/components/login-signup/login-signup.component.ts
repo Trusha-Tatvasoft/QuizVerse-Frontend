@@ -8,11 +8,8 @@ import {
 import { TabComponent } from '../../../../shared/components/tab/tab.component';
 import { RouterLink } from '@angular/router';
 
-/**
- * Login/Signup container component
- * - Displays Google and Facebook login buttons
- * - Displays tab layout for Sign In / Sign Up
- */
+// Login/Signup container component contains tab for login and signup forms
+
 @Component({
   selector: 'app-login-signup',
   imports: [OutlineButtonComponent, TabComponent, RouterLink],
