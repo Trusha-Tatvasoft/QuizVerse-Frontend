@@ -1,5 +1,10 @@
+import { Navigations } from '../shared/enums/navigation';
 import { TagInputConfig } from '../shared/interfaces/tag-component.interface';
 import { TagColor, TagType } from './types/tag-component.type';
+
+export const SNACKBAR_DURATION = 5000;
+export const SNACKBAR_HORIZONTAL_POSITION = 'end';
+export const SNACKBAR_VERTICAL_POSITION = 'bottom';
 
 export const AppColors = {
   adminBackgroundColor: 'linear-gradient(to right, #fff4f2, #fffaf6)',
@@ -84,4 +89,106 @@ export const blue: TagInputConfig = {
   textColor: 'blue' as TagColor,
   isSelected: false,
   hasBorder: true,
+};
+
+export const NavigationItems = {
+  UserRoutes: [
+    {
+      label: 'Dashboard',
+      icon: 'dashboard',
+      route: `${Navigations.User}/${Navigations.Dashboard}`,
+    },
+    {
+      label: 'Browse Quizzes',
+      icon: 'quiz',
+      route: `${Navigations.User}/${Navigations.BrowseQuizzes}`,
+    },
+    {
+      label: 'Battles',
+      icon: 'sports_kabaddi',
+      route: `${Navigations.User}/${Navigations.Battles}`,
+    },
+    {
+      label: 'Tournaments',
+      icon: 'sports_esports',
+      route: `${Navigations.User}/${Navigations.Tournaments}`,
+    },
+    {
+      label: 'Leaderboard',
+      icon: 'emoji_events',
+      route: `${Navigations.User}/${Navigations.Leaderboards}`,
+    },
+    { label: 'Profile', icon: 'person', route: `${Navigations.User}/${Navigations.Profile}` },
+  ],
+
+  AdminRoutes: [
+    {
+      label: 'Dashboard',
+      icon: 'dashboard',
+      route: `${Navigations.Admin}/${Navigations.Dashboard}`,
+    },
+    { label: 'User Management', icon: 'group', route: `${Navigations.Admin}/${Navigations.Users}` },
+    {
+      label: 'Quiz Management',
+      icon: 'quiz',
+      route: `${Navigations.Admin}/${Navigations.Quizzes}`,
+    },
+    {
+      label: 'Quiz Categories',
+      icon: 'category',
+      route: `${Navigations.Admin}/${Navigations.Categories}`,
+    },
+    {
+      label: 'Difficulty Levels',
+      icon: 'signal_cellular_alt',
+      route: `${Navigations.Admin}/${Navigations.Difficulties}`,
+    },
+    {
+      label: 'Battle Management',
+      icon: 'sports_kabaddi',
+      route: `${Navigations.Admin}/${Navigations.BattlesAdmin}`,
+    },
+    {
+      label: 'Question Pool',
+      icon: 'inventory_2',
+      route: `${Navigations.Admin}/${Navigations.QuestionPool}`,
+    },
+    {
+      label: 'Question Difficulty',
+      icon: 'bar_chart',
+      route: `${Navigations.Admin}/${Navigations.QuestionDifficulty}`,
+    },
+    {
+      label: 'Email Templates',
+      icon: 'email',
+      route: `${Navigations.Admin}/${Navigations.EmailTemplates}`,
+    },
+    {
+      label: 'Platform Settings',
+      icon: 'settings',
+      route: `${Navigations.Admin}/${Navigations.Settings}`,
+    },
+    {
+      label: 'AI Configuration',
+      icon: 'smart_toy',
+      route: `${Navigations.Admin}/${Navigations.AiConfig}`,
+    },
+    {
+      label: 'Financial Management',
+      icon: 'attach_money',
+      route: `${Navigations.Admin}/${Navigations.Finance}`,
+    },
+    {
+      label: 'Notification Center',
+      icon: 'notifications',
+      route: `${Navigations.Admin}/${Navigations.Notifications}`,
+    },
+  ],
+};
+
+export const PlateformName = 'QuizVerse';
+
+export const PlatformMessages = {
+  errorTitle: `Error!`,
+  errorMessage: `Something went wrong.`,
 };

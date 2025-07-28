@@ -1,4 +1,13 @@
-import { Component, HostListener, inject, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
@@ -26,6 +35,8 @@ import { SidebarItem } from '../../../shared/interfaces/sidebar-component.interf
 export class SidebarComponent implements OnInit {
   @Input() sidebarItems: SidebarItem[] = [];
   @Input() role: UserType = 'user';
+
+  @Output() sidebarClosed = new EventEmitter<void>();
 
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
@@ -64,6 +75,12 @@ export class SidebarComponent implements OnInit {
   closeSidebar(): void {
     if (this.isMobile) {
       this.sidenav.close();
+    }
+  }
+
+  openSidebar(): void {
+    if (this.isMobile) {
+      this.sidenav.open();
     }
   }
 

@@ -1,13 +1,26 @@
-<header class="navbar top-0 fixed left-0 w-full z-50 bg-white/30 backdrop-blur-lg shadow-sm">
+<header class="navbar top-0 fixed left-0 w-full z-50 bg-white/80 backdrop-blur-sm">
   <!-- Left Section: Logo + Sidebar toggle -->
   <div class="navbar__left">
     @if (isLogin) {
-      <button mat-icon-button class="toggle-btn" aria-label="Toggle Sidebar">
-        <mat-icon fontSet="material-icons-outlined">menu</mat-icon>
+      <button
+        mat-icon-button
+        class="toggle-btn"
+        aria-label="Toggle Sidebar"
+        (click)="toggleSidebar()"
+      >
+        <mat-icon fontSet="material-icons-outlined">
+          {{ menuOpen ? 'close' : 'menu' }}
+        </mat-icon>
       </button>
     }
-    <img src="assets/images/logo-to-be-changed-removebg.png" class="logo-big" alt="Logo" />
-    <img src="assets/images/logo-small-removebg.png" class="logo-small" alt="Logo" />
+    <div class="flex items-center space-x-2 h-12">
+      <div
+        class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-lg logo-small"
+      >
+        {{ plateformName.charAt(0) }}
+      </div>
+      <div class="logo-big">{{ plateformName }}</div>
+    </div>
   </div>
 
   <!-- Right Section: Authenticated User Content -->
@@ -146,8 +159,14 @@
   <!-- Right Section: Guest View -->
   @if (!isLogin) {
     <div class="navbar__guest">
-      <app-text-button [textButtonConfig]="signInButton"></app-text-button>
-      <app-filled-button [filledButtonConfig]="getStartedButton"></app-filled-button>
+      <app-text-button
+        [textButtonConfig]="signInButton"
+        (buttonClicked)="loginRedirect()"
+      ></app-text-button>
+      <app-filled-button
+        [filledButtonConfig]="getStartedButton"
+        (buttonClicked)="browseQuizRedirect()"
+      ></app-filled-button>
     </div>
   }
 </header>
