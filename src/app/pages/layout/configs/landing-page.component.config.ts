@@ -5,9 +5,9 @@ export const LANDING_PAGE_CONTENT: LandingPageConfig = {
   quote:
     'Create, share, and compete in quizzes powered by AI. Challenge friends, join tournaments, and climb the leaderboards in the ultimate quiz experience.',
   stats: [
-    { value: '-', label: 'Active Players' },
-    { value: '-', label: 'Quizzes Created' },
-    { value: '-', label: 'Questions Answered' },
+    { value: '100+', label: 'Active Players' },
+    { value: '50+', label: 'Quizzes Created' },
+    { value: '1000+', label: 'Questions Answered' },
     { value: '500+', label: 'Daily Tournaments' },
   ],
 };

@@ -1,9 +1,9 @@
-export interface LandingStat {
+export interface LandingPageStat {
   value: string;
   label: string;
 }
 
 export interface LandingPageConfig {
   quote: string;
-  stats: LandingStat[];
+  stats: LandingPageStat[];
 }
