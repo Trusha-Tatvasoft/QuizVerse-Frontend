@@ -70,7 +70,7 @@ export class RegisterComponent {
     };
 
     setTimeout(() => {
-      this.loadingService.show();
+      this.loadingService.hide();
       // API call to register can be added here
     }, 1000);
   }
