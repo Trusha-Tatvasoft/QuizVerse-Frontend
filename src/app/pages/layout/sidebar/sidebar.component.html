@@ -3,6 +3,7 @@
     #sidenav
     [mode]="sidenavMode"
     [opened]="isOpen"
+    (closed)="sidebarClosed.emit()"
     class="sidebar"
     [class.sidebar-mobile]="isMobile"
     fixedInViewport="true"

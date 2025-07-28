@@ -185,3 +185,10 @@ export const NavigationItems = {
     },
   ],
 };
+
+export const PlateformName = 'QuizVerse';
+
+export const PlatformMessages = {
+  errorTitle: `Error!`,
+  errorMessage: `Something went wrong.`,
+};
