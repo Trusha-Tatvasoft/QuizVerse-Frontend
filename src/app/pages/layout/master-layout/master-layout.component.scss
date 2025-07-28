@@ -1,0 +1,16 @@
+.layout-container {
+  display: flex;
+  height: calc(100vh - 65px);
+  margin-top: 65px;
+}
+
+app-sidebar {
+  flex-shrink: 0;
+}
+
+.main-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  background-color: var(--global-bg-gradient);
+}
