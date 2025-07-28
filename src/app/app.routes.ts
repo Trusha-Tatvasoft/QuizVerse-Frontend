@@ -12,7 +12,7 @@ export const routes: Routes = [
   {
     path: '',
     component: LandingPageComponent,
-    pathMatch: 'full',
+    title: 'Quizeverse | LandingPage',
   },
   {
     path: Navigations.Login,
