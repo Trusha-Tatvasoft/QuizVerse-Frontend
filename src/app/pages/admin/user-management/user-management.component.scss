@@ -1,5 +1,9 @@
 .user-management {
   padding: 24px 32px;
+
+  @media (min-width: 1024px) {
+    width: calc(100vw - 280px);
+  }
   .page-heading {
     font-size: revert;
     font-weight: revert;

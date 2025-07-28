@@ -3,7 +3,7 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { NavigationItems } from '../../../utils/constants';
 import { UserType } from '../../../utils/types/sidebar-component.type';
-import { RouterModule } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-master-layout',

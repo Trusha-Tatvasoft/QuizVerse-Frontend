@@ -9,7 +9,7 @@ export const USER_HEADER_CONFIG = {
 };
 
 export const SEARCH_INPUT_CONFIG = {
-  placeholder: 'Search users(name/email/role)...',
+  placeholder: 'Search users(name/email)...',
 };
 
 export const ADD_USER_BUTTON_CONFIG: ButtonConfig = {

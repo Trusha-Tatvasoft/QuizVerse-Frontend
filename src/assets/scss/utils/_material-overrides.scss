@@ -221,13 +221,7 @@
 }
 
 .mat-mdc-option {
-  display: flex;
-  align-items: center;
   gap: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #1f2937;
-  padding: 10px 16px;
   border-radius: 4px !important;
   margin: 2px 4px;
 }
@@ -242,7 +236,7 @@
     .mat-mdc-option-multiple
   ) {
   padding-left: 0px !important;
-  background-color: #e7eaec !important;
+  background-color: #d4d4d4 !important;
 }
 
 .mat-mdc-option .mat-pseudo-checkbox {
