@@ -1,0 +1,107 @@
+<app-navbar></app-navbar>
+<section>
+  <div class="landing-wrapper">
+    <div class="landing-content">
+      <div class="badge gradient-text">
+        <mat-icon class="badge-icon">bolt</mat-icon>
+        AI-Powered Quiz Platform
+      </div>
+      <h1 class="title">
+        Master Knowledge Through<br />
+        <span class="highlight">Interactive Quizzes</span>
+      </h1>
+      <p class="subtitle">
+        {{ landingPageContent.quote }}
+      </p>
+      <div class="cta-buttons">
+        <app-filled-button
+          [filledButtonConfig]="startPlayButton"
+          (buttonClicked)="loginRedirect()"
+        ></app-filled-button>
+        <app-outline-button
+          [outlineButtonConfig]="browseQuizButton"
+          (buttonClicked)="browseQuizRedirect()"
+        ></app-outline-button>
+      </div>
+    </div>
+    <div class="landing-stats">
+      @for (stat of landingPageContent.stats; track stat.label) {
+        <div class="stat-box">
+          <div class="stat-value">{{ stat.value }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+        </div>
+      }
+    </div>
+    <div class="feature-section">
+      <div class="feature-header">
+        <h2 class="feature-title">Why Choose QuizVerse?</h2>
+        <p class="feature-subtitle">
+          Experience the future of online learning with our cutting-edge features
+        </p>
+      </div>
+      <div class="feature-grid">
+        @for (feature of quizFeatures; track feature) {
+          <div class="feature-card">
+            <div class="feature-icon">
+              <mat-icon>{{ feature.icon }}</mat-icon>
+            </div>
+            <h3 class="card-title">{{ feature.title }}</h3>
+            <p class="card-description">{{ feature.description }}</p>
+          </div>
+        }
+      </div>
+    </div>
+    <div class="cta-content">
+      <div class="cta-container">
+        <p class="cta-title">Ready to Test Your Knowledge?</p>
+        <p class="cta-subtitle">
+          Join thousands of learners competing in the most engaging quiz platform ever created.
+        </p>
+        <app-outline-button
+          [outlineButtonConfig]="joinPlatFormButton"
+          (buttonClicked)="loginRedirect()"
+        ></app-outline-button>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <div class="brand-logo">
+            <div class="logo-icon">{{ plateformName.charAt(0) }}</div>
+            <span class="brand-name">{{ plateformName }}</span>
+          </div>
+          <p class="brand-description">
+            The ultimate platform for interactive learning and knowledge competition.
+          </p>
+        </div>
+        <div class="footer-column">
+          <h3 class="column-title">Product</h3>
+          <ul class="footer-links">
+            <li><a href="#">Browse Quizzes</a></li>
+            <li><a href="#">Tournaments</a></li>
+            <li><a href="#">Leaderboards</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3 class="column-title">Company</h3>
+          <ul class="footer-links">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3 class="column-title">Support</h3>
+          <ul class="footer-links">
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Community</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="copyright">© 2025 QuizVerse. All rights reserved.</div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -4,6 +4,7 @@ import { NavbarComponent } from './navbar.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { yellow } from '../../../utils/constants';
 import { mockDataNotifications } from './navbar-mock-data';
+import { Navigations } from '../../../shared/enums/navigation';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -31,7 +32,6 @@ describe('NavbarComponent', () => {
   it('should display guest view when not logged in', () => {
     component.isLogin = false;
     fixture.detectChanges();
-
     const guestView = fixture.debugElement.query(By.css('.navbar__guest'));
     expect(guestView).toBeTruthy();
   });
@@ -40,7 +40,6 @@ describe('NavbarComponent', () => {
   it('should display logged-in view when isLogin is true', () => {
     component.isLogin = true;
     fixture.detectChanges();
-
     const userView = fixture.debugElement.query(By.css('.navbar__right'));
     expect(userView).toBeTruthy();
   });
@@ -50,7 +49,6 @@ describe('NavbarComponent', () => {
     component.showNotifications = false;
     component.toggleNotifications();
     expect(component.showNotifications).toBe(true);
-
     component.toggleNotifications();
     expect(component.showNotifications).toBe(false);
   });
@@ -60,7 +58,6 @@ describe('NavbarComponent', () => {
     component.isLogin = true;
     component.notificationCount = 45;
     fixture.detectChanges();
-
     const badge = fixture.debugElement.query(By.css('.badge'));
     expect(badge.nativeElement.textContent.trim()).toBe('45');
   });
@@ -70,7 +67,6 @@ describe('NavbarComponent', () => {
     component.isLogin = true;
     component.notificationCount = 123;
     fixture.detectChanges();
-
     const badge = fixture.debugElement.query(By.css('.badge'));
     expect(badge.nativeElement.textContent.trim()).toBe('99+');
   });
@@ -81,7 +77,6 @@ describe('NavbarComponent', () => {
     component.isLogin = true;
     component.showNotifications = true;
     fixture.detectChanges();
-
     const emptyMsg = fixture.debugElement.query(By.css('.notification-inner p'));
     expect(emptyMsg.nativeElement.textContent).toContain('No new notifications');
   });
@@ -92,7 +87,6 @@ describe('NavbarComponent', () => {
     component.isLogin = true;
     component.showNotifications = true;
     fixture.detectChanges();
-
     const notifItems = fixture.debugElement.queryAll(By.css('.notification-inner > div'));
     expect(notifItems.length).toBeGreaterThan(0);
 
@@ -107,7 +101,6 @@ describe('NavbarComponent', () => {
     component.currentXp = 500;
     component.xpLimit = 1000;
     fixture.detectChanges();
-
     const xpLabel = fixture.debugElement.query(By.css('.xp-label'));
     expect(xpLabel.nativeElement.textContent).toContain('XP: 500');
   });
@@ -117,7 +110,6 @@ describe('NavbarComponent', () => {
     component.isLogin = true;
     component.isAdmin = true;
     fixture.detectChanges();
-
     const xpSection = fixture.debugElement.query(By.css('.xp-section'));
     expect(xpSection).toBeNull();
   });
@@ -128,7 +120,6 @@ describe('NavbarComponent', () => {
     component.profileImageUrl = testUrl;
     component.isLogin = true;
     fixture.detectChanges();
-
     const img = fixture.debugElement.query(By.css('.profile-button img'));
     expect(img.nativeElement.getAttribute('src')).toBe(testUrl);
   });
@@ -137,11 +128,9 @@ describe('NavbarComponent', () => {
   it('should toggle notification panel when text button is clicked', () => {
     component.isLogin = true;
     fixture.detectChanges();
-
     const notifButton = fixture.debugElement.query(By.css('.wrapper-text-button'));
     notifButton.triggerEventHandler('buttonClicked', null);
     fixture.detectChanges();
-
     const notifBox = fixture.debugElement.query(By.css('.notification-box'));
     expect(notifBox).toBeTruthy();
   });
@@ -152,10 +141,8 @@ describe('NavbarComponent', () => {
     component.isLogin = true;
     component.showNotifications = true;
     fixture.detectChanges();
-
     const notifItems = fixture.debugElement.queryAll(By.css('.notification-inner > div'));
     expect(notifItems.length).toBeGreaterThan(0);
-
     const buttons = notifItems[0].queryAll(By.css('app-text-button'));
     expect(buttons.length).toBeGreaterThanOrEqual(2);
   });
@@ -166,8 +153,62 @@ describe('NavbarComponent', () => {
     component.isLogin = true;
     component.showNotifications = true;
     fixture.detectChanges();
-
     const viewDetailsButton = fixture.debugElement.query(By.css('app-outline-button'));
     expect(viewDetailsButton).toBeTruthy();
+  });
+
+  it('should close sidebar if window is resized below 1024px on init', () => {
+    component['previousWidth'] = 1200; // simulate desktop width
+    window.innerWidth = 768; // simulate tablet/mobile width
+    const closeSpy = jest.spyOn(component.closeSidebar, 'emit');
+    component.ngOnInit();
+    expect(component.menuOpen).toBe(false);
+    expect(closeSpy).toHaveBeenCalled();
+  });
+
+  it('should call checkWindowSize and emit closeSidebar on resize', () => {
+    component['previousWidth'] = 1200;
+    const closeSpy = jest.spyOn(component.closeSidebar, 'emit');
+    // Simulate a small screen resize
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 800 });
+    component.onWindowResize();
+    expect(closeSpy).toHaveBeenCalled();
+    expect(component.menuOpen).toBe(false);
+  });
+
+  it('should emit openSidebar when toggling menuOpen from false to true', () => {
+    component.menuOpen = false;
+    const openSpy = jest.spyOn(component.openSidebar, 'emit');
+    component.toggleSidebar();
+    expect(component.menuOpen).toBe(true);
+    expect(openSpy).toHaveBeenCalled();
+  });
+
+  it('should emit closeSidebar when toggling menuOpen from true to false', () => {
+    component.menuOpen = true;
+    const closeSpy = jest.spyOn(component.closeSidebar, 'emit');
+    component.toggleSidebar();
+    expect(component.menuOpen).toBe(false);
+    expect(closeSpy).toHaveBeenCalled();
+  });
+
+  it('should close sidebar and emit event when sidebarClosedByBackdrop is called', () => {
+    component.menuOpen = true;
+    const closeSpy = jest.spyOn(component.closeSidebar, 'emit');
+    component.sidebarClosedByBackdrop();
+    expect(component.menuOpen).toBe(false);
+    expect(closeSpy).toHaveBeenCalled();
+  });
+
+  it('should navigate to BrowseQuizzes on browseQuizRedirect()', () => {
+    const navSpy = jest.spyOn(component['router'], 'navigate');
+    component.browseQuizRedirect();
+    expect(navSpy).toHaveBeenCalledWith([Navigations.BrowseQuizzes]);
+  });
+
+  it('should navigate to Login on loginRedirect()', () => {
+    const navSpy = jest.spyOn(component['router'], 'navigate');
+    component.loginRedirect();
+    expect(navSpy).toHaveBeenCalledWith([Navigations.Login]);
   });
 });
