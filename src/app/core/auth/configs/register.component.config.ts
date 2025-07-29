@@ -25,12 +25,12 @@ export const REGISTER_FORM_FIELDS: DynamicFormField[] = [
     validators: [
       Validators.required,
       Validators.minLength(3),
-      Validators.pattern(/^(?!\s)[\s\S]+$/),
+      Validators.pattern(/^(?!\s)[A-Za-z ]+$/),
     ],
     validationMessages: {
       required: 'Full Name is required.',
       minlength: 'Full Name must be at least 3 characters.',
-      pattern: 'Full Name should not start with a space.',
+      pattern: 'Full Name must only contain letters and cannot start with a space.',
     },
   },
   {

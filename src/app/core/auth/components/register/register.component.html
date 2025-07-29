@@ -24,8 +24,7 @@
           </button>
         }
 
-        <!-- Single mat-error block handling all validations -->
-        @if (registerForm.get(field.name)?.invalid && registerForm.get(field.name)?.touched) {
+        @if (getError(field.name)) {
           <mat-error>
             {{ getError(field.name) }}
           </mat-error>

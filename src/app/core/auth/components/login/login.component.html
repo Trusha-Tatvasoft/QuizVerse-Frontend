@@ -31,7 +31,7 @@
           </button>
         }
 
-        @if (loginForm.get(field.name)?.invalid && loginForm.get(field.name)?.touched) {
+        @if (getError(field.name)) {
           <mat-error>
             {{ getError(field.name) }}
           </mat-error>
