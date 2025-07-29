@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ForgotPasswordComponent } from './forgot-password.component';
 import { Router } from '@angular/router';
 import { provideRouter } from '@angular/router';
-import { LoaderService } from '../../../../shared/service/loader/loader.service';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
 import { Validators } from '@angular/forms';
 
@@ -10,13 +9,12 @@ describe('ForgotPasswordComponent', () => {
   let component: ForgotPasswordComponent;
   let fixture: ComponentFixture<ForgotPasswordComponent>;
   let router: Router;
-  let loaderService: LoaderService;
   let validationErrorService: ValidationErrorService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ForgotPasswordComponent],
-      providers: [provideRouter([]), LoaderService, ValidationErrorService],
+      providers: [provideRouter([]), ValidationErrorService],
     }).compileComponents();
   }));
 
@@ -24,7 +22,6 @@ describe('ForgotPasswordComponent', () => {
     fixture = TestBed.createComponent(ForgotPasswordComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
-    loaderService = TestBed.inject(LoaderService);
     validationErrorService = TestBed.inject(ValidationErrorService);
 
     fixture.detectChanges();
@@ -40,31 +37,10 @@ describe('ForgotPasswordComponent', () => {
 
   it('should mark form as touched and return early if form is invalid', () => {
     const markSpy = jest.spyOn(component.forgotPasswordForm, 'markAllAsTouched');
-    const loaderSpy = jest.spyOn(loaderService, 'show');
 
     component.onSubmit();
 
     expect(markSpy).toHaveBeenCalled();
-    expect(loaderSpy).not.toHaveBeenCalled();
-  });
-
-  it('should call show, hide loader and navigate on valid form submit', () => {
-    const showSpy = jest.spyOn(loaderService, 'show');
-    const hideSpy = jest.spyOn(loaderService, 'hide');
-    const navigateSpy = jest.spyOn(router, 'navigate');
-
-    component.forgotPasswordForm.setValue({ email: 'test@example.com' });
-
-    jest.useFakeTimers();
-    component.onSubmit();
-
-    expect(showSpy).toHaveBeenCalled();
-    jest.advanceTimersByTime(1000);
-    expect(hideSpy).toHaveBeenCalled();
-    expect(navigateSpy).toHaveBeenCalledWith(['reset-password-link-success'], {
-      state: { email: 'test@example.com' },
-    });
-    jest.useRealTimers();
   });
 
   it('should not mark form as touched if valid and submitted', () => {

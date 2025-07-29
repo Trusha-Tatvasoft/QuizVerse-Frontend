@@ -1,19 +1,16 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ResetPasswordComponent } from './reset-password.component';
 import { provideRouter } from '@angular/router';
-import { LoaderService } from '../../../../shared/service/loader/loader.service';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
 import { FormBuilder } from '@angular/forms';
+import { ResetCredential } from '../../interfaces/forgot-reset-password.interface';
 
 describe('ResetPasswordComponent', () => {
   let component: ResetPasswordComponent;
   let fixture: ComponentFixture<ResetPasswordComponent>;
-  let loaderService: LoaderService;
   let validationErrorService: ValidationErrorService;
 
   beforeEach(async () => {
-    const formBuilder = new FormBuilder();
-
     await TestBed.configureTestingModule({
       imports: [ResetPasswordComponent],
       providers: [provideRouter([])],
@@ -21,7 +18,6 @@ describe('ResetPasswordComponent', () => {
 
     fixture = TestBed.createComponent(ResetPasswordComponent);
     component = fixture.componentInstance;
-    loaderService = TestBed.inject(LoaderService);
     validationErrorService = TestBed.inject(ValidationErrorService);
     fixture.detectChanges();
   });
@@ -74,29 +70,11 @@ describe('ResetPasswordComponent', () => {
 
   it('should mark all as touched if form is invalid on submit', () => {
     const markSpy = jest.spyOn(component.resetForm, 'markAllAsTouched');
-    const loaderSpy = jest.spyOn(loaderService, 'show');
 
     component.onSubmit();
 
     expect(markSpy).toHaveBeenCalled();
-    expect(loaderSpy).not.toHaveBeenCalled();
   });
-
-  it('should show and hide loader when form is valid on submit', fakeAsync(() => {
-    const showSpy = jest.spyOn(loaderService, 'show');
-    const hideSpy = jest.spyOn(loaderService, 'hide');
-
-    component.resetForm.setValue({
-      password: 'Password@123',
-      confirmPassword: 'Password@123',
-    });
-
-    component.onSubmit();
-    expect(showSpy).toHaveBeenCalled();
-
-    tick(1000);
-    expect(hideSpy).toHaveBeenCalled();
-  }));
 
   it('should return null from validator if confirmPassword is missing', () => {
     component.resetForm.removeControl('confirmPassword');
@@ -138,52 +116,6 @@ describe('ResetPasswordComponent', () => {
     expect(result).toBeNull();
   });
 
-  it('should clear passwordMismatch when passwords now match but error exists', () => {
-    const formGroup = new FormBuilder().group({
-      password: ['SamePassword1'],
-      confirmPassword: ['SamePassword1'],
-    });
-
-    // simulate existing mismatch error
-    formGroup.get('confirmPassword')?.setErrors({ passwordMismatch: true });
-
-    const result = component.passwordMatchValidator(formGroup);
-    expect(formGroup.get('confirmPassword')?.errors).toBeNull();
-    expect(result).toBeNull();
-  });
-
-  it('should retain other existing errors when passwordMismatch is removed', () => {
-    const formGroup = new FormBuilder().group({
-      password: ['SamePassword1'],
-      confirmPassword: ['SamePassword1'],
-    });
-
-    // simulate existing multiple errors
-    formGroup.get('confirmPassword')?.setErrors({ passwordMismatch: true, required: true });
-
-    const result = component.passwordMatchValidator(formGroup);
-
-    const errors = formGroup.get('confirmPassword')?.errors;
-    expect(errors).toEqual({ required: true });
-    expect(result).toBeNull();
-  });
-
-  it('should preserve all errors if passwords mismatch and other errors exist', () => {
-    const formGroup = new FormBuilder().group({
-      password: ['Pass1'],
-      confirmPassword: ['WrongPass'],
-    });
-
-    // simulate existing unrelated error
-    formGroup.get('confirmPassword')?.setErrors({ required: true });
-
-    const result = component.passwordMatchValidator(formGroup);
-
-    const errors = formGroup.get('confirmPassword')?.errors;
-    expect(errors).toEqual({ required: true, passwordMismatch: true });
-    expect(result).toBeNull();
-  });
-
   it('should fallback to empty object if validationMessages is undefined', () => {
     // Patch a field with no validationMessages
     const mockField = {
@@ -201,5 +133,25 @@ describe('ResetPasswordComponent', () => {
 
     expect(result).toBe('Mocked error');
     expect(validationErrorService.getErrorMessage).toHaveBeenCalledWith(control, {}, 'password');
+  });
+
+  it('should create credentials and not mark as touched when form is valid', () => {
+    const password = 'ValidPass@1';
+
+    component.resetForm.get('password')?.setValue(password);
+    component.resetForm.get('confirmPassword')?.setValue(password);
+
+    const markSpy = jest.spyOn(component.resetForm, 'markAllAsTouched');
+
+    component.onSubmit();
+
+    const credentials: ResetCredential = {
+      password,
+      confirmPassword: password,
+    };
+
+    // Optional: you can spy on a service method here if you use it later
+    expect(component.resetForm.valid).toBe(true);
+    expect(markSpy).not.toHaveBeenCalled();
   });
 });

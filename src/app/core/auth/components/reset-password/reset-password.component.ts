@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
@@ -9,11 +9,10 @@ import {
   RESET_PASSWORD_FOEM_FIELD,
   SEND_RESET_LINK_CONFIG,
 } from '../../configs/reset-password.component.config';
-import { ResetCredential } from '../../interfaces/reset-password.interface';
+import { ResetCredential } from '../../interfaces/forgot-reset-password.interface';
 import { TogglePasswordDirective } from '../toggle-password.directive';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { LoaderService } from '../../../../shared/service/loader/loader.service';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
 
 @Component({
@@ -38,8 +37,6 @@ import { ValidationErrorService } from '../../../../shared/service/validation-er
 })
 export class ResetPasswordComponent {
   private readonly fb = inject(FormBuilder); // For creating form group
-  private readonly router = inject(Router); // For navigation if needed
-  private readonly loaderService = inject(LoaderService); // For managing loading state
   private readonly validationErrorService = inject(ValidationErrorService);
 
   resetFields = RESET_PASSWORD_FOEM_FIELD;
@@ -74,25 +71,18 @@ export class ResetPasswordComponent {
     return this.validationErrorService.getErrorMessage(control!, customMessages, fieldName);
   }
 
-  // Validates if password and confirmPassword match
-  passwordMatchValidator(formGroup: FormGroup): { [key: string]: boolean } | null {
+  passwordMatchValidator(formGroup: FormGroup): null {
     const password = formGroup.get('password')?.value;
-    const confirmPassword = formGroup.get('confirmPassword');
-    if (!confirmPassword) return null;
+    const confirmPasswordControl = formGroup.get('confirmPassword');
 
-    const confirmControl = confirmPassword;
-    const errors = confirmControl.errors || {};
-
-    if (password !== confirmControl.value) {
-      errors['passwordMismatch'] = true;
-      confirmControl.setErrors(errors);
+    if (confirmPasswordControl?.value && password !== confirmPasswordControl?.value) {
+      confirmPasswordControl?.setErrors({ passwordMismatch: true });
     } else {
-      if (errors['passwordMismatch']) {
-        delete errors['passwordMismatch'];
-        confirmControl.setErrors(Object.keys(errors).length ? errors : null);
+      // Clear error if previously set and now matched
+      if (confirmPasswordControl?.hasError('passwordMismatch')) {
+        confirmPasswordControl.setErrors(null);
       }
     }
-
     return null;
   }
 
@@ -103,15 +93,9 @@ export class ResetPasswordComponent {
       return;
     }
 
-    this.loaderService.show();
-
     const credentials: ResetCredential = {
       password: this.resetForm.value.password,
       confirmPassword: this.resetForm.value.confirmPassword,
     };
-
-    setTimeout(() => {
-      this.loaderService.hide();
-    }, 1000);
   }
 }

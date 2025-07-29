@@ -12,7 +12,6 @@ import {
   REGISTER_FORM_FIELDS,
 } from '../../configs/register.component.config';
 import { TogglePasswordDirective } from '../toggle-password.directive';
-import { LoaderService } from '../../../../shared/service/loader/loader.service';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
 
 @Component({
@@ -33,7 +32,6 @@ import { ValidationErrorService } from '../../../../shared/service/validation-er
 })
 export class RegisterComponent {
   private readonly fb = inject(FormBuilder);
-  private readonly loadingService = inject(LoaderService);
   private readonly validationErrorService = inject(ValidationErrorService);
 
   registerFields = REGISTER_FORM_FIELDS;
@@ -69,17 +67,10 @@ export class RegisterComponent {
       return;
     }
 
-    this.loadingService.show();
-
     const credentials: RegisterCredentials = {
       fullName: this.registerForm.value.fullName,
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
     };
-
-    setTimeout(() => {
-      this.loadingService.hide();
-      // API call to register can be added here
-    }, 1000);
   }
 }

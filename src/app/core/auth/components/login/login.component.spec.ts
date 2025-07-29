@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LoginComponent } from './login.component';
-import { LoaderService } from '../../../../shared/service/loader/loader.service';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
 import { provideRouter } from '@angular/router';
 import { Validators } from '@angular/forms';
@@ -8,20 +7,18 @@ import { Validators } from '@angular/forms';
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
-  let loaderService: LoaderService;
   let validationErrorService: ValidationErrorService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [LoginComponent],
-      providers: [LoaderService, ValidationErrorService, provideRouter([])],
+      providers: [ValidationErrorService, provideRouter([])],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
-    loaderService = TestBed.inject(LoaderService);
     validationErrorService = TestBed.inject(ValidationErrorService);
     fixture.detectChanges();
   });
@@ -38,30 +35,10 @@ describe('LoginComponent', () => {
 
   it('should mark all fields as touched and not proceed when form is invalid', () => {
     const markSpy = jest.spyOn(component.loginForm, 'markAllAsTouched');
-    const showLoaderSpy = jest.spyOn(loaderService, 'show');
 
     component.onSubmit();
 
     expect(markSpy).toHaveBeenCalled();
-    expect(showLoaderSpy).not.toHaveBeenCalled();
-  });
-
-  it('should show loader and hide after timeout when form is valid', () => {
-    const showSpy = jest.spyOn(loaderService, 'show');
-    const hideSpy = jest.spyOn(loaderService, 'hide');
-
-    component.loginForm.setValue({
-      email: 'test@example.com',
-      password: 'password123',
-    });
-
-    jest.useFakeTimers();
-    component.onSubmit();
-
-    expect(showSpy).toHaveBeenCalled();
-    jest.advanceTimersByTime(1000);
-    expect(hideSpy).toHaveBeenCalled();
-    jest.useRealTimers();
   });
 
   it('should return error message if control is invalid and touched', () => {
@@ -99,5 +76,18 @@ describe('LoginComponent', () => {
 
   it('should use SIGNIN_BUTTON_CONFIG label', () => {
     expect(component.signInButton.label).toBeDefined();
+  });
+
+  it('should create credentials and not mark as touched when form is valid', () => {
+    // Fill form with valid values
+    component.loginForm.get('email')?.setValue('john@example.com');
+    component.loginForm.get('password')?.setValue('StrongPass123');
+
+    const markSpy = jest.spyOn(component.loginForm, 'markAllAsTouched');
+
+    component.onSubmit();
+
+    expect(component.loginForm.valid).toBe(true);
+    expect(markSpy).not.toHaveBeenCalled();
   });
 });

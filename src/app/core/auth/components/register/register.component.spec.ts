@@ -1,24 +1,22 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegisterComponent } from './register.component';
 import { provideRouter } from '@angular/router';
-import { LoaderService } from '../../../../shared/service/loader/loader.service';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
+import { RegisterCredentials } from '../../interfaces/register.interface';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
-  let loaderService: LoaderService;
   let validationErrorService: ValidationErrorService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RegisterComponent],
-      providers: [provideRouter([]), LoaderService, ValidationErrorService],
+      providers: [provideRouter([]), ValidationErrorService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
-    loaderService = TestBed.inject(LoaderService);
     validationErrorService = TestBed.inject(ValidationErrorService);
     fixture.detectChanges();
   });
@@ -31,38 +29,11 @@ describe('RegisterComponent', () => {
   // Invalid form should mark as touched
   it('should mark form as touched if invalid on submit', () => {
     const markSpy = jest.spyOn(component.registerForm, 'markAllAsTouched');
-    const loaderSpy = jest.spyOn(loaderService, 'show');
 
     component.onSubmit();
 
     expect(markSpy).toHaveBeenCalled();
-    expect(loaderSpy).not.toHaveBeenCalled();
   });
-
-  // Valid form should show and hide loader
-  it('should call loader service on valid submit', fakeAsync(() => {
-    const showSpy = jest.spyOn(loaderService, 'show');
-    const hideSpy = jest.spyOn(loaderService, 'hide');
-
-    component.registerForm.setValue({
-      fullName: 'New User',
-      email: 'new@example.com',
-      username: 'newuser123',
-      password: 'Password@123',
-    });
-
-    component.onSubmit();
-
-    expect(showSpy).toHaveBeenCalled();
-    tick(1000);
-    expect(hideSpy).toHaveBeenCalled();
-    expect(component.registerForm.value).toEqual({
-      fullName: 'New User',
-      email: 'new@example.com',
-      username: 'newuser123',
-      password: 'Password@123',
-    });
-  }));
 
   // Form field existence
   it('should initialize form fields correctly', () => {
@@ -97,5 +68,23 @@ describe('RegisterComponent', () => {
   it('should return null if getError called with unknown field', () => {
     const result = component.getError('nonexistentField');
     expect(result).toBeNull();
+  });
+
+  it('should create credentials and not mark as touched when form is valid', () => {
+    component.registerForm.get('fullName')?.setValue('John Doe');
+    component.registerForm.get('email')?.setValue('john@example.com');
+    component.registerForm.get('password')?.setValue('StrongPass@123');
+    component.registerForm.get('username')?.setValue('johndoe');
+
+    Object.entries(component.registerForm.controls).forEach(([key, control]) => {
+      expect(control.valid).toBe(true);
+    });
+
+    const markSpy = jest.spyOn(component.registerForm, 'markAllAsTouched');
+
+    component.onSubmit();
+
+    expect(component.registerForm.valid).toBe(true);
+    expect(markSpy).not.toHaveBeenCalled();
   });
 });

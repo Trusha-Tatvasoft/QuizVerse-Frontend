@@ -24,11 +24,9 @@
           </button>
         }
 
-        @if (getError(field.name)) {
-          <mat-error>
-            {{ getError(field.name) }}
-          </mat-error>
-        }
+        <mat-error>
+          {{ getError(field.name) }}
+        </mat-error>
       </mat-form-field>
     </div>
   }

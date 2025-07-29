@@ -9,7 +9,6 @@ import { LOGIN_FORM_FIELDS, SIGNIN_BUTTON_CONFIG } from '../../configs/login.com
 import { TogglePasswordDirective } from '../toggle-password.directive';
 import { MatFormField, MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
-import { LoaderService } from '../../../../shared/service/loader/loader.service';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
 
 @Component({
@@ -30,7 +29,6 @@ import { ValidationErrorService } from '../../../../shared/service/validation-er
 })
 export class LoginComponent {
   private readonly fb = inject(FormBuilder);
-  private readonly loaderService = inject(LoaderService);
   private readonly validationErrorService = inject(ValidationErrorService);
 
   loginFields = LOGIN_FORM_FIELDS; // Field config for login form
@@ -66,17 +64,10 @@ export class LoginComponent {
       return;
     }
 
-    this.loaderService.show();
-
     // Extract and simulate handling login credentials
     const credentials: LoginCredentials = {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
     };
-
-    // Simulate async processing delay
-    setTimeout(() => {
-      this.loaderService.hide();
-    }, 1000);
   }
 }

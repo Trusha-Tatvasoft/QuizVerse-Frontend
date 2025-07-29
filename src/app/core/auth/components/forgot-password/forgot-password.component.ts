@@ -6,15 +6,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
-import { ForgotCredential } from '../../interfaces/forgot.interface';
 import {
   FORGOT_PASSWORD_FORM_FIELDS,
   SEND_RESET_LINK_CONFIG,
 } from '../../configs/forgot-password.component.config';
 import { Navigations } from '../../../../shared/enums/navigation';
 import { MatFormField, MatInputModule } from '@angular/material/input';
-import { LoaderService } from '../../../../shared/service/loader/loader.service';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
+import { ForgotCredential } from '../../interfaces/forgot-reset-password.interface';
 
 @Component({
   selector: 'app-forgot-password',
@@ -39,7 +38,6 @@ import { ValidationErrorService } from '../../../../shared/service/validation-er
 export class ForgotPasswordComponent {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
-  private readonly loaderService = inject(LoaderService);
   private readonly validationErrorService = inject(ValidationErrorService);
 
   forgotPasswordFields = FORGOT_PASSWORD_FORM_FIELDS;
@@ -73,16 +71,9 @@ export class ForgotPasswordComponent {
       return;
     }
 
-    this.loaderService.show(); // Show global loader
-
     const credentials: ForgotCredential = {
       email: this.forgotPasswordForm.value.email,
     };
-
-    // Simulate backend delay then hide loader
-    setTimeout(() => {
-      this.loaderService.hide();
-    }, 1000);
 
     // Navigate to success page with email in router state
     this.router.navigate([Navigations.ResetPasswordLinkSuccess], {
