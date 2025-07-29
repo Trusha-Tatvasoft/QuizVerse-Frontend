@@ -14,6 +14,7 @@ import { TogglePasswordDirective } from '../toggle-password.directive';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { LoaderService } from '../../../../shared/service/loader/loader.service';
+import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -39,12 +40,11 @@ export class ResetPasswordComponent {
   private readonly fb = inject(FormBuilder); // For creating form group
   private readonly router = inject(Router); // For navigation if needed
   private readonly loaderService = inject(LoaderService); // For managing loading state
+  private readonly validationErrorService = inject(ValidationErrorService);
 
   resetFields = RESET_PASSWORD_FOEM_FIELD;
   resetForm: FormGroup;
   sendResetLinkButton = SEND_RESET_LINK_CONFIG;
-
-  errorMessage = '';
 
   // Initializes form controls and attaches validator
   constructor() {
@@ -69,6 +69,14 @@ export class ResetPasswordComponent {
   // Tracks form fields by name to optimize rendering
   trackByField(index: number, field: any): string {
     return field.name;
+  }
+
+  getError(fieldName: string): string | null {
+    const control = this.resetForm.get(fieldName);
+    const field = this.resetFields.find((f) => f.name === fieldName);
+    const customMessages = field?.validationMessages || {};
+
+    return this.validationErrorService.getErrorMessage(control!, customMessages, fieldName);
   }
 
   // Validates if password and confirmPassword match
@@ -101,7 +109,6 @@ export class ResetPasswordComponent {
     }
 
     this.loaderService.show();
-    this.errorMessage = '';
 
     const credentials: ResetCredential = {
       password: this.resetForm.value.password,
@@ -110,7 +117,6 @@ export class ResetPasswordComponent {
 
     setTimeout(() => {
       this.loaderService.hide();
-      // API integration goes here
     }, 1000);
   }
 }

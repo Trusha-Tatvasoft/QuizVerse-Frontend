@@ -14,7 +14,7 @@ export const FORGOT_PASSWORD_FORM_FIELDS: DynamicFormField[] = [
     name: 'email',
     label: 'Email Address',
     type: 'email',
-    placeholder: 'john@example.com',
+    placeholder: 'Enter your email',
     icon: 'mail',
     validators: [
       Validators.required,

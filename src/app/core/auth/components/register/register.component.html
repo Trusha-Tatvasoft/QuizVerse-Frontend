@@ -1,5 +1,5 @@
 <!-- Register Form -->
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+<form class="custom-form-field" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   @for (field of registerFields; track field.name) {
     <div class="d-flex flex-column justify-content-start form-field pb-1">
       <mat-label>{{ field.label }}</mat-label>
@@ -27,27 +27,11 @@
         <!-- Single mat-error block handling all validations -->
         @if (registerForm.get(field.name)?.invalid && registerForm.get(field.name)?.touched) {
           <mat-error>
-            @if (registerForm.get(field.name)?.hasError('required')) {
-              {{ field.validationMessages?.['required'] || field.label + ' is required.' }}
-            } @else if (registerForm.get(field.name)?.hasError('minlength')) {
-              {{ field.validationMessages?.['minlength'] || field.label + ' is too short.' }}
-            } @else if (registerForm.get(field.name)?.hasError('pattern')) {
-              @if (
-                field.name === 'password' && registerForm.get('password')?.value?.includes(' ')
-              ) {
-                Password must not contain spaces.
-              } @else {
-                {{ field.validationMessages?.['pattern'] || 'Invalid format.' }}
-              }
-            }
+            {{ getError(field.name) }}
           </mat-error>
         }
       </mat-form-field>
     </div>
-  }
-
-  @if (errorMessage) {
-    <div class="error">{{ errorMessage }}</div>
   }
 
   <app-filled-button [filledButtonConfig]="registerButton" class="signup-button">

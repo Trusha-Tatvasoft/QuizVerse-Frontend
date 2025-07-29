@@ -34,6 +34,23 @@ export const REGISTER_FORM_FIELDS: DynamicFormField[] = [
     },
   },
   {
+    name: 'username',
+    label: 'Username',
+    type: 'text',
+    placeholder: 'john_12',
+    icon: 'person',
+    validators: [
+      Validators.required,
+      Validators.pattern(/^[a-zA-Z][a-zA-Z0-9._]*$/),
+      Validators.minLength(5),
+    ],
+    validationMessages: {
+      required: 'Username is required.',
+      minlength: 'Username must be at least 5 characters.',
+      pattern: 'Username must start with a letter.',
+    },
+  },
+  {
     name: 'email',
     label: 'Email',
     type: 'email',

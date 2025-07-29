@@ -1,4 +1,4 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+<form class="custom-form-field" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   @for (field of loginFields; track field.name) {
     <div class="form-field">
       <mat-label>{{ field.label }}</mat-label>
@@ -33,11 +33,7 @@
 
         @if (loginForm.get(field.name)?.invalid && loginForm.get(field.name)?.touched) {
           <mat-error>
-            @if (loginForm.get(field.name)?.hasError('required')) {
-              {{ field.validationMessages?.['required'] || field.label + ' is required.' }}
-            } @else if (loginForm.get(field.name)?.hasError('pattern')) {
-              {{ field.validationMessages?.['pattern'] || 'Invalid format.' }}
-            }
+            {{ getError(field.name) }}
           </mat-error>
         }
       </mat-form-field>
@@ -46,10 +42,6 @@
   <div class="flex justify-end items-center mb-3">
     <a class="forgot-password" routerLink="/forgot-password">Forgot password?</a>
   </div>
-
-  @if (errorMessage) {
-    <div class="error">{{ errorMessage }}</div>
-  }
 
   <app-filled-button [filledButtonConfig]="signInButton" class="signin-button"> </app-filled-button>
 </form>

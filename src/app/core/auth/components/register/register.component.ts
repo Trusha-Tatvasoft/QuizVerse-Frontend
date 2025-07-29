@@ -13,6 +13,7 @@ import {
 } from '../../configs/register.component.config';
 import { TogglePasswordDirective } from '../toggle-password.directive';
 import { LoaderService } from '../../../../shared/service/loader/loader.service';
+import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
 
 @Component({
   selector: 'app-register',
@@ -33,10 +34,10 @@ import { LoaderService } from '../../../../shared/service/loader/loader.service'
 export class RegisterComponent {
   private readonly fb = inject(FormBuilder);
   private readonly loadingService = inject(LoaderService);
+  private readonly validationErrorService = inject(ValidationErrorService);
 
   registerFields = REGISTER_FORM_FIELDS;
   registerButton = REGISTER_BUTTON_CONFIG;
-  errorMessage = '';
 
   registerForm: FormGroup;
 
@@ -53,6 +54,14 @@ export class RegisterComponent {
     );
   }
 
+  getError(fieldName: string): string | null {
+    const control = this.registerForm.get(fieldName);
+    const field = this.registerFields.find((f) => f.name === fieldName);
+    const customMessages = field?.validationMessages || {};
+
+    return this.validationErrorService.getErrorMessage(control!, customMessages, fieldName);
+  }
+
   // Handle form submission with validation and simulated delay
   onSubmit(): void {
     if (this.registerForm.invalid) {
@@ -61,7 +70,6 @@ export class RegisterComponent {
     }
 
     this.loadingService.show();
-    this.errorMessage = '';
 
     const credentials: RegisterCredentials = {
       fullName: this.registerForm.value.fullName,

@@ -14,6 +14,7 @@ import {
 import { Navigations } from '../../../../shared/enums/navigation';
 import { MatFormField, MatInputModule } from '@angular/material/input';
 import { LoaderService } from '../../../../shared/service/loader/loader.service';
+import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -39,11 +40,11 @@ export class ForgotPasswordComponent {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly loaderService = inject(LoaderService);
+  private readonly validationErrorService = inject(ValidationErrorService);
 
   forgotPasswordFields = FORGOT_PASSWORD_FORM_FIELDS;
   forgotPasswordForm: FormGroup;
   sendResetLinkButton = SEND_RESET_LINK_CONFIG;
-  errorMessage = '';
 
   constructor() {
     // Build reactive form using config field definitions and validators
@@ -58,14 +59,21 @@ export class ForgotPasswordComponent {
     );
   }
 
+  getError(fieldName: string): string | null {
+    const control = this.forgotPasswordForm.get(fieldName);
+    const field = this.forgotPasswordFields.find((f) => f.name === fieldName);
+    const customMessages = field?.validationMessages || {};
+
+    return this.validationErrorService.getErrorMessage(control!, customMessages);
+  }
+
   onSubmit(): void {
     if (this.forgotPasswordForm.invalid) {
-      this.forgotPasswordForm.markAllAsTouched(); // Show validation errors
+      this.forgotPasswordForm.markAllAsTouched();
       return;
     }
 
     this.loaderService.show(); // Show global loader
-    this.errorMessage = '';
 
     const credentials: ForgotCredential = {
       email: this.forgotPasswordForm.value.email,

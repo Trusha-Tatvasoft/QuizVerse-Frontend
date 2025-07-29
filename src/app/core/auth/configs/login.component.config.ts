@@ -21,7 +21,7 @@ export const LOGIN_FORM_FIELDS: DynamicFormField[] = [
     name: 'email',
     label: 'Email',
     type: 'email',
-    placeholder: 'john@example.com',
+    placeholder: 'Enter your email',
     icon: 'mail',
     validators: [
       Validators.required,
@@ -36,7 +36,7 @@ export const LOGIN_FORM_FIELDS: DynamicFormField[] = [
     name: 'password',
     label: 'Password',
     type: 'password',
-    placeholder: '••••••',
+    placeholder: 'Enter your password',
     icon: 'lock',
     validators: [Validators.required],
     validationMessages: {

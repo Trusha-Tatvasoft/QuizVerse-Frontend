@@ -10,6 +10,7 @@ import { TogglePasswordDirective } from '../toggle-password.directive';
 import { MatFormField, MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { LoaderService } from '../../../../shared/service/loader/loader.service';
+import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
 
 @Component({
   selector: 'app-login',
@@ -30,10 +31,10 @@ import { LoaderService } from '../../../../shared/service/loader/loader.service'
 export class LoginComponent {
   private readonly fb = inject(FormBuilder);
   private readonly loaderService = inject(LoaderService);
+  private readonly validationErrorService = inject(ValidationErrorService);
 
   loginFields = LOGIN_FORM_FIELDS; // Field config for login form
   signInButton = SIGNIN_BUTTON_CONFIG; // Button config for sign-in
-  errorMessage = '';
 
   loginForm: FormGroup;
 
@@ -50,6 +51,14 @@ export class LoginComponent {
     );
   }
 
+  getError(fieldName: string): string | null {
+    const control = this.loginForm.get(fieldName);
+    const field = this.loginFields.find((f) => f.name === fieldName);
+    const customMessages = field?.validationMessages || {};
+
+    return this.validationErrorService.getErrorMessage(control!, customMessages);
+  }
+
   onSubmit(): void {
     // If form is invalid, mark all fields as touched to trigger validation messages
     if (this.loginForm.invalid) {
@@ -58,7 +67,6 @@ export class LoginComponent {
     }
 
     this.loaderService.show();
-    this.errorMessage = '';
 
     // Extract and simulate handling login credentials
     const credentials: LoginCredentials = {
