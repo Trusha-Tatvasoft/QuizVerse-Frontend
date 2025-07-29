@@ -20,7 +20,7 @@ export const REGISTER_FORM_FIELDS: DynamicFormField[] = [
     name: 'fullName',
     label: 'Full Name',
     type: 'text',
-    placeholder: 'John Doe',
+    placeholder: 'Full name',
     icon: 'account_circle',
     validators: [
       Validators.required,
@@ -37,7 +37,7 @@ export const REGISTER_FORM_FIELDS: DynamicFormField[] = [
     name: 'username',
     label: 'Username',
     type: 'text',
-    placeholder: 'john_12',
+    placeholder: 'Username',
     icon: 'person',
     validators: [
       Validators.required,
@@ -54,7 +54,7 @@ export const REGISTER_FORM_FIELDS: DynamicFormField[] = [
     name: 'email',
     label: 'Email',
     type: 'email',
-    placeholder: 'john@example.com',
+    placeholder: 'Email address',
     icon: 'mail',
     validators: [
       Validators.required,
@@ -69,7 +69,7 @@ export const REGISTER_FORM_FIELDS: DynamicFormField[] = [
     name: 'password',
     label: 'Password',
     type: 'password',
-    placeholder: '••••••',
+    placeholder: 'Password',
     icon: 'lock',
     validators: [
       Validators.required,

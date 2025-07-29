@@ -59,11 +59,6 @@ export class ResetPasswordComponent {
     this.resetForm = this.fb.group(formControls, {
       validators: this.passwordMatchValidator,
     });
-
-    // Updates confirmPassword validation if password changes
-    this.resetForm.get('password')?.valueChanges.subscribe(() => {
-      this.resetForm.get('confirmPassword')?.updateValueAndValidity();
-    });
   }
 
   // Tracks form fields by name to optimize rendering

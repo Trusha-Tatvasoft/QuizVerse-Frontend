@@ -98,15 +98,6 @@ describe('ResetPasswordComponent', () => {
     expect(hideSpy).toHaveBeenCalled();
   }));
 
-  it('should update confirmPassword validity when password changes', () => {
-    const confirmControl = component.resetForm.get('confirmPassword');
-    const updateSpy = jest.spyOn(confirmControl!, 'updateValueAndValidity');
-
-    component.resetForm.get('password')?.setValue('NewPass123');
-    fixture.detectChanges();
-    expect(updateSpy).toHaveBeenCalled();
-  });
-
   it('should return null from validator if confirmPassword is missing', () => {
     component.resetForm.removeControl('confirmPassword');
 
