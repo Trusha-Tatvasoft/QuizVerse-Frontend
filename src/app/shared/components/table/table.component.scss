@@ -342,3 +342,14 @@
     color: #fff;
   }
 }
+
+::ng-deep {
+  .mat-mdc-option.mdc-list-item {
+    padding-left: 16px !important;
+  }
+  .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(
+      .mat-mdc-option-multiple
+    ) {
+    padding-left: 16px !important;
+  }
+}

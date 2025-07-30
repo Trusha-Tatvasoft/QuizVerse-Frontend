@@ -46,9 +46,4 @@ export const routes: Routes = [
     component: MasterLayoutComponent,
     children: [{ path: 'user-management', component: UserManagementComponent }],
   },
-  {
-    path: 'Admin',
-    component: MasterLayoutComponent,
-    children: [{ path: 'user-management', component: UserManagementComponent }],
-  },
 ];

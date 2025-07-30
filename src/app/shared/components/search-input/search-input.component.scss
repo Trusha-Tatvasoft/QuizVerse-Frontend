@@ -10,8 +10,10 @@
     padding: 0 12px;
     background-color: #fff;
 
-    &:hover {
+    &:hover,
+    &:focus-within {
       border: 2px solid var(--global-primary-color);
+      padding: 0 11px;
     }
 
     .search-icon {
@@ -38,10 +40,12 @@
   &.search-black .search-input-box:hover,
   &.search-black .search-input-box:focus-within {
     border: 2px solid #000000;
+    padding: 0 11px;
   }
 
   &.search-purple .search-input-box:hover,
   &.search-purple .search-input-box:focus-within {
     border: 2px solid var(--global-primary-color);
+    padding: 0 11px;
   }
 }
