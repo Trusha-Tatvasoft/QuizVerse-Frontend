@@ -1,4 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+$custom-typography: mat.m2-define-typography-config(
+  $font-family: 'Segoe UI, sans-serif',
+  $body-1: mat.m2-define-typography-level(16px, 20px, 400),
+  $caption: mat.m2-define-typography-level(13px, 16px, 400),
+);
+
 @import 'tailwindcss';
 @import '../src/assets/scss/utils/variable';
 @import '../src/assets/scss/utils/material-overrides';

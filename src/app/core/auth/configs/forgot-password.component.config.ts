@@ -2,24 +2,17 @@ import { Validators } from '@angular/forms';
 import { ButtonConfig } from '../../../shared/interfaces/button-config.interface';
 import { DynamicFormField } from '../../../shared/interfaces/dynamic-form-field.interface';
 
-/**
- * Sign In button configuration
- */
-export const SIGNIN_BUTTON_CONFIG: ButtonConfig = {
-  label: 'Sign In',
+export const SEND_RESET_LINK_CONFIG: ButtonConfig = {
+  label: 'Send Reset Link',
   fontWeight: 500,
   variant: 'gradient',
   type: 'submit',
 };
 
-/**
- * Login form field configurations
- */
-
-export const LOGIN_FORM_FIELDS: DynamicFormField[] = [
+export const FORGOT_PASSWORD_FORM_FIELDS: DynamicFormField[] = [
   {
     name: 'email',
-    label: 'Email',
+    label: 'Email Address',
     type: 'email',
     placeholder: 'Enter your email',
     icon: 'mail',
@@ -30,17 +23,6 @@ export const LOGIN_FORM_FIELDS: DynamicFormField[] = [
     validationMessages: {
       required: 'Email is required.',
       pattern: 'Please enter a valid email address.',
-    },
-  },
-  {
-    name: 'password',
-    label: 'Password',
-    type: 'password',
-    placeholder: 'Enter your password',
-    icon: 'lock',
-    validators: [Validators.required],
-    validationMessages: {
-      required: 'Password is required.',
     },
   },
 ];
