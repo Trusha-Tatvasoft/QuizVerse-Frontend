@@ -8,4 +8,6 @@ export interface DynamicFormField {
   placeholder: string;
   validators: any[];
   options?: { value: any; label: string }[];
+  icon?: string;
+  validationMessages?: { [key: string]: string };
 }
