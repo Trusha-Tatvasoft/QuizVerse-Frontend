@@ -2,7 +2,7 @@ import { Validators } from '@angular/forms';
 import { DynamicFormField } from '../../../shared/interfaces/dynamic-form-field.interface';
 import { ButtonConfig } from '../../../shared/interfaces/button-config.interface';
 
-export const RESET_PASSWORD_FOEM_FIELD: DynamicFormField[] = [
+export const RESET_PASSWORD_FORM_FIELD: DynamicFormField[] = [
   {
     name: 'password',
     icon: 'lock',

@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import {
-  RESET_PASSWORD_FOEM_FIELD,
+  RESET_PASSWORD_FORM_FIELD,
   SEND_RESET_LINK_CONFIG,
 } from '../../configs/reset-password.component.config';
 import { ResetCredential } from '../../interfaces/forgot-reset-password.interface';
@@ -39,7 +39,7 @@ export class ResetPasswordComponent {
   private readonly fb = inject(FormBuilder); // For creating form group
   private readonly validationErrorService = inject(ValidationErrorService);
 
-  resetFields = RESET_PASSWORD_FOEM_FIELD;
+  resetFields = RESET_PASSWORD_FORM_FIELD;
   resetForm: FormGroup;
   sendResetLinkButton = SEND_RESET_LINK_CONFIG;
 
