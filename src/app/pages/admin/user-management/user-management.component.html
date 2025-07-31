@@ -16,19 +16,31 @@
     ></app-search-input>
 
     <div class="user-management-filters">
+      <!-- Role Filter -->
       <mat-form-field appearance="outline" class="filter-select">
-        <mat-select [(value)]="selectedRole" placeholder="All Roles">
-          <mat-option value="">All Roles</mat-option>
-          <mat-option value="admin">Admin</mat-option>
-          <mat-option value="player">Player</mat-option>
+        <mat-select
+          [(value)]="selectedRole"
+          (selectionChange)="onFilterChange()"
+          placeholder="All Roles"
+        >
+          <mat-option [value]="''">All Roles</mat-option>
+          @for (role of userRoles; track role.value) {
+            <mat-option [value]="role.value">{{ role.label }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
+
+      <!-- Status Filter -->
       <mat-form-field appearance="outline" class="filter-select">
-        <mat-select [(value)]="selectedStatus" placeholder="All Status">
-          <mat-option value="">All Status</mat-option>
-          <mat-option value="active">Active</mat-option>
-          <mat-option value="suspended">Suspended</mat-option>
-          <mat-option value="inactive">Inactive</mat-option>
+        <mat-select
+          [(value)]="selectedStatus"
+          (selectionChange)="onFilterChange()"
+          placeholder="All Status"
+        >
+          <mat-option [value]="''">All Status</mat-option>
+          @for (status of userStatus; track status.value) {
+            <mat-option [value]="status.value">{{ status.label }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>
@@ -45,5 +57,10 @@
     </div>
   </div>
 
-  <app-user-table></app-user-table>
+  <app-user-table
+    [dataSource]="dataSource()"
+    [totalItems]="totalItems()"
+    (pageChange)="onPageChange($event)"
+    (sortChange)="onSortChange($event)"
+  ></app-user-table>
 </main>

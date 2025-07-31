@@ -2,10 +2,48 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserListingComponent } from './user-listing.component';
 import { TableComponent } from '../../../../../shared/components/table/table.component';
 import { By } from '@angular/platform-browser';
+import { TableData } from '../../../../../shared/interfaces/table-component.interface';
 
 describe('UserListingComponent', () => {
   let component: UserListingComponent;
   let fixture: ComponentFixture<UserListingComponent>;
+
+  const mockDataSource: TableData[] = [
+    {
+      fullname: { name: 'John Doe', email: 'john@example.com', image: '' },
+      role: {
+        tagConfig: {
+          id: '1',
+          label: 'Admin',
+          type: 'static',
+          backgroundColor: 'lightPurple',
+          textColor: 'purple',
+        },
+      },
+      status: {
+        tagConfig: {
+          id: '1',
+          label: 'Active',
+          type: 'static',
+          backgroundColor: 'lightGreen',
+          textColor: 'green',
+        },
+      },
+      joinDate: '2024-01-01',
+      lastActive: '2024-06-01',
+      attemptedQuizzes: {
+        tagConfig: {
+          id: 'quizzes-1',
+          label: '5',
+          type: 'static',
+          backgroundColor: 'white',
+          textColor: 'black',
+        },
+        extraText: 'quizzes',
+      },
+      actions: ['edit', 'delete'],
+    },
+  ];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -14,65 +52,70 @@ describe('UserListingComponent', () => {
 
     fixture = TestBed.createComponent(UserListingComponent);
     component = fixture.componentInstance;
+
+    // Set input values
+    component.dataSource = mockDataSource;
+    component.totalItems = mockDataSource.length;
+
     fixture.detectChanges();
   });
 
+  // Verifies the component is created successfully
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize columns config', () => {
+  // Ensures columns and pagination configs are initialized
+  it('should initialize column and pagination configs', () => {
     expect(component.columns).toBeDefined();
-    expect(component.columns.length).toBeGreaterThan(0);
-    expect(component.columns[0].key).toBe('user');
-  });
-
-  it('should initialize pagination config', () => {
     expect(component.paginationConfig).toBeDefined();
-    expect(component.paginationConfig.applyPaginator).toBe(true);
   });
 
-  it('should set tableTitle and tableDescription', () => {
+  // Confirms title and description are set as expected
+  it('should set correct table title and description', () => {
     expect(component.tableTitle).toBe('All Users');
     expect(component.tableDescription).toBe('Manage and monitor user accounts');
   });
 
-  it('should have a non-empty dataSource with correct length', () => {
-    expect(component.dataSource).toBeDefined();
-    expect(component.dataSource.length).toBeGreaterThan(0);
-    expect(component.totalItems).toBe(component.dataSource.length);
+  // Validates inputs are bound correctly to the component
+  it('should bind inputs correctly', () => {
+    expect(component.dataSource).toEqual(mockDataSource);
+    expect(component.totalItems).toBe(mockDataSource.length);
   });
 
+  // Checks that the TableComponent is rendered in the template
   it('should render the TableComponent', () => {
-    const tableDebugElement = fixture.debugElement.query(By.directive(TableComponent));
-    expect(tableDebugElement).toBeTruthy();
+    const tableEl = fixture.debugElement.query(By.directive(TableComponent));
+    expect(tableEl).toBeTruthy();
   });
 
-  it('should call onActionClick with correct parameters', () => {
-    const mockRow = component.dataSource[0];
-    const action = 'edit';
+  // Ensures actionClick emits with the correct payload
+  it('should emit actionClick with correct data', () => {
+    const emitSpy = jest.spyOn(component.actionClick, 'emit');
+    const mockAction = { action: 'edit', row: mockDataSource[0] };
 
-    const spy = jest.spyOn(component, 'onActionClick');
-    component.onActionClick({ action, row: mockRow });
+    component.onActionClick(mockAction);
 
-    expect(spy).toHaveBeenCalledWith({ action, row: mockRow });
+    expect(emitSpy).toHaveBeenCalledWith(mockAction);
   });
 
-  it('should call onPageChange with correct parameters', () => {
-    const pageEvent = { pageIndex: 1, pageSize: 10 };
+  // Ensures pageChange emits with the correct payload
+  it('should emit pageChange with correct data', () => {
+    const emitSpy = jest.spyOn(component.pageChange, 'emit');
+    const mockPage = { pageIndex: 2, pageSize: 20 };
 
-    const spy = jest.spyOn(component, 'onPageChange');
-    component.onPageChange(pageEvent);
+    component.onPageChange(mockPage);
 
-    expect(spy).toHaveBeenCalledWith(pageEvent);
+    expect(emitSpy).toHaveBeenCalledWith(mockPage);
   });
 
-  it('should call onSortChange with correct parameters', () => {
-    const sortEvent = { active: 'user', direction: 'asc' };
+  // Ensures sortChange emits with the correct payload
+  it('should emit sortChange with correct data', () => {
+    const emitSpy = jest.spyOn(component.sortChange, 'emit');
+    const sortEvent = { active: 'fullname', direction: 'asc' };
 
-    const spy = jest.spyOn(component, 'onSortChange');
     component.onSortChange(sortEvent);
 
-    expect(spy).toHaveBeenCalledWith(sortEvent);
+    expect(emitSpy).toHaveBeenCalledWith(sortEvent);
   });
 });

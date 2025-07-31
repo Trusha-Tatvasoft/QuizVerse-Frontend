@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TableComponent } from '../../../../../shared/components/table/table.component';
 import {
   USER_TABLE_COLUMNS_CONFIG,
-  USER_TABLE_DATA,
   USER_TABLE_PAGINATION_CONFIG,
 } from '../../configs/user-table.config';
 import { TableData } from '../../../../../shared/interfaces/table-component.interface';
@@ -14,17 +13,30 @@ import { TableData } from '../../../../../shared/interfaces/table-component.inte
   styleUrls: ['./user-listing.component.scss'],
 })
 export class UserListingComponent {
-  columns = USER_TABLE_COLUMNS_CONFIG;
-  paginationConfig = USER_TABLE_PAGINATION_CONFIG;
-  dataSource = USER_TABLE_DATA;
-  tableTitle = 'All Users';
+  @Input() dataSource: TableData[] = []; // Input data to be displayed in the table
+  @Input() totalItems = 0; // Total number of items for pagination
+
+  @Output() pageChange = new EventEmitter<{ pageIndex: number; pageSize: number }>(); // Emits event when pagination changes
+  @Output() sortChange = new EventEmitter<{ active: string; direction: string }>(); // Emits event when sorting changes
+  @Output() actionClick = new EventEmitter<{ action: string; row: TableData }>(); // Emits event when any action button (edit/delete/block etc.) is clicked
+
+  columns = USER_TABLE_COLUMNS_CONFIG; // Table column configuration
+  paginationConfig = USER_TABLE_PAGINATION_CONFIG; // Pagination settings
+  tableTitle = 'All Users'; // Table metadata
   tableDescription = 'Manage and monitor user accounts';
 
-  totalItems = this.dataSource.length;
+  // Emits the clicked action and row to the parent
+  onActionClick(event: { action: string; row: TableData }) {
+    this.actionClick.emit(event);
+  }
 
-  onActionClick(event: { action: string; row: TableData }) {}
+  // Emits page change event to the parent
+  onPageChange(event: { pageIndex: number; pageSize: number }) {
+    this.pageChange.emit(event);
+  }
 
-  onPageChange(event: { pageIndex: number; pageSize: number }) {}
-
-  onSortChange(event: { active: string; direction: string }) {}
+  // Emits sort change event to the parent
+  onSortChange(event: { active: string; direction: string }) {
+    this.sortChange.emit(event);
+  }
 }
