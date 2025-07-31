@@ -84,8 +84,8 @@ describe('UserManagementService', () => {
     // Verifies successful API call with expected response data
     service.getUsers(mockRequest).subscribe((res) => {
       expect(res).toEqual(mockResponseData);
-      expect(res.totalRecords).toBe(2);
-      expect(res.records[0].email).toBe('john@example.com');
+      expect(res.data.totalRecords).toBe(2);
+      expect(res.data.records[0].email).toBe('john@example.com');
     });
 
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.UserTableData}`);
@@ -108,8 +108,8 @@ describe('UserManagementService', () => {
     };
 
     service.getUsers(mockRequest).subscribe((res) => {
-      expect(res.totalRecords).toBe(0);
-      expect(res.records.length).toBe(0);
+      expect(res.data.totalRecords).toBe(0);
+      expect(res.data.records.length).toBe(0);
     });
 
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.UserTableData}`);

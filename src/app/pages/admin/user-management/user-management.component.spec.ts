@@ -7,22 +7,24 @@ import { MatSelectModule } from '@angular/material/select';
 import { OutlineButtonComponent } from '../../../shared/components/outline-button/outline-button.component';
 import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
 import { By } from '@angular/platform-browser';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { UserManagementService } from '../../../services/admin/user-management/user-management.service';
-import { LoaderService } from '../../../shared/service/loader/loader.service';
 import { UserListData } from './interfaces/user-list-data.interface';
-import { TableData } from '../../../shared/interfaces/table-component.interface';
 import { userToUserListingTableData } from './components/user-table/user-listing-data.mapper';
 import { UserListingComponent } from './components/user-table/user-listing.component';
+import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
+import { PaginatedDataResponse } from '../../../shared/interfaces/paginated-data-response.interface';
+import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
+import { DEBOUNCE_TIME } from '../../../utils/constants';
 
 jest.mock('../../../services/admin/user-management/user-management.service');
-jest.mock('../../../shared/service/loader/loader.service');
+jest.mock('../../../shared/service/snackbar/snackbar.service');
 
 describe('UserManagementComponent', () => {
   let component: UserManagementComponent;
   let fixture: ComponentFixture<UserManagementComponent>;
   let userService: jest.Mocked<UserManagementService>;
-  let loaderService: jest.Mocked<LoaderService>;
+  let snackbarService: jest.Mocked<SnackbarService>;
 
   const mockUserResponse = {
     totalRecords: 1,
@@ -41,6 +43,13 @@ describe('UserManagementComponent', () => {
     ],
   };
 
+  const mockApiResponse: ApiResponse<PaginatedDataResponse<UserListData>> = {
+    result: true,
+    statusCode: 200,
+    message: 'Success',
+    data: mockUserResponse,
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -57,14 +66,13 @@ describe('UserManagementComponent', () => {
         {
           provide: UserManagementService,
           useValue: {
-            getUsers: jest.fn().mockReturnValue(of(mockUserResponse)),
+            getUsers: jest.fn().mockReturnValue(of(mockApiResponse)),
           },
         },
         {
-          provide: LoaderService,
+          provide: SnackbarService,
           useValue: {
-            show: jest.fn(),
-            hide: jest.fn(),
+            showError: jest.fn(),
           },
         },
       ],
@@ -73,7 +81,7 @@ describe('UserManagementComponent', () => {
     fixture = TestBed.createComponent(UserManagementComponent);
     component = fixture.componentInstance;
     userService = TestBed.inject(UserManagementService) as jest.Mocked<UserManagementService>;
-    loaderService = TestBed.inject(LoaderService) as jest.Mocked<LoaderService>;
+    snackbarService = TestBed.inject(SnackbarService) as jest.Mocked<SnackbarService>;
     fixture.detectChanges();
   });
 
@@ -85,18 +93,16 @@ describe('UserManagementComponent', () => {
   it('should call fetchUsers on init', () => {
     // checks API is called on component init
     expect(userService.getUsers).toHaveBeenCalled();
-    expect(loaderService.show).toHaveBeenCalled();
-    expect(loaderService.hide).toHaveBeenCalled();
     expect(component.dataSource().length).toBeGreaterThan(0);
     expect(component.totalItems()).toBe(1);
   });
 
   it('should debounce and fetch users on search input change', fakeAsync(() => {
-    // verifies debounce and fetch on search input
     const spy = jest.spyOn(component as any, 'fetchUsers');
-    component.searchControl.setValue('Jane');
-    tick(300);
-    expect(spy).toHaveBeenCalled();
+    component.onSearchInputChange('Jane');
+    expect(spy).not.toHaveBeenCalled();
+    tick(DEBOUNCE_TIME);
+    expect(spy).toHaveBeenCalledTimes(1);
   }));
 
   it('should update pagination and fetch users on page change', () => {
@@ -141,14 +147,51 @@ describe('UserManagementComponent', () => {
     expect(component.userStatus.length).toBeGreaterThan(0);
   });
 
-  it('should hide loader if API call fails', () => {
-    // ensures loader is hidden even if API throws an error
-    userService.getUsers.mockImplementationOnce(() => {
-      throw new Error('API error');
-    });
+  it('should show snackbar error when API returns result: false', () => {
+    // verifies snackbar error is shown when API returns unsuccessful result
+    const failedApiResponse = {
+      result: false,
+      statusCode: 400,
+      message: 'Bad Request',
+      data: {
+        totalRecords: 0,
+        records: [],
+      },
+    };
 
-    expect(() => component.fetchUsers()).toThrow('API error');
-    expect(loaderService.hide).toHaveBeenCalled();
+    userService.getUsers.mockReturnValueOnce(of(failedApiResponse));
+    const snackbarSpy = jest.spyOn(snackbarService, 'showError');
+
+    component.fetchUsers();
+
+    expect(snackbarSpy).toHaveBeenCalledWith('Bad Request', 'Error 400');
+    expect(component.dataSource()).toEqual([]);
+    expect(component.totalItems()).toBe(0);
+  });
+
+  it('should show snackbar error when API throws an error', () => {
+    // verifies snackbar error is shown when API call fails with an error
+    const mockError = {
+      error: { message: 'Internal Server Error' },
+      status: 500,
+    };
+
+    userService.getUsers.mockReturnValueOnce(throwError(() => mockError));
+    const snackbarSpy = jest.spyOn(snackbarService, 'showError');
+
+    component.fetchUsers();
+
+    expect(snackbarSpy).toHaveBeenCalledWith('Internal Server Error', 'Error 500');
+  });
+
+  it('should handle unknown error structure and show fallback snackbar error', () => {
+    // verifies snackbar error is shown for unexpected error structures
+    userService.getUsers.mockReturnValueOnce(throwError(() => ({})));
+    const snackbarSpy = jest.spyOn(snackbarService, 'showError');
+
+    component.fetchUsers();
+
+    expect(snackbarSpy).toHaveBeenCalledWith('Unexpected error occurred', 'Error Unknown');
   });
 
   it('should map UserListData to correct TableData', () => {
@@ -180,7 +223,9 @@ describe('UserManagementComponent', () => {
 
   it('should handle empty API response without errors', () => {
     // verifies UI handles empty API response gracefully
-    userService.getUsers.mockReturnValueOnce(of({ totalRecords: 0, records: [] }));
+    userService.getUsers.mockReturnValueOnce(
+      of({ ...mockApiResponse, data: { totalRecords: 0, records: [] } }),
+    );
     component.fetchUsers();
     expect(component.dataSource()).toEqual([]);
     expect(component.totalItems()).toBe(0);

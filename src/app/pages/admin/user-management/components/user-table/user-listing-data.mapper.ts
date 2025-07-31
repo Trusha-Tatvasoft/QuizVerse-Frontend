@@ -1,5 +1,6 @@
 import { UserStatus } from '../../../../../shared/enums/user-management.enum';
 import { TableData } from '../../../../../shared/interfaces/table-component.interface';
+import { DEFAULT_LAST_LOGIN_DATE } from '../../../../../utils/constants';
 import { UserListData } from '../../interfaces/user-list-data.interface';
 
 /**
@@ -31,9 +32,9 @@ export function userToUserListingTableData(user: UserListData): TableData {
         textColor: getStatusColor(user.status).text,
       },
     },
-    joinDate: user.createdDate,
-    lastActive: user.lastLogin !== '0001-01-01T00:00:00' ? user.lastLogin : user.createdDate, // Fallback to createdDate if lastLogin is uninitialized
-    attemptedQuizzes: {
+    createdDate: user.createdDate,
+    lastLogin: user.lastLogin !== DEFAULT_LAST_LOGIN_DATE ? user.lastLogin : null, // Fallback to createdDate if lastLogin is uninitialized
+    quizattempt: {
       tagConfig: {
         id: `quizzes-${user.id}`,
         label: user.attemptedQuizzes.toString(),

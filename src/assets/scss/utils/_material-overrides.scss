@@ -382,7 +382,7 @@
 //#endregion
 
 .custom-paginator .mat-mdc-form-field.mat-mdc-form-field-type-mat-select {
-  width: initial !important;
+  width: 80px !important;
   margin: initial !important;
   .mat-mdc-select-value {
     padding: initial !important;
@@ -391,5 +391,11 @@
     width: initial !important;
     height: initial !important;
     padding: initial !important;
+  }
+}
+
+.custom-paginator .mat-mdc-paginator-range-actions .mat-mdc-paginator-range-label {
+  @media (max-width: 400px) {
+    margin: 0 10px 0 10px !important;
   }
 }

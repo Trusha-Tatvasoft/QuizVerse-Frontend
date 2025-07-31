@@ -1,7 +1,7 @@
 .user-management {
   padding: 24px 32px;
   background: var(--global-bg-gradient);
-  height: 100vh;
+  min-height: 100%;
   @media (min-width: 1024px) {
     width: calc(100vw - 283px);
   }

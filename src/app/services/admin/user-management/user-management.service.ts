@@ -14,17 +14,18 @@ import { EndPoints } from '../../../shared/enums/end-point.enum';
 export class UserManagementService {
   // Inject HttpClient using Angular's inject function
   private readonly http = inject(HttpClient);
-
   /**
    * Fetch paginated, filtered, sorted user list from backend.
    * @param request - PaginationRequest with search, filters, and sort.
    * @returns Observable of paginated user data.
    */
-  getUsers(request: PaginationRequest): Observable<PaginatedDataResponse<UserListData>> {
+  getUsers(
+    request: PaginationRequest,
+  ): Observable<ApiResponse<PaginatedDataResponse<UserListData>>> {
     return this.http
       .post<
         ApiResponse<PaginatedDataResponse<UserListData>>
       >(`${environment.baseUrl}/${EndPoints.UserTableData}`, request)
-      .pipe(map((res) => res.data)); // Extract `data` from wrapped ApiResponse
+      .pipe(map((res) => res)); // Extract `data` from wrapped ApiResponse
   }
 }

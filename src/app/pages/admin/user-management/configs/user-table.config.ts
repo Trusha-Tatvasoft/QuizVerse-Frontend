@@ -1,4 +1,4 @@
-import { ColumnDef, TableData } from '../../../../shared/interfaces/table-component.interface';
+import { ColumnDef } from '../../../../shared/interfaces/table-component.interface';
 import { TablePaginationConfig } from '../../../../utils/constants';
 
 // Configuration for user table columns
@@ -22,7 +22,7 @@ export const USER_TABLE_COLUMNS_CONFIG: ColumnDef[] = [
     isSortable: true,
   },
   {
-    key: 'joinDate',
+    key: 'createdDate',
     label: 'Join Date',
     type: 'text',
     pipe: 'date', // Format date using Angular DatePipe
@@ -30,7 +30,7 @@ export const USER_TABLE_COLUMNS_CONFIG: ColumnDef[] = [
     isSortable: true,
   },
   {
-    key: 'lastActive',
+    key: 'lastLogin',
     label: 'Last Active',
     type: 'text',
     pipe: 'date',
@@ -38,7 +38,7 @@ export const USER_TABLE_COLUMNS_CONFIG: ColumnDef[] = [
     isSortable: true,
   },
   {
-    key: 'attemptedQuizzes',
+    key: 'quizattempt',
     label: 'Attempted Quizzes',
     type: 'tag',
     isSortable: true,

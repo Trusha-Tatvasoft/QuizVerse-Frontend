@@ -29,9 +29,9 @@ describe('UserListingComponent', () => {
           textColor: 'green',
         },
       },
-      joinDate: '2024-01-01',
-      lastActive: '2024-06-01',
-      attemptedQuizzes: {
+      createdDate: '2024-01-01',
+      lastLogin: '2024-06-01',
+      quizattempt: {
         tagConfig: {
           id: 'quizzes-1',
           label: '5',

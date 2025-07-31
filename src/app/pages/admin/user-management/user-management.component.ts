@@ -12,18 +12,17 @@ import {
   USER_HEADER_CONFIG,
 } from './configs/user-management.config';
 import { FormControl } from '@angular/forms';
-import { debounceTime, finalize } from 'rxjs';
+import { debounceTime, Subject } from 'rxjs';
 import { UserRoles, UserStatus } from '../../../shared/enums/user-management.enum';
 import { PaginationRequest } from '../../../shared/interfaces/pagination-request.interface';
 import { TableData } from '../../../shared/interfaces/table-component.interface';
 import { UserManagementService } from '../../../services/admin/user-management/user-management.service';
-import { LoaderService } from '../../../shared/service/loader/loader.service';
 import { userToUserListingTableData } from './components/user-table/user-listing-data.mapper';
-import { TablePaginationConfig } from '../../../utils/constants';
+import { DEBOUNCE_TIME, TablePaginationConfig } from '../../../utils/constants';
+import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-user-management',
-  standalone: true,
   imports: [
     UserListingComponent,
     PageHeaderComponent,
@@ -36,6 +35,10 @@ import { TablePaginationConfig } from '../../../utils/constants';
   styleUrl: './user-management.component.scss',
 })
 export class UserManagementComponent {
+  // Inject services
+  userService = inject(UserManagementService);
+  snackbar = inject(SnackbarService);
+
   // Header and button configs
   userConfig = USER_HEADER_CONFIG;
   searchInputConfig = SEARCH_INPUT_CONFIG;
@@ -70,20 +73,24 @@ export class UserManagementComponent {
   pagination = signal({ pageNumber: 1, pageSize: TablePaginationConfig.PageSize });
   sort = signal({ sortColumn: '', sortDescending: false });
 
-  // Inject services
-  // constructor(private userService: UserManagementService) {}
-  userService = inject(UserManagementService);
-  loader = inject(LoaderService);
+  // Private reactive helpers
+  private readonly searchSubject = new Subject<string>();
 
   ngOnInit(): void {
-    // Debounced search input listener
-    this.searchControl.valueChanges.pipe(debounceTime(300)).subscribe(() => {
+    // Initial data fetch
+    this.fetchUsers();
+  }
+
+  getFilteredUser(): void {
+    this.searchSubject.pipe(debounceTime(DEBOUNCE_TIME)).subscribe(() => {
       this.pagination.set({ ...this.pagination(), pageNumber: 1 });
       this.fetchUsers();
     });
+  }
 
-    // Initial data fetch
-    this.fetchUsers();
+  onSearchInputChange(value: string): void {
+    this.getFilteredUser();
+    this.searchSubject.next(value);
   }
 
   // Triggered on paginator change
@@ -109,8 +116,6 @@ export class UserManagementComponent {
 
   // Fetch user list with filters, sort, pagination
   fetchUsers() {
-    this.loader.show();
-
     const request: PaginationRequest = {
       ...this.pagination(),
       searchTerm: this.searchControl.value ?? '',
@@ -123,12 +128,22 @@ export class UserManagementComponent {
     if (this.selectedRole) request.filters!['role'] = Number(this.selectedRole);
     if (this.selectedStatus) request.filters!['status'] = Number(this.selectedStatus);
 
-    this.userService
-      .getUsers(request)
-      .pipe(finalize(() => this.loader.hide()))
-      .subscribe((res) => {
-        this.dataSource.set(res.records.map(userToUserListingTableData));
-        this.totalItems.set(res.totalRecords);
-      });
+    this.userService.getUsers(request).subscribe({
+      next: (res) => {
+        if (!res.result || res.statusCode !== 200) {
+          this.snackbar.showError(res.message || 'Something went wrong', `Error ${res.statusCode}`);
+          this.dataSource.set([]);
+          this.totalItems.set(0);
+          return;
+        }
+        this.dataSource.set(res.data.records.map(userToUserListingTableData));
+        this.totalItems.set(res.data.totalRecords);
+      },
+      error: (error) => {
+        const message = error?.error?.message || error?.message || 'Unexpected error occurred';
+        const status = error?.status || 'Unknown';
+        this.snackbar.showError(message, `Error ${status}`);
+      },
+    });
   }
 }

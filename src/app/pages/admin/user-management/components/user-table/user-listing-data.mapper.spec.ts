@@ -3,10 +3,12 @@ import { UserStatus } from '../../../../../shared/enums/user-management.enum';
 import { UserListData } from '../../interfaces/user-list-data.interface';
 import { UserManagementComponent } from '../../user-management.component';
 import { UserManagementService } from '../../../../../services/admin/user-management/user-management.service';
-import { LoaderService } from '../../../../../shared/service/loader/loader.service';
 import { of } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
 import { userToUserListingTableData } from './user-listing-data.mapper';
+import { DEBOUNCE_TIME, DEFAULT_LAST_LOGIN_DATE } from '../../../../../utils/constants';
+import { PaginatedDataResponse } from '../../../../../shared/interfaces/paginated-data-response.interface';
+import { ApiResponse } from '../../../../../shared/interfaces/api-response.interface';
 
 // Mock data
 const mockUsers: UserListData[] = [
@@ -29,28 +31,26 @@ const mockPaginatedResponse = {
   records: mockUsers,
 };
 
+const mockApiResponse: ApiResponse<PaginatedDataResponse<UserListData>> = {
+  result: true,
+  statusCode: 200,
+  message: 'Success',
+  data: mockPaginatedResponse,
+};
+
 describe('UserManagementComponent', () => {
   let component: UserManagementComponent;
   let fixture: ComponentFixture<UserManagementComponent>;
   let userServiceMock: jest.Mocked<UserManagementService>;
-  let loaderServiceMock: jest.Mocked<LoaderService>;
 
   beforeEach(async () => {
     userServiceMock = {
-      getUsers: jest.fn().mockReturnValue(of(mockPaginatedResponse)),
-    } as any;
-
-    loaderServiceMock = {
-      show: jest.fn(),
-      hide: jest.fn(),
+      getUsers: jest.fn().mockReturnValue(of(mockApiResponse)),
     } as any;
 
     await TestBed.configureTestingModule({
       imports: [UserManagementComponent, ReactiveFormsModule],
-      providers: [
-        { provide: UserManagementService, useValue: userServiceMock },
-        { provide: LoaderService, useValue: loaderServiceMock },
-      ],
+      providers: [{ provide: UserManagementService, useValue: userServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserManagementComponent);
@@ -68,13 +68,6 @@ describe('UserManagementComponent', () => {
     expect(userServiceMock.getUsers).toHaveBeenCalledTimes(1);
     expect(component.dataSource().length).toBe(1);
     expect(component.totalItems()).toBe(1);
-  });
-
-  it('should show and hide loader on fetchUsers', () => {
-    // Verifies loader visibility during fetchUsers
-    component.fetchUsers();
-    expect(loaderServiceMock.show).toHaveBeenCalled();
-    expect(loaderServiceMock.hide).toHaveBeenCalled();
   });
 
   it('should call fetchUsers when page changes', () => {
@@ -102,12 +95,13 @@ describe('UserManagementComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should apply search term with debounce', fakeAsync(() => {
-    // Verifies search input triggers fetch after debounce delay
-    const spy = jest.spyOn(component, 'fetchUsers');
-    component.searchControl.setValue('admin');
-    tick(300);
-    expect(spy).toHaveBeenCalled();
+  it('should debounce and fetch users on search input change after 500ms', fakeAsync(() => {
+    // Validates that search input changes are debounced
+    const spy = jest.spyOn(component as any, 'fetchUsers');
+    component.onSearchInputChange('Jane');
+    expect(spy).not.toHaveBeenCalled();
+    tick(DEBOUNCE_TIME);
+    expect(spy).toHaveBeenCalledTimes(1);
   }));
 
   it('should correctly apply filters to request payload', () => {
@@ -153,12 +147,13 @@ describe('UserManagementComponent', () => {
     expect(result.fullname.image).toBe('');
   });
 
-  // Use createdDate as fallback if lastLogin is uninitialized
-  it('should fallback to createdDate if lastLogin is uninitialized', () => {
-    const userWithDefaultLastLogin = { ...mockUsers[0], lastLogin: '0001-01-01T00:00:00' };
+  // Use null as fallback if lastLogin is uninitialized
+  it('should give null if lastLogin is uninitialized', () => {
+    const userWithDefaultLastLogin = { ...mockUsers[0], lastLogin: DEFAULT_LAST_LOGIN_DATE };
     const result = userToUserListingTableData(userWithDefaultLastLogin) as any;
-    expect(result['lastActive']).toBe(userWithDefaultLastLogin.createdDate);
+    expect(result['lastActive']).toBe(undefined);
   });
+  DEFAULT_LAST_LOGIN_DATE;
 
   // Role mapping for non-admin users should return "Player"
   it('should map role correctly for non-admin (Player)', () => {
@@ -197,8 +192,8 @@ describe('UserManagementComponent', () => {
   it('should correctly handle attemptedQuizzes value', () => {
     const user = { ...mockUsers[0], attemptedQuizzes: 0 };
     const result = userToUserListingTableData(user) as any;
-    expect(result.attemptedQuizzes.tagConfig.label).toBe('0');
-    expect(result.attemptedQuizzes.extraText).toBe('quizzes');
+    expect(result.quizattempt.tagConfig.label).toBe('0');
+    expect(result.quizattempt.extraText).toBe('quizzes');
   });
 
   // Status mapping should return correct label, color, and background

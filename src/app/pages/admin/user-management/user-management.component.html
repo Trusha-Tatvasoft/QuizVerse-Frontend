@@ -12,6 +12,7 @@
     <app-search-input
       [placeholder]="searchInputConfig.placeholder"
       [control]="searchControl"
+      (search)="onSearchInputChange($event)"
       class="user-management-search-bar"
     ></app-search-input>
 
