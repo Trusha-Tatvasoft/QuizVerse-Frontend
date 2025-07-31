@@ -46,7 +46,7 @@ export const AppColors = {
 };
 
 export const TablePaginationConfig = {
-  PageSize: 5,
+  PageSize: 1,
   TotalItems: 0,
   PageSizeOptions: [5, 10, 20],
 };

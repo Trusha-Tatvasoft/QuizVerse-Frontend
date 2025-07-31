@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { UserTableComponent } from './components/user-table/user-table.component';
+import { UserListingComponent } from './components/user-table/user-listing.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import {
   ADD_USER_BUTTON_CONFIG,
@@ -16,7 +16,7 @@ import { FilledButtonComponent } from '../../../shared/components/filled-button/
 @Component({
   selector: 'app-user-management',
   imports: [
-    UserTableComponent,
+    UserListingComponent,
     PageHeaderComponent,
     SearchInputComponent,
     MatSelectModule,

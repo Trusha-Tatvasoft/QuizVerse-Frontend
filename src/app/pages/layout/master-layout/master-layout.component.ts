@@ -1,9 +1,9 @@
-import { Component, HostListener, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { NavigationItems } from '../../../utils/constants';
 import { UserType } from '../../../utils/types/sidebar-component.type';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-master-layout',

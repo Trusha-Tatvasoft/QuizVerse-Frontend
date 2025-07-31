@@ -42,8 +42,14 @@ export const routes: Routes = [
     title: 'Quizeverse | Reset Password',
   },
   {
-    path: 'Admin',
+    path: Navigations.Admin,
     component: MasterLayoutComponent,
-    children: [{ path: 'user-management', component: UserManagementComponent }],
+    children: [
+      {
+        path: Navigations.Users,
+        component: UserManagementComponent,
+        title: 'Quizeverse | User Management',
+      },
+    ],
   },
 ];

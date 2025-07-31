@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UserTableComponent } from './user-table.component';
+import { UserListingComponent } from './user-listing.component';
 import { TableComponent } from '../../../../../shared/components/table/table.component';
 import { By } from '@angular/platform-browser';
 
-describe('UserTableComponent', () => {
-  let component: UserTableComponent;
-  let fixture: ComponentFixture<UserTableComponent>;
+describe('UserListingComponent', () => {
+  let component: UserListingComponent;
+  let fixture: ComponentFixture<UserListingComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UserTableComponent],
+      imports: [UserListingComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(UserTableComponent);
+    fixture = TestBed.createComponent(UserListingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

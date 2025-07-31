@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserManagementComponent } from './user-management.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { UserTableComponent } from './components/user-table/user-table.component';
+import { UserListingComponent } from './components/user-table/user-listing.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { SearchInputComponent } from '../../../shared/components/search-input/search-input.component';
 import { MatSelectModule } from '@angular/material/select';
@@ -18,7 +18,7 @@ describe('UserManagementComponent', () => {
       imports: [
         UserManagementComponent,
         ReactiveFormsModule, // for FormControl testing
-        UserTableComponent,
+        UserListingComponent,
         PageHeaderComponent,
         SearchInputComponent,
         MatSelectModule,
@@ -58,7 +58,7 @@ describe('UserManagementComponent', () => {
   });
 
   it('should render user table component', () => {
-    const userTableEl = fixture.debugElement.query(By.directive(UserTableComponent));
+    const userTableEl = fixture.debugElement.query(By.directive(UserListingComponent));
     expect(userTableEl).toBeTruthy();
   });
 

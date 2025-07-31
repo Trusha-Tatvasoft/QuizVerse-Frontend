@@ -1,4 +1,3 @@
-import { FormControl } from '@angular/forms';
 import { ButtonConfig } from '../../../../shared/interfaces/button-config.interface';
 
 export const USER_HEADER_CONFIG = {

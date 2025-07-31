@@ -9,12 +9,11 @@ import { TableData } from '../../../../../shared/interfaces/table-component.inte
 
 @Component({
   selector: 'app-user-table',
-  standalone: true,
   imports: [TableComponent],
-  templateUrl: './user-table.component.html',
-  styleUrls: ['./user-table.component.scss'],
+  templateUrl: './user-listing.component.html',
+  styleUrls: ['./user-listing.component.scss'],
 })
-export class UserTableComponent {
+export class UserListingComponent {
   columns = USER_TABLE_COLUMNS_CONFIG;
   paginationConfig = USER_TABLE_PAGINATION_CONFIG;
   dataSource = USER_TABLE_DATA;
