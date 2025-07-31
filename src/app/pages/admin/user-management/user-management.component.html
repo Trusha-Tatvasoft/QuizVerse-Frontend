@@ -1,0 +1,49 @@
+<main class="user-management">
+  <h2 class="page-heading">User Management</h2>
+  <div class="user-page-header">
+    <app-page-header
+      [icon]="userConfig.icon"
+      [title]="userConfig.title"
+      [subtitle]="userConfig.subtitle"
+      [theme]="userConfig.theme"
+    ></app-page-header>
+  </div>
+  <div class="user-management-toolbar">
+    <app-search-input
+      [placeholder]="searchInputConfig.placeholder"
+      [control]="searchControl"
+      class="user-management-search-bar"
+    ></app-search-input>
+
+    <div class="user-management-filters">
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-select [(value)]="selectedRole" placeholder="All Roles">
+          <mat-option value="">All Roles</mat-option>
+          <mat-option value="admin">Admin</mat-option>
+          <mat-option value="player">Player</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-select [(value)]="selectedStatus" placeholder="All Status">
+          <mat-option value="">All Status</mat-option>
+          <mat-option value="active">Active</mat-option>
+          <mat-option value="suspended">Suspended</mat-option>
+          <mat-option value="inactive">Inactive</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="user-management-btns">
+      <app-outline-button
+        [outlineButtonConfig]="addUserButtonConfig"
+        class="add-user"
+      ></app-outline-button>
+      <app-filled-button
+        [filledButtonConfig]="exportButtonConfig"
+        class="export-users"
+      ></app-filled-button>
+    </div>
+  </div>
+
+  <app-user-table></app-user-table>
+</main>

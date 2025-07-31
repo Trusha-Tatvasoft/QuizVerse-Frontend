@@ -1,0 +1,83 @@
+.user-management {
+  padding: 24px 32px;
+  background: var(--global-bg-gradient);
+  height: 100%;
+  @media (min-width: 1024px) {
+    width: calc(100vw - 283px);
+  }
+  .page-heading {
+    font-size: revert;
+    font-weight: revert;
+    margin-bottom: 24px;
+  }
+
+  .user-page-header {
+    margin-bottom: 24px;
+  }
+
+  .user-management-toolbar {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 1rem;
+    align-items: center;
+    border-radius: 8px;
+    border: 0.5px solid #e2e8f0;
+    background-color: white;
+    margin-bottom: 24px;
+    padding: 24px;
+
+    .user-management-search-bar {
+      width: 100%;
+    }
+
+    .user-management-btns {
+      display: flex;
+      flex-direction: row;
+      gap: 16px;
+    }
+
+    .user-management-filters {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    @media (max-width: 1316px) {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 16px;
+
+      .user-management-filters {
+        justify-content: flex-start;
+
+        @media (max-width: 430px) {
+          flex-direction: column;
+          align-items: stretch;
+        }
+      }
+
+      .user-management-search-bar,
+      .user-management-btns {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        width: 100%;
+      }
+      @media (max-width: 768px) {
+        padding: 16px;
+        @media (max-width: 480px) {
+          padding: 12px;
+          .user-management-btns {
+            flex-direction: column;
+            align-items: stretch;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1036px) {
+    padding: 24px 16px;
+  }
+}

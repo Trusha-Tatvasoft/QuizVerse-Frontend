@@ -1,0 +1,15 @@
+<app-data-table
+  [columns]="columns"
+  [dataSource]="dataSource"
+  [totalItems]="totalItems"
+  [pageSize]="paginationConfig.pageSize"
+  [pageSizeOptions]="paginationConfig.pageSizeOptions"
+  [applyPaginator]="paginationConfig.applyPaginator"
+  [tableTitle]="tableTitle"
+  [tableDescription]="tableDescription"
+  (actionClick)="onActionClick($event)"
+  (pageChange)="onPageChange($event)"
+  (sortChange)="onSortChange($event)"
+  class="user-table"
+>
+</app-data-table>
