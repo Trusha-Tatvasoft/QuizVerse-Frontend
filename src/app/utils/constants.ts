@@ -191,8 +191,14 @@ export const PlateformName = 'QuizVerse';
 export const PlatformMessages = {
   errorTitle: `Error!`,
   errorMessage: `Something went wrong.`,
+  noDataAvailable: `No data available to export.`,
+  errorExport: `Export failed.`,
 };
 
 export const DEFAULT_LAST_LOGIN_DATE = '0001-01-01T00:00:00';
 
 export const DEBOUNCE_TIME = 500;
+
+export const USER_EXPORT_FILE_PREFIX = 'User';
+
+export const EXPORT_FILE_NAME_TEMPLATE = '{prefix}_export_{date}.xlsx';
