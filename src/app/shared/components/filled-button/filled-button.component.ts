@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ButtonConfig } from '../../interfaces/button-config.interface';
-import { DEFAULT_BUTTON_CONFIG } from '../../interfaces/default-button-config.constants';
+import { defaultButtonConfig } from '../../interfaces/default-button-config.constants';
 
 @Component({
   selector: 'app-filled-button',
@@ -15,11 +15,11 @@ import { DEFAULT_BUTTON_CONFIG } from '../../interfaces/default-button-config.co
 export class FilledButtonComponent {
   @Input() filledButtonConfig: ButtonConfig = {};
   @Output() buttonClicked = new EventEmitter<Event>();
-  config: Required<ButtonConfig> = { ...DEFAULT_BUTTON_CONFIG };
+  config: Required<ButtonConfig> = { ...defaultButtonConfig };
   private readonly elRef = inject(ElementRef);
 
   ngOnInit() {
-    this.config = { ...DEFAULT_BUTTON_CONFIG, ...this.filledButtonConfig };
+    this.config = { ...defaultButtonConfig, ...this.filledButtonConfig };
     this.elRef.nativeElement.style.setProperty('--font-weight', this.validFontWeight);
   }
 

@@ -6,11 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { RegisterCredentials } from '../../interfaces/register.interface';
-import {
-  REGISTER_BUTTON_CONFIG,
-  REGISTER_FORM_FIELDS,
-} from '../../configs/register.component.config';
+import { registerButtonConfig, registerFormFields } from '../../configs/register.component.config';
 import { TogglePasswordDirective } from '../toggle-password.directive';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
 
@@ -34,8 +30,8 @@ export class RegisterComponent {
   private readonly fb = inject(FormBuilder);
   private readonly validationErrorService = inject(ValidationErrorService);
 
-  registerFields = REGISTER_FORM_FIELDS;
-  registerButton = REGISTER_BUTTON_CONFIG;
+  registerFields = registerFormFields;
+  registerButton = registerButtonConfig;
 
   registerForm: FormGroup;
 
@@ -47,7 +43,7 @@ export class RegisterComponent {
           acc[field.name] = ['', field.validators];
           return acc;
         },
-        {} as Record<string, any>,
+        {} as Record<string, unknown>,
       ),
     );
   }
@@ -67,10 +63,10 @@ export class RegisterComponent {
       return;
     }
 
-    const credentials: RegisterCredentials = {
-      fullName: this.registerForm.value.fullName,
-      email: this.registerForm.value.email,
-      password: this.registerForm.value.password,
-    };
+    // const credentials: RegisterCredentials = {
+    //   fullName: this.registerForm.value.fullName,
+    //   email: this.registerForm.value.email,
+    //   password: this.registerForm.value.password,
+    // };
   }
 }

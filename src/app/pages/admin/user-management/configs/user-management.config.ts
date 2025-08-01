@@ -1,7 +1,7 @@
 import { ButtonConfig } from '../../../../shared/interfaces/button-config.interface';
 
 // Header section config for User Management page
-export const USER_HEADER_CONFIG = {
+export const userHeaderConfig = {
   icon: 'shield',
   title: 'User Management',
   subtitle: 'Manage user accounts, roles, and permissions',
@@ -9,12 +9,12 @@ export const USER_HEADER_CONFIG = {
 };
 
 // Config for the search input field
-export const SEARCH_INPUT_CONFIG = {
+export const searchInputConfig = {
   placeholder: 'Search users(name/email)...',
 };
 
 // Config for the "Add User" button
-export const ADD_USER_BUTTON_CONFIG: ButtonConfig = {
+export const addUserButtonConfig: ButtonConfig = {
   label: 'Add User',
   matIcon: 'person_add',
   iconFontSet: 'material-icons',
@@ -24,7 +24,7 @@ export const ADD_USER_BUTTON_CONFIG: ButtonConfig = {
 };
 
 // Config for the "Export User" button
-export const EXPORT_BUTTON_CONFIG: ButtonConfig = {
+export const exportButtonConfig: ButtonConfig = {
   label: 'Export User',
   variant: 'secondary',
   fontWeight: 500,

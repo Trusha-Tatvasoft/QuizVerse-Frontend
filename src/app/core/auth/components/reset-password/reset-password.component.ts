@@ -6,10 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import {
-  RESET_PASSWORD_FORM_FIELD,
-  SEND_RESET_LINK_CONFIG,
+  resetPasswordFormField,
+  sendResetLinkConfig,
 } from '../../configs/reset-password.component.config';
-import { ResetCredential } from '../../interfaces/forgot-reset-password.interface';
 import { TogglePasswordDirective } from '../toggle-password.directive';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -39,9 +38,9 @@ export class ResetPasswordComponent {
   private readonly fb = inject(FormBuilder); // For creating form group
   private readonly validationErrorService = inject(ValidationErrorService);
 
-  resetFields = RESET_PASSWORD_FORM_FIELD;
+  resetFields = resetPasswordFormField;
   resetForm: FormGroup;
-  sendResetLinkButton = SEND_RESET_LINK_CONFIG;
+  sendResetLinkButton = sendResetLinkConfig;
 
   // Initializes form controls and attaches validator
   constructor() {
@@ -50,7 +49,7 @@ export class ResetPasswordComponent {
         acc[field.name] = ['', field.validators];
         return acc;
       },
-      {} as Record<string, any>,
+      {} as Record<string, unknown>,
     );
 
     this.resetForm = this.fb.group(formControls, {
@@ -59,7 +58,7 @@ export class ResetPasswordComponent {
   }
 
   // Tracks form fields by name to optimize rendering
-  trackByField(index: number, field: any): string {
+  trackByField(index: number, field: { name: string }): string {
     return field.name;
   }
 
@@ -93,9 +92,9 @@ export class ResetPasswordComponent {
       return;
     }
 
-    const credentials: ResetCredential = {
-      password: this.resetForm.value.password,
-      confirmPassword: this.resetForm.value.confirmPassword,
-    };
+    // const credentials: ResetCredential = {
+    //   password: this.resetForm.value.password,
+    //   confirmPassword: this.resetForm.value.confirmPassword,
+    // };
   }
 }

@@ -1,11 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { LoginCredentials } from '../../interfaces/login.interface';
-import { LOGIN_FORM_FIELDS, SIGNIN_BUTTON_CONFIG } from '../../configs/login.component.config';
+import { loginFormFields, signInButtonConfig } from '../../configs/login.component.config';
 import { TogglePasswordDirective } from '../toggle-password.directive';
 import { MatFormField, MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
@@ -31,8 +30,8 @@ export class LoginComponent {
   private readonly fb = inject(FormBuilder);
   private readonly validationErrorService = inject(ValidationErrorService);
 
-  loginFields = LOGIN_FORM_FIELDS; // Field config for login form
-  signInButton = SIGNIN_BUTTON_CONFIG; // Button config for sign-in
+  loginFields = loginFormFields; // Field config for login form
+  signInButton = signInButtonConfig; // Button config for sign-in
 
   loginForm: FormGroup;
 
@@ -44,7 +43,7 @@ export class LoginComponent {
           acc[field.name] = ['', field.validators];
           return acc;
         },
-        {} as Record<string, any>,
+        {} as Record<string, unknown>,
       ),
     );
   }
@@ -65,9 +64,9 @@ export class LoginComponent {
     }
 
     // Extract and simulate handling login credentials
-    const credentials: LoginCredentials = {
-      email: this.loginForm.value.email,
-      password: this.loginForm.value.password,
-    };
+    // const credentials: LoginCredentials = {
+    //   email: this.loginForm.value.email,
+    //   password: this.loginForm.value.password,
+    // };
   }
 }

@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import {
-  BACK_TO_SIGNIN_BUTTON,
-  NEW_RESET_LINK_BUTTON,
+  backToSignInButton,
+  newResetLinkButton,
 } from '../../configs/reset-link-invalid.component.config';
 import { Navigations } from '../../../../shared/enums/navigation';
 import { Router, RouterLink } from '@angular/router';
@@ -20,8 +20,8 @@ export class ResetLinkInvalidComponent {
   private readonly router = inject(Router);
   private readonly loaderService = inject(LoaderService);
 
-  NewResetLinkButton = NEW_RESET_LINK_BUTTON;
-  BackToSignInButton = BACK_TO_SIGNIN_BUTTON;
+  NewResetLinkButton = newResetLinkButton;
+  BackToSignInButton = backToSignInButton;
 
   // Navigate to forgot password screen to request new reset link
   onRequestNewResetLink(): void {

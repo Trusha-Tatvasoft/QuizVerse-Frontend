@@ -1,8 +1,8 @@
 import { ColumnDef } from '../../../../shared/interfaces/table-component.interface';
-import { TablePaginationConfig } from '../../../../utils/constants';
+import { tablePaginationConfig } from '../../../../utils/constants';
 
 // Configuration for user table columns
-export const USER_TABLE_COLUMNS_CONFIG: ColumnDef[] = [
+export const userTableColumnsConfig: ColumnDef[] = [
   {
     key: 'fullname',
     label: 'User',
@@ -52,8 +52,8 @@ export const USER_TABLE_COLUMNS_CONFIG: ColumnDef[] = [
 ];
 
 // Pagination settings for user table
-export const USER_TABLE_PAGINATION_CONFIG = {
-  pageSize: TablePaginationConfig.PageSize, // Default page size
-  pageSizeOptions: TablePaginationConfig.PageSizeOptions, // Options in paginator dropdown
+export const userTablePaginationConfig = {
+  pageSize: tablePaginationConfig.PageSize, // Default page size
+  pageSizeOptions: tablePaginationConfig.PageSizeOptions, // Options in paginator dropdown
   applyPaginator: true, // Enable pagination in the table
 };

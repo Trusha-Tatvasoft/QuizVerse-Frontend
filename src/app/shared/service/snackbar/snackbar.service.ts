@@ -3,9 +3,9 @@ import { Component, inject, Inject, Injectable } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { MatSnackBarRef } from '@angular/material/snack-bar';
 import {
-  SNACKBAR_DURATION,
-  SNACKBAR_HORIZONTAL_POSITION,
-  SNACKBAR_VERTICAL_POSITION,
+  snackbarDuration,
+  snackbarHorizontalPosition,
+  snackbarVerticalPostion,
 } from '../../../utils/constants';
 import { MatIcon } from '@angular/material/icon';
 
@@ -70,9 +70,9 @@ export class SnackbarService {
   private readonly snackBar = inject(MatSnackBar);
 
   private readonly defaultConfig: MatSnackBarConfig = {
-    duration: SNACKBAR_DURATION,
-    horizontalPosition: SNACKBAR_HORIZONTAL_POSITION,
-    verticalPosition: SNACKBAR_VERTICAL_POSITION,
+    duration: snackbarDuration,
+    horizontalPosition: snackbarHorizontalPosition,
+    verticalPosition: snackbarVerticalPostion,
     panelClass: ['styled-snackbar'],
   };
 

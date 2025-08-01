@@ -84,7 +84,7 @@ describe('ForgotPasswordComponent', () => {
     expect(error).toBeNull();
   });
 
-  it('should use SEND_RESET_LINK_CONFIG for button label', () => {
+  it('should use sendResetLinkConfig for button label', () => {
     expect(component.sendResetLinkButton.label).toBeDefined();
   });
 });

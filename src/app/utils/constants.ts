@@ -2,11 +2,11 @@ import { Navigations } from '../shared/enums/navigation';
 import { TagInputConfig } from '../shared/interfaces/tag-component.interface';
 import { TagColor, TagType } from './types/tag-component.type';
 
-export const SNACKBAR_DURATION = 5000;
-export const SNACKBAR_HORIZONTAL_POSITION = 'end';
-export const SNACKBAR_VERTICAL_POSITION = 'bottom';
+export const snackbarDuration = 5000;
+export const snackbarHorizontalPosition = 'end';
+export const snackbarVerticalPostion = 'bottom';
 
-export const AppColors = {
+export const appColors = {
   adminBackgroundColor: 'linear-gradient(to right, #fff4f2, #fffaf6)',
   adminTextColor: 'rgb(153 27 27 / var(--tw-text-opacity, 1))',
   adminBorderColor: 'rgb(254 202 202 / var(--tw-border-opacity, 1))',
@@ -45,7 +45,7 @@ export const AppColors = {
   darkText: '#333',
 };
 
-export const TablePaginationConfig = {
+export const tablePaginationConfig = {
   PageSize: 5,
   TotalItems: 0,
   PageSizeOptions: [5, 10, 20],
@@ -91,7 +91,7 @@ export const blue: TagInputConfig = {
   hasBorder: true,
 };
 
-export const NavigationItems = {
+export const navigationItems = {
   UserRoutes: [
     {
       label: 'Dashboard',
@@ -186,19 +186,19 @@ export const NavigationItems = {
   ],
 };
 
-export const PlateformName = 'QuizVerse';
+export const plateformName = 'QuizVerse';
 
-export const PlatformMessages = {
+export const platformMessages = {
   errorTitle: `Error!`,
   errorMessage: `Something went wrong.`,
   noDataAvailable: `No data available to export.`,
   errorExport: `Export failed.`,
 };
 
-export const DEFAULT_LAST_LOGIN_DATE = '0001-01-01T00:00:00';
+export const defaultLastLoginDate = '0001-01-01T00:00:00';
 
-export const DEBOUNCE_TIME = 500;
+export const debounceTimeValue = 500;
 
-export const USER_EXPORT_FILE_PREFIX = 'User';
+export const userExportFilePrefix = 'User';
 
-export const EXPORT_FILE_NAME_TEMPLATE = '{prefix}_export_{date}.xlsx';
+export const exportFileNameTemplate = '{prefix}_export_{date}.xlsx';

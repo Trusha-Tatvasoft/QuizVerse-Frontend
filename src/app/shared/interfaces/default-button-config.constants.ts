@@ -1,6 +1,6 @@
 import { ButtonConfig } from './button-config.interface';
 
-export const DEFAULT_BUTTON_CONFIG: Required<ButtonConfig> = {
+export const defaultButtonConfig: Required<ButtonConfig> = {
   isDisabled: false,
   imageSrc: '',
   matIcon: '',
