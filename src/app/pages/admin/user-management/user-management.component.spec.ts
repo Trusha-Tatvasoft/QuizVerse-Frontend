@@ -164,7 +164,7 @@ describe('UserManagementComponent', () => {
 
     component.fetchUsers();
 
-    expect(snackbarSpy).toHaveBeenCalledWith('Bad Request', 'Error 400');
+    expect(snackbarSpy).toHaveBeenCalledWith('Bad Request', 'Error! 400');
     expect(component.dataSource()).toEqual([]);
     expect(component.totalItems()).toBe(0);
   });
