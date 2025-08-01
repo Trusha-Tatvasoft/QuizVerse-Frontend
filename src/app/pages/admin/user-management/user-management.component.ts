@@ -22,10 +22,10 @@ import {
   DEBOUNCE_TIME,
   PlatformMessages,
   TablePaginationConfig,
-  UserExportFileName,
+  USER_EXPORT_FILE_PREFIX,
 } from '../../../utils/constants';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
-import { UserExportService } from '../../../services/admin/user-export.service';
+import { generateExportFileName } from '../../../utils/generate-export-file-name.util';
 
 @Component({
   selector: 'app-user-management',
@@ -44,7 +44,6 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   // Inject services
   userService = inject(UserManagementService);
   snackbar = inject(SnackbarService);
-  userExportService = inject(UserExportService);
 
   // Header and button configs
   userConfig = USER_HEADER_CONFIG;
@@ -179,7 +178,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     if (this.selectedRole) request.filters!['role'] = Number(this.selectedRole);
     if (this.selectedStatus) request.filters!['status'] = Number(this.selectedStatus);
 
-    this.userExportService
+    this.userService
       .exportUsersToExcel(request)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -192,7 +191,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
           // Create a link element to download the blob as an Excel file
           const link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
-          link.download = UserExportFileName;
+          link.download = generateExportFileName(USER_EXPORT_FILE_PREFIX);
           link.click();
           URL.revokeObjectURL(link.href);
         },

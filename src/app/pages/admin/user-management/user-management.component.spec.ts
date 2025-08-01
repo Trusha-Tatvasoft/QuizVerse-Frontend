@@ -17,19 +17,16 @@ import { PaginatedDataResponse } from '../../../shared/interfaces/paginated-data
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { DEBOUNCE_TIME } from '../../../utils/constants';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { UserExportService } from '../../../services/admin/user-export.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 jest.mock('../../../services/admin/user-management/user-management.service');
 jest.mock('../../../shared/service/snackbar/snackbar.service');
-jest.mock('../../../services/admin/user-export.service');
 
 describe('UserManagementComponent', () => {
   let component: UserManagementComponent;
   let fixture: ComponentFixture<UserManagementComponent>;
   let userService: jest.Mocked<UserManagementService>;
   let snackbarService: jest.Mocked<SnackbarService>;
-  let exportService: jest.Mocked<UserExportService>;
 
   const mockUserResponse = {
     totalRecords: 1,
@@ -82,18 +79,13 @@ describe('UserManagementComponent', () => {
           provide: UserManagementService,
           useValue: {
             getUsers: jest.fn().mockReturnValue(of(mockApiResponse)),
+            exportUsersToExcel: jest.fn().mockReturnValue(of(mockExportBlob)),
           },
         },
         {
           provide: SnackbarService,
           useValue: {
             showError: jest.fn(),
-          },
-        },
-        {
-          provide: UserExportService,
-          useValue: {
-            exportUsersToExcel: jest.fn().mockReturnValue(of(mockExportBlob)),
           },
         },
         { provide: MatSnackBar, useValue: mockMatSnackBar },
@@ -104,7 +96,6 @@ describe('UserManagementComponent', () => {
     component = fixture.componentInstance;
     userService = TestBed.inject(UserManagementService) as jest.Mocked<UserManagementService>;
     snackbarService = TestBed.inject(SnackbarService) as jest.Mocked<SnackbarService>;
-    exportService = TestBed.inject(UserExportService) as jest.Mocked<UserExportService>;
     fixture.detectChanges();
   });
   const originalCreateElement = document.createElement;
@@ -271,7 +262,7 @@ describe('UserManagementComponent', () => {
   });
 
   it('should call UserExportService.exportUsers and trigger download', () => {
-    jest.spyOn(exportService, 'exportUsersToExcel').mockReturnValue(of(mockExportBlob));
+    jest.spyOn(userService, 'exportUsersToExcel').mockReturnValue(of(mockExportBlob));
 
     const anchorMock = {
       href: '',
@@ -298,7 +289,7 @@ describe('UserManagementComponent', () => {
 
     component.exportUsers();
 
-    expect(exportService.exportUsersToExcel).toHaveBeenCalled();
+    expect(userService.exportUsersToExcel).toHaveBeenCalled();
     expect(mockCreateObjectURL).toHaveBeenCalledWith(mockExportBlob);
     expect(mockRevokeObjectURL).toHaveBeenCalled();
   });
@@ -308,7 +299,7 @@ describe('UserManagementComponent', () => {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
 
-    exportService.exportUsersToExcel.mockReturnValueOnce(of(emptyBlob));
+    userService.exportUsersToExcel.mockReturnValueOnce(of(emptyBlob));
     const snackbarSpy = jest.spyOn(snackbarService, 'showError');
 
     component.exportUsers();
@@ -325,7 +316,7 @@ describe('UserManagementComponent', () => {
       status: 500,
     };
 
-    exportService.exportUsersToExcel.mockReturnValueOnce(throwError(() => mockError));
+    userService.exportUsersToExcel.mockReturnValueOnce(throwError(() => mockError));
     const snackbarSpy = jest.spyOn(snackbarService, 'showError');
 
     await component.exportUsers();
@@ -341,7 +332,7 @@ describe('UserManagementComponent', () => {
       status: 500,
     };
 
-    exportService.exportUsersToExcel.mockReturnValueOnce(throwError(() => mockError));
+    userService.exportUsersToExcel.mockReturnValueOnce(throwError(() => mockError));
     const snackbarSpy = jest.spyOn(snackbarService, 'showError');
 
     await component.exportUsers();
@@ -356,7 +347,7 @@ describe('UserManagementComponent', () => {
       status: 500,
     };
 
-    exportService.exportUsersToExcel.mockReturnValueOnce(throwError(() => mockError));
+    userService.exportUsersToExcel.mockReturnValueOnce(throwError(() => mockError));
     const snackbarSpy = jest.spyOn(snackbarService, 'showError');
 
     await component.exportUsers();
@@ -441,7 +432,7 @@ describe('UserManagementComponent', () => {
       status: 500,
     };
 
-    exportService.exportUsersToExcel.mockReturnValueOnce(throwError(() => mockError));
+    userService.exportUsersToExcel.mockReturnValueOnce(throwError(() => mockError));
     const snackbarSpy = jest.spyOn(snackbarService, 'showError');
 
     await component.exportUsers();
