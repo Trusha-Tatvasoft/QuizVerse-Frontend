@@ -28,4 +28,15 @@ export class UserManagementService {
       >(`${environment.baseUrl}/${EndPoints.UserTableData}`, request)
       .pipe(map((res) => res)); // Extract `data` from wrapped ApiResponse
   }
+
+  /**
+   * Fetch excel file from backend.
+   * @param request - PaginationRequest with search, filters, and sort.
+   * @returns Observable of excel file of user.
+   */
+  exportUsersToExcel(request: PaginationRequest): Observable<Blob> {
+    return this.http.post(`${environment.baseUrl}/${EndPoints.UserExport}`, request, {
+      responseType: 'blob',
+    });
+  }
 }
