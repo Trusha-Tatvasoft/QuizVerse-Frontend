@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { UserListingComponent } from './components/user-table/user-listing.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { SearchInputComponent } from '../../../shared/components/search-input/search-input.component';
@@ -18,8 +18,14 @@ import { PaginationRequest } from '../../../shared/interfaces/pagination-request
 import { TableData } from '../../../shared/interfaces/table-component.interface';
 import { UserManagementService } from '../../../services/admin/user-management/user-management.service';
 import { userToUserListingTableData } from './components/user-table/user-listing-data.mapper';
-import { DEBOUNCE_TIME, PlatformMessages, TablePaginationConfig } from '../../../utils/constants';
+import {
+  DEBOUNCE_TIME,
+  PlatformMessages,
+  TablePaginationConfig,
+  UserExportFileName,
+} from '../../../utils/constants';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
+import { UserExportService } from '../../../services/admin/user-export.service';
 
 @Component({
   selector: 'app-user-management',
@@ -34,10 +40,11 @@ import { SnackbarService } from '../../../shared/service/snackbar/snackbar.servi
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.scss',
 })
-export class UserManagementComponent {
+export class UserManagementComponent implements OnInit, OnDestroy {
   // Inject services
   userService = inject(UserManagementService);
   snackbar = inject(SnackbarService);
+  userExportService = inject(UserExportService);
 
   // Header and button configs
   userConfig = USER_HEADER_CONFIG;
@@ -155,6 +162,56 @@ export class UserManagementComponent {
           const message = error?.error?.message || error?.message || 'Unexpected error occurred';
           const status = error?.status || 'Unknown';
           this.snackbar.showError(message, `Error ${status}`);
+        },
+      });
+  }
+
+  exportUsers() {
+    const request: PaginationRequest = {
+      ...this.pagination(),
+      searchTerm: this.searchControl.value ?? '',
+      sortColumn: this.sort().sortColumn,
+      sortDescending: this.sort().sortDescending,
+      filters: {},
+    };
+
+    // Apply filters if selected
+    if (this.selectedRole) request.filters!['role'] = Number(this.selectedRole);
+    if (this.selectedStatus) request.filters!['status'] = Number(this.selectedStatus);
+
+    this.userExportService
+      .exportUsersToExcel(request)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (blob: Blob) => {
+          if (blob.size === 0) {
+            this.snackbar.showError(PlatformMessages.noDataAvailable);
+            return;
+          }
+
+          // Create a link element to download the blob as an Excel file
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = UserExportFileName;
+          link.click();
+          URL.revokeObjectURL(link.href);
+        },
+        error: async (err) => {
+          if (err.error instanceof Blob) {
+            try {
+              // Attempt to parse the error response as JSON (Receive common api response as error)
+              const errorText = await err.error.text();
+              const errorJson = JSON.parse(errorText);
+              this.snackbar.showError(errorJson.message || PlatformMessages.errorExport);
+            } catch (parseError) {
+              this.snackbar.showError(PlatformMessages.errorExport);
+            }
+          } else {
+            this.snackbar.showError(
+              PlatformMessages.errorExport,
+              err.message || PlatformMessages.errorExport,
+            );
+          }
         },
       });
   }
