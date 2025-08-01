@@ -6,6 +6,7 @@ import {
   LOGIN_SIGNUP_TABS_CONFIG,
 } from '../../configs/login-signup.component.config';
 import { By } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
 
 describe('LoginSignupComponent', () => {
   let component: LoginSignupComponent;
@@ -15,6 +16,7 @@ describe('LoginSignupComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LoginSignupComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginSignupComponent);
@@ -23,22 +25,22 @@ describe('LoginSignupComponent', () => {
     fixture.detectChanges();
   });
 
-  // Test: Should create the component
+  // Should create the component instance
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  // Test: Should have correct Google button config
+  // Should match Google button configuration with expected constant
   it('should have correct Google button config', () => {
     expect(component.googleButton).toEqual(GOOGLE_BUTTON_CONFIG);
   });
 
-  // Test: Should have correct Facebook button config
+  // Should match Facebook button configuration with expected constant
   it('should have correct Facebook button config', () => {
     expect(component.facebookButton).toEqual(FACEBOOK_BUTTON_CONFIG);
   });
 
-  // Test: Should have correct tabs config
+  // Should initialize tabs with correct values and order
   it('should have correct tabs config', () => {
     expect(component.tabs).toEqual(LOGIN_SIGNUP_TABS_CONFIG);
     expect(component.tabs.length).toBe(2);
@@ -48,21 +50,20 @@ describe('LoginSignupComponent', () => {
     expect(component.tabs[1].label).toBe('Sign Up');
   });
 
-  // Test: Should initialize selectedIndex to 0
+  // Should initialize selectedIndex to 0 (Sign In)
   it('should initialize selectedIndex to 0', () => {
     expect(component.selectedIndex).toBe(0);
   });
 
-  // Test: Should render tab labels correctly
+  // Should render tab labels for Sign In and Sign Up
   it('should render tab labels correctly', () => {
-    fixture.detectChanges();
     const tabLabels = fixture.debugElement.queryAll(By.css('.mdc-tab__content'));
     const labels = tabLabels.map((el) => el.nativeElement.textContent.trim());
     expect(labels).toContain('Sign In');
     expect(labels).toContain('Sign Up');
   });
 
-  // Test: Should update selectedIndex on tab change
+  // Should update selectedIndex when user switches tab
   it('should update selectedIndex on tab change', () => {
     component.selectedIndex = 1;
     fixture.detectChanges();
