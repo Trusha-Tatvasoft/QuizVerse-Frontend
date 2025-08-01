@@ -16,6 +16,8 @@ import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { PaginatedDataResponse } from '../../../shared/interfaces/paginated-data-response.interface';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { DEBOUNCE_TIME } from '../../../utils/constants';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 jest.mock('../../../services/admin/user-management/user-management.service');
 jest.mock('../../../shared/service/snackbar/snackbar.service');
@@ -50,6 +52,14 @@ describe('UserManagementComponent', () => {
     data: mockUserResponse,
   };
 
+  const mockExportBlob = new Blob(['test data'], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  });
+
+  const mockMatSnackBar = {
+    openFromComponent: jest.fn(),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -61,12 +71,15 @@ describe('UserManagementComponent', () => {
         MatSelectModule,
         OutlineButtonComponent,
         FilledButtonComponent,
+        HttpClientTestingModule,
+        MatSnackBarModule,
       ],
       providers: [
         {
           provide: UserManagementService,
           useValue: {
             getUsers: jest.fn().mockReturnValue(of(mockApiResponse)),
+            exportUsersToExcel: jest.fn().mockReturnValue(of(mockExportBlob)),
           },
         },
         {
@@ -75,6 +88,7 @@ describe('UserManagementComponent', () => {
             showError: jest.fn(),
           },
         },
+        { provide: MatSnackBar, useValue: mockMatSnackBar },
       ],
     }).compileComponents();
 
@@ -83,6 +97,14 @@ describe('UserManagementComponent', () => {
     userService = TestBed.inject(UserManagementService) as jest.Mocked<UserManagementService>;
     snackbarService = TestBed.inject(SnackbarService) as jest.Mocked<SnackbarService>;
     fixture.detectChanges();
+  });
+  const originalCreateElement = document.createElement;
+  const originalURL = window.URL;
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    document.createElement = originalCreateElement;
+    window.URL = originalURL;
   });
 
   it('should create the component', () => {
@@ -237,5 +259,199 @@ describe('UserManagementComponent', () => {
     fixture.detectChanges();
     const table = fixture.debugElement.query(By.directive(UserListingComponent));
     expect(table).toBeTruthy();
+  });
+
+  it('should call UserExportService.exportUsers and trigger download', () => {
+    jest.spyOn(userService, 'exportUsersToExcel').mockReturnValue(of(mockExportBlob));
+
+    const anchorMock = {
+      href: '',
+      download: '',
+      click: jest.fn(),
+      setAttribute: jest.fn(),
+      style: {},
+      remove: jest.fn(),
+    };
+
+    const mockCreateElement = jest.fn().mockReturnValue(anchorMock);
+
+    const mockCreateObjectURL = jest.fn(() => 'blob:http://mock-url');
+    const mockRevokeObjectURL = jest.fn();
+
+    Object.defineProperty(window, 'URL', {
+      writable: true,
+      value: {
+        createObjectURL: mockCreateObjectURL,
+        revokeObjectURL: mockRevokeObjectURL,
+      },
+    });
+    document.createElement = mockCreateElement as any;
+
+    component.exportUsers();
+
+    expect(userService.exportUsersToExcel).toHaveBeenCalled();
+    expect(mockCreateObjectURL).toHaveBeenCalledWith(mockExportBlob);
+    expect(mockRevokeObjectURL).toHaveBeenCalled();
+  });
+
+  it('should show snackbar error when export returns an empty Blob', () => {
+    const emptyBlob = new Blob([], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+
+    userService.exportUsersToExcel.mockReturnValueOnce(of(emptyBlob));
+    const snackbarSpy = jest.spyOn(snackbarService, 'showError');
+
+    component.exportUsers();
+
+    expect(snackbarSpy).toHaveBeenCalledWith('No data available to export.');
+  });
+
+  it('should parse and show error message from Blob error', async () => {
+    const mockErrorMessage = { message: 'Export failed due to server issue' };
+    const mockBlob = new Blob([JSON.stringify(mockErrorMessage)], { type: 'application/json' });
+
+    const mockError = {
+      error: mockBlob,
+      status: 500,
+    };
+
+    userService.exportUsersToExcel.mockReturnValueOnce(throwError(() => mockError));
+    const snackbarSpy = jest.spyOn(snackbarService, 'showError');
+
+    await component.exportUsers();
+
+    expect(snackbarSpy).toHaveBeenCalledWith('Export failed.');
+  });
+
+  it('should show fallback export error when blob text parsing fails', async () => {
+    const malformedBlob = new Blob(['not-json'], { type: 'application/json' });
+
+    const mockError = {
+      error: malformedBlob,
+      status: 500,
+    };
+
+    userService.exportUsersToExcel.mockReturnValueOnce(throwError(() => mockError));
+    const snackbarSpy = jest.spyOn(snackbarService, 'showError');
+
+    await component.exportUsers();
+
+    expect(snackbarSpy).toHaveBeenCalledWith('Export failed.');
+  });
+
+  it('should show export error for non-Blob errors', async () => {
+    const mockError = {
+      error: 'Server down',
+      message: 'Server error',
+      status: 500,
+    };
+
+    userService.exportUsersToExcel.mockReturnValueOnce(throwError(() => mockError));
+    const snackbarSpy = jest.spyOn(snackbarService, 'showError');
+
+    await component.exportUsers();
+
+    expect(snackbarSpy).toHaveBeenCalledWith('Export failed.', 'Server error');
+  });
+
+  it('should show snackbar error when API returns statusCode not 200', () => {
+    const failedApiResponse = {
+      result: true,
+      statusCode: 400,
+      message: 'Custom error',
+      data: {
+        totalRecords: 0,
+        records: [],
+      },
+    };
+
+    userService.getUsers.mockReturnValueOnce(of(failedApiResponse));
+    const snackbarSpy = jest.spyOn(snackbarService, 'showError');
+
+    component.fetchUsers();
+
+    expect(snackbarSpy).toHaveBeenCalledWith('Custom error', 'Error! 400');
+    expect(component.dataSource()).toEqual([]);
+    expect(component.totalItems()).toBe(0);
+  });
+
+  it('should add filters to request when selectedRole and selectedStatus are set', () => {
+    component.selectedRole = 2;
+    component.selectedStatus = 1;
+    const spy = jest.spyOn(userService, 'getUsers');
+    component.fetchUsers();
+    expect(spy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        filters: expect.objectContaining({
+          role: 2,
+          status: 1,
+        }),
+      }),
+    );
+  });
+
+  it('should show error when both result is false and statusCode is not 200', () => {
+    const failedApiResponse = {
+      result: false,
+      statusCode: 400,
+      message: 'Invalid input',
+      data: {
+        totalRecords: 0,
+        records: [],
+      },
+    };
+
+    userService.getUsers.mockReturnValueOnce(of(failedApiResponse));
+    const snackbarSpy = jest.spyOn(snackbarService, 'showError');
+
+    component.fetchUsers();
+
+    expect(snackbarSpy).toHaveBeenCalledWith('Invalid input', 'Error! 400');
+    expect(component.dataSource()).toEqual([]);
+    expect(component.totalItems()).toBe(0);
+  });
+
+  it('should show error using error.message if error.error is missing', () => {
+    const mockError = {
+      message: 'Network timeout',
+      status: 408,
+    };
+
+    userService.getUsers.mockReturnValueOnce(throwError(() => mockError));
+    const snackbarSpy = jest.spyOn(snackbarService, 'showError');
+
+    component.fetchUsers();
+
+    expect(snackbarSpy).toHaveBeenCalledWith('Network timeout', 'Error 408');
+  });
+
+  it('should use fallback message when export error has no message', async () => {
+    const mockError = {
+      error: 'Something went wrong',
+      status: 500,
+    };
+
+    userService.exportUsersToExcel.mockReturnValueOnce(throwError(() => mockError));
+    const snackbarSpy = jest.spyOn(snackbarService, 'showError');
+
+    await component.exportUsers();
+
+    expect(snackbarSpy).toHaveBeenCalledWith('Export failed.', 'Export failed.');
+  });
+
+  it('should call getUsers without filters if role and status are not selected', () => {
+    component.selectedRole = undefined as any;
+    component.selectedStatus = undefined as any;
+
+    const spy = jest.spyOn(userService, 'getUsers');
+
+    component.fetchUsers();
+
+    expect(spy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        filters: {},
+      }),
+    );
   });
 });

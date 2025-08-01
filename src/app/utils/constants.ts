@@ -202,6 +202,8 @@ export const PlateformName = 'QuizVerse';
 export const PlatformMessages = {
   errorTitle: `Error!`,
   errorMessage: `Something went wrong.`,
+  noDataAvailable: `No data available to export.`,
+  errorExport: `Export failed.`,
 
   //#region authMessages
   loginRedirectMessage: 'Redirecting to login.',
@@ -243,4 +245,8 @@ export const ACCESS_TOKEN_EXPIRY_MINUTES = 30;
 export const REFRESH_TOKEN_EXPIRY_DAYS = 7;
 export const REMEMBER_ME_EXPIRY_DAYS = 30;
 //#endregion
+
+export const USER_EXPORT_FILE_PREFIX = 'User';
+export const EXPORT_FILE_NAME_TEMPLATE = '{prefix}_export_{date}.xlsx';
+
 //#endregion
