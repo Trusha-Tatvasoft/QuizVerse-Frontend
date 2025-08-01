@@ -12,13 +12,13 @@ import {
   USER_HEADER_CONFIG,
 } from './configs/user-management.config';
 import { FormControl } from '@angular/forms';
-import { debounceTime, Subject } from 'rxjs';
+import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { UserRoles, UserStatus } from '../../../shared/enums/user-management.enum';
 import { PaginationRequest } from '../../../shared/interfaces/pagination-request.interface';
 import { TableData } from '../../../shared/interfaces/table-component.interface';
 import { UserManagementService } from '../../../services/admin/user-management/user-management.service';
 import { userToUserListingTableData } from './components/user-table/user-listing-data.mapper';
-import { DEBOUNCE_TIME, TablePaginationConfig } from '../../../utils/constants';
+import { DEBOUNCE_TIME, PlatformMessages, TablePaginationConfig } from '../../../utils/constants';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 
 @Component({
@@ -75,10 +75,16 @@ export class UserManagementComponent {
 
   // Private reactive helpers
   private readonly searchSubject = new Subject<string>();
+  private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
     // Initial data fetch
     this.fetchUsers();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getFilteredUser(): void {
@@ -128,22 +134,28 @@ export class UserManagementComponent {
     if (this.selectedRole) request.filters!['role'] = Number(this.selectedRole);
     if (this.selectedStatus) request.filters!['status'] = Number(this.selectedStatus);
 
-    this.userService.getUsers(request).subscribe({
-      next: (res) => {
-        if (!res.result || res.statusCode !== 200) {
-          this.snackbar.showError(res.message || 'Something went wrong', `Error ${res.statusCode}`);
-          this.dataSource.set([]);
-          this.totalItems.set(0);
-          return;
-        }
-        this.dataSource.set(res.data.records.map(userToUserListingTableData));
-        this.totalItems.set(res.data.totalRecords);
-      },
-      error: (error) => {
-        const message = error?.error?.message || error?.message || 'Unexpected error occurred';
-        const status = error?.status || 'Unknown';
-        this.snackbar.showError(message, `Error ${status}`);
-      },
-    });
+    this.userService
+      .getUsers(request)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (!res.result || res.statusCode !== 200) {
+            this.snackbar.showError(
+              res.message || PlatformMessages.errorMessage,
+              `${PlatformMessages.errorTitle} ${res.statusCode}`,
+            );
+            this.dataSource.set([]);
+            this.totalItems.set(0);
+            return;
+          }
+          this.dataSource.set(res.data.records.map(userToUserListingTableData));
+          this.totalItems.set(res.data.totalRecords);
+        },
+        error: (error) => {
+          const message = error?.error?.message || error?.message || 'Unexpected error occurred';
+          const status = error?.status || 'Unknown';
+          this.snackbar.showError(message, `Error ${status}`);
+        },
+      });
   }
 }
