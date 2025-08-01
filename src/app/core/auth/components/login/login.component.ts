@@ -8,8 +8,12 @@ import { LoginCredentials } from '../../interfaces/login.interface';
 import { LOGIN_FORM_FIELDS, SIGNIN_BUTTON_CONFIG } from '../../configs/login.component.config';
 import { TogglePasswordDirective } from '../toggle-password.directive';
 import { MatFormField, MatInputModule } from '@angular/material/input';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AuthService } from '../../services/auth.service';
+import { Navigations } from '../../../../shared/enums/navigation';
+import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-login',
@@ -23,13 +27,17 @@ import { ValidationErrorService } from '../../../../shared/service/validation-er
     MatInputModule,
     MatFormField,
     RouterLink,
+    MatCheckboxModule,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss', '../login-signup/login-signup.component.scss'],
 })
 export class LoginComponent {
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
   private readonly validationErrorService = inject(ValidationErrorService);
+  private readonly authService = inject(AuthService);
+  private readonly snackbar = inject(SnackbarService);
 
   loginFields = LOGIN_FORM_FIELDS; // Field config for login form
   signInButton = SIGNIN_BUTTON_CONFIG; // Button config for sign-in
@@ -58,16 +66,32 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
-    // If form is invalid, mark all fields as touched to trigger validation messages
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
     }
 
-    // Extract and simulate handling login credentials
     const credentials: LoginCredentials = {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
+      rememberMe: !!this.loginForm.value.rememberMe,
     };
+
+    this.authService.login(credentials).subscribe({
+      next: () => {
+        const token = this.authService.getAccessToken();
+        const role = token ? this.authService.getRoleFromToken(token) : null;
+
+        if (role === 'admin') {
+          this.snackbar.showSuccess('Welcome back!', 'You have been successfully logged in!');
+          this.router.navigate([Navigations.Admin]);
+        } else {
+          this.router.navigate([Navigations.User]);
+        }
+      },
+      error: () => {
+        this.snackbar.showError('Login Falied!!');
+      },
+    });
   }
 }

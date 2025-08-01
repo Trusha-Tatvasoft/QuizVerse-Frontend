@@ -34,7 +34,7 @@ import { SidebarItem } from '../../../shared/interfaces/sidebar-component.interf
 })
 export class SidebarComponent implements OnInit {
   @Input() sidebarItems: SidebarItem[] = [];
-  @Input() role: UserType = 'user';
+  @Input() role: UserType = 'player';
 
   @Output() sidebarClosed = new EventEmitter<void>();
 
