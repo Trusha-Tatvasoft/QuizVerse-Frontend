@@ -46,7 +46,7 @@ export const AppColors = {
 };
 
 export const TablePaginationConfig = {
-  PageSize: 1,
+  PageSize: 5,
   TotalItems: 0,
   PageSizeOptions: [5, 10, 20],
 };
@@ -192,3 +192,7 @@ export const PlatformMessages = {
   errorTitle: `Error!`,
   errorMessage: `Something went wrong.`,
 };
+
+export const DEFAULT_LAST_LOGIN_DATE = '0001-01-01T00:00:00';
+
+export const DEBOUNCE_TIME = 500;
