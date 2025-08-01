@@ -5,7 +5,7 @@ import { DynamicFormField } from '../../../shared/interfaces/dynamic-form-field.
 /**
  * Register button configuration
  */
-export const REGISTER_BUTTON_CONFIG: ButtonConfig = {
+export const registerButtonConfig: ButtonConfig = {
   label: 'Create An Account',
   fontWeight: 500,
   variant: 'gradient',
@@ -15,7 +15,7 @@ export const REGISTER_BUTTON_CONFIG: ButtonConfig = {
 /**
  * Register form field configurations
  */
-export const REGISTER_FORM_FIELDS: DynamicFormField[] = [
+export const registerFormFields: DynamicFormField[] = [
   {
     name: 'fullName',
     label: 'Full Name',

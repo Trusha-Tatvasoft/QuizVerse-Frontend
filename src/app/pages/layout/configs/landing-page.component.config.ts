@@ -1,7 +1,7 @@
 import { ButtonConfig } from '../../../shared/interfaces/button-config.interface';
 import { LandingPageConfig } from '../interfaces/landing-page.interface';
 
-export const LANDING_PAGE_CONTENT: LandingPageConfig = {
+export const landingPageContent: LandingPageConfig = {
   quote:
     'Create, share, and compete in quizzes powered by AI. Challenge friends, join tournaments, and climb the leaderboards in the ultimate quiz experience.',
   stats: [
@@ -12,7 +12,7 @@ export const LANDING_PAGE_CONTENT: LandingPageConfig = {
   ],
 };
 
-export const FEATURES = [
+export const landingPageFeaturesCardsConfig = [
   {
     title: 'AI-Generated Quizzes',
     description: 'Create quizzes instantly from PDFs, text, or URLs using advanced AI technology.',
@@ -35,7 +35,7 @@ export const FEATURES = [
   },
 ];
 
-export const START_PLAY_BUTTON: ButtonConfig = {
+export const startPlayButton: ButtonConfig = {
   label: 'Start Playing Now',
   matIcon: 'play_arrow',
   iconFontSet: 'material-icons',
@@ -43,14 +43,14 @@ export const START_PLAY_BUTTON: ButtonConfig = {
   variant: 'gradient',
 };
 
-export const BROWSE_QUIZZES_BUTTON: ButtonConfig = {
+export const browseQuizzesButton: ButtonConfig = {
   label: 'Browse Quizzes',
   matIcon: 'import_contacts',
   iconFontSet: 'material-icons',
   imagePosition: 'left',
 };
 
-export const JOIN_PLATFORM_BUTTON: ButtonConfig = {
+export const joinPlatformButton: ButtonConfig = {
   label: 'Join QuizzVerse Today',
   matIcon: 'arrow_forward',
   iconFontSet: 'material-icons',

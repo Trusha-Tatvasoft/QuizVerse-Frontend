@@ -6,7 +6,10 @@ import { FilledButtonComponent } from '../../../shared/components/filled-button/
 import { OutlineButtonComponent } from '../../../shared/components/outline-button/outline-button.component';
 import { CommonModule } from '@angular/common';
 import { By } from '@angular/platform-browser';
-import { FEATURES, LANDING_PAGE_CONTENT } from '../configs/landing-page.component.config';
+import {
+  landingPageFeaturesCardsConfig,
+  landingPageContent,
+} from '../configs/landing-page.component.config';
 import { of, Subject, throwError } from 'rxjs';
 import { LandingPageDataService } from '../../../services/user/landing-page/landing-page-data.service';
 import { LandingPageStats } from '../../../shared/interfaces/landing-page-stats.interface';
@@ -110,12 +113,12 @@ describe('LandingPageComponent (Jest)', () => {
 
   it('should render all stat boxes', () => {
     const statBoxes = fixture.nativeElement.querySelectorAll('.stat-box');
-    expect(statBoxes.length).toBe(LANDING_PAGE_CONTENT.stats.length);
+    expect(statBoxes.length).toBe(landingPageContent.stats.length);
   });
 
   it('should render feature cards', () => {
     const featureCards = fixture.nativeElement.querySelectorAll('.feature-card');
-    expect(featureCards.length).toBe(FEATURES.length);
+    expect(featureCards.length).toBe(landingPageFeaturesCardsConfig.length);
   });
 
   it('should render CTA buttons', () => {

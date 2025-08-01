@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { NavigationItems } from '../../../utils/constants';
+import { navigationItems } from '../../../utils/constants';
 import { UserType } from '../../../utils/types/sidebar-component.type';
 import { RouterModule } from '@angular/router';
 
@@ -20,7 +20,7 @@ export class MasterLayoutComponent {
   currentXp: number = 500;
   xpLimit: number = 1000;
   notificationCount: number = 0;
-  sidebarItems = NavigationItems.UserRoutes.filter((item) => item.label !== 'Profile');
+  sidebarItems = navigationItems.UserRoutes.filter((item) => item.label !== 'Profile');
   notifications = [];
 
   toggleSidebarFromParent(): void {

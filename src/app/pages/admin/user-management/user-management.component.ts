@@ -6,10 +6,10 @@ import { OutlineButtonComponent } from '../../../shared/components/outline-butto
 import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
 import { MatSelectModule } from '@angular/material/select';
 import {
-  ADD_USER_BUTTON_CONFIG,
-  EXPORT_BUTTON_CONFIG,
-  SEARCH_INPUT_CONFIG,
-  USER_HEADER_CONFIG,
+  addUserButtonConfig,
+  exportButtonConfig,
+  searchInputConfig,
+  userHeaderConfig,
 } from './configs/user-management.config';
 import { FormControl } from '@angular/forms';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
@@ -19,10 +19,10 @@ import { TableData } from '../../../shared/interfaces/table-component.interface'
 import { UserManagementService } from '../../../services/admin/user-management/user-management.service';
 import { userToUserListingTableData } from './components/user-table/user-listing-data.mapper';
 import {
-  DEBOUNCE_TIME,
-  PlatformMessages,
-  TablePaginationConfig,
-  USER_EXPORT_FILE_PREFIX,
+  debounceTimeValue,
+  platformMessages,
+  tablePaginationConfig,
+  userExportFilePrefix,
 } from '../../../utils/constants';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { generateExportFileName } from '../../../utils/generate-export-file-name.util';
@@ -46,10 +46,10 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   snackbar = inject(SnackbarService);
 
   // Header and button configs
-  userConfig = USER_HEADER_CONFIG;
-  searchInputConfig = SEARCH_INPUT_CONFIG;
-  addUserButtonConfig = ADD_USER_BUTTON_CONFIG;
-  exportButtonConfig = EXPORT_BUTTON_CONFIG;
+  userConfig = userHeaderConfig;
+  searchInputConfig = searchInputConfig;
+  addUserButtonConfig = addUserButtonConfig;
+  exportButtonConfig = exportButtonConfig;
 
   // Search input control
   searchControl = new FormControl<string | null>(null);
@@ -76,7 +76,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   // Table data signals
   dataSource = signal<TableData[]>([]);
   totalItems = signal(0);
-  pagination = signal({ pageNumber: 1, pageSize: TablePaginationConfig.PageSize });
+  pagination = signal({ pageNumber: 1, pageSize: tablePaginationConfig.PageSize });
   sort = signal({ sortColumn: '', sortDescending: false });
 
   // Private reactive helpers
@@ -94,7 +94,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
 
   getFilteredUser(): void {
-    this.searchSubject.pipe(debounceTime(DEBOUNCE_TIME)).subscribe(() => {
+    this.searchSubject.pipe(debounceTime(debounceTimeValue)).subscribe(() => {
       this.pagination.set({ ...this.pagination(), pageNumber: 1 });
       this.fetchUsers();
     });
@@ -147,8 +147,8 @@ export class UserManagementComponent implements OnInit, OnDestroy {
         next: (res) => {
           if (!res.result || res.statusCode !== 200) {
             this.snackbar.showError(
-              res.message || PlatformMessages.errorMessage,
-              `${PlatformMessages.errorTitle} ${res.statusCode}`,
+              res.message || platformMessages.errorMessage,
+              `${platformMessages.errorTitle} ${res.statusCode}`,
             );
             this.dataSource.set([]);
             this.totalItems.set(0);
@@ -184,14 +184,14 @@ export class UserManagementComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (blob: Blob) => {
           if (blob.size === 0) {
-            this.snackbar.showError(PlatformMessages.noDataAvailable);
+            this.snackbar.showError(platformMessages.noDataAvailable);
             return;
           }
 
           // Create a link element to download the blob as an Excel file
           const link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
-          link.download = generateExportFileName(USER_EXPORT_FILE_PREFIX);
+          link.download = generateExportFileName(userExportFilePrefix);
           link.click();
           URL.revokeObjectURL(link.href);
         },
@@ -201,14 +201,14 @@ export class UserManagementComponent implements OnInit, OnDestroy {
               // Attempt to parse the error response as JSON (Receive common api response as error)
               const errorText = await err.error.text();
               const errorJson = JSON.parse(errorText);
-              this.snackbar.showError(errorJson.message || PlatformMessages.errorExport);
-            } catch (parseError) {
-              this.snackbar.showError(PlatformMessages.errorExport);
+              this.snackbar.showError(errorJson.message || platformMessages.errorExport);
+            } catch {
+              this.snackbar.showError(platformMessages.errorExport);
             }
           } else {
             this.snackbar.showError(
-              PlatformMessages.errorExport,
-              err.message || PlatformMessages.errorExport,
+              platformMessages.errorExport,
+              err.message || platformMessages.errorExport,
             );
           }
         },

@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginSignupComponent } from './login-signup.component';
 import {
-  GOOGLE_BUTTON_CONFIG,
-  FACEBOOK_BUTTON_CONFIG,
-  LOGIN_SIGNUP_TABS_CONFIG,
+  googleButtonConfig,
+  facebookButtonConfig,
+  loginSignUpTabsConfig,
 } from '../../configs/login-signup.component.config';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
@@ -32,17 +32,17 @@ describe('LoginSignupComponent', () => {
 
   // Should match Google button configuration with expected constant
   it('should have correct Google button config', () => {
-    expect(component.googleButton).toEqual(GOOGLE_BUTTON_CONFIG);
+    expect(component.googleButton).toEqual(googleButtonConfig);
   });
 
   // Should match Facebook button configuration with expected constant
   it('should have correct Facebook button config', () => {
-    expect(component.facebookButton).toEqual(FACEBOOK_BUTTON_CONFIG);
+    expect(component.facebookButton).toEqual(facebookButtonConfig);
   });
 
   // Should initialize tabs with correct values and order
   it('should have correct tabs config', () => {
-    expect(component.tabs).toEqual(LOGIN_SIGNUP_TABS_CONFIG);
+    expect(component.tabs).toEqual(loginSignUpTabsConfig);
     expect(component.tabs.length).toBe(2);
     expect(component.tabs[0].id).toBe('login-form');
     expect(component.tabs[0].label).toBe('Sign In');

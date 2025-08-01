@@ -13,5 +13,5 @@ export interface LazyTab {
   id: string;
   label: string;
   icon?: string;
-  loadChildren?: () => Promise<Type<any>>;
+  loadChildren?: () => Promise<Type<unknown>>;
 }

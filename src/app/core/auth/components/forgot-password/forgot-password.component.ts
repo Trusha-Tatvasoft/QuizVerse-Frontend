@@ -7,8 +7,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import {
-  FORGOT_PASSWORD_FORM_FIELDS,
-  SEND_RESET_LINK_CONFIG,
+  forgotPasswordFormFields,
+  sendResetLinkConfig,
 } from '../../configs/forgot-password.component.config';
 import { Navigations } from '../../../../shared/enums/navigation';
 import { MatFormField, MatInputModule } from '@angular/material/input';
@@ -40,9 +40,9 @@ export class ForgotPasswordComponent {
   private readonly router = inject(Router);
   private readonly validationErrorService = inject(ValidationErrorService);
 
-  forgotPasswordFields = FORGOT_PASSWORD_FORM_FIELDS;
+  forgotPasswordFields = forgotPasswordFormFields;
   forgotPasswordForm: FormGroup;
-  sendResetLinkButton = SEND_RESET_LINK_CONFIG;
+  sendResetLinkButton = sendResetLinkConfig;
 
   constructor() {
     // Build reactive form using config field definitions and validators
@@ -52,7 +52,7 @@ export class ForgotPasswordComponent {
           acc[field.name] = ['', field.validators];
           return acc;
         },
-        {} as Record<string, any>,
+        {} as Record<string, unknown>,
       ),
     );
   }

@@ -1,8 +1,8 @@
 import { Component, inject, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import {
-  BACK_TO_SIGNIN_CONFIG,
-  SEND_ANOTHER_EMAIL_CONFIG,
+  backToSignInConfig,
+  sendAnotherEmailConfig,
 } from '../../configs/reset-link-send-successfully.component.config';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import { OutlineButtonComponent } from '../../../../shared/components/outline-button/outline-button.component';
@@ -27,8 +27,8 @@ export class ResetLinkSendSuccessfullyComponent {
   @Input() email: string;
 
   // Button configurations
-  loginButton = BACK_TO_SIGNIN_CONFIG;
-  sendAnotherEmailButton = SEND_ANOTHER_EMAIL_CONFIG;
+  loginButton = backToSignInConfig;
+  sendAnotherEmailButton = sendAnotherEmailConfig;
 
   // OnInit lifecycle hook to extract email from navigation state
   ngOnInit() {

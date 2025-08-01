@@ -3,7 +3,7 @@ import { TableComponent } from './table.component';
 import { moduleMetadata } from '@storybook/angular';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { TablePaginationConfig } from '../../../utils/constants';
+import { tablePaginationConfig } from '../../../utils/constants';
 
 import {
   categoryColumns,
@@ -37,8 +37,8 @@ export const CategoryIconOnly: Story = {
     columns: categoryColumns,
     dataSource: categoryData,
     totalItems: categoryData.length,
-    pageSize: TablePaginationConfig.PageSize,
-    pageSizeOptions: TablePaginationConfig.PageSizeOptions,
+    pageSize: tablePaginationConfig.PageSize,
+    pageSizeOptions: tablePaginationConfig.PageSizeOptions,
     applyPaginator: true,
   },
 };
@@ -52,8 +52,8 @@ export const QuestionPoolOnly: Story = {
     columns: questionPoolColumns,
     dataSource: questionPoolData,
     totalItems: questionPoolData.length,
-    pageSize: TablePaginationConfig.PageSize,
-    pageSizeOptions: TablePaginationConfig.PageSizeOptions,
+    pageSize: tablePaginationConfig.PageSize,
+    pageSizeOptions: tablePaginationConfig.PageSizeOptions,
     applyPaginator: true,
   },
 };
@@ -67,8 +67,8 @@ export const ProfileOnly: Story = {
     columns: profileColumns,
     dataSource: profileData,
     totalItems: profileData.length,
-    pageSize: TablePaginationConfig.PageSize,
-    pageSizeOptions: TablePaginationConfig.PageSizeOptions,
+    pageSize: tablePaginationConfig.PageSize,
+    pageSizeOptions: tablePaginationConfig.PageSizeOptions,
     applyPaginator: true,
   },
 };
@@ -83,8 +83,8 @@ export const StaticTagsOnly: Story = {
     columns: tagColumns,
     dataSource: tagData,
     totalItems: tagData.length,
-    pageSize: TablePaginationConfig.PageSize,
-    pageSizeOptions: TablePaginationConfig.PageSizeOptions,
+    pageSize: tablePaginationConfig.PageSize,
+    pageSizeOptions: tablePaginationConfig.PageSizeOptions,
     applyPaginator: false,
   },
 };
@@ -98,8 +98,8 @@ export const MixedDataTable: Story = {
     columns: mixedColumns,
     dataSource: mixedData,
     totalItems: mixedData.length,
-    pageSize: TablePaginationConfig.PageSize,
-    pageSizeOptions: TablePaginationConfig.PageSizeOptions,
+    pageSize: tablePaginationConfig.PageSize,
+    pageSizeOptions: tablePaginationConfig.PageSizeOptions,
     applyPaginator: false,
   },
 };

@@ -15,7 +15,7 @@ import { UserListingComponent } from './components/user-table/user-listing.compo
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { PaginatedDataResponse } from '../../../shared/interfaces/paginated-data-response.interface';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
-import { DEBOUNCE_TIME } from '../../../utils/constants';
+import { debounceTimeValue } from '../../../utils/constants';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
@@ -123,7 +123,7 @@ describe('UserManagementComponent', () => {
     const spy = jest.spyOn(component as any, 'fetchUsers');
     component.onSearchInputChange('Jane');
     expect(spy).not.toHaveBeenCalled();
-    tick(DEBOUNCE_TIME);
+    tick(debounceTimeValue);
     expect(spy).toHaveBeenCalledTimes(1);
   }));
 
