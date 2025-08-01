@@ -1,4 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+$custom-typography: mat.m2-define-typography-config(
+  $font-family: 'Segoe UI, sans-serif',
+  $body-1: mat.m2-define-typography-level(16px, 20px, 400),
+  $caption: mat.m2-define-typography-level(13px, 16px, 400),
+);
+
 @import 'tailwindcss';
 @import '../src/assets/scss/utils/variable';
 @import '../src/assets/scss/utils/material-overrides';
@@ -191,4 +198,62 @@
   button {
     width: 100%;
   }
+}
+
+// action buttons of table
+app-data-table {
+  .table-responsive {
+    .action-icons {
+      gap: 5px !important;
+      .text-button {
+        padding: 8px !important;
+        .secondary {
+          color: #424242;
+        }
+      }
+    }
+
+    .mat-mdc-cell.mat-column-actions {
+      padding-left: 8px !important;
+    }
+  }
+}
+
+//User Management Buttons
+.user-management {
+  .user-management-toolbar {
+    .user-management-btns {
+      .add-user,
+      .export-users {
+        flex: 1 1 50%;
+        min-width: 0;
+        button {
+          width: 100% !important;
+          white-space: nowrap !important;
+        }
+      }
+    }
+  }
+}
+
+/* Width of the scrollbar */
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+  margin-left: 5px;
+}
+
+/* Track of the scrollbar */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle of the scrollbar */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
