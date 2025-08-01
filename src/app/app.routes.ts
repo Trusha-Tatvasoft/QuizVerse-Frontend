@@ -7,6 +7,8 @@ import { ForgotPasswordComponent } from './core/auth/components/forgot-password/
 import { ResetLinkSendSuccessfullyComponent } from './core/auth/components/reset-link-send-successfully/reset-link-send-successfully.component';
 import { ResetLinkInvalidComponent } from './core/auth/components/reset-link-invalid/reset-link-invalid.component';
 import { ResetPasswordComponent } from './core/auth/components/reset-password/reset-password.component';
+import { UserManagementComponent } from './pages/admin/user-management/user-management.component';
+import { MasterLayoutComponent } from './pages/layout/master-layout/master-layout.component';
 
 export const routes: Routes = [
   {
@@ -38,5 +40,16 @@ export const routes: Routes = [
     path: Navigations.ResetPassword,
     component: ResetPasswordComponent,
     title: 'Quizeverse | Reset Password',
+  },
+  {
+    path: Navigations.Admin,
+    component: MasterLayoutComponent,
+    children: [
+      {
+        path: Navigations.Users,
+        component: UserManagementComponent,
+        title: 'Quizeverse | User Management',
+      },
+    ],
   },
 ];
