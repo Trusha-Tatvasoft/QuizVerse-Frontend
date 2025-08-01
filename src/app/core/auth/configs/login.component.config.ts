@@ -43,4 +43,11 @@ export const LOGIN_FORM_FIELDS: DynamicFormField[] = [
       required: 'Password is required.',
     },
   },
+  {
+    name: 'rememberMe',
+    label: 'Remember Me',
+    type: 'checkbox',
+    placeholder: '',
+    validators: [],
+  },
 ];
