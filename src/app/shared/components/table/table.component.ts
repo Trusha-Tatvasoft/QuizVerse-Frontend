@@ -92,6 +92,9 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   onSortChange(sort: Sort) {
+    if (sort.direction === '') {
+      sort.active = '';
+    }
     this.sortChange.emit({ active: sort.active, direction: sort.direction });
   }
 
