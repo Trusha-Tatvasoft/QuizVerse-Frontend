@@ -1,27 +1,22 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ButtonConfig } from '../../../../shared/interfaces/button-config.interface';
 import { RegisterCredentials } from '../../interfaces/register.interface';
 import {
   REGISTER_BUTTON_CONFIG,
   REGISTER_FORM_FIELDS,
 } from '../../configs/register.component.config';
+import { TogglePasswordDirective } from '../toggle-password.directive';
+import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
 
-/**
- * Register component handling:
- * - Reactive form setup and validation
- * - Loading state management
- * - Submission of registration credentials
- */
 @Component({
   selector: 'app-register',
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     FilledButtonComponent,
@@ -30,20 +25,22 @@ import {
     MatInputModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    TogglePasswordDirective,
   ],
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  styleUrls: ['./register.component.scss', '../login-signup/login-signup.component.scss'],
 })
 export class RegisterComponent {
-  private readonly fb = inject(FormBuilder); // Inject FormBuilder for reactive form
-  registerFields = REGISTER_FORM_FIELDS; // Form field configurations
-  registerForm: FormGroup; // Reactive form instance
-  isLoading = false; // Loading state
-  errorMessage = ''; // Error message
-  registerButton = REGISTER_BUTTON_CONFIG; // Register button configuration
+  private readonly fb = inject(FormBuilder);
+  private readonly validationErrorService = inject(ValidationErrorService);
+
+  registerFields = REGISTER_FORM_FIELDS;
+  registerButton = REGISTER_BUTTON_CONFIG;
+
+  registerForm: FormGroup;
 
   constructor() {
-    // Initialize form with controls based on REGISTER_FORM_FIELDS
+    // Create form group using fields and validators
     this.registerForm = this.fb.group(
       this.registerFields.reduce(
         (acc, field) => {
@@ -55,38 +52,25 @@ export class RegisterComponent {
     );
   }
 
-  /**
-   * Returns button config with dynamic disabled state based on loading
-   */
-  get buttonConfig(): ButtonConfig {
-    return {
-      ...this.registerButton,
-      isDisabled: this.isLoading,
-    };
+  getError(fieldName: string): string | null {
+    const control = this.registerForm.get(fieldName);
+    const field = this.registerFields.find((f) => f.name === fieldName);
+    const customMessages = field?.validationMessages || {};
+
+    return this.validationErrorService.getErrorMessage(control!, customMessages, fieldName);
   }
 
-  /**
-   * Handles form submission
-   * - Marks form as touched if invalid
-   * - Sets loading state and simulates processing delay
-   */
+  // Handle form submission with validation and simulated delay
   onSubmit(): void {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
     }
 
-    this.isLoading = true;
-    this.errorMessage = '';
-
     const credentials: RegisterCredentials = {
       fullName: this.registerForm.value.fullName,
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
     };
-
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 1000);
   }
 }

@@ -143,7 +143,7 @@
     .info {
       display: flex;
       flex-direction: column;
-
+      background: #ffffff !important;
       .name {
         font-weight: 600;
         font-size: 14px;
@@ -160,6 +160,26 @@
         @media (max-width: 480px) {
           font-size: 12px;
         }
+      }
+    }
+
+    .initials {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+      font-size: 14px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+      padding-top: 2px;
+
+      @media (max-width: 480px) {
+        width: 30px;
+        height: 30px;
+        font-size: 13px;
       }
     }
   }
@@ -258,5 +278,67 @@
   .text-failed {
     color: #991b1b;
     font-weight: bold;
+  }
+}
+
+.profile-cell {
+  .initials.bg-avatar-0 {
+    background-color: #ffb703;
+    color: #000;
+  }
+
+  .initials.bg-avatar-1 {
+    background-color: #fb8500;
+    color: #fff;
+  }
+
+  .initials.bg-avatar-2 {
+    background-color: #219ebc;
+    color: #fff;
+  }
+
+  .initials.bg-avatar-3 {
+    background-color: #8ecae6;
+    color: #000;
+  }
+
+  .initials.bg-avatar-4 {
+    background-color: #ff006e;
+    color: #fff;
+  }
+
+  .initials.bg-avatar-5 {
+    background-color: #8338ec;
+    color: #fff;
+  }
+
+  .initials.bg-avatar-6 {
+    background-color: #3a86ff;
+    color: #fff;
+  }
+
+  .initials.bg-avatar-7 {
+    background-color: #06d6a0;
+    color: #000;
+  }
+
+  .initials.bg-avatar-8 {
+    background-color: #ef476f;
+    color: #fff;
+  }
+
+  .initials.bg-avatar-9 {
+    background-color: #ffd166;
+    color: #000;
+  }
+
+  .initials.bg-avatar-10 {
+    background-color: #118ab2;
+    color: #fff;
+  }
+
+  .initials.bg-avatar-11 {
+    background-color: #073b4c;
+    color: #fff;
   }
 }

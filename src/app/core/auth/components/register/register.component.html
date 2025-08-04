@@ -1,67 +1,36 @@
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+<!-- Register Form -->
+<form class="custom-form-field" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   @for (field of registerFields; track field.name) {
-    <div class="form-field">
-      <label [for]="field.name">{{ field.label }}</label>
-      <div class="input-group">
-        <mat-icon fontSet="material-icons-outlined">
-          @switch (field.name) {
-            @case ('fullName') {
-              account_circle
-            }
-            @case ('email') {
-              mail
-            }
-            @case ('password') {
-              lock
-            }
-          }
-        </mat-icon>
+    <div class="d-flex flex-column justify-content-start form-field pb-1">
+      <mat-label>{{ field.label }}</mat-label>
+
+      <mat-form-field appearance="outline" class="full-width" [floatLabel]="'auto'">
+        <mat-icon fontSet="material-icons-outlined" matPrefix>{{ field.icon || 'input' }}</mat-icon>
+
         <input
+          #fieldRef
+          matInput
           [id]="field.name"
           [type]="field.type"
           [formControlName]="field.name"
           [placeholder]="field.placeholder"
+          autocomplete="off"
           required
         />
-      </div>
+
+        @if (field.type === 'password') {
+          <button mat-icon-button matSuffix type="button" [appTogglePassword]="fieldRef">
+            <mat-icon fontSet="material-icons-outlined">visibility_off</mat-icon>
+          </button>
+        }
+
+        <mat-error>
+          {{ getError(field.name) }}
+        </mat-error>
+      </mat-form-field>
     </div>
-
-    @if (registerForm.get(field.name)?.invalid && registerForm.get(field.name)?.touched) {
-      <div class="error">
-        @if (registerForm.get(field.name)?.hasError('required')) {
-          {{ field.label }} is required.
-        }
-      </div>
-      <div class="error">
-        @if (registerForm.get(field.name)?.hasError('minlength')) {
-          {{ field.label }} must be at least
-          {{ registerForm.get(field.name)?.errors?.['minlength']?.requiredLength }} characters.
-        }
-      </div>
-      <div class="error">
-        @if (registerForm.get(field.name)?.hasError('pattern')) {
-          @if (field.name === 'email') {
-            Please enter a valid email format.
-          }
-          @if (field.name === 'password') {
-            Password must be at least 8 characters long and include uppercase, lowercase, number,
-            and special character.
-          }
-          @if (field.name === 'fullName') {
-            Full Name should not start with a space.
-          }
-        }
-      </div>
-    }
   }
 
-  @if (errorMessage) {
-    <div class="error">{{ errorMessage }}</div>
-  }
-
-  <app-filled-button [filledButtonConfig]="buttonConfig" class="signup-button">
-    @if (isLoading) {
-      <span class="loader"></span>
-    }
+  <app-filled-button [filledButtonConfig]="registerButton" class="signup-button">
   </app-filled-button>
 </form>

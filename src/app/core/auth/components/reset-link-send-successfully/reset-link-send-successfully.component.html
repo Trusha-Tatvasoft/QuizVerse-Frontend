@@ -1,0 +1,60 @@
+<div class="auth-main-container">
+  <!-- Back to Sign In link -->
+  <div class="back-link-container">
+    <a routerLink="/login" class="back-link">
+      <img src="assets/images/back-arrow.svg" alt="Back" class="back-arrow-icon" />
+      Back to Sign In
+    </a>
+  </div>
+
+  <div class="auth-card">
+    <!-- Icon representing success -->
+    <div class="logo pb-4">
+      <mat-icon class="material-icons-outlined">task_alt</mat-icon>
+    </div>
+
+    <!-- Header with success message -->
+    <div class="auth-header">
+      <h1>Check Your Email</h1>
+      <p class="subtext">We've sent a password reset link to your email</p>
+    </div>
+
+    <!-- Success message with user's email -->
+    <div class="success-message">
+      <mat-icon class="material-icons-outlined">mail</mat-icon>
+      <p class="green-header pb-2">
+        A password reset link has been sent to <br />
+        <strong class="dark-green pt-2">{{ email }}</strong>
+      </p>
+      <p class="green-header d-inline-block">
+        Please check your inbox and click the link to reset your password.
+      </p>
+    </div>
+
+    <!-- Info message if email not received -->
+    <p class="subtext pt-4">Didn't receive the email? Check your spam folder.</p>
+
+    <!-- Expiry information -->
+    <p class="subtext expire-info pt-1 pb-5 text-sm">
+      The reset link will expire in 15 minutes for security purposes.
+    </p>
+
+    <!-- Button to send another reset email -->
+    <div class="pb-3">
+      <app-outline-button
+        class="signin-button"
+        [outlineButtonConfig]="sendAnotherEmailButton"
+        (buttonClicked)="onSendAnotherEmailClick()"
+      >
+      </app-outline-button>
+    </div>
+
+    <!-- Button to navigate to sign in -->
+    <app-filled-button
+      [filledButtonConfig]="loginButton"
+      class="signin-button"
+      (buttonClicked)="onSignInClick()"
+    >
+    </app-filled-button>
+  </div>
+</div>

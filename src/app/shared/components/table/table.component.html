@@ -95,7 +95,18 @@
 
               @case ('profile') {
                 <div class="profile-cell">
-                  <img [src]="row[column.key].image" alt="{{ row[column.key].name }}" />
+                  @if (row[column.key]?.image) {
+                    <img
+                      [src]="row[column.key].image"
+                      alt="{{ row[column.key].name }}"
+                      (error)="row[column.key].image = null"
+                    />
+                  } @else {
+                    <div class="initials" [ngClass]="getInitialsColorClass(row[column.key].name)">
+                      {{ getInitials(row[column.key].name) }}
+                    </div>
+                  }
+
                   <div class="info">
                     <div class="name">{{ row[column.key].name }}</div>
                     <div class="email">{{ row[column.key].email }}</div>

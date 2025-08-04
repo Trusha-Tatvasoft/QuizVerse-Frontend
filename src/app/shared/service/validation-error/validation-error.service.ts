@@ -4,35 +4,56 @@ import { ValidationMessageMap } from '../../interfaces/validation-message-map.in
 
 @Injectable({ providedIn: 'root' })
 export class ValidationErrorService {
+  // Fields that should not allow spaces
+  private readonly noSpaceFields = ['username', 'password'];
+
   getErrorMessage(
     control: AbstractControl,
     customMessages: ValidationMessageMap = {},
+    fieldName?: string,
   ): string | null {
     if (!control || !control.errors || !control.touched) return null;
 
     const errors: ValidationErrors = control.errors;
 
     for (const key of Object.keys(errors)) {
-      // Priority 1: Custom message
-      if (customMessages[key]) return customMessages[key];
-
-      // Priority 2: Default message via switch
       switch (key) {
         case 'required':
-          return 'This field is required.';
+          return customMessages[key] || 'This field is required.';
+
         case 'minlength':
-          return `Minimum length is ${errors[key].requiredLength}.`;
+          return customMessages[key] || `Minimum length is ${errors[key].requiredLength}.`;
+
         case 'maxlength':
-          return `Maximum length is ${errors[key].requiredLength}.`;
+          return customMessages[key] || `Maximum length is ${errors[key].requiredLength}.`;
+
         case 'email':
-          return 'Invalid email address.';
+          return customMessages[key] || 'Invalid email address.';
+
         case 'pattern':
-          return 'Invalid format.';
+          // Check if fieldName is in noSpaceFields and contains space
+          if (
+            fieldName &&
+            this.noSpaceFields.includes(fieldName.toLowerCase()) &&
+            typeof control.value === 'string' &&
+            control.value.includes(' ')
+          ) {
+            return `${this.capitalize(fieldName)} cannot contain spaces.`;
+          }
+          return customMessages[key] || 'Invalid format.';
+
+        case 'passwordMismatch':
+          return customMessages[key] || 'Passwords do not match.';
+
         default:
-          return `Invalid: ${key}`;
+          return customMessages[key] || `Invalid: ${key}`;
       }
     }
 
     return null;
+  }
+
+  private capitalize(value: string): string {
+    return value.charAt(0).toUpperCase() + value.slice(1);
   }
 }

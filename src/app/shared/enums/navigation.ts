@@ -1,7 +1,10 @@
 export enum Navigations {
   Login = 'login',
   ForgetPassword = 'forgot-password',
+  ResetPassword = 'reset-password',
   ResetPasswordLink = 'reset-password-link',
+  ResetPasswordLinkSuccess = 'reset-password-link-success',
+  ResetLinkInvalid = 'reset-link-invalid',
 
   User = 'user',
   Dashboard = '',

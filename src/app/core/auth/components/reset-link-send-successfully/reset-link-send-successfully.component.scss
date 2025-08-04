@@ -1,0 +1,42 @@
+.logo {
+  .mat-icon {
+    font-size: 2rem !important;
+    font-weight: 200 !important;
+    background: #43ad19 !important;
+  }
+}
+
+.subtext,
+.green-header {
+  color: #64748b !important;
+  font-size: 0.875rem !important;
+}
+
+.green-header {
+  color: #166534 !important;
+}
+
+.success-message {
+  padding: 1rem;
+  text-align: center;
+  background: #f0fdf4;
+  border-radius: 0.5rem;
+  border: 1px solid #bbf7d0;
+
+  .mat-icon {
+    height: 2rem;
+    width: 2rem;
+    color: #16a34a !important;
+    font-size: 2rem !important;
+    font-weight: 200 !important;
+    opacity: 1;
+  }
+}
+
+.expire-info {
+  font-size: 0.75rem !important;
+}
+
+.auth-header {
+  margin-bottom: 1rem !important;
+}
