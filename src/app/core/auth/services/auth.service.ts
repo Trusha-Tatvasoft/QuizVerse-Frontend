@@ -20,10 +20,10 @@ import { SnackbarService } from '../../../shared/service/snackbar/snackbar.servi
 import {
   ACCESS_TOKEN_EXPIRY_MINUTES,
   ACCESS_TOKEN_KEY,
+  getAccessTokenExpiryDate,
+  getRefreshTokenExpiryDate,
   PlatformMessages,
-  REFRESH_TOKEN_EXPIRY_DAYS,
   REFRESH_TOKEN_KEY,
-  REMEMBER_ME_EXPIRY_DAYS,
   ROLE_CLAIM_KEY,
 } from '../../../utils/constants';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
@@ -35,10 +35,11 @@ export class AuthService {
   private readonly router = inject(Router);
   private readonly snackbar = inject(SnackbarService);
   private readonly cookieService = inject(CookieService);
+  private readonly http = inject(HttpClient);
 
   currentRole$ = new BehaviorSubject<string | null>(null);
 
-  constructor(private readonly http: HttpClient) {
+  constructor() {
     const token = this.getAccessToken();
     if (token) {
       this.currentRole$.next(this.getRoleFromToken(token));
@@ -46,15 +47,14 @@ export class AuthService {
   }
 
   saveTokens(accessToken: string, refreshToken: string, rememberMe: boolean = false) {
-    const now = new Date();
-    const accessExpiry = new Date(now.getTime() + ACCESS_TOKEN_EXPIRY_MINUTES * 60 * 1000);
-    const refreshExpiry = new Date(
-      now.getTime() +
-        (rememberMe ? REMEMBER_ME_EXPIRY_DAYS : REFRESH_TOKEN_EXPIRY_DAYS) * 24 * 60 * 60 * 1000,
-    );
-
-    this.cookieService.set(ACCESS_TOKEN_KEY, accessToken, { expires: accessExpiry, path: '/' });
-    this.cookieService.set(REFRESH_TOKEN_KEY, refreshToken, { expires: refreshExpiry, path: '/' });
+    this.cookieService.set(ACCESS_TOKEN_KEY, accessToken, {
+      expires: getAccessTokenExpiryDate(),
+      path: '/',
+    });
+    this.cookieService.set(REFRESH_TOKEN_KEY, refreshToken, {
+      expires: getRefreshTokenExpiryDate(rememberMe),
+      path: '/',
+    });
 
     this.currentRole$.next(this.getRoleFromToken(accessToken));
   }
@@ -75,27 +75,16 @@ export class AuthService {
     return this.cookieService.get(REFRESH_TOKEN_KEY) || null;
   }
 
-  isLoggedIn(): boolean {
-    return !!this.getAccessToken();
-  }
-
   getRoleFromToken(token: string): string | null {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const role = payload[ROLE_CLAIM_KEY];
       return role?.toLowerCase() || null;
     } catch {
-      this.router.navigate([PlatformMessages.loginRedirectMessage]); // use route const if defined
+      this.router.navigate(['/login']);
+      this.snackbar.showInfo(PlatformMessages.loginRedirectMessage);
       return null;
     }
-  }
-
-  hasRole(role: string): boolean {
-    const token = this.getAccessToken();
-    if (!token) return false;
-
-    const userRole = this.getRoleFromToken(token);
-    return userRole === role;
   }
 
   refreshAccessToken(): Observable<string> {
@@ -148,25 +137,20 @@ export class AuthService {
     }
   }
 
-  verifyResetPasswordToken(token: string): Observable<boolean> {
-    return this.http
-      .post<
-        ApiResponse<boolean>
-      >(`${this.API}/${EndPoints.VerifyResetPasswordToken}`, { resetPasswordToken: token })
-      .pipe(map((response) => response.data));
-  }
-
-  login(credentials: LoginCredentials): Observable<void> {
+  login(
+    credentials: LoginCredentials,
+  ): Observable<ApiResponse<{ accessToken: string; refreshToken?: string }>> {
     return this.http
       .post<
         ApiResponse<{ accessToken: string; refreshToken?: string }>
       >(`${this.API}/${EndPoints.Login}`, credentials)
       .pipe(
         tap((response) => {
-          const { accessToken, refreshToken } = response.data;
-          this.saveTokens(accessToken, refreshToken || '', credentials.rememberMe);
+          if (response.result && response.statusCode === 200) {
+            const { accessToken, refreshToken } = response.data;
+            this.saveTokens(accessToken, refreshToken || '', credentials.rememberMe);
+          }
         }),
-        map(() => undefined),
       );
   }
 

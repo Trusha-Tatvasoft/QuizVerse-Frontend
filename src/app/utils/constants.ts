@@ -208,8 +208,7 @@ export const PlatformMessages = {
   //#region authMessages
   loginRedirectMessage: 'Redirecting to login.',
   unauthorizedTitle: 'Unauthorized',
-  unauthorizedAccessAdmin: 'No access for this page (Admin only).',
-  unauthorizedAccessUser: 'No access for this page (User only).',
+  unauthorizedAccess: 'No access for this page.',
   invalidOrExpiredToken: 'Invalid token or Token Expired!!',
   //#endregion
 
@@ -244,6 +243,16 @@ export const ROLE_CLAIM_KEY = 'http://schemas.microsoft.com/ws/2008/06/identity/
 export const ACCESS_TOKEN_EXPIRY_MINUTES = 30;
 export const REFRESH_TOKEN_EXPIRY_DAYS = 7;
 export const REMEMBER_ME_EXPIRY_DAYS = 30;
+
+// Functions to get expiry dates
+export const getAccessTokenExpiryDate = () => {
+  return new Date(Date.now() + ACCESS_TOKEN_EXPIRY_MINUTES * 60 * 1000);
+};
+
+export const getRefreshTokenExpiryDate = (rememberMe: boolean) => {
+  const days = rememberMe ? REMEMBER_ME_EXPIRY_DAYS : REFRESH_TOKEN_EXPIRY_DAYS;
+  return new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+};
 //#endregion
 
 export const USER_EXPORT_FILE_PREFIX = 'User';

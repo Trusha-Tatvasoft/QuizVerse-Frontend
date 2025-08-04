@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, FormGroup } from '@angular/forms';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import { CommonModule } from '@angular/common';
@@ -14,6 +14,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AuthService } from '../../services/auth.service';
 import { Navigations } from '../../../../shared/enums/navigation';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -32,12 +33,14 @@ import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.se
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss', '../login-signup/login-signup.component.scss'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly validationErrorService = inject(ValidationErrorService);
   private readonly authService = inject(AuthService);
   private readonly snackbar = inject(SnackbarService);
+
+  private readonly destroy$ = new Subject<void>();
 
   loginFields = LOGIN_FORM_FIELDS; // Field config for login form
   signInButton = SIGNIN_BUTTON_CONFIG; // Button config for sign-in
@@ -77,21 +80,30 @@ export class LoginComponent {
       rememberMe: !!this.loginForm.value.rememberMe,
     };
 
-    this.authService.login(credentials).subscribe({
-      next: () => {
-        const token = this.authService.getAccessToken();
-        const role = token ? this.authService.getRoleFromToken(token) : null;
+    this.authService
+      .login(credentials)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          const token = res.data.accessToken;
+          const role = token ? this.authService.getRoleFromToken(token) : null;
 
-        if (role === 'admin') {
+          if (role === 'admin') {
+            this.router.navigate([Navigations.Admin]);
+          } else {
+            this.router.navigate([Navigations.User]);
+          }
           this.snackbar.showSuccess('Welcome back!', 'You have been successfully logged in!');
-          this.router.navigate([Navigations.Admin]);
-        } else {
-          this.router.navigate([Navigations.User]);
-        }
-      },
-      error: () => {
-        this.snackbar.showError('Login Falied!!');
-      },
-    });
+        },
+        error: (err) => {
+          const message = err.error?.message || 'Unexpected error occurred';
+          this.snackbar.showError('Login Failed', message);
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

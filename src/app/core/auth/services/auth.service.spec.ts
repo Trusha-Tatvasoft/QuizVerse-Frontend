@@ -30,6 +30,7 @@ describe('AuthService (Jest)', () => {
 
   const snackbarMock = {
     showError: jest.fn(),
+    showInfo: jest.fn(),
   };
 
   beforeEach(() => {
@@ -108,25 +109,13 @@ describe('AuthService (Jest)', () => {
   });
 
   it('should navigate on invalid token', () => {
-    service.getRoleFromToken('invalid.token');
-    expect(routerMock.navigate).toHaveBeenCalledWith([PlatformMessages.loginRedirectMessage]);
-  });
+    const invalidToken = 'invalid.token.value'; // malformed token
 
-  it('should return true for matching role', () => {
-    const token = createToken('player');
-    cookieServiceMock.get.mockReturnValue(token);
-    expect(service.hasRole('player')).toBe(true);
-  });
+    const role = service.getRoleFromToken(invalidToken);
 
-  it('should return false if role does not match', () => {
-    const token = createToken('admin');
-    cookieServiceMock.get.mockReturnValue(token);
-    expect(service.hasRole('user')).toBe(false);
-  });
-
-  it('should return false if no token', () => {
-    cookieServiceMock.get.mockReturnValue('');
-    expect(service.hasRole('admin')).toBe(false);
+    expect(role).toBeNull();
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/login']);
+    expect(snackbarMock.showInfo).toHaveBeenCalledWith('Redirecting to login.');
   });
 
   it('should return true if token is expired', () => {
@@ -205,25 +194,6 @@ describe('AuthService (Jest)', () => {
     expect(service.currentRole$.value).toBeNull();
   });
 
-  it('should verify reset password token', () => {
-    service.verifyResetPasswordToken('token123').subscribe((result) => {
-      expect(result).toBe(true);
-    });
-
-    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.VerifyResetPasswordToken}`);
-    req.flush({ result: true, data: true, message: '', statusCode: 200 });
-  });
-
-  it('should return true when access token exists', () => {
-    cookieServiceMock.get.mockReturnValue('token123');
-    expect(service.isLoggedIn()).toBe(true);
-  });
-
-  it('should return false when access token does not exist', () => {
-    cookieServiceMock.get.mockReturnValue('');
-    expect(service.isLoggedIn()).toBe(false);
-  });
-
   it('should return null if token has no role', () => {
     const token = createToken('', 3600);
     const parts = token.split('.');
@@ -294,5 +264,20 @@ describe('AuthService (Jest)', () => {
       status: 400,
       statusText: 'Bad Request',
     });
+  });
+
+  it('should use tokenInvalidMessage when no error message is provided during refresh', () => {
+    cookieServiceMock.get.mockReturnValue('refresh-token');
+
+    service.refreshAccessToken().subscribe((res) => {
+      expect(res).toBe('');
+      expect(snackbarMock.showError).toHaveBeenCalledWith(
+        PlatformMessages.sessionExpiredTitle,
+        PlatformMessages.tokenInvalidMessage,
+      );
+    });
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.RefreshToken}`);
+    req.error(new ProgressEvent('error'));
   });
 });

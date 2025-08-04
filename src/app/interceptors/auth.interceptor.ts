@@ -5,7 +5,7 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Observable, BehaviorSubject, EMPTY } from 'rxjs';
+import { Observable, BehaviorSubject, EMPTY, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
 
 import { AuthService } from '../core/auth/services/auth.service';
@@ -42,6 +42,9 @@ export const AuthInterceptor: HttpInterceptorFn = (
       const backendMessage = error.statusText;
 
       switch (error.status) {
+        case 400:
+          return throwError(() => error);
+
         case 401:
           return refreshAndRetry(authReq, next, authService, snackbar);
 

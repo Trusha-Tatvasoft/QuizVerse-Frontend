@@ -108,7 +108,18 @@ describe('LoginComponent', () => {
       rememberMe: true,
     });
 
-    authSpy.login.mockReturnValue(of(void 0));
+    authSpy.login.mockReturnValue(
+      of({
+        data: {
+          accessToken: 'mock-token',
+          refreshToken: 'mock-refresh-token',
+        },
+        message: 'Login successful',
+        statusCode: 200,
+        result: true,
+      }),
+    );
+
     authSpy.getAccessToken.mockReturnValue('token');
     authSpy.getRoleFromToken.mockReturnValue('admin');
 
@@ -129,7 +140,18 @@ describe('LoginComponent', () => {
       rememberMe: true,
     });
 
-    authSpy.login.mockReturnValue(of(void 0));
+    authSpy.login.mockReturnValue(
+      of({
+        data: {
+          accessToken: 'mock-token',
+          refreshToken: 'mock-refresh-token',
+        },
+        message: 'Login successful',
+        statusCode: 200,
+        result: true,
+      }),
+    );
+
     authSpy.getAccessToken.mockReturnValue('token');
     authSpy.getRoleFromToken.mockReturnValue('admin');
     const navSpy = jest.spyOn(router, 'navigate');
@@ -150,7 +172,18 @@ describe('LoginComponent', () => {
       rememberMe: false,
     });
 
-    authSpy.login.mockReturnValue(of(void 0));
+    authSpy.login.mockReturnValue(
+      of({
+        data: {
+          accessToken: 'mock-token',
+          refreshToken: 'mock-refresh-token',
+        },
+        message: 'Login successful',
+        statusCode: 200,
+        result: true,
+      }),
+    );
+
     authSpy.getAccessToken.mockReturnValue('token');
     authSpy.getRoleFromToken.mockReturnValue('player');
     const navSpy = jest.spyOn(router, 'navigate');
@@ -167,10 +200,13 @@ describe('LoginComponent', () => {
       rememberMe: false,
     });
 
-    authSpy.login.mockReturnValue(throwError(() => new Error('Invalid login')));
+    const errorResponse = {
+      error: { message: 'Invalid credentials' },
+    };
 
+    authSpy.login.mockReturnValue(throwError(() => errorResponse));
     component.onSubmit();
 
-    expect(snackbarSpy.showError).toHaveBeenCalledWith('Login Falied!!');
+    expect(snackbarSpy.showError).toHaveBeenCalledWith('Login Failed', 'Invalid credentials');
   });
 });
