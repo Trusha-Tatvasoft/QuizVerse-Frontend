@@ -209,4 +209,32 @@ describe('LoginComponent', () => {
 
     expect(snackbarSpy.showError).toHaveBeenCalledWith('Login Failed', 'Invalid credentials');
   });
+
+  it('should navigate to user when token is null', () => {
+    const mockResponse = {
+      result: true,
+      statusCode: 200,
+      message: 'Login successful but no token',
+      data: { accessToken: null as unknown as string, refreshToken: undefined },
+    };
+
+    authSpy.login.mockReturnValue(of(mockResponse));
+
+    component.loginForm.setValue({ email: 'a@b.com', password: 'pass', rememberMe: false });
+    const navSpy = jest.spyOn(router, 'navigate');
+
+    component.onSubmit();
+
+    expect(navSpy).toHaveBeenCalledWith([Navigations.User]);
+  });
+
+  it('should show default error message when err.error.message is missing', () => {
+    const mockError = { error: {} }; // no message property
+    authSpy.login.mockReturnValue(throwError(() => mockError));
+
+    component.loginForm.setValue({ email: 'a@b.com', password: 'pass', rememberMe: false });
+    component.onSubmit();
+
+    expect(snackbarSpy.showError).toHaveBeenCalledWith('Login Failed', 'Unexpected error occurred');
+  });
 });
