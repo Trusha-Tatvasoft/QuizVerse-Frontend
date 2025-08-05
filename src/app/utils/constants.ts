@@ -195,6 +195,7 @@ export const PlatformMessages = {
   passwordResetSuccess: `Password reset successfully.`,
   noDataAvailable: `No data available to export.`,
   errorExport: `Export failed.`,
+  registerSuccessfully: `Register Successfully!!`,
 };
 
 export const DEFAULT_LAST_LOGIN_DATE = '0001-01-01T00:00:00';

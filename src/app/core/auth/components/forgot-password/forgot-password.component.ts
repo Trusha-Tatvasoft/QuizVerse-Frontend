@@ -45,12 +45,13 @@ export class ForgotPasswordComponent {
   private readonly router = inject(Router);
   private readonly validationErrorService = inject(ValidationErrorService);
   private readonly authService = inject(ForgotResetPasswordService);
-  private readonly destroy$ = new Subject<void>();
   private readonly snackbarService = inject(SnackbarService);
 
   forgotPasswordFields = FORGOT_PASSWORD_FORM_FIELDS;
-  forgotPasswordForm: FormGroup;
   sendResetLinkButton = SEND_RESET_LINK_CONFIG;
+  forgotPasswordForm: FormGroup;
+
+  private readonly destroy$ = new Subject<void>();
 
   constructor() {
     // Build reactive form using config field definitions and validators
