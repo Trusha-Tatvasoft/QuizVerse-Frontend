@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { OutlineButtonComponent } from '../../../../shared/components/outline-button/outline-button.component';
 import {
   FACEBOOK_BUTTON_CONFIG,
@@ -8,7 +8,7 @@ import {
 import { TabComponent } from '../../../../shared/components/tab/tab.component';
 import { RouterLink } from '@angular/router';
 
-// Login/Signup container component contains tab for login and signup forms
+export const selectedTabIndexSignal = signal<number>(0);
 
 @Component({
   selector: 'app-login-signup',
@@ -20,5 +20,15 @@ export class LoginSignupComponent {
   googleButton = GOOGLE_BUTTON_CONFIG; // Google button configuration
   facebookButton = FACEBOOK_BUTTON_CONFIG; // Facebook button configuration
   tabs = LOGIN_SIGNUP_TABS_CONFIG; // Tabs for Sign In / Sign Up
-  selectedIndex = 0; // Active tab index
+  selectedIndex = selectedTabIndexSignal(); // Active tab index
+
+  constructor() {
+    effect(() => {
+      this.selectedIndex = selectedTabIndexSignal();
+    });
+  }
+
+  switchToTab(index: number) {
+    selectedTabIndexSignal.set(index);
+  }
 }

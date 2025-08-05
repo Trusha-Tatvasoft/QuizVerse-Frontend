@@ -191,6 +191,8 @@ export const PlateformName = 'QuizVerse';
 export const PlatformMessages = {
   errorTitle: `Error!`,
   errorMessage: `Something went wrong.`,
+  resetLinkSendSuccessfully: `Reset link sent successfully.`,
+  passwordResetSuccess: `Password reset successfully.`,
 };
 
 export const DEFAULT_LAST_LOGIN_DATE = '0001-01-01T00:00:00';
