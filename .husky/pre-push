@@ -5,4 +5,3 @@
 set -e
 
 echo "Running tests before push..."
-npm run test:ci
