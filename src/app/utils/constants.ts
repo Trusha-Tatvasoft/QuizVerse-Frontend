@@ -205,3 +205,7 @@ export const DEBOUNCE_TIME = 500;
 export const USER_EXPORT_FILE_PREFIX = 'User';
 
 export const EXPORT_FILE_NAME_TEMPLATE = '{prefix}_export_{date}.xlsx';
+
+export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+
+export const MAX_FILE_UPLOAD_SIZE = 10 * 1024 * 1024;

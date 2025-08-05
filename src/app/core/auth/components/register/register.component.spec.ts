@@ -98,9 +98,9 @@ describe('RegisterComponent', () => {
     expect(component.selectedFile).toBe(mockFile);
   });
 
-  it('should reject large file (>5MB)', () => {
+  it('should reject large file (>10MB)', () => {
     const mockFile = new File([''], 'large.jpg', { type: 'image/jpeg' });
-    Object.defineProperty(mockFile, 'size', { value: 6 * 1024 * 1024 });
+    Object.defineProperty(mockFile, 'size', { value: 11 * 1024 * 1024 });
 
     const event = {
       target: { files: [mockFile] },

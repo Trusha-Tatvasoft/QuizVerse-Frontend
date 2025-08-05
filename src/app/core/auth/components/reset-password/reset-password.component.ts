@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -40,7 +40,7 @@ import { Navigations } from '../../../../shared/enums/navigation';
     '../login/login.component.scss',
   ],
 })
-export class ResetPasswordComponent {
+export class ResetPasswordComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly validationErrorService = inject(ValidationErrorService);
   private readonly authService = inject(ForgotResetPasswordService);
@@ -72,7 +72,10 @@ export class ResetPasswordComponent {
 
   ngOnInit(): void {
     this.resetToken = this.route.snapshot.queryParamMap.get('token') || '';
+    this.resetLinkValidation();
+  }
 
+  resetLinkValidation() {
     if (!this.resetToken) {
       this.router.navigate([Navigations.ResetLinkInvalid]);
       return;
@@ -163,5 +166,10 @@ export class ResetPasswordComponent {
           this.router.navigate([Navigations.ForgetPassword]);
         },
       });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

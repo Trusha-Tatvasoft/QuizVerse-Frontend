@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import { CommonModule } from '@angular/common';
@@ -16,11 +16,15 @@ import {
 } from '../../configs/register.component.config';
 import { TogglePasswordDirective } from '../toggle-password.directive';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { RegisterService } from '../../services/register.service';
-import { PlatformMessages } from '../../../../utils/constants';
+import {
+  ALLOWED_IMAGE_TYPES,
+  MAX_FILE_UPLOAD_SIZE,
+  PlatformMessages,
+} from '../../../../utils/constants';
 import { RegisterCredential } from '../../interfaces/register.interface';
 import { TextButtonComponent } from '../../../../shared/components/text-button/text-button.component';
 import { OutlineButtonComponent } from '../../../../shared/components/outline-button/outline-button.component';
@@ -44,7 +48,7 @@ import { selectedTabIndexSignal } from '../login-signup/login-signup.component';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss', '../login-signup/login-signup.component.scss'],
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly validationErrorService = inject(ValidationErrorService);
   private readonly snackbarService = inject(SnackbarService);
@@ -126,11 +130,11 @@ export class RegisterComponent {
 
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      const allowedTypes = ['image/jpeg', 'image/png'];
+      const allowedTypes = ALLOWED_IMAGE_TYPES;
 
       control?.setErrors(null);
 
-      if (file.size > 5 * 1024 * 1024) {
+      if (file.size > MAX_FILE_UPLOAD_SIZE) {
         control?.setErrors({ fileSize: true });
         control?.markAsTouched();
         this.selectedFile = null;
@@ -213,4 +217,9 @@ export class RegisterComponent {
 
   // Handle cancel button click
   onCancel(): void {}
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
