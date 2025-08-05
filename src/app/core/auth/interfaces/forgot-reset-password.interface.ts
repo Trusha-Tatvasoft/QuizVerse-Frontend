@@ -1,6 +1,6 @@
 export interface ResetCredential {
   password: string;
-  confirmPassword: string;
+  resetPasswordToken?: string;
 }
 
 export interface ForgotCredential {
