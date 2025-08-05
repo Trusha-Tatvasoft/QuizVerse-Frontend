@@ -17,6 +17,7 @@ import { LoaderService } from '../../../../shared/service/loader/loader.service'
   styleUrls: [
     './reset-link-send-successfully.component.scss',
     '../login-signup/login-signup.component.scss',
+    '../reset-password/reset-password.component.scss',
   ],
 })
 export class ResetLinkSendSuccessfullyComponent {
