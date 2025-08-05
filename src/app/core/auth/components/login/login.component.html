@@ -1,4 +1,4 @@
-<form class="custom-form-field" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="loginForm" class="login-form" (ngSubmit)="onSubmit()">
   @for (field of loginFields; track field.name) {
     <div class="form-field mb-2">
       @if (field.type === 'checkbox') {
@@ -13,7 +13,11 @@
       } @else {
         <mat-label>{{ field.label }}</mat-label>
 
-        <mat-form-field appearance="outline" class="full-width" [floatLabel]="'auto'">
+        <mat-form-field
+          class="custom-form-field full-width"
+          appearance="outline"
+          [floatLabel]="'auto'"
+        >
           <mat-icon fontSet="material-icons-outlined" matPrefix>{{
             field.icon || 'person'
           }}</mat-icon>
@@ -30,15 +34,16 @@
           />
 
           @if (field.type === 'password') {
-            <button
-              mat-icon-button
-              matSuffix
-              type="button"
+            <mat-icon
+              fontSet="material-icons-outlined"
               [appTogglePassword]="fieldRef"
+              matSuffix
+              class="password-toggle-icon"
+              style="cursor: pointer"
               aria-label="Toggle password visibility"
             >
-              <mat-icon fontSet="material-icons-outlined">visibility_off</mat-icon>
-            </button>
+              visibility_off
+            </mat-icon>
           }
 
           <mat-error>

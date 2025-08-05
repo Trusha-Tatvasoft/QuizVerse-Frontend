@@ -5,4 +5,8 @@ export enum EndPoints {
   RefreshToken = 'authentication/refersh-token',
   VerifyResetPasswordToken = 'authentication/verify-token-reset-password',
   UserExport = 'Users/user-export-data',
+  ForgotPassword = 'Authentication/forgot-password',
+  ResetPassword = 'Authentication/reset-password',
+  RegisterUser = 'Authentication/register-user',
+  VerifyTokenRestPassword = 'Authentication/verify-token-reset-password',
 }

@@ -9,3 +9,19 @@
     text-underline-offset: 4px;
   }
 }
+
+.login-form {
+  padding: 0 6rem;
+}
+
+@media (max-width: 767px) {
+  .login-form {
+    padding: 0 2rem;
+  }
+}
+
+@media (max-width: 550px) {
+  .login-form {
+    padding: 0rem;
+  }
+}

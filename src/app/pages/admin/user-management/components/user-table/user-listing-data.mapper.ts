@@ -1,3 +1,4 @@
+import { environment } from '../../../../../../environments/environment.dev';
 import { UserStatus } from '../../../../../shared/enums/user-management.enum';
 import { TableData } from '../../../../../shared/interfaces/table-component.interface';
 import { DEFAULT_LAST_LOGIN_DATE } from '../../../../../utils/constants';
@@ -12,7 +13,7 @@ export function userToUserListingTableData(user: UserListData): TableData {
     fullname: {
       name: user.fullName,
       email: user.email,
-      image: user.profilePic || '', // Fallback to empty string if profilePic is not available
+      image: `${environment.imageBaseUrl}/${user.profilePic}` || '', // Fallback to empty string if profilePic is not available
     },
     role: {
       tagConfig: {

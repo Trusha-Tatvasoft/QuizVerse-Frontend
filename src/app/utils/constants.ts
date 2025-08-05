@@ -202,6 +202,8 @@ export const PlateformName = 'QuizVerse';
 export const PlatformMessages = {
   errorTitle: `Error!`,
   errorMessage: `Something went wrong.`,
+  resetLinkSendSuccessfully: `Reset link sent successfully.`,
+  passwordResetSuccess: `Password reset successfully.`,
   noDataAvailable: `No data available to export.`,
   errorExport: `Export failed.`,
 

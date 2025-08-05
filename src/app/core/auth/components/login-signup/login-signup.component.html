@@ -14,8 +14,12 @@
       <p class="subtext">Sign in by your account or create a new one</p>
     </div>
 
-    <app-common-tab [tabs]="tabs" [selectedIndex]="selectedIndex" class="login-signup-tabs">
-    </app-common-tab>
+    <app-common-tab
+      [tabs]="tabs"
+      [selectedIndex]="selectedIndex"
+      class="login-signup-tabs"
+      (tabChanged)="switchToTab($event)"
+    ></app-common-tab>
 
     <div class="divider-container">
       <div class="divider">
