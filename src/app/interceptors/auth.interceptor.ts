@@ -12,6 +12,7 @@ import { AuthService } from '../core/auth/services/auth.service';
 import { SnackbarService } from '../shared/service/snackbar/snackbar.service';
 import { Router } from '@angular/router';
 import { PlatformMessages } from '../utils/constants';
+import { Navigations } from '../shared/enums/navigation';
 
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
@@ -49,7 +50,7 @@ export const AuthInterceptor: HttpInterceptorFn = (
           return refreshAndRetry(authReq, next, authService, snackbar);
 
         case 403:
-          router.navigate(['/unauthorized']);
+          router.navigate([Navigations.Unauthorized]);
           snackbar.showError(PlatformMessages.accessDeniedTitle, backendMessage);
           break;
 

@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../core/auth/services/auth.service';
 import { SnackbarService } from '../shared/service/snackbar/snackbar.service';
 import { PlatformMessages } from '../utils/constants';
+import { Navigations } from '../shared/enums/navigation';
 
 export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot): Promise<boolean> => {
   const authService = inject(AuthService);
@@ -24,20 +25,20 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot): P
 
   if (publicOnly && isValid) {
     const roleString = authService.getRoleFromToken(token || '')?.toLowerCase();
-    const target = roleString === 'admin' ? '/admin' : '/user';
+    const target = roleString === 'admin' ? `/${Navigations.Admin}` : `/${Navigations.User}`;
     router.navigate([target]);
     return false;
   }
 
   if (!publicOnly && !isValid) {
-    router.navigate(['/login']);
+    router.navigate([Navigations.Login]);
     return false;
   }
 
   if (allowedRoles.length > 0) {
     const roleString = authService.getRoleFromToken(token || '')?.toLowerCase();
     if (!roleString || !allowedRoles.includes(roleString)) {
-      router.navigate(['/unauthorized']);
+      router.navigate([Navigations.Unauthorized]);
       snackbar.showError(PlatformMessages.unauthorizedTitle, PlatformMessages.unauthorizedAccess);
       return false;
     }

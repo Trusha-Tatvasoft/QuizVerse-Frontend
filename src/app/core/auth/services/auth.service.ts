@@ -27,6 +27,7 @@ import {
   ROLE_CLAIM_KEY,
 } from '../../../utils/constants';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
+import { Navigations } from '../../../shared/enums/navigation';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -81,7 +82,7 @@ export class AuthService {
       const role = payload[ROLE_CLAIM_KEY];
       return role?.toLowerCase() || null;
     } catch {
-      this.router.navigate(['/login']);
+      this.router.navigate([Navigations.Login]);
       this.snackbar.showInfo(PlatformMessages.loginRedirectMessage);
       return null;
     }

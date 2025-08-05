@@ -27,4 +27,6 @@ export enum Navigations {
   AiConfig = 'ai',
   Finance = 'financial-management',
   Notifications = 'notification-center',
+
+  Unauthorized = 'unauthorized',
 }

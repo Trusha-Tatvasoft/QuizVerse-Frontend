@@ -13,6 +13,7 @@ import {
 } from '../../../utils/constants';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { provideHttpClient } from '@angular/common/http';
+import { Navigations } from '../../../shared/enums/navigation';
 
 describe('AuthService (Jest)', () => {
   let service: AuthService;
@@ -114,7 +115,7 @@ describe('AuthService (Jest)', () => {
     const role = service.getRoleFromToken(invalidToken);
 
     expect(role).toBeNull();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/login']);
+    expect(routerMock.navigate).toHaveBeenCalledWith([Navigations.Login]);
     expect(snackbarMock.showInfo).toHaveBeenCalledWith('Redirecting to login.');
   });
 
