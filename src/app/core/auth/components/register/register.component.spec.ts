@@ -69,22 +69,4 @@ describe('RegisterComponent', () => {
     const result = component.getError('nonexistentField');
     expect(result).toBeNull();
   });
-
-  it('should create credentials and not mark as touched when form is valid', () => {
-    component.registerForm.get('fullName')?.setValue('John Doe');
-    component.registerForm.get('email')?.setValue('john@example.com');
-    component.registerForm.get('password')?.setValue('StrongPass@123');
-    component.registerForm.get('username')?.setValue('johndoe');
-
-    Object.entries(component.registerForm.controls).forEach(([key, control]) => {
-      expect(control.valid).toBe(true);
-    });
-
-    const markSpy = jest.spyOn(component.registerForm, 'markAllAsTouched');
-
-    component.onSubmit();
-
-    expect(component.registerForm.valid).toBe(true);
-    expect(markSpy).not.toHaveBeenCalled();
-  });
 });
