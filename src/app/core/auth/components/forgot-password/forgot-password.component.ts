@@ -14,6 +14,10 @@ import { Navigations } from '../../../../shared/enums/navigation';
 import { MatFormField, MatInputModule } from '@angular/material/input';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
 import { ForgotCredential } from '../../interfaces/forgot-reset-password.interface';
+import { Subject, takeUntil } from 'rxjs';
+import { ForgotResetPasswordService } from '../../services/forgot-reset-password.service';
+import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
+import { PlatformMessages } from '../../../../utils/constants';
 
 @Component({
   selector: 'app-forgot-password',
@@ -33,12 +37,16 @@ import { ForgotCredential } from '../../interfaces/forgot-reset-password.interfa
     './forgot-password.component.scss',
     '../login-signup/login-signup.component.scss',
     '../login/login.component.scss',
+    '../reset-password/reset-password.component.scss',
   ],
 })
 export class ForgotPasswordComponent {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly validationErrorService = inject(ValidationErrorService);
+  private readonly authService = inject(ForgotResetPasswordService);
+  private readonly destroy$ = new Subject<void>();
+  private readonly snackbarService = inject(SnackbarService);
 
   forgotPasswordFields = FORGOT_PASSWORD_FORM_FIELDS;
   forgotPasswordForm: FormGroup;
@@ -75,9 +83,32 @@ export class ForgotPasswordComponent {
       email: this.forgotPasswordForm.value.email,
     };
 
-    // Navigate to success page with email in router state
-    this.router.navigate([Navigations.ResetPasswordLinkSuccess], {
-      state: { email: credentials.email },
-    });
+    this.authService
+      .sendResetLink(credentials)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (!res.result || res.statusCode !== 200) {
+            this.snackbarService.showError(
+              `${PlatformMessages.errorTitle} ${res.statusCode}`,
+              res.message || PlatformMessages.errorMessage,
+            );
+            return;
+          }
+
+          this.snackbarService.showSuccess(
+            'Success',
+            res.message || `${PlatformMessages.resetLinkSendSuccessfully}`,
+          );
+
+          this.router.navigate([Navigations.ResetPasswordLinkSuccess], {
+            state: { email: credentials.email },
+          });
+        },
+        error: (err) => {
+          const message = err?.error?.message || PlatformMessages.errorMessage;
+          this.snackbarService.showError(`Error`, message);
+        },
+      });
   }
 }
