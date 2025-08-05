@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { LoginSignupComponent } from './login-signup.component';
+import { LoginSignupComponent, selectedTabIndexSignal } from './login-signup.component';
 import {
   GOOGLE_BUTTON_CONFIG,
   FACEBOOK_BUTTON_CONFIG,
@@ -14,6 +14,8 @@ describe('LoginSignupComponent', () => {
   let compiled: HTMLElement;
 
   beforeEach(async () => {
+    selectedTabIndexSignal.set(0);
+
     await TestBed.configureTestingModule({
       imports: [LoginSignupComponent],
       providers: [provideRouter([])],
@@ -50,9 +52,10 @@ describe('LoginSignupComponent', () => {
     expect(component.tabs[1].label).toBe('Sign Up');
   });
 
-  // Should initialize selectedIndex to 0 (Sign In)
+  // Should initialize selectedIndex to match signal (default 0)
   it('should initialize selectedIndex to 0', () => {
     expect(component.selectedIndex).toBe(0);
+    expect(selectedTabIndexSignal()).toBe(0);
   });
 
   // Should render tab labels for Sign In and Sign Up
@@ -63,10 +66,20 @@ describe('LoginSignupComponent', () => {
     expect(labels).toContain('Sign Up');
   });
 
-  // Should update selectedIndex when user switches tab
-  it('should update selectedIndex on tab change', () => {
-    component.selectedIndex = 1;
+  // Should update selectedIndex AND signal when switchToTab is called
+  it('should update selectedIndex and signal on tab change', () => {
+    component.switchToTab(1); // simulate tab switch
     fixture.detectChanges();
+    expect(component.selectedIndex).toBe(1);
+    expect(selectedTabIndexSignal()).toBe(1);
+  });
+
+  // Signal updates should reflect in component's selectedIndex
+  it('should reflect signal change in component', () => {
+    selectedTabIndexSignal.set(1); // external signal update
+    fixture.detectChanges();
+
+    // Wait for effect to propagate
     expect(component.selectedIndex).toBe(1);
   });
 });

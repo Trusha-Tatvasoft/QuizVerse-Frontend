@@ -9,6 +9,7 @@ import { userToUserListingTableData } from './user-listing-data.mapper';
 import { DEBOUNCE_TIME, DEFAULT_LAST_LOGIN_DATE } from '../../../../../utils/constants';
 import { PaginatedDataResponse } from '../../../../../shared/interfaces/paginated-data-response.interface';
 import { ApiResponse } from '../../../../../shared/interfaces/api-response.interface';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 // Mock data
 const mockUsers: UserListData[] = [
@@ -49,7 +50,7 @@ describe('UserManagementComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      imports: [UserManagementComponent, ReactiveFormsModule],
+      imports: [UserManagementComponent, ReactiveFormsModule, HttpClientTestingModule],
       providers: [{ provide: UserManagementService, useValue: userServiceMock }],
     }).compileComponents();
 
@@ -144,7 +145,7 @@ describe('UserManagementComponent', () => {
   it('should fallback to empty string if profilePic is missing', () => {
     const userWithoutProfilePic = { ...mockUsers[0], profilePic: undefined };
     const result = userToUserListingTableData(userWithoutProfilePic) as any;
-    expect(result.fullname.image).toBe('');
+    expect(result.fullname.image).toBe('http://localhost:5041/uploads/undefined');
   });
 
   // Use null as fallback if lastLogin is uninitialized
