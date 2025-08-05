@@ -10,6 +10,9 @@ import { CommonModule } from '@angular/common';
 import { InsightCardComponent } from '../insight-card/insight-card.component';
 import { AdminDashboardData } from '../interfaces/admin-dashboard.interface';
 
+jest.mock('chart.js');
+jest.mock('ng2-charts');
+
 describe('AdminDashboardComponent (Jest)', () => {
   let component: AdminDashboardComponent;
   let fixture: ComponentFixture<AdminDashboardComponent>;

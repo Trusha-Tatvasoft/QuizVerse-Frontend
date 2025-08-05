@@ -4,6 +4,9 @@ import { InsightCardComponent } from './insight-card.component';
 import { AdminDashboardDataService } from '../../../../services/admin/admin-dashboard/admin-dashboard-data.service';
 import { ChartDataPoint } from '../interfaces/admin-dashboard.interface';
 
+jest.mock('chart.js');
+jest.mock('ng2-charts');
+
 // ... [existing imports]
 describe('InsightCardComponent', () => {
   let component: InsightCardComponent;
