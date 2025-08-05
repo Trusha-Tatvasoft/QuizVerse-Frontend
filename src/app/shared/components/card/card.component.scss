@@ -16,12 +16,20 @@
 .text-yellow {
   color: var(--yellow-color);
 }
+.text-red {
+  color: var(--red-color);
+}
+.text-blue {
+  color: var(--blue-color);
+}
 
 .stats-card {
   border-radius: 12px;
   padding: 15px;
+  background-color: var(--light-white-color);
   border: 1px solid #e2e8f0;
-  min-height: 125px;
+  box-shadow: none;
+  min-height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;

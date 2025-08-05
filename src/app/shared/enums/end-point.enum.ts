@@ -6,4 +6,8 @@ export enum EndPoints {
   ResetPassword = 'Authentication/reset-password',
   RegisterUser = 'Authentication/register-user',
   VerifyTokenRestPassword = 'Authentication/verify-token-reset-password',
+  AdminDashboardData = 'AdminDashboard/get-statistics-data',
+  getUserEngagementData = 'AdminDashboard/get-user-engagement-data',
+  getPerformaceScoreData = 'AdminDashboard/get-performance-score-data',
+  getRevenueTrendData = 'AdminDashboard/get-revenue-trend-data',
 }

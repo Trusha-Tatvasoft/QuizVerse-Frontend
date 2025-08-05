@@ -1,0 +1,120 @@
+.dashboard-layout {
+  display: flex;
+  flex-direction: column;
+
+  background: var(--global-bg-gradient);
+  box-sizing: border-box;
+
+  .dashboard-body {
+    .dashboard-main {
+      padding: 1rem;
+      box-sizing: border-box;
+
+      .analytics-visualization-section {
+        padding: 1.5rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background-color: var(--light-white-color);
+
+        @media (max-width: 768px) {
+          padding: 1rem;
+        }
+      }
+
+      .section-header-content {
+        padding: 1.5rem;
+
+        @media (max-width: 768px) {
+          padding: 1rem;
+        }
+
+        @media (max-width: 480px) {
+          padding: 0.75rem;
+        }
+
+        .section-header {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 0.5rem;
+
+          @media (max-width: 767px) {
+            flex-direction: column;
+            text-align: center;
+          }
+        }
+
+        .section-title {
+          font-size: var(--font-title-md);
+          font-weight: 600;
+          color: var(--black-color);
+          margin: 0;
+
+          @media (max-width: 767px) {
+            font-size: var(--font-title-sm);
+          }
+
+          @media (max-width: 480px) {
+            font-size: var(--font-title-xs);
+          }
+        }
+
+        .section-subtitle {
+          font-size: var(--font-subtitle-md);
+          color: var(--gray-color);
+          margin-top: 2px;
+
+          @media (max-width: 767px) {
+            font-size: var(--font-subtitle-sm);
+          }
+
+          @media (max-width: 480px) {
+            font-size: var(--font-subtitle-xs);
+          }
+        }
+      }
+
+      .stats-grid {
+        display: grid;
+        gap: 1.25rem;
+        padding: 1.5rem 0;
+        grid-template-columns: 1fr;
+
+        @media (min-width: 768px) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (min-width: 1440px) {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      .insights-grid {
+        display: grid;
+        gap: 2rem;
+        padding: 1rem 0;
+        grid-template-columns: repeat(2, 1fr);
+
+        @media (max-width: 1240px) {
+          grid-template-columns: 1fr;
+        }
+
+        .insights-column {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .centered {
+          grid-column: 1 / -1;
+          justify-self: center;
+          width: 50%;
+
+          @media (max-width: 1240px) {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
