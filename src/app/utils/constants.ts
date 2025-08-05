@@ -206,6 +206,7 @@ export const PlatformMessages = {
   passwordResetSuccess: `Password reset successfully.`,
   noDataAvailable: `No data available to export.`,
   errorExport: `Export failed.`,
+  registerSuccessfully: `Register Successfully!!`,
 
   //#region authMessages
   loginRedirectMessage: 'Redirecting to login.',
@@ -233,6 +234,10 @@ export const PlatformMessages = {
 //#endregion
 
 //#region Constant Variables
+export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+
+export const MAX_FILE_UPLOAD_SIZE = 10 * 1024 * 1024;
+
 export const DEFAULT_LAST_LOGIN_DATE = '0001-01-01T00:00:00';
 
 export const DEBOUNCE_TIME = 500;

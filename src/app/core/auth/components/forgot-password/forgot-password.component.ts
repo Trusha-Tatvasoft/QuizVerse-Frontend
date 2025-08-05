@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -40,17 +40,18 @@ import { PlatformMessages } from '../../../../utils/constants';
     '../reset-password/reset-password.component.scss',
   ],
 })
-export class ForgotPasswordComponent {
+export class ForgotPasswordComponent implements OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly validationErrorService = inject(ValidationErrorService);
   private readonly authService = inject(ForgotResetPasswordService);
-  private readonly destroy$ = new Subject<void>();
   private readonly snackbarService = inject(SnackbarService);
 
   forgotPasswordFields = FORGOT_PASSWORD_FORM_FIELDS;
-  forgotPasswordForm: FormGroup;
   sendResetLinkButton = SEND_RESET_LINK_CONFIG;
+  forgotPasswordForm: FormGroup;
+
+  private readonly destroy$ = new Subject<void>();
 
   constructor() {
     // Build reactive form using config field definitions and validators
@@ -110,5 +111,10 @@ export class ForgotPasswordComponent {
           this.snackbarService.showError(`Error`, message);
         },
       });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
