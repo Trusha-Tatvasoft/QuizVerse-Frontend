@@ -53,6 +53,7 @@
       ></app-outline-button>
       <app-filled-button
         [filledButtonConfig]="exportButtonConfig"
+        (buttonClicked)="exportUsers()"
         class="export-users"
       ></app-filled-button>
     </div>

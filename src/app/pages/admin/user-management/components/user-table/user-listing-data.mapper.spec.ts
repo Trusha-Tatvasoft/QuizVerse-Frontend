@@ -9,6 +9,7 @@ import { userToUserListingTableData } from './user-listing-data.mapper';
 import { DEBOUNCE_TIME, DEFAULT_LAST_LOGIN_DATE } from '../../../../../utils/constants';
 import { PaginatedDataResponse } from '../../../../../shared/interfaces/paginated-data-response.interface';
 import { ApiResponse } from '../../../../../shared/interfaces/api-response.interface';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 // Mock data
 const mockUsers: UserListData[] = [
@@ -49,7 +50,7 @@ describe('UserManagementComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      imports: [UserManagementComponent, ReactiveFormsModule],
+      imports: [UserManagementComponent, ReactiveFormsModule, HttpClientTestingModule],
       providers: [{ provide: UserManagementService, useValue: userServiceMock }],
     }).compileComponents();
 
