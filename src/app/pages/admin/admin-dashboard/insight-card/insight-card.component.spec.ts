@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { of } from 'rxjs';
 import { InsightCardComponent } from './insight-card.component';
 import { AdminDashboardDataService } from '../../../../services/admin/admin-dashboard/admin-dashboard-data.service';
-import { ChartDataPoint } from '../interfaces/admin-dashboard.interface';
+import { ChartDataPoint } from '../interfaces/chart-data-point.interface';
 
 describe('InsightCardComponent', () => {
   let component: InsightCardComponent;

@@ -6,12 +6,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { ChartConfiguration, ChartDataset, ChartType } from 'chart.js';
 import { DynamicChartComponent } from '../dynamic-chart/dynamic-chart.component';
 import { AdminDashboardDataService } from '../../../../services/admin/admin-dashboard/admin-dashboard-data.service';
-import { ChartDataPoint, InsightCards } from '../interfaces/admin-dashboard.interface';
 import {
   BAR_CHART_OPTIONS_CONFIG,
   DOUGHNUT_CHART_OPTIONS_CONFIG,
   LINE_CHART_OPTIONS_CONFIG,
-} from '../configs/admin-dashboard.component.configs';
+} from '../configs/chart-options.config';
+import { InsightCards } from '../interfaces/insight-card.interface';
+import { ChartDataPoint } from '../interfaces/chart-data-point.interface';
 
 @Component({
   selector: 'app-insight-card',

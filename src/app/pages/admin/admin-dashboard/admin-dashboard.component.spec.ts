@@ -1,14 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AdminDashboardComponent } from './admin-dashboard.component';
-import { AdminDashboardDataService } from '../../../../services/admin/admin-dashboard/admin-dashboard-data.service';
+import { AdminDashboardDataService } from '../../../services/admin/admin-dashboard/admin-dashboard-data.service';
 import { of } from 'rxjs';
 
-import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
-import { CardComponent } from '../../../../shared/components/card/card.component';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { CardComponent } from '../../../shared/components/card/card.component';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { InsightCardComponent } from '../insight-card/insight-card.component';
-import { AdminDashboardData } from '../interfaces/admin-dashboard.interface';
+import { InsightCardComponent } from './insight-card/insight-card.component';
+import { AdminDashboardSummary } from './interfaces/admin-dashboard-summary.interface';
 
 jest.mock('chart.js');
 jest.mock('ng2-charts');
@@ -18,7 +18,7 @@ describe('AdminDashboardComponent (Jest)', () => {
   let fixture: ComponentFixture<AdminDashboardComponent>;
   let dashboardService: AdminDashboardDataService;
 
-  const mockData: AdminDashboardData = {
+  const mockData: AdminDashboardSummary = {
     totalUsers: { value: 1000, trendPercentage: 10 },
     activeQuizzes: { value: 120, trendPercentage: -5 },
     revenue: { value: 50000, trendPercentage: 15 },

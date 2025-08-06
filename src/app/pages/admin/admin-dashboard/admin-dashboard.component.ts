@@ -1,19 +1,17 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
-import { CardComponent } from '../../../../shared/components/card/card.component';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { CardComponent } from '../../../shared/components/card/card.component';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { InsightCardComponent } from '../insight-card/insight-card.component';
+import { InsightCardComponent } from './insight-card/insight-card.component';
 
-import { CardInputConfig } from '../../../../shared/interfaces/card-component.interface';
-import { CardColor } from '../../../../utils/types/card-component.type';
-import { AdminDashboardDataService } from '../../../../services/admin/admin-dashboard/admin-dashboard-data.service';
-import { AdminDashboardData } from '../interfaces/admin-dashboard.interface';
-import {
-  ADMIN_DASHBOARD_HEADER_CONFIG,
-  DASHBOARD_STATS_CARD_CONFIG,
-  INSIGHT_CARDS_CONFIG,
-} from '../configs/admin-dashboard.component.configs';
+import { CardInputConfig } from '../../../shared/interfaces/card-component.interface';
+import { CardColor } from '../../../utils/types/card-component.type';
+import { AdminDashboardDataService } from '../../../services/admin/admin-dashboard/admin-dashboard-data.service';
+import { ADMIN_DASHBOARD_HEADER_CONFIG } from './configs/admin-dashboard-header.configs';
+import { INSIGHT_CARDS_CONFIG } from './configs/insight-card.config';
+import { DASHBOARD_STATS_CARD_CONFIG } from './configs/dashboard-stats-card.config';
+import { AdminDashboardSummary } from './interfaces/admin-dashboard-summary.interface';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -37,12 +35,12 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  private mapDashboardStatsToCards(data: AdminDashboardData): CardInputConfig[] {
+  private mapDashboardStatsToCards(data: AdminDashboardSummary): CardInputConfig[] {
     const adminDashboardCards: CardInputConfig[] = [];
 
     for (const key in data) {
-      const stat = data[key as keyof AdminDashboardData];
-      const config = DASHBOARD_STATS_CARD_CONFIG[key as keyof AdminDashboardData];
+      const stat = data[key as keyof AdminDashboardSummary];
+      const config = DASHBOARD_STATS_CARD_CONFIG[key as keyof AdminDashboardSummary];
 
       const value = key === 'revenue' ? `$${stat.value}` : stat.value;
 
