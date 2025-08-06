@@ -10,4 +10,5 @@ export interface DynamicFormField {
   options?: { value: unknown; label: string }[];
   icon?: string;
   validationMessages?: { [key: string]: string };
+  gridClass?: string;
 }

@@ -14,7 +14,11 @@ import { LoaderService } from '../../../../shared/service/loader/loader.service'
   selector: 'app-reset-link-invalid',
   imports: [MatIcon, FilledButtonComponent, OutlineButtonComponent, RouterLink],
   templateUrl: './reset-link-invalid.component.html',
-  styleUrls: ['./reset-link-invalid.component.scss', '../login-signup/login-signup.component.scss'],
+  styleUrls: [
+    './reset-link-invalid.component.scss',
+    '../login-signup/login-signup.component.scss',
+    '../reset-password/reset-password.component.scss',
+  ],
 })
 export class ResetLinkInvalidComponent {
   private readonly router = inject(Router);

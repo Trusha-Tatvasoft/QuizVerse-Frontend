@@ -1,77 +1,110 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MasterLayoutComponent } from './master-layout.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { NavbarComponent } from '../navbar/navbar.component';
+import { AuthService } from '../../../core/auth/services/auth.service';
+import { of, Subject } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Component } from '@angular/core';
-import { NavbarComponent } from '../navbar/navbar.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 
-@Component({
-  selector: 'app-navbar',
-  template: '',
-  standalone: true,
-})
-class MockNavbarComponent {
-  sidebarClosedByBackdrop() {}
+// Dummy sidebar and navbar for ViewChild interaction
+@Component({ selector: 'app-sidebar', template: '' })
+class MockSidebarComponent {
+  openSidebar = jest.fn();
+  closeSidebar = jest.fn();
+  toggleSidebar = jest.fn();
 }
 
-@Component({
-  selector: 'app-sidebar',
-  template: '',
-  standalone: true,
-})
-class MockSidebarComponent {
-  toggleSidebar() {}
-  openSidebar() {}
-  closeSidebar() {}
+@Component({ selector: 'app-navbar', template: '' })
+class MockNavbarComponent {
+  sidebarClosedByBackdrop = jest.fn();
 }
 
 describe('MasterLayoutComponent', () => {
   let component: MasterLayoutComponent;
   let fixture: ComponentFixture<MasterLayoutComponent>;
+  let authServiceMock: any;
+  let roleSubject: Subject<string>;
 
   beforeEach(async () => {
+    roleSubject = new Subject<string>();
+
+    authServiceMock = {
+      currentRole$: roleSubject.asObservable(),
+    };
+
     await TestBed.configureTestingModule({
       imports: [
         MasterLayoutComponent,
-        MockNavbarComponent,
         MockSidebarComponent,
+        MockNavbarComponent,
         RouterTestingModule,
       ],
+      providers: [{ provide: AuthService, useValue: authServiceMock }],
     }).compileComponents();
+
     fixture = TestBed.createComponent(MasterLayoutComponent);
     component = fixture.componentInstance;
-    component.navbar = TestBed.createComponent(MockNavbarComponent)
-      .componentInstance as unknown as NavbarComponent;
-    component.sidebar = TestBed.createComponent(MockSidebarComponent)
-      .componentInstance as unknown as SidebarComponent;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create the master layout component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call sidebar.toggleSidebar() from toggleSidebarFromParent()', () => {
-    const toggleSpy = jest.spyOn(component.sidebar, 'toggleSidebar');
-    component.toggleSidebarFromParent();
-    expect(toggleSpy).toHaveBeenCalled();
+  it('should update role and sidebarItems when currentRole$ emits "admin"', () => {
+    roleSubject.next('admin');
+    fixture.detectChanges();
+
+    expect(component.role).toBe('admin');
+    expect(component.sidebarItems).toEqual(
+      expect.arrayContaining([expect.objectContaining({ label: expect.any(String) })]),
+    );
   });
 
-  it('should call sidebar.openSidebar() from handleSidebarOpen()', () => {
-    const openSpy = jest.spyOn(component.sidebar, 'openSidebar');
+  it('should update role and sidebarItems when currentRole$ emits "player"', () => {
+    roleSubject.next('player');
+    fixture.detectChanges();
+
+    expect(component.role).toBe('player');
+    expect(component.sidebarItems.some((item) => item.label === 'Profile')).toBe(false);
+  });
+
+  it('should call sidebar methods', () => {
+    const sidebar = {
+      openSidebar: jest.fn(),
+      closeSidebar: jest.fn(),
+      toggleSidebar: jest.fn(),
+    } as unknown as SidebarComponent;
+    component.sidebar = sidebar;
+
     component.handleSidebarOpen();
-    expect(openSpy).toHaveBeenCalled();
-  });
+    expect(sidebar.openSidebar).toHaveBeenCalled();
 
-  it('should call sidebar.closeSidebar() from handleSidebarClose()', () => {
-    const closeSpy = jest.spyOn(component.sidebar, 'closeSidebar');
     component.handleSidebarClose();
-    expect(closeSpy).toHaveBeenCalled();
+    expect(sidebar.closeSidebar).toHaveBeenCalled();
+
+    component.toggleSidebarFromParent();
+    expect(sidebar.toggleSidebar).toHaveBeenCalled();
   });
 
-  it('should call navbar.sidebarClosedByBackdrop() from handleSidebarClosedByBackdrop()', () => {
-    const backdropSpy = jest.spyOn(component.navbar, 'sidebarClosedByBackdrop');
+  it('should call navbar.sidebarClosedByBackdrop when handleSidebarClosedByBackdrop is called', () => {
+    const navbar = {
+      sidebarClosedByBackdrop: jest.fn(),
+    } as unknown as NavbarComponent;
+    component.navbar = navbar;
+
     component.handleSidebarClosedByBackdrop();
-    expect(backdropSpy).toHaveBeenCalled();
+    expect(navbar.sidebarClosedByBackdrop).toHaveBeenCalled();
+  });
+
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const destroySpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(destroySpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

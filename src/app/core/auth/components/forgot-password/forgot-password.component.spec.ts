@@ -3,26 +3,56 @@ import { ForgotPasswordComponent } from './forgot-password.component';
 import { Router } from '@angular/router';
 import { provideRouter } from '@angular/router';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
-import { Validators } from '@angular/forms';
+import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
+import { ForgotResetPasswordService } from '../../services/forgot-reset-password.service';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { of, throwError } from 'rxjs';
+import { platformMessages } from '../../../../utils/constants';
+import { sendResetLinkConfig } from '../../configs/forgot-password.component.config';
 
 describe('ForgotPasswordComponent', () => {
   let component: ForgotPasswordComponent;
   let fixture: ComponentFixture<ForgotPasswordComponent>;
-  let router: Router;
   let validationErrorService: ValidationErrorService;
+  let forgotResetPasswordService: ForgotResetPasswordService;
+  let snackbarService: SnackbarService;
+  let router: Router;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ForgotPasswordComponent],
-      providers: [provideRouter([]), ValidationErrorService],
+      imports: [ForgotPasswordComponent, ReactiveFormsModule],
+      providers: [
+        provideRouter([]),
+        {
+          provide: ValidationErrorService,
+          useValue: {
+            getErrorMessage: jest.fn(),
+          },
+        },
+        {
+          provide: ForgotResetPasswordService,
+          useValue: {
+            sendResetLink: jest.fn(),
+          },
+        },
+        {
+          provide: SnackbarService,
+          useValue: {
+            showSuccess: jest.fn(),
+            showError: jest.fn(),
+          },
+        },
+      ],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ForgotPasswordComponent);
     component = fixture.componentInstance;
-    router = TestBed.inject(Router);
     validationErrorService = TestBed.inject(ValidationErrorService);
+    forgotResetPasswordService = TestBed.inject(ForgotResetPasswordService);
+    snackbarService = TestBed.inject(SnackbarService);
+    router = TestBed.inject(Router);
 
     fixture.detectChanges();
   });
@@ -43,13 +73,58 @@ describe('ForgotPasswordComponent', () => {
     expect(markSpy).toHaveBeenCalled();
   });
 
-  it('should not mark form as touched if valid and submitted', () => {
-    const markSpy = jest.spyOn(component.forgotPasswordForm, 'markAllAsTouched');
+  it('should call sendResetLink and show success snackbar and navigate if form is valid', () => {
+    const credentials = { email: 'test@example.com' };
+    const sendResetLinkSpy = jest
+      .spyOn(forgotResetPasswordService, 'sendResetLink')
+      .mockReturnValue(of({ result: true, statusCode: 200, message: 'Success', data: null }));
 
-    component.forgotPasswordForm.setValue({ email: 'valid@example.com' });
+    const navigateSpy = jest.spyOn(router, 'navigate');
+    const showSuccessSpy = jest.spyOn(snackbarService, 'showSuccess');
+
+    component.forgotPasswordForm.setValue(credentials);
     component.onSubmit();
 
-    expect(markSpy).not.toHaveBeenCalled();
+    expect(sendResetLinkSpy).toHaveBeenCalledWith(credentials);
+    expect(showSuccessSpy).toHaveBeenCalledWith('Success', 'Success');
+    expect(navigateSpy).toHaveBeenCalledWith(['reset-password-link-success'], {
+      state: { email: credentials.email },
+    });
+  });
+
+  it('should show error snackbar if sendResetLink fails with non-200 code', () => {
+    const credentials = { email: 'test@example.com' };
+    jest
+      .spyOn(forgotResetPasswordService, 'sendResetLink')
+      .mockReturnValue(
+        of({ result: false, statusCode: 400, message: 'Invalid email', data: null }),
+      );
+
+    const showErrorSpy = jest.spyOn(snackbarService, 'showError');
+
+    component.forgotPasswordForm.setValue(credentials);
+    component.onSubmit();
+
+    expect(showErrorSpy).toHaveBeenCalledWith(
+      `${platformMessages.errorTitle} 400`,
+      'Invalid email',
+    );
+  });
+
+  it('should show error snackbar on HTTP error', () => {
+    const credentials = { email: 'test@example.com' };
+    jest.spyOn(forgotResetPasswordService, 'sendResetLink').mockReturnValue(
+      throwError(() => ({
+        error: { message: 'Server error' },
+      })),
+    );
+
+    const showErrorSpy = jest.spyOn(snackbarService, 'showError');
+
+    component.forgotPasswordForm.setValue(credentials);
+    component.onSubmit();
+
+    expect(showErrorSpy).toHaveBeenCalledWith('Error', 'Server error');
   });
 
   it('should return error message if control is invalid and touched', () => {
@@ -84,7 +159,55 @@ describe('ForgotPasswordComponent', () => {
     expect(error).toBeNull();
   });
 
-  it('should use sendResetLinkConfig for button label', () => {
-    expect(component.sendResetLinkButton.label).toBeDefined();
+  it('should use SEND_RESET_LINK_CONFIG for button label', () => {
+    expect(component.sendResetLinkButton.label).toBe(sendResetLinkConfig.label);
+  });
+
+  it('should show error snackbar if result is false even with statusCode 200', () => {
+    const credentials = { email: 'test@example.com' };
+    jest
+      .spyOn(forgotResetPasswordService, 'sendResetLink')
+      .mockReturnValue(
+        of({ result: false, statusCode: 200, message: 'Something went wrong', data: null }),
+      );
+
+    const showErrorSpy = jest.spyOn(snackbarService, 'showError');
+
+    component.forgotPasswordForm.setValue(credentials);
+    component.onSubmit();
+
+    expect(showErrorSpy).toHaveBeenCalledWith(
+      `${platformMessages.errorTitle} 200`,
+      'Something went wrong',
+    );
+  });
+
+  it('should fallback to default success message when res.message is missing', () => {
+    const credentials = { email: 'test@example.com' };
+    jest
+      .spyOn(forgotResetPasswordService, 'sendResetLink')
+      .mockReturnValue(of({ result: true, statusCode: 200, message: '', data: null }));
+
+    const showSuccessSpy = jest.spyOn(snackbarService, 'showSuccess');
+
+    component.forgotPasswordForm.setValue(credentials);
+    component.onSubmit();
+
+    expect(showSuccessSpy).toHaveBeenCalledWith(
+      'Success',
+      platformMessages.resetLinkSendSuccessfully,
+    );
+  });
+
+  it('should fallback to default error message when HTTP error has no message', () => {
+    const credentials = { email: 'test@example.com' };
+    jest.spyOn(forgotResetPasswordService, 'sendResetLink').mockReturnValue(throwError(() => ({})));
+
+    const showErrorSpy = jest.spyOn(snackbarService, 'showError');
+
+    component.forgotPasswordForm.setValue(credentials);
+    component.onSubmit();
+
+    expect(showErrorSpy).toHaveBeenCalledWith('Error', platformMessages.errorMessage);
   });
 });
