@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../core/auth/services/auth.service';
 import { SnackbarService } from '../shared/service/snackbar/snackbar.service';
-import { PlatformMessages } from '../utils/constants';
+import { platformMessages } from '../utils/constants';
 import { Navigations } from '../shared/enums/navigation';
 
 export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot): Promise<boolean> => {
@@ -39,7 +39,7 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot): P
     const roleString = authService.getRoleFromToken(token || '')?.toLowerCase();
     if (!roleString || !allowedRoles.includes(roleString)) {
       router.navigate([Navigations.Unauthorized]);
-      snackbar.showError(PlatformMessages.unauthorizedTitle, PlatformMessages.unauthorizedAccess);
+      snackbar.showError(platformMessages.unauthorizedTitle, platformMessages.unauthorizedAccess);
       return false;
     }
   }

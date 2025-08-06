@@ -28,7 +28,7 @@ describe('SidebarComponent', () => {
     fixture = TestBed.createComponent(SidebarComponent);
     component = fixture.componentInstance;
     component.sidebarItems = mockSidebarItems;
-    component.role = 'user';
+    component.role = 'player';
     fixture.detectChanges();
   });
 

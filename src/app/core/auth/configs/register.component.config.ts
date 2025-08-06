@@ -5,28 +5,28 @@ import { DynamicFormField } from '../../../shared/interfaces/dynamic-form-field.
 /**
  * Register button configuration
  */
-export const REGISTER_BUTTON_CONFIG: ButtonConfig = {
+export const registerButtonConfig: ButtonConfig = {
   label: 'Create An Account',
   fontWeight: 500,
   variant: 'gradient',
   type: 'submit',
 };
 
-export const CREATE_USER_BUTTON_CONFIG: ButtonConfig = {
+export const createUserButtonConfig: ButtonConfig = {
   label: 'Create User',
   variant: 'secondary',
   fontWeight: 500,
   type: 'submit',
 };
 
-export const UPDATE_USER_BUTTON_CONFIG: ButtonConfig = {
+export const updateUserButtonConfig: ButtonConfig = {
   label: 'Update User',
   variant: 'secondary',
   fontWeight: 500,
   type: 'submit',
 };
 
-export const CANCEL_BUTTON_CONFIG: ButtonConfig = {
+export const cancelButtonConfig: ButtonConfig = {
   label: 'Cancel',
   variant: 'secondary',
   fontWeight: 500,
@@ -35,7 +35,7 @@ export const CANCEL_BUTTON_CONFIG: ButtonConfig = {
 /**
  * Register form field configurations
  */
-export const REGISTER_FORM_FIELDS: DynamicFormField[] = [
+export const registerFormFields: DynamicFormField[] = [
   {
     name: 'fullName',
     label: 'Full Name',
@@ -136,7 +136,7 @@ export const REGISTER_FORM_FIELDS: DynamicFormField[] = [
   },
 ];
 
-export const USER_FORM_FIELDS: DynamicFormField[] = [
+export const userFormFields: DynamicFormField[] = [
   {
     name: 'fullName',
     label: 'Full Name',
@@ -237,7 +237,7 @@ export const USER_FORM_FIELDS: DynamicFormField[] = [
   },
 ];
 
-export const UPLOAD_BUTTON_CONFIG: ButtonConfig = {
+export const uploadButtonConfig: ButtonConfig = {
   label: 'Choose File',
   variant: 'primary',
   fontWeight: 500,

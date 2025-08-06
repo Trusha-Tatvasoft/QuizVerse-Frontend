@@ -7,8 +7,8 @@ import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.se
 import { ForgotResetPasswordService } from '../../services/forgot-reset-password.service';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { of, throwError } from 'rxjs';
-import { PlatformMessages } from '../../../../utils/constants';
-import { SEND_RESET_LINK_CONFIG } from '../../configs/forgot-password.component.config';
+import { platformMessages } from '../../../../utils/constants';
+import { sendResetLinkConfig } from '../../configs/forgot-password.component.config';
 
 describe('ForgotPasswordComponent', () => {
   let component: ForgotPasswordComponent;
@@ -106,7 +106,7 @@ describe('ForgotPasswordComponent', () => {
     component.onSubmit();
 
     expect(showErrorSpy).toHaveBeenCalledWith(
-      `${PlatformMessages.errorTitle} 400`,
+      `${platformMessages.errorTitle} 400`,
       'Invalid email',
     );
   });
@@ -160,7 +160,7 @@ describe('ForgotPasswordComponent', () => {
   });
 
   it('should use SEND_RESET_LINK_CONFIG for button label', () => {
-    expect(component.sendResetLinkButton.label).toBe(SEND_RESET_LINK_CONFIG.label);
+    expect(component.sendResetLinkButton.label).toBe(sendResetLinkConfig.label);
   });
 
   it('should show error snackbar if result is false even with statusCode 200', () => {
@@ -177,7 +177,7 @@ describe('ForgotPasswordComponent', () => {
     component.onSubmit();
 
     expect(showErrorSpy).toHaveBeenCalledWith(
-      `${PlatformMessages.errorTitle} 200`,
+      `${platformMessages.errorTitle} 200`,
       'Something went wrong',
     );
   });
@@ -195,7 +195,7 @@ describe('ForgotPasswordComponent', () => {
 
     expect(showSuccessSpy).toHaveBeenCalledWith(
       'Success',
-      PlatformMessages.resetLinkSendSuccessfully,
+      platformMessages.resetLinkSendSuccessfully,
     );
   });
 
@@ -208,6 +208,6 @@ describe('ForgotPasswordComponent', () => {
     component.forgotPasswordForm.setValue(credentials);
     component.onSubmit();
 
-    expect(showErrorSpy).toHaveBeenCalledWith('Error', PlatformMessages.errorMessage);
+    expect(showErrorSpy).toHaveBeenCalledWith('Error', platformMessages.errorMessage);
   });
 });

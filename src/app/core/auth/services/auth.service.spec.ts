@@ -6,10 +6,10 @@ import { Router } from '@angular/router';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { environment } from '../../../../environments/environment.dev';
 import {
-  ACCESS_TOKEN_KEY,
-  REFRESH_TOKEN_KEY,
-  ROLE_CLAIM_KEY,
-  PlatformMessages,
+  accessTokenKey,
+  refreshTokenKey,
+  roleClaimKey,
+  platformMessages,
 } from '../../../utils/constants';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { provideHttpClient } from '@angular/common/http';
@@ -60,7 +60,7 @@ describe('AuthService (Jest)', () => {
     const payload = btoa(
       JSON.stringify({
         exp: Math.floor(Date.now() / 1000) + expiresInSeconds,
-        [ROLE_CLAIM_KEY]: role,
+        [roleClaimKey]: role,
       }),
     );
     return `${header}.${payload}.signature`;
@@ -76,9 +76,9 @@ describe('AuthService (Jest)', () => {
 
     service.saveTokens(token, 'refresh123', true);
 
-    expect(cookieServiceMock.set).toHaveBeenCalledWith(ACCESS_TOKEN_KEY, token, expect.any(Object));
+    expect(cookieServiceMock.set).toHaveBeenCalledWith(accessTokenKey, token, expect.any(Object));
     expect(cookieServiceMock.set).toHaveBeenCalledWith(
-      REFRESH_TOKEN_KEY,
+      refreshTokenKey,
       'refresh123',
       expect.any(Object),
     );
@@ -91,13 +91,13 @@ describe('AuthService (Jest)', () => {
 
     service.setAccessToken(token);
 
-    expect(cookieServiceMock.set).toHaveBeenCalledWith(ACCESS_TOKEN_KEY, token, expect.any(Object));
+    expect(cookieServiceMock.set).toHaveBeenCalledWith(accessTokenKey, token, expect.any(Object));
     expect(service.currentRole$.value).toBe('admin');
   });
 
   it('should get access and refresh tokens from cookies', () => {
     cookieServiceMock.get.mockImplementation((key: string) =>
-      key === ACCESS_TOKEN_KEY ? 'access' : key === REFRESH_TOKEN_KEY ? 'refresh' : '',
+      key === accessTokenKey ? 'access' : key === refreshTokenKey ? 'refresh' : '',
     );
 
     expect(service.getAccessToken()).toBe('access');
@@ -136,8 +136,8 @@ describe('AuthService (Jest)', () => {
     });
 
     expect(snackbarMock.showError).toHaveBeenCalledWith(
-      PlatformMessages.sessionExpiredTitle,
-      PlatformMessages.noRefreshTokenMessage,
+      platformMessages.sessionExpiredTitle,
+      platformMessages.noRefreshTokenMessage,
     );
   });
 
@@ -163,7 +163,7 @@ describe('AuthService (Jest)', () => {
     service.refreshAccessToken().subscribe((res) => {
       expect(res).toBe('');
       expect(snackbarMock.showError).toHaveBeenCalledWith(
-        PlatformMessages.sessionExpiredTitle,
+        platformMessages.sessionExpiredTitle,
         expect.any(String),
       );
     });
@@ -190,8 +190,8 @@ describe('AuthService (Jest)', () => {
 
   it('should delete tokens on logout', () => {
     service.logout();
-    expect(cookieServiceMock.delete).toHaveBeenCalledWith(ACCESS_TOKEN_KEY, '/');
-    expect(cookieServiceMock.delete).toHaveBeenCalledWith(REFRESH_TOKEN_KEY, '/');
+    expect(cookieServiceMock.delete).toHaveBeenCalledWith(accessTokenKey, '/');
+    expect(cookieServiceMock.delete).toHaveBeenCalledWith(refreshTokenKey, '/');
     expect(service.currentRole$.value).toBeNull();
   });
 
@@ -199,7 +199,7 @@ describe('AuthService (Jest)', () => {
     const token = createToken('', 3600);
     const parts = token.split('.');
     const payload = JSON.parse(atob(parts[1]));
-    delete payload[ROLE_CLAIM_KEY]; // remove role
+    delete payload[roleClaimKey]; // remove role
     const newToken = `${parts[0]}.${btoa(JSON.stringify(payload))}.signature`;
     expect(service.getRoleFromToken(newToken)).toBeNull();
   });
@@ -243,7 +243,7 @@ describe('AuthService (Jest)', () => {
     });
 
     expect(cookieServiceMock.set).toHaveBeenCalledWith(
-      REFRESH_TOKEN_KEY,
+      refreshTokenKey,
       oldRefresh,
       expect.any(Object),
     );
@@ -255,7 +255,7 @@ describe('AuthService (Jest)', () => {
     service.refreshAccessToken().subscribe((res) => {
       expect(res).toBe('');
       expect(snackbarMock.showError).toHaveBeenCalledWith(
-        PlatformMessages.sessionExpiredTitle,
+        platformMessages.sessionExpiredTitle,
         'Network error',
       );
     });
@@ -273,8 +273,8 @@ describe('AuthService (Jest)', () => {
     service.refreshAccessToken().subscribe((res) => {
       expect(res).toBe('');
       expect(snackbarMock.showError).toHaveBeenCalledWith(
-        PlatformMessages.sessionExpiredTitle,
-        PlatformMessages.tokenInvalidMessage,
+        platformMessages.sessionExpiredTitle,
+        platformMessages.tokenInvalidMessage,
       );
     });
 

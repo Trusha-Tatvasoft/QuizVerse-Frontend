@@ -1,30 +1,20 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import {
-  BehaviorSubject,
-  catchError,
-  EMPTY,
-  map,
-  mapTo,
-  Observable,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, catchError, EMPTY, Observable, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment.dev';
 import { LoginCredentials } from '../interfaces/login.interface';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { Router } from '@angular/router';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import {
-  ACCESS_TOKEN_EXPIRY_MINUTES,
-  ACCESS_TOKEN_KEY,
+  accessTokenExpiryMinutes,
+  accessTokenKey,
   getAccessTokenExpiryDate,
   getRefreshTokenExpiryDate,
-  PlatformMessages,
-  REFRESH_TOKEN_KEY,
-  ROLE_CLAIM_KEY,
+  platformMessages,
+  refreshTokenKey,
+  roleClaimKey,
 } from '../../../utils/constants';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { Navigations } from '../../../shared/enums/navigation';
@@ -48,11 +38,11 @@ export class AuthService {
   }
 
   saveTokens(accessToken: string, refreshToken: string, rememberMe: boolean = false) {
-    this.cookieService.set(ACCESS_TOKEN_KEY, accessToken, {
+    this.cookieService.set(accessTokenKey, accessToken, {
       expires: getAccessTokenExpiryDate(),
       path: '/',
     });
-    this.cookieService.set(REFRESH_TOKEN_KEY, refreshToken, {
+    this.cookieService.set(refreshTokenKey, refreshToken, {
       expires: getRefreshTokenExpiryDate(rememberMe),
       path: '/',
     });
@@ -62,28 +52,28 @@ export class AuthService {
 
   setAccessToken(token: string) {
     const now = new Date();
-    const accessExpiry = new Date(now.getTime() + ACCESS_TOKEN_EXPIRY_MINUTES * 60 * 1000);
+    const accessExpiry = new Date(now.getTime() + accessTokenExpiryMinutes * 60 * 1000);
 
-    this.cookieService.set(ACCESS_TOKEN_KEY, token, { expires: accessExpiry, path: '/' });
+    this.cookieService.set(accessTokenKey, token, { expires: accessExpiry, path: '/' });
     this.currentRole$.next(this.getRoleFromToken(token));
   }
 
   getAccessToken(): string | null {
-    return this.cookieService.get(ACCESS_TOKEN_KEY) || null;
+    return this.cookieService.get(accessTokenKey) || null;
   }
 
   getRefreshToken(): string | null {
-    return this.cookieService.get(REFRESH_TOKEN_KEY) || null;
+    return this.cookieService.get(refreshTokenKey) || null;
   }
 
   getRoleFromToken(token: string): string | null {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      const role = payload[ROLE_CLAIM_KEY];
+      const role = payload[roleClaimKey];
       return role?.toLowerCase() || null;
     } catch {
       this.router.navigate([Navigations.Login]);
-      this.snackbar.showInfo(PlatformMessages.loginRedirectMessage);
+      this.snackbar.showInfo(platformMessages.loginRedirectMessage);
       return null;
     }
   }
@@ -93,8 +83,8 @@ export class AuthService {
 
     if (!refreshToken) {
       this.snackbar.showError(
-        PlatformMessages.sessionExpiredTitle,
-        PlatformMessages.noRefreshTokenMessage,
+        platformMessages.sessionExpiredTitle,
+        platformMessages.noRefreshTokenMessage,
       );
       return EMPTY;
     }
@@ -107,8 +97,8 @@ export class AuthService {
         switchMap((response) => {
           if (!response.result || response.statusCode !== 200 || !response.data.accessToken) {
             this.snackbar.showError(
-              PlatformMessages.tokenRefreshFailedTitle,
-              response.message || PlatformMessages.tokenRefreshFailedMessage,
+              platformMessages.tokenRefreshFailedTitle,
+              response.message || platformMessages.tokenRefreshFailedMessage,
             );
             return EMPTY;
           }
@@ -120,8 +110,8 @@ export class AuthService {
         }),
         catchError((error) => {
           const message =
-            error?.error?.message || error?.message || PlatformMessages.tokenInvalidMessage;
-          this.snackbar.showError(PlatformMessages.sessionExpiredTitle, message);
+            error?.error?.message || error?.message || platformMessages.tokenInvalidMessage;
+          this.snackbar.showError(platformMessages.sessionExpiredTitle, message);
           return of('');
         }),
       );
@@ -156,8 +146,8 @@ export class AuthService {
   }
 
   logout() {
-    this.cookieService.delete(ACCESS_TOKEN_KEY, '/');
-    this.cookieService.delete(REFRESH_TOKEN_KEY, '/');
+    this.cookieService.delete(accessTokenKey, '/');
+    this.cookieService.delete(refreshTokenKey, '/');
     this.currentRole$.next(null);
   }
 }

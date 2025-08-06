@@ -5,7 +5,7 @@ import { DynamicFormField } from '../../../shared/interfaces/dynamic-form-field.
 /**
  * Sign In button configuration
  */
-export const SIGNIN_BUTTON_CONFIG: ButtonConfig = {
+export const signInButtonConfig: ButtonConfig = {
   label: 'Sign In',
   fontWeight: 500,
   variant: 'gradient',
@@ -16,7 +16,7 @@ export const SIGNIN_BUTTON_CONFIG: ButtonConfig = {
  * Login form field configurations
  */
 
-export const LOGIN_FORM_FIELDS: DynamicFormField[] = [
+export const loginFormFields: DynamicFormField[] = [
   {
     name: 'email',
     label: 'Email',

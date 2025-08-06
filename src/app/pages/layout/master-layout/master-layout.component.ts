@@ -1,7 +1,7 @@
-import { Component, HostListener, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { NavigationItems } from '../../../utils/constants';
+import { navigationItems } from '../../../utils/constants';
 import { UserType } from '../../../utils/types/sidebar-component.type';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/auth/services/auth.service';
@@ -25,7 +25,7 @@ export class MasterLayoutComponent implements OnInit, OnDestroy {
   currentXp: number = 500;
   xpLimit: number = 1000;
   notificationCount: number = 0;
-  sidebarItems = NavigationItems.UserRoutes.filter((item) => item.label !== 'Profile');
+  sidebarItems = navigationItems.UserRoutes.filter((item) => item.label !== 'Profile');
   notifications = [];
 
   ngOnInit(): void {
@@ -34,8 +34,8 @@ export class MasterLayoutComponent implements OnInit, OnDestroy {
         this.role = role as UserType;
         this.sidebarItems =
           role === 'admin'
-            ? NavigationItems.AdminRoutes
-            : NavigationItems.UserRoutes.filter((item) => item.label !== 'Profile');
+            ? navigationItems.AdminRoutes
+            : navigationItems.UserRoutes.filter((item) => item.label !== 'Profile');
       }
     });
   }

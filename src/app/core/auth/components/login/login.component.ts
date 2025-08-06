@@ -1,11 +1,10 @@
 import { Component, inject, OnDestroy } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { LoginCredentials } from '../../interfaces/login.interface';
-import { LOGIN_FORM_FIELDS, SIGNIN_BUTTON_CONFIG } from '../../configs/login.component.config';
+import { loginFormFields, signInButtonConfig } from '../../configs/login.component.config';
 import { TogglePasswordDirective } from '../toggle-password.directive';
 import { MatFormField, MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
@@ -15,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
 import { Navigations } from '../../../../shared/enums/navigation';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { Subject, takeUntil } from 'rxjs';
+import { LoginCredentials } from '../../interfaces/login.interface';
 
 @Component({
   selector: 'app-login',
@@ -42,8 +42,8 @@ export class LoginComponent implements OnDestroy {
 
   private readonly destroy$ = new Subject<void>();
 
-  loginFields = LOGIN_FORM_FIELDS; // Field config for login form
-  signInButton = SIGNIN_BUTTON_CONFIG; // Button config for sign-in
+  loginFields = loginFormFields; // Field config for login form
+  signInButton = signInButtonConfig; // Button config for sign-in
 
   loginForm: FormGroup;
 
@@ -55,7 +55,7 @@ export class LoginComponent implements OnDestroy {
           acc[field.name] = ['', field.validators];
           return acc;
         },
-        {} as Record<string, any>,
+        {} as Record<string, unknown>,
       ),
     );
   }

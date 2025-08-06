@@ -3,6 +3,7 @@ import {
   HttpRequest,
   HttpHandlerFn,
   HttpErrorResponse,
+  HttpEvent,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Observable, BehaviorSubject, EMPTY, throwError } from 'rxjs';
@@ -11,16 +12,16 @@ import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '../core/auth/services/auth.service';
 import { SnackbarService } from '../shared/service/snackbar/snackbar.service';
 import { Router } from '@angular/router';
-import { PlatformMessages } from '../utils/constants';
+import { platformMessages } from '../utils/constants';
 import { Navigations } from '../shared/enums/navigation';
 
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
-export const AuthInterceptor: HttpInterceptorFn = (
-  req: HttpRequest<any>,
+export const authInterceptor: HttpInterceptorFn = (
+  req: HttpRequest<unknown>,
   next: HttpHandlerFn,
-): Observable<any> => {
+): Observable<HttpEvent<unknown>> => {
   const authService = inject(AuthService);
   const snackbar = inject(SnackbarService);
   const router = inject(Router);
@@ -51,19 +52,19 @@ export const AuthInterceptor: HttpInterceptorFn = (
 
         case 403:
           router.navigate([Navigations.Unauthorized]);
-          snackbar.showError(PlatformMessages.accessDeniedTitle, backendMessage);
+          snackbar.showError(platformMessages.accessDeniedTitle, backendMessage);
           break;
 
         case 404:
-          snackbar.showError(PlatformMessages.notFoundTitle, backendMessage);
+          snackbar.showError(platformMessages.notFoundTitle, backendMessage);
           break;
 
         case 500:
-          snackbar.showError(PlatformMessages.serverErrorTitle, backendMessage);
+          snackbar.showError(platformMessages.serverErrorTitle, backendMessage);
           break;
 
         default:
-          snackbar.showError(PlatformMessages.errorTitle, PlatformMessages.unavailableMessage);
+          snackbar.showError(platformMessages.errorTitle, platformMessages.unavailableMessage);
           break;
       }
 
@@ -73,11 +74,11 @@ export const AuthInterceptor: HttpInterceptorFn = (
 };
 
 function refreshAndRetry(
-  request: HttpRequest<any>,
+  request: HttpRequest<unknown>,
   next: HttpHandlerFn,
   authService: AuthService,
   snackbar: SnackbarService,
-): Observable<any> {
+): Observable<HttpEvent<unknown>> {
   if (!isRefreshing) {
     isRefreshing = true;
     refreshTokenSubject.next(null);
@@ -97,12 +98,12 @@ function refreshAndRetry(
           }),
         );
       }),
-      catchError((err: HttpErrorResponse) => {
+      catchError(() => {
         isRefreshing = false;
         authService.logout();
         snackbar.showError(
-          PlatformMessages.sessionExpiredTitle,
-          PlatformMessages.sessionExpiredMessage,
+          platformMessages.sessionExpiredTitle,
+          platformMessages.sessionExpiredMessage,
         );
         return EMPTY;
       }),

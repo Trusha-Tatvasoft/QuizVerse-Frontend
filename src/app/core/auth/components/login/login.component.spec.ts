@@ -97,7 +97,7 @@ describe('LoginComponent', () => {
     expect(result).toBeNull();
   });
 
-  it('should use SIGNIN_BUTTON_CONFIG label', () => {
+  it('should use signInButtonConfig label', () => {
     expect(component.signInButton.label).toBeDefined();
   });
 

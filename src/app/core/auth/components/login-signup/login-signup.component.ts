@@ -1,9 +1,9 @@
 import { Component, effect, signal } from '@angular/core';
 import { OutlineButtonComponent } from '../../../../shared/components/outline-button/outline-button.component';
 import {
-  FACEBOOK_BUTTON_CONFIG,
-  GOOGLE_BUTTON_CONFIG,
-  LOGIN_SIGNUP_TABS_CONFIG,
+  facebookButtonConfig,
+  googleButtonConfig,
+  loginSignUpTabsConfig,
 } from '../../configs/login-signup.component.config';
 import { TabComponent } from '../../../../shared/components/tab/tab.component';
 import { RouterLink } from '@angular/router';
@@ -17,9 +17,9 @@ export const selectedTabIndexSignal = signal<number>(0);
   styleUrl: './login-signup.component.scss',
 })
 export class LoginSignupComponent {
-  googleButton = GOOGLE_BUTTON_CONFIG; // Google button configuration
-  facebookButton = FACEBOOK_BUTTON_CONFIG; // Facebook button configuration
-  tabs = LOGIN_SIGNUP_TABS_CONFIG; // Tabs for Sign In / Sign Up
+  googleButton = googleButtonConfig; // Google button configuration
+  facebookButton = facebookButtonConfig; // Facebook button configuration
+  tabs = loginSignUpTabsConfig; // Tabs for Sign In / Sign Up
   selectedIndex = selectedTabIndexSignal(); // Active tab index
 
   constructor() {
