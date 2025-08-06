@@ -5,17 +5,17 @@ import { OutlineButtonComponent } from '../../../shared/components/outline-butto
 import { MatIcon } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import {
-  BROWSE_QUIZZES_BUTTON,
-  FEATURES,
-  JOIN_PLATFORM_BUTTON,
-  LANDING_PAGE_CONTENT,
-  START_PLAY_BUTTON,
+  browseQuizzesButton,
+  landingPageFeaturesCardsConfig,
+  joinPlatformButton,
+  landingPageContent,
+  startPlayButton,
 } from '../configs/landing-page.component.config';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { Navigations } from '../../../shared/enums/navigation';
 import { LandingPageDataService } from '../../../services/user/landing-page/landing-page-data.service';
 import { LandingPageStats } from '../../../shared/interfaces/landing-page-stats.interface';
-import { PlateformName, PlatformMessages } from '../../../utils/constants';
+import { plateformName, platformMessages } from '../../../utils/constants';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { LoaderService } from '../../../shared/service/loader/loader.service';
@@ -32,12 +32,12 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   private readonly snackbarService = inject(SnackbarService);
   private readonly loaderService = inject(LoaderService);
 
-  landingPageContent = LANDING_PAGE_CONTENT;
-  quizFeatures = FEATURES;
-  startPlayButton = START_PLAY_BUTTON;
-  browseQuizButton = BROWSE_QUIZZES_BUTTON;
-  joinPlatFormButton = JOIN_PLATFORM_BUTTON;
-  plateformName = PlateformName;
+  landingPageContent = landingPageContent;
+  quizFeatures = landingPageFeaturesCardsConfig;
+  startPlayButton = startPlayButton;
+  browseQuizButton = browseQuizzesButton;
+  joinPlatFormButton = joinPlatformButton;
+  plateformName = plateformName;
   stats: LandingPageStats;
   private readonly destroy$ = new Subject<void>();
 
@@ -75,8 +75,8 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.snackbarService.showError(
-            PlatformMessages.errorMessage,
-            err.error?.message || PlatformMessages.errorTitle,
+            platformMessages.errorMessage,
+            err.error?.message || platformMessages.errorTitle,
           );
         },
       });

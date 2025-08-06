@@ -2,11 +2,14 @@ import { Navigations } from '../shared/enums/navigation';
 import { TagInputConfig } from '../shared/interfaces/tag-component.interface';
 import { TagColor, TagType } from './types/tag-component.type';
 
-export const SNACKBAR_DURATION = 5000;
-export const SNACKBAR_HORIZONTAL_POSITION = 'end';
-export const SNACKBAR_VERTICAL_POSITION = 'bottom';
+//#region snackbar - constant
+export const snackbarDuration = 5000;
+export const snackbarHorizontalPosition = 'end';
+export const snackbarVerticalPostion = 'bottom';
+//#endregion
 
-export const AppColors = {
+//#region AppColors
+export const appColors = {
   adminBackgroundColor: 'linear-gradient(to right, #fff4f2, #fffaf6)',
   adminTextColor: 'rgb(153 27 27 / var(--tw-text-opacity, 1))',
   adminBorderColor: 'rgb(254 202 202 / var(--tw-border-opacity, 1))',
@@ -44,13 +47,17 @@ export const AppColors = {
 
   darkText: '#333',
 };
+//#endregion
 
-export const TablePaginationConfig = {
+//#region Common Table Pagination Config
+export const tablePaginationConfig = {
   PageSize: 5,
   TotalItems: 0,
   PageSizeOptions: [5, 10, 20],
 };
+//#endregion
 
+//#region navBar Config
 export const yellow: TagInputConfig = {
   id: '0',
   label: 'warning',
@@ -90,8 +97,10 @@ export const blue: TagInputConfig = {
   isSelected: false,
   hasBorder: true,
 };
+//#endregion
 
-export const NavigationItems = {
+//#region NavigationItems
+export const navigationItems = {
   UserRoutes: [
     {
       label: 'Dashboard',
@@ -185,10 +194,12 @@ export const NavigationItems = {
     },
   ],
 };
+//#endregion
 
-export const PlateformName = 'QuizVerse';
+//#region Constants Messages
+export const plateformName = 'QuizVerse';
 
-export const PlatformMessages = {
+export const platformMessages = {
   errorTitle: `Error!`,
   errorMessage: `Something went wrong.`,
   resetLinkSendSuccessfully: `Reset link sent successfully.`,
@@ -196,16 +207,61 @@ export const PlatformMessages = {
   noDataAvailable: `No data available to export.`,
   errorExport: `Export failed.`,
   registerSuccessfully: `Register Successfully!!`,
+
+  //#region authMessages
+  loginRedirectMessage: 'Redirecting to login.',
+  unauthorizedTitle: 'Unauthorized',
+  unauthorizedAccess: 'No access for this page.',
+  invalidOrExpiredToken: 'Invalid token or Token Expired!!',
+  //#endregion
+
+  //#region auth Interceptor Errors
+  accessDeniedTitle: 'Access Denied',
+  notFoundTitle: 'Not Found',
+  serverErrorTitle: 'Server Error',
+  unavailableMessage: 'Server Unavailable',
+  sessionExpiredTitle: 'Session expired',
+  sessionExpiredMessage: 'Please log in again.',
+  //#endregion
+
+  //#region authService messages
+  noRefreshTokenMessage: 'No refresh token found.',
+  tokenRefreshFailedTitle: 'Token refresh failed',
+  tokenRefreshFailedMessage: 'Unexpected response.',
+  tokenInvalidMessage: 'Token refresh failed',
+  //#endregion
+};
+//#endregion
+
+//#region Constant Variables
+export const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+
+export const maxFileUploadSize = 10 * 1024 * 1024;
+
+export const defaultLastLoginDate = '0001-01-01T00:00:00';
+
+export const debounceTimeValue = 500;
+
+//#region authToken Const
+export const accessTokenKey = 'access_token';
+export const refreshTokenKey = 'refresh_token';
+export const roleClaimKey = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role';
+
+export const accessTokenExpiryMinutes = 30;
+export const refreshTokenExpiryDays = 7;
+export const rememberMeExpiryDays = 30;
+
+// Functions to get expiry dates
+export const getAccessTokenExpiryDate = () => {
+  return new Date(Date.now() + accessTokenExpiryMinutes * 60 * 1000);
 };
 
-export const USER_EXPORT_FILE_PREFIX = 'User';
+export const getRefreshTokenExpiryDate = (rememberMe: boolean) => {
+  const days = rememberMe ? rememberMeExpiryDays : refreshTokenExpiryDays;
+  return new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+};
+//#endregion
 
-export const EXPORT_FILE_NAME_TEMPLATE = '{prefix}_export_{date}.xlsx';
+export const userExportFilePrefix = 'User';
 
-export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-
-export const MAX_FILE_UPLOAD_SIZE = 10 * 1024 * 1024;
-
-export const DEFAULT_LAST_LOGIN_DATE = '0001-01-01T00:00:00';
-
-export const DEBOUNCE_TIME = 500;
+export const exportFileNameTemplate = '{prefix}_export_{date}.xlsx';

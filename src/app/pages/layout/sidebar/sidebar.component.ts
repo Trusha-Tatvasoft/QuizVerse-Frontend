@@ -34,7 +34,7 @@ import { SidebarItem } from '../../../shared/interfaces/sidebar-component.interf
 })
 export class SidebarComponent implements OnInit {
   @Input() sidebarItems: SidebarItem[] = [];
-  @Input() role: UserType = 'user';
+  @Input() role: UserType = 'player';
 
   @Output() sidebarClosed = new EventEmitter<void>();
 
@@ -58,8 +58,9 @@ export class SidebarComponent implements OnInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event: any): void {
-    this.setSidenavMode(event.target.innerWidth);
+  onResize(event: UIEvent): void {
+    const width = (event.target as Window).innerWidth;
+    this.setSidenavMode(width);
   }
 
   setSidenavMode(width: number): void {

@@ -11,7 +11,6 @@ import {
   Directive,
   ChangeDetectorRef,
   AfterContentChecked,
-  Inject,
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -28,7 +27,7 @@ import { LazyTab } from '../../interfaces/tab-component.interface';
 })
 export class TabContentDirective {
   @Input('tabContent') tabId!: string;
-  templateRef = inject(TemplateRef<any>);
+  templateRef = inject(TemplateRef<unknown>);
 }
 
 /**
@@ -45,12 +44,12 @@ export class TabContentDirective {
 export class TabComponent implements AfterContentInit, AfterContentChecked {
   @Input() tabs: LazyTab[] = []; // Array of tab definitions
   @Input() selectedIndex = 0; // Currently selected tab index
-  @Input() templates?: { [key: string]: TemplateRef<any> }; // Optional templates input specifically for Storybook compatibility.
+  @Input() templates?: { [key: string]: TemplateRef<unknown> }; // Optional templates input specifically for Storybook compatibility.
 
   @Output() tabChanged = new EventEmitter<number>(); // Event emitted when the active tab changes
 
-  loadedComponents = new Map<string, Type<any>>(); // Map of lazy-loaded components by tab ID
-  templateMap = new Map<string, TemplateRef<any>>(); // Map of content templates by tab ID (for static content)
+  loadedComponents = new Map<string, Type<unknown>>(); // Map of lazy-loaded components by tab ID
+  templateMap = new Map<string, TemplateRef<unknown>>(); // Map of content templates by tab ID (for static content)
   templatesInitialized = false; // Flag to track if templates have been initialized
 
   @ContentChildren(TabContentDirective) tabContentDirectives!: QueryList<TabContentDirective>; // Query list of all projected tab content directives
@@ -90,7 +89,7 @@ export class TabComponent implements AfterContentInit, AfterContentChecked {
    * Handles tab change events
    * @param event The tab change event containing the new index
    */
-  async onTabChange(event: any) {
+  async onTabChange(event: { index: number }): Promise<void> {
     this.selectedIndex = event.index;
     this.tabChanged.emit(event.index);
 
@@ -106,7 +105,7 @@ export class TabComponent implements AfterContentInit, AfterContentChecked {
    * @param tabId The ID of the tab
    * @returns The component class or null if not loaded
    */
-  getLoadedComponent(tabId: string): Type<any> | null {
+  getLoadedComponent(tabId: string): Type<unknown> | null {
     return this.loadedComponents.get(tabId) ?? null;
   }
 
@@ -116,7 +115,7 @@ export class TabComponent implements AfterContentInit, AfterContentChecked {
    * @param tabId The ID of the tab
    * @returns The template reference or null if not found
    */
-  getTemplate(tabId: string): TemplateRef<any> | null {
+  getTemplate(tabId: string): TemplateRef<unknown> | null {
     if (this.templates?.[tabId]) {
       return this.templates[tabId];
     }

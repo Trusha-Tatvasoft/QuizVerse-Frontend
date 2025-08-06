@@ -1,7 +1,7 @@
 import { environment } from '../../../../../../environments/environment.dev';
 import { UserStatus } from '../../../../../shared/enums/user-management.enum';
 import { TableData } from '../../../../../shared/interfaces/table-component.interface';
-import { DEFAULT_LAST_LOGIN_DATE } from '../../../../../utils/constants';
+import { defaultLastLoginDate } from '../../../../../utils/constants';
 import { UserListData } from '../../interfaces/user-list-data.interface';
 
 /**
@@ -34,7 +34,7 @@ export function userToUserListingTableData(user: UserListData): TableData {
       },
     },
     createdDate: user.createdDate,
-    lastLogin: user.lastLogin !== DEFAULT_LAST_LOGIN_DATE ? user.lastLogin : null, // Fallback to createdDate if lastLogin is uninitialized
+    lastLogin: user.lastLogin !== defaultLastLoginDate ? user.lastLogin : null, // Fallback to createdDate if lastLogin is uninitialized
     quizattempt: {
       tagConfig: {
         id: `quizzes-${user.id}`,
