@@ -2,10 +2,13 @@ import { Navigations } from '../shared/enums/navigation';
 import { TagInputConfig } from '../shared/interfaces/tag-component.interface';
 import { TagColor, TagType } from './types/tag-component.type';
 
+//#region snackbar - constant
 export const SNACKBAR_DURATION = 5000;
 export const SNACKBAR_HORIZONTAL_POSITION = 'end';
 export const SNACKBAR_VERTICAL_POSITION = 'bottom';
+//#endregion
 
+//#region AppColors
 export const AppColors = {
   adminBackgroundColor: 'linear-gradient(to right, #fff4f2, #fffaf6)',
   adminTextColor: 'rgb(153 27 27 / var(--tw-text-opacity, 1))',
@@ -44,13 +47,17 @@ export const AppColors = {
 
   darkText: '#333',
 };
+//#endregion
 
+//#region Common Table Pagination Config
 export const TablePaginationConfig = {
   PageSize: 5,
   TotalItems: 0,
   PageSizeOptions: [5, 10, 20],
 };
+//#endregion
 
+//#region navBar Config
 export const yellow: TagInputConfig = {
   id: '0',
   label: 'warning',
@@ -90,7 +97,9 @@ export const blue: TagInputConfig = {
   isSelected: false,
   hasBorder: true,
 };
+//#endregion
 
+//#region NavigationItems
 export const NavigationItems = {
   UserRoutes: [
     {
@@ -185,7 +194,9 @@ export const NavigationItems = {
     },
   ],
 };
+//#endregion
 
+//#region Constants Messages
 export const PlateformName = 'QuizVerse';
 
 export const PlatformMessages = {
@@ -196,12 +207,33 @@ export const PlatformMessages = {
   noDataAvailable: `No data available to export.`,
   errorExport: `Export failed.`,
   registerSuccessfully: `Register Successfully!!`,
+
+  //#region authMessages
+  loginRedirectMessage: 'Redirecting to login.',
+  unauthorizedTitle: 'Unauthorized',
+  unauthorizedAccess: 'No access for this page.',
+  invalidOrExpiredToken: 'Invalid token or Token Expired!!',
+  //#endregion
+
+  //#region auth Interceptor Errors
+  accessDeniedTitle: 'Access Denied',
+  notFoundTitle: 'Not Found',
+  serverErrorTitle: 'Server Error',
+  unavailableMessage: 'Server Unavailable',
+  sessionExpiredTitle: 'Session expired',
+  sessionExpiredMessage: 'Please log in again.',
+  //#endregion
+
+  //#region authService messages
+  noRefreshTokenMessage: 'No refresh token found.',
+  tokenRefreshFailedTitle: 'Token refresh failed',
+  tokenRefreshFailedMessage: 'Unexpected response.',
+  tokenInvalidMessage: 'Token refresh failed',
+  //#endregion
 };
+//#endregion
 
-export const USER_EXPORT_FILE_PREFIX = 'User';
-
-export const EXPORT_FILE_NAME_TEMPLATE = '{prefix}_export_{date}.xlsx';
-
+//#region Constant Variables
 export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
 
 export const MAX_FILE_UPLOAD_SIZE = 10 * 1024 * 1024;
@@ -209,3 +241,28 @@ export const MAX_FILE_UPLOAD_SIZE = 10 * 1024 * 1024;
 export const DEFAULT_LAST_LOGIN_DATE = '0001-01-01T00:00:00';
 
 export const DEBOUNCE_TIME = 500;
+
+//#region authToken Const
+export const ACCESS_TOKEN_KEY = 'access_token';
+export const REFRESH_TOKEN_KEY = 'refresh_token';
+export const ROLE_CLAIM_KEY = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role';
+
+export const ACCESS_TOKEN_EXPIRY_MINUTES = 30;
+export const REFRESH_TOKEN_EXPIRY_DAYS = 7;
+export const REMEMBER_ME_EXPIRY_DAYS = 30;
+
+// Functions to get expiry dates
+export const getAccessTokenExpiryDate = () => {
+  return new Date(Date.now() + ACCESS_TOKEN_EXPIRY_MINUTES * 60 * 1000);
+};
+
+export const getRefreshTokenExpiryDate = (rememberMe: boolean) => {
+  const days = rememberMe ? REMEMBER_ME_EXPIRY_DAYS : REFRESH_TOKEN_EXPIRY_DAYS;
+  return new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+};
+//#endregion
+
+export const USER_EXPORT_FILE_PREFIX = 'User';
+export const EXPORT_FILE_NAME_TEMPLATE = '{prefix}_export_{date}.xlsx';
+
+//#endregion
