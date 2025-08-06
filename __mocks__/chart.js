@@ -1,17 +1,25 @@
-// Mock for Chart.js to prevent ESM parsing issues
+// __mocks__/chart.js
+// CommonJS mock used by Jest. Keeps Chart.register(...) safe at import time.
+
 const ChartMock = jest.fn().mockImplementation(() => ({
   destroy: jest.fn(),
   update: jest.fn(),
-  render: jest.fn()
+  render: jest.fn(),
 }));
 
-// ✅ Static register method (called by your component at import time)
+// static register method (no-op)
 ChartMock.register = jest.fn();
 
-// ✅ Dummy registerables so spreading won't fail
-const registerables = [{}];
+// For unit tests it's fine to keep registerables empty
+const registerables = [];
+
+// placeholders (types stripped at runtime)
+const ChartConfiguration = {};
+const ChartType = {};
 
 module.exports = {
   Chart: ChartMock,
-  registerables
+  registerables,
+  ChartConfiguration,
+  ChartType,
 };
