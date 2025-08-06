@@ -6,13 +6,13 @@ import { MatFormField, MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {
-  CANCEL_BUTTON_CONFIG,
-  CREATE_USER_BUTTON_CONFIG,
-  REGISTER_BUTTON_CONFIG,
-  REGISTER_FORM_FIELDS,
-  UPDATE_USER_BUTTON_CONFIG,
-  UPLOAD_BUTTON_CONFIG,
-  USER_FORM_FIELDS,
+  cancelButtonConfig,
+  createUserButtonConfig,
+  registerButtonConfig,
+  registerFormFields,
+  updateUserButtonConfig,
+  uploadButtonConfig,
+  userFormFields,
 } from '../../configs/register.component.config';
 import { TogglePasswordDirective } from '../toggle-password.directive';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
@@ -21,9 +21,9 @@ import { Subject, takeUntil } from 'rxjs';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { RegisterService } from '../../services/register.service';
 import {
-  ALLOWED_IMAGE_TYPES,
-  MAX_FILE_UPLOAD_SIZE,
-  PlatformMessages,
+  allowedImageTypes,
+  maxFileUploadSize,
+  platformMessages,
 } from '../../../../utils/constants';
 import { RegisterCredential } from '../../interfaces/register.interface';
 import { TextButtonComponent } from '../../../../shared/components/text-button/text-button.component';
@@ -54,13 +54,13 @@ export class RegisterComponent implements OnDestroy {
   private readonly snackbarService = inject(SnackbarService);
   private readonly registerService = inject(RegisterService);
 
-  registerFields = REGISTER_FORM_FIELDS;
-  userFields = USER_FORM_FIELDS;
-  registerButton = REGISTER_BUTTON_CONFIG;
-  uploadButton = UPLOAD_BUTTON_CONFIG;
-  cancelButton = CANCEL_BUTTON_CONFIG;
-  updateUserButton = UPDATE_USER_BUTTON_CONFIG;
-  createUserButton = CREATE_USER_BUTTON_CONFIG;
+  registerFields = registerFormFields;
+  userFields = userFormFields;
+  registerButton = registerButtonConfig;
+  uploadButton = uploadButtonConfig;
+  cancelButton = cancelButtonConfig;
+  updateUserButton = updateUserButtonConfig;
+  createUserButton = createUserButtonConfig;
 
   isLogin = false;
   isEditMode = false;
@@ -78,7 +78,7 @@ export class RegisterComponent implements OnDestroy {
         acc[field.name] = ['', field.validators];
         return acc;
       },
-      {} as Record<string, any>,
+      {} as Record<string, unknown>,
     );
 
     this.registerForm = this.fb.group(formControls, {
@@ -91,7 +91,7 @@ export class RegisterComponent implements OnDestroy {
           acc[field.name] = ['', field.validators];
           return acc;
         },
-        {} as Record<string, any>,
+        {} as Record<string, unknown>,
       ),
     );
   }
@@ -130,11 +130,11 @@ export class RegisterComponent implements OnDestroy {
 
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      const allowedTypes = ALLOWED_IMAGE_TYPES;
+      const allowedTypes = allowedImageTypes;
 
       control?.setErrors(null);
 
-      if (file.size > MAX_FILE_UPLOAD_SIZE) {
+      if (file.size > maxFileUploadSize) {
         control?.setErrors({ fileSize: true });
         control?.markAsTouched();
         this.selectedFile = null;
@@ -175,22 +175,22 @@ export class RegisterComponent implements OnDestroy {
         next: (res) => {
           if (!res.result || res.statusCode !== 201) {
             this.snackbarService.showError(
-              `${PlatformMessages.errorTitle} ${res.statusCode}`,
-              res.message || PlatformMessages.errorMessage,
+              `${platformMessages.errorTitle} ${res.statusCode}`,
+              res.message || platformMessages.errorMessage,
             );
             return;
           }
 
           this.snackbarService.showSuccess(
             'Success',
-            res.message || PlatformMessages.registerSuccessfully,
+            res.message || platformMessages.registerSuccessfully,
           );
 
           // Switch to login tab after successful registration
           selectedTabIndexSignal.set(0);
         },
         error: (err) => {
-          const message = err?.error?.message || PlatformMessages.errorMessage;
+          const message = err?.error?.message || platformMessages.errorMessage;
           this.snackbarService.showError('Error', message);
         },
       });
@@ -216,7 +216,7 @@ export class RegisterComponent implements OnDestroy {
   }
 
   // Handle cancel button click
-  onCancel(): void {}
+  // onCancel(): void {}
 
   ngOnDestroy(): void {
     this.destroy$.next();

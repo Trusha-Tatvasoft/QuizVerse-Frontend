@@ -6,10 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import {
-  RESET_PASSWORD_FORM_FIELD,
-  SEND_RESET_LINK_CONFIG,
+  resetPasswordFormField,
+  sendResetLinkConfig,
 } from '../../configs/reset-password.component.config';
-import { ResetCredential } from '../../interfaces/forgot-reset-password.interface';
 import { TogglePasswordDirective } from '../toggle-password.directive';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,8 +16,9 @@ import { ValidationErrorService } from '../../../../shared/service/validation-er
 import { ForgotResetPasswordService } from '../../services/forgot-reset-password.service';
 import { Subject, takeUntil } from 'rxjs';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
-import { PlatformMessages } from '../../../../utils/constants';
+import { platformMessages } from '../../../../utils/constants';
 import { Navigations } from '../../../../shared/enums/navigation';
+import { ResetCredential } from '../../interfaces/forgot-reset-password.interface';
 
 @Component({
   selector: 'app-reset-password',
@@ -48,8 +48,8 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  resetFields = RESET_PASSWORD_FORM_FIELD;
-  sendResetLinkButton = SEND_RESET_LINK_CONFIG;
+  resetFields = resetPasswordFormField;
+  sendResetLinkButton = sendResetLinkConfig;
 
   resetForm: FormGroup;
   resetToken: string = '';
@@ -62,7 +62,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         acc[field.name] = ['', field.validators];
         return acc;
       },
-      {} as Record<string, any>,
+      {} as Record<string, unknown>,
     );
 
     this.resetForm = this.fb.group(formControls, {
@@ -88,15 +88,15 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         next: (res) => {
           if (!res.result || res.statusCode !== 200 || res.data === false) {
             this.snackbarService.showError(
-              `${PlatformMessages.errorTitle} ${res.statusCode}`,
-              res.message || PlatformMessages.errorMessage,
+              `${platformMessages.errorTitle} ${res.statusCode}`,
+              res.message || platformMessages.errorMessage,
             );
 
             this.router.navigate([Navigations.ResetLinkInvalid]);
           }
         },
         error: (err) => {
-          const message = err?.error?.message || PlatformMessages.errorMessage;
+          const message = err?.error?.message || platformMessages.errorMessage;
           this.snackbarService.showError('Error', message);
 
           this.router.navigate([Navigations.ResetLinkInvalid]);
@@ -144,8 +144,8 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         next: (res) => {
           if (!res.result || res.statusCode !== 200) {
             this.snackbarService.showError(
-              `${PlatformMessages.errorTitle} ${res.statusCode}`,
-              res.message || PlatformMessages.errorMessage,
+              `${platformMessages.errorTitle} ${res.statusCode}`,
+              res.message || platformMessages.errorMessage,
             );
 
             this.router.navigate([Navigations.ForgetPassword]);
@@ -154,13 +154,13 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
 
           this.snackbarService.showSuccess(
             'Success',
-            res.message || PlatformMessages.passwordResetSuccess,
+            res.message || platformMessages.passwordResetSuccess,
           );
 
           this.router.navigate([Navigations.Login]);
         },
         error: (err) => {
-          const message = err?.error?.message || PlatformMessages.errorMessage;
+          const message = err?.error?.message || platformMessages.errorMessage;
           this.snackbarService.showError('Error', message);
 
           this.router.navigate([Navigations.ForgetPassword]);

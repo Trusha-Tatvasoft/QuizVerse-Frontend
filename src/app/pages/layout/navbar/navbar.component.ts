@@ -7,14 +7,14 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TextButtonComponent } from '../../../shared/components/text-button/text-button.component';
 import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
 import {
-  DELETE_BUTTON_CONFIG,
-  GET_STARTED_BUTTON_CONFIG,
-  MARK_AS_ALL_READ_BUTTON_CONFIG,
-  MARK_AS_READ_BUTTON_CONFIG,
-  SIGN_IN_BUTTON_CONFIG,
-  TEXT_BUTTON_CONFIG,
-  VIEW_ALL_DETAILS_BUTTON_CONFIG,
-  VIEW_DETAILS_BUTTON_CONFIG,
+  deleteButtonConfig,
+  getStartedButtonConfig,
+  markAsAllReadButtonConfig,
+  markAsReadButtonConfig,
+  signInButtonConfig,
+  textButtonConfig,
+  viewAllDetailsButtonConfig,
+  viewDetailsButtonConfig,
 } from '../configs/navbar.component.config';
 import { TagComponent } from '../../../shared/components/tag/tag.component';
 import { ProgressBarComponent } from '../../../shared/components/progress-bar/progress-bar.component';
@@ -22,7 +22,7 @@ import { OutlineButtonComponent } from '../../../shared/components/outline-butto
 import { Notifications } from '../interfaces/navbar.component.interface';
 import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
-import { PlateformName } from '../../../utils/constants';
+import { plateformName } from '../../../utils/constants';
 
 @Component({
   selector: 'app-navbar',
@@ -55,15 +55,15 @@ export class NavbarComponent {
 
   private readonly router = inject(Router);
 
-  textButton = TEXT_BUTTON_CONFIG;
-  signInButton = SIGN_IN_BUTTON_CONFIG;
-  getStartedButton = GET_STARTED_BUTTON_CONFIG;
-  markAsReadButton = MARK_AS_READ_BUTTON_CONFIG;
-  deleteButton = DELETE_BUTTON_CONFIG;
-  viewDetailsButton = VIEW_DETAILS_BUTTON_CONFIG;
-  markAsAllReadButton = MARK_AS_ALL_READ_BUTTON_CONFIG;
-  viewAllButton = VIEW_ALL_DETAILS_BUTTON_CONFIG;
-  plateformName = PlateformName;
+  textButton = textButtonConfig;
+  signInButton = signInButtonConfig;
+  getStartedButton = getStartedButtonConfig;
+  markAsReadButton = markAsReadButtonConfig;
+  deleteButton = deleteButtonConfig;
+  viewDetailsButton = viewDetailsButtonConfig;
+  markAsAllReadButton = markAsAllReadButtonConfig;
+  viewAllButton = viewAllDetailsButtonConfig;
+  plateformName = plateformName;
   showNotifications = false;
   menuOpen = false;
   private previousWidth = window.innerWidth;

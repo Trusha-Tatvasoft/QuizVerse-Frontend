@@ -6,10 +6,10 @@ import { of, throwError } from 'rxjs';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
 import { ForgotResetPasswordService } from '../../services/forgot-reset-password.service';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
-import { SEND_RESET_LINK_CONFIG } from '../../configs/reset-password.component.config';
+import { sendResetLinkConfig } from '../../configs/reset-password.component.config';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Navigations } from '../../../../shared/enums/navigation';
-import { PlatformMessages } from '../../../../utils/constants';
+import { platformMessages } from '../../../../utils/constants';
 
 describe('ResetPasswordComponent', () => {
   let component: ResetPasswordComponent;
@@ -216,7 +216,7 @@ describe('ResetPasswordComponent', () => {
   });
 
   it('should use SEND_RESET_LINK_CONFIG for button config', () => {
-    expect(component.sendResetLinkButton).toBe(SEND_RESET_LINK_CONFIG);
+    expect(component.sendResetLinkButton).toBe(sendResetLinkConfig);
   });
 
   it('should show error and navigate if verifyResetToken returns data false', () => {
@@ -313,7 +313,7 @@ describe('ResetPasswordComponent', () => {
 
     component.ngOnInit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error', PlatformMessages.errorMessage);
+    expect(errorSpy).toHaveBeenCalledWith('Error', platformMessages.errorMessage);
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ResetLinkInvalid]);
   });
 
@@ -333,7 +333,7 @@ describe('ResetPasswordComponent', () => {
 
     component.onSubmit();
 
-    expect(successSpy).toHaveBeenCalledWith('Success', PlatformMessages.passwordResetSuccess);
+    expect(successSpy).toHaveBeenCalledWith('Success', platformMessages.passwordResetSuccess);
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.Login]);
   });
 
@@ -347,7 +347,7 @@ describe('ResetPasswordComponent', () => {
 
     component.ngOnInit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error', PlatformMessages.errorMessage);
+    expect(errorSpy).toHaveBeenCalledWith('Error', platformMessages.errorMessage);
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ResetLinkInvalid]);
   });
 
@@ -368,8 +368,8 @@ describe('ResetPasswordComponent', () => {
     component.onSubmit();
 
     expect(errorSpy).toHaveBeenCalledWith(
-      `${PlatformMessages.errorTitle} 400`,
-      PlatformMessages.errorMessage,
+      `${platformMessages.errorTitle} 400`,
+      platformMessages.errorMessage,
     );
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ForgetPassword]);
   });
@@ -390,7 +390,7 @@ describe('ResetPasswordComponent', () => {
 
     component.onSubmit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error', PlatformMessages.errorMessage);
+    expect(errorSpy).toHaveBeenCalledWith('Error', platformMessages.errorMessage);
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ForgetPassword]);
   });
 });

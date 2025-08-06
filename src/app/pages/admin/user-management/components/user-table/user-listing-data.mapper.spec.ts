@@ -6,7 +6,7 @@ import { UserManagementService } from '../../../../../services/admin/user-manage
 import { of } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
 import { userToUserListingTableData } from './user-listing-data.mapper';
-import { DEBOUNCE_TIME, DEFAULT_LAST_LOGIN_DATE } from '../../../../../utils/constants';
+import { debounceTimeValue, defaultLastLoginDate } from '../../../../../utils/constants';
 import { PaginatedDataResponse } from '../../../../../shared/interfaces/paginated-data-response.interface';
 import { ApiResponse } from '../../../../../shared/interfaces/api-response.interface';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -101,7 +101,7 @@ describe('UserManagementComponent', () => {
     const spy = jest.spyOn(component as any, 'fetchUsers');
     component.onSearchInputChange('Jane');
     expect(spy).not.toHaveBeenCalled();
-    tick(DEBOUNCE_TIME);
+    tick(debounceTimeValue);
     expect(spy).toHaveBeenCalledTimes(1);
   }));
 
@@ -150,11 +150,11 @@ describe('UserManagementComponent', () => {
 
   // Use null as fallback if lastLogin is uninitialized
   it('should give null if lastLogin is uninitialized', () => {
-    const userWithDefaultLastLogin = { ...mockUsers[0], lastLogin: DEFAULT_LAST_LOGIN_DATE };
+    const userWithDefaultLastLogin = { ...mockUsers[0], lastLogin: defaultLastLoginDate };
     const result = userToUserListingTableData(userWithDefaultLastLogin) as any;
     expect(result['lastActive']).toBe(undefined);
   });
-  DEFAULT_LAST_LOGIN_DATE;
+  defaultLastLoginDate;
 
   // Role mapping for non-admin users should return "Player"
   it('should map role correctly for non-admin (Player)', () => {

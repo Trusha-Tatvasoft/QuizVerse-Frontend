@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
 import { RegisterService } from '../../services/register.service';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
-import { PlatformMessages } from '../../../../utils/constants';
+import { platformMessages } from '../../../../utils/constants';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -277,6 +277,6 @@ describe('RegisterComponent', () => {
 
     component.registerFormSubmit();
 
-    expect(successSpy).toHaveBeenCalledWith('Success', PlatformMessages.registerSuccessfully);
+    expect(successSpy).toHaveBeenCalledWith('Success', platformMessages.registerSuccessfully);
   });
 });
