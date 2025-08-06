@@ -9,6 +9,7 @@ import { ResetLinkInvalidComponent } from './core/auth/components/reset-link-inv
 import { ResetPasswordComponent } from './core/auth/components/reset-password/reset-password.component';
 import { UserManagementComponent } from './pages/admin/user-management/user-management.component';
 import { MasterLayoutComponent } from './pages/layout/master-layout/master-layout.component';
+import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -45,6 +46,11 @@ export const routes: Routes = [
     path: Navigations.Admin,
     component: MasterLayoutComponent,
     children: [
+      {
+        path: Navigations.Dashboard,
+        component: AdminDashboardComponent,
+        title: 'Quizeverse | Admin Dashboard',
+      },
       {
         path: Navigations.Users,
         component: UserManagementComponent,

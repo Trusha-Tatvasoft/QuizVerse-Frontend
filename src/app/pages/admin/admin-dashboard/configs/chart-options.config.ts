@@ -1,23 +1,4 @@
 import { ChartConfiguration } from 'chart.js';
-import {
-  AdminDashboardData,
-  DashboardCardDetails,
-  InsightCards,
-} from '../interfaces/admin-dashboard.interface';
-import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
-
-export const ADMIN_DASHBOARD_HEADER_CONFIG: PageHeaderComponent = {
-  icon: 'shield',
-  title: 'Administrator Control Panel',
-  subtitle: 'Platform performance overview',
-  theme: 'admin',
-};
-export const DASHBOARD_STATS_CARD_CONFIG: Record<keyof AdminDashboardData, DashboardCardDetails> = {
-  totalUsers: { title: 'Total Users', icon: 'group', iconColor: 'blue' },
-  activeQuizzes: { title: 'Active Quizzes', icon: 'menu_book', iconColor: 'green' },
-  revenue: { title: 'Revenue', icon: 'attach_money', iconColor: 'purple' },
-  reports: { title: 'Reports', icon: 'report_problem', iconColor: 'red' },
-};
 
 export const LINE_CHART_OPTIONS_CONFIG: ChartConfiguration<'line'>['options'] = {
   responsive: true,
@@ -209,24 +190,3 @@ export const DOUGHNUT_CHART_OPTIONS_CONFIG: ChartConfiguration<'doughnut'>['opti
     },
   },
 };
-
-export const INSIGHT_CARDS_CONFIG: InsightCards[] = [
-  {
-    icon: 'trending_up',
-    title: 'User Engagement',
-    subtitle: 'Monthly engagement trend',
-    type: 'engagement',
-  },
-  {
-    icon: 'insights',
-    title: 'Performance Score',
-    subtitle: 'Weekly improvement',
-    type: 'performance',
-  },
-  {
-    icon: 'attach_money',
-    title: 'Revenue Trends',
-    subtitle: 'Quarterly overview',
-    type: 'revenue',
-  },
-];

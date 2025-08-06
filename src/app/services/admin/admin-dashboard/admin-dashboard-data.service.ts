@@ -4,11 +4,11 @@ import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { HttpClient } from '@angular/common/http';
+import { AdminDashboardSummary } from '../../../pages/admin/admin-dashboard/interfaces/admin-dashboard-summary.interface';
 import {
-  AdminDashboardData,
   ChartDataPoint,
   DateRangeQuery,
-} from '../../../pages/admin/admin-dashboard/interfaces/admin-dashboard.interface';
+} from '../../../pages/admin/admin-dashboard/interfaces/chart-data-point.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +16,8 @@ import {
 export class AdminDashboardDataService {
   private readonly http = inject(HttpClient);
 
-  getAdminDashboardStats(): Observable<ApiResponse<AdminDashboardData>> {
-    return this.http.get<ApiResponse<AdminDashboardData>>(
+  getAdminDashboardStats(): Observable<ApiResponse<AdminDashboardSummary>> {
+    return this.http.get<ApiResponse<AdminDashboardSummary>>(
       `${environment.baseUrl}/${EndPoints.AdminDashboardData}`,
     );
   }
