@@ -1,15 +1,20 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators, FormGroup } from '@angular/forms';
+import { Component, inject, OnDestroy } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { LoginCredentials } from '../../interfaces/login.interface';
-import { LOGIN_FORM_FIELDS, SIGNIN_BUTTON_CONFIG } from '../../configs/login.component.config';
+import { loginFormFields, signInButtonConfig } from '../../configs/login.component.config';
 import { TogglePasswordDirective } from '../toggle-password.directive';
 import { MatFormField, MatInputModule } from '@angular/material/input';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AuthService } from '../../services/auth.service';
+import { Navigations } from '../../../../shared/enums/navigation';
+import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
+import { Subject, takeUntil } from 'rxjs';
+import { LoginCredentials } from '../../interfaces/login.interface';
 
 @Component({
   selector: 'app-login',
@@ -23,16 +28,22 @@ import { ValidationErrorService } from '../../../../shared/service/validation-er
     MatInputModule,
     MatFormField,
     RouterLink,
+    MatCheckboxModule,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss', '../login-signup/login-signup.component.scss'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
   private readonly validationErrorService = inject(ValidationErrorService);
+  private readonly authService = inject(AuthService);
+  private readonly snackbar = inject(SnackbarService);
 
-  loginFields = LOGIN_FORM_FIELDS; // Field config for login form
-  signInButton = SIGNIN_BUTTON_CONFIG; // Button config for sign-in
+  private readonly destroy$ = new Subject<void>();
+
+  loginFields = loginFormFields; // Field config for login form
+  signInButton = signInButtonConfig; // Button config for sign-in
 
   loginForm: FormGroup;
 
@@ -44,7 +55,7 @@ export class LoginComponent {
           acc[field.name] = ['', field.validators];
           return acc;
         },
-        {} as Record<string, any>,
+        {} as Record<string, unknown>,
       ),
     );
   }
@@ -58,16 +69,41 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
-    // If form is invalid, mark all fields as touched to trigger validation messages
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
     }
 
-    // Extract and simulate handling login credentials
     const credentials: LoginCredentials = {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
+      rememberMe: !!this.loginForm.value.rememberMe,
     };
+
+    this.authService
+      .login(credentials)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          const token = res.data.accessToken;
+          const role = token ? this.authService.getRoleFromToken(token) : null;
+
+          if (role === 'admin') {
+            this.router.navigate([Navigations.Admin]);
+          } else {
+            this.router.navigate([Navigations.User]);
+          }
+          this.snackbar.showSuccess('Welcome back!', 'You have been successfully logged in!');
+        },
+        error: (err) => {
+          const message = err.error?.message || 'Unexpected error occurred';
+          this.snackbar.showError('Login Failed', message);
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -7,8 +7,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import {
-  FORGOT_PASSWORD_FORM_FIELDS,
-  SEND_RESET_LINK_CONFIG,
+  forgotPasswordFormFields,
+  sendResetLinkConfig,
 } from '../../configs/forgot-password.component.config';
 import { Navigations } from '../../../../shared/enums/navigation';
 import { MatFormField, MatInputModule } from '@angular/material/input';
@@ -17,7 +17,7 @@ import { ForgotCredential } from '../../interfaces/forgot-reset-password.interfa
 import { Subject, takeUntil } from 'rxjs';
 import { ForgotResetPasswordService } from '../../services/forgot-reset-password.service';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
-import { PlatformMessages } from '../../../../utils/constants';
+import { platformMessages } from '../../../../utils/constants';
 
 @Component({
   selector: 'app-forgot-password',
@@ -47,9 +47,9 @@ export class ForgotPasswordComponent implements OnDestroy {
   private readonly authService = inject(ForgotResetPasswordService);
   private readonly snackbarService = inject(SnackbarService);
 
-  forgotPasswordFields = FORGOT_PASSWORD_FORM_FIELDS;
-  sendResetLinkButton = SEND_RESET_LINK_CONFIG;
+  forgotPasswordFields = forgotPasswordFormFields;
   forgotPasswordForm: FormGroup;
+  sendResetLinkButton = sendResetLinkConfig;
 
   private readonly destroy$ = new Subject<void>();
 
@@ -61,7 +61,7 @@ export class ForgotPasswordComponent implements OnDestroy {
           acc[field.name] = ['', field.validators];
           return acc;
         },
-        {} as Record<string, any>,
+        {} as Record<string, unknown>,
       ),
     );
   }
@@ -91,15 +91,15 @@ export class ForgotPasswordComponent implements OnDestroy {
         next: (res) => {
           if (!res.result || res.statusCode !== 200) {
             this.snackbarService.showError(
-              `${PlatformMessages.errorTitle} ${res.statusCode}`,
-              res.message || PlatformMessages.errorMessage,
+              `${platformMessages.errorTitle} ${res.statusCode}`,
+              res.message || platformMessages.errorMessage,
             );
             return;
           }
 
           this.snackbarService.showSuccess(
             'Success',
-            res.message || `${PlatformMessages.resetLinkSendSuccessfully}`,
+            res.message || `${platformMessages.resetLinkSendSuccessfully}`,
           );
 
           this.router.navigate([Navigations.ResetPasswordLinkSuccess], {
@@ -107,7 +107,7 @@ export class ForgotPasswordComponent implements OnDestroy {
           });
         },
         error: (err) => {
-          const message = err?.error?.message || PlatformMessages.errorMessage;
+          const message = err?.error?.message || platformMessages.errorMessage;
           this.snackbarService.showError(`Error`, message);
         },
       });
