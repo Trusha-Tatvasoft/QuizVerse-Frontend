@@ -88,10 +88,6 @@
 
   @if (isLogin) {
     <div class="dialog-actions">
-      <!-- <app-filled-button
-        [filledButtonConfig]="cancelButton"
-        (buttonClicked)="onCancel()"
-      ></app-filled-button> -->
       <app-outline-button
         [outlineButtonConfig]="isEditMode ? updateUserButton : createUserButton"
       ></app-outline-button>
