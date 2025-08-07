@@ -130,7 +130,7 @@ describe('LoginComponent', () => {
 
     expect(component.loginForm.valid).toBe(true);
     expect(markSpy).not.toHaveBeenCalled();
-    expect(navSpy).toHaveBeenCalledWith(['admin']); // or Navigations.Admin
+    expect(navSpy).toHaveBeenCalledWith([`${Navigations.Admin}/${Navigations.Dashboard}`]);
   });
 
   it('should show success snackbar and navigate to /admin for admin login', () => {
@@ -162,7 +162,7 @@ describe('LoginComponent', () => {
       'Welcome back!',
       'You have been successfully logged in!',
     );
-    expect(navSpy).toHaveBeenCalledWith([Navigations.Admin]);
+    expect(navSpy).toHaveBeenCalledWith([`${Navigations.Admin}/${Navigations.Dashboard}`]);
   });
 
   it('should navigate to /user for player login', () => {
@@ -190,7 +190,7 @@ describe('LoginComponent', () => {
 
     component.onSubmit();
 
-    expect(navSpy).toHaveBeenCalledWith([Navigations.User]);
+    expect(navSpy).toHaveBeenCalledWith([`${Navigations.User}/${Navigations.Dashboard}`]);
   });
 
   it('should show error snackbar on login failure', () => {
@@ -225,7 +225,7 @@ describe('LoginComponent', () => {
 
     component.onSubmit();
 
-    expect(navSpy).toHaveBeenCalledWith([Navigations.User]);
+    expect(navSpy).toHaveBeenCalledWith([`${Navigations.User}/${Navigations.Dashboard}`]);
   });
 
   it('should show default error message when err.error.message is missing', () => {
