@@ -3,10 +3,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RegisterComponent } from '../../../../../core/auth/components/register/register.component';
 import { UserFormData } from '../../interfaces/user-form-data.interface';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-user-form-dialog',
-  imports: [CommonModule, ReactiveFormsModule, RegisterComponent],
+  imports: [CommonModule, ReactiveFormsModule, RegisterComponent, MatIconModule],
   templateUrl: './user-form-dialog.component.html',
   styleUrl: './user-form-dialog.component.scss',
 })

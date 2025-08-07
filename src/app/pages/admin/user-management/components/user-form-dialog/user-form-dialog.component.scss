@@ -39,10 +39,11 @@
   top: 1rem;
   border-radius: 0.125rem;
   opacity: 0.7;
-  background: transparent;
-  border: none;
   cursor: pointer;
   padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: opacity 0.2s;
 
   &:hover {
@@ -54,9 +55,11 @@
     box-shadow: 0 0 0 2px var(--global-secondary-color);
   }
 
-  svg {
-    width: 1rem;
-    height: 1rem;
+  mat-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 1.25rem;
+    line-height: 1.25rem;
   }
 }
 
