@@ -279,4 +279,143 @@ describe('RegisterComponent', () => {
 
     expect(successSpy).toHaveBeenCalledWith('Success', platformMessages.registerSuccessfully);
   });
+
+  it('should emit FormData with all fields when creating user and form is valid', () => {
+    component.isEditMode = false;
+    component.saveUser.emit = jest.fn();
+
+    component.userForm.setValue({
+      fullName: 'Jane Doe',
+      username: 'janedoe',
+      email: 'jane@example.com',
+      password: 'Password@123',
+      bio: 'Test user',
+      profilePicture: null,
+    });
+
+    expect(component.userForm.valid).toBe(true);
+
+    component.createUserFormSubmit();
+
+    expect(component.saveUser.emit).toHaveBeenCalledTimes(1);
+
+    const emittedArg = (component.saveUser.emit as jest.Mock).mock.calls[0][0];
+    const formData: FormData = emittedArg.formData;
+
+    expect(formData.get('fullName')).toBe('Jane Doe');
+    expect(formData.get('username')).toBe('janedoe');
+    expect(formData.get('email')).toBe('jane@example.com');
+    expect(emittedArg.isEdit).toBe(false);
+  });
+
+  it('should clear password fields and skip them in FormData when editing', () => {
+    component.isEditMode = true;
+    component.user = { id: 101 } as any;
+
+    component.userForm.patchValue({
+      fullName: 'Edited Name',
+      username: 'editedusername',
+      email: 'edited@example.com',
+      password: 'shouldBeCleared',
+      confirmPassword: 'shouldBeCleared',
+      bio: '',
+      profilePicture: null,
+    });
+
+    const emitSpy = jest.spyOn(component.saveUser, 'emit');
+
+    component.createUserFormSubmit();
+
+    expect(component.userForm.valid).toBe(true);
+    expect(emitSpy).toHaveBeenCalledTimes(1);
+
+    const emittedArg = emitSpy.mock.calls[0][0]!;
+    const formData: FormData = emittedArg.formData;
+
+    expect(formData.get('password')).toBeNull();
+    expect(formData.get('confirmPassword')).toBeNull();
+    expect(formData.get('fullName')).toBe('Edited Name');
+    expect(formData.get('id')).toBe('101');
+    expect(emittedArg.isEdit).toBe(true);
+
+    expect(component.userForm.get('password')?.value).toBe('');
+    expect(component.userForm.get('confirmPassword')?.value ?? '').toBe('');
+  });
+
+  it('should not emit when form is invalid', () => {
+    const emitSpy = jest.spyOn(component.saveUser, 'emit');
+
+    component.userForm.get('email')?.setValue('');
+
+    component.userForm.get('fullName')?.setValue('Valid Name');
+    component.userForm.get('username')?.setValue('validusername');
+    component.userForm.get('password')?.setValue('ValidPass123!');
+    component.userForm.get('confirmPassword')?.setValue('ValidPass123!');
+
+    component.createUserFormSubmit();
+
+    expect(component.userForm.invalid).toBe(true);
+
+    expect(emitSpy).not.toHaveBeenCalled();
+  });
+
+  it('should skip appending empty or null values to FormData', () => {
+    const emitSpy = jest.spyOn(component.saveUser, 'emit');
+
+    component.userForm.patchValue({
+      fullName: 'John Doe',
+      email: 'john@example.com',
+      username: 'john_doe',
+      password: 'John@9090',
+      confirmPassword: 'John@9090',
+      bio: '',
+    });
+
+    component.createUserFormSubmit();
+
+    expect(emitSpy).toHaveBeenCalledTimes(1);
+
+    const emittedArg = emitSpy.mock.calls[0][0]!;
+    const formData: FormData = emittedArg.formData;
+
+    expect(formData.has('bio')).toBe(false);
+
+    expect(formData.get('fullName')).toBe('John Doe');
+    expect(formData.get('email')).toBe('john@example.com');
+    expect(formData.get('username')).toBe('john_doe');
+  });
+
+  it('should emit formCancelled event when cancel is called', () => {
+    const cancelSpy = jest.spyOn(component.formCancelled, 'emit');
+
+    component.cancel();
+
+    expect(cancelSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should append selectedFile as profilePic to FormData when selectedFile is set', () => {
+    const mockFile = new File(['dummy content'], 'avatar.png', { type: 'image/png' });
+    component.selectedFile = mockFile;
+
+    component.userForm.patchValue({
+      fullName: 'John Doe',
+      email: 'john@example.com',
+      username: 'john_doe',
+      password: 'John@123',
+      confirmPassword: 'John@123',
+      bio: 'Test bio',
+    });
+
+    const emitSpy = jest.spyOn(component.saveUser, 'emit');
+
+    component.createUserFormSubmit();
+
+    expect(emitSpy).toHaveBeenCalledTimes(1);
+
+    const emittedArg = emitSpy.mock.calls[0][0]!;
+    const formData: FormData = emittedArg.formData;
+
+    expect(formData.get('profilePic')).toBeInstanceOf(File);
+    expect((formData.get('profilePic') as File).name).toBe('avatar.png');
+  });
 });

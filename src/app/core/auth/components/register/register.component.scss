@@ -23,9 +23,16 @@
     width: 100%;
 
     &:hover {
-      border-color: var(--global-primary-color);
-      box-shadow: 0 0 0 1px var(--global-primary-color);
+      border-color: var(--global-secondary-color);
+      box-shadow: 0 0 0 1px var(--global-secondary-color);
     }
+  }
+
+  .error-message {
+    margin-top: -0.25rem;
+    color: #ef4444;
+    font-size: 13px;
+    font-weight: 400;
   }
 
   .custom-upload-button {

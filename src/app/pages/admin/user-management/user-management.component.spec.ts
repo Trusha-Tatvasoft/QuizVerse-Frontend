@@ -18,6 +18,7 @@ import { SnackbarService } from '../../../shared/service/snackbar/snackbar.servi
 import { debounceTimeValue } from '../../../utils/constants';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { UserFormData } from './interfaces/user-form-data.interface';
 
 jest.mock('../../../services/admin/user-management/user-management.service');
 jest.mock('../../../shared/service/snackbar/snackbar.service');
@@ -60,6 +61,23 @@ describe('UserManagementComponent', () => {
     openFromComponent: jest.fn(),
   };
 
+  const mockUserRow: UserFormData = {
+    id: 1,
+    fullName: 'John Doe',
+    userName: 'johndoe',
+    email: 'john@example.com',
+    bio: 'Team lead',
+    profilePic: 'https://example.com/john.jpg',
+    password: '',
+  };
+
+  const mockUserByIdResponse: ApiResponse<UserFormData> = {
+    result: true,
+    statusCode: 200,
+    message: 'User fetched successfully',
+    data: mockUserRow,
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -80,12 +98,15 @@ describe('UserManagementComponent', () => {
           useValue: {
             getUsers: jest.fn().mockReturnValue(of(mockApiResponse)),
             exportUsersToExcel: jest.fn().mockReturnValue(of(mockExportBlob)),
+            getUserById: jest.fn(),
+            createOrUpdateUser: jest.fn(),
           },
         },
         {
           provide: SnackbarService,
           useValue: {
             showError: jest.fn(),
+            showSuccess: jest.fn(),
           },
         },
         { provide: MatSnackBar, useValue: mockMatSnackBar },
@@ -238,8 +259,12 @@ describe('UserManagementComponent', () => {
   it('should respond to actionClick from UserListingComponent', () => {
     // verifies event handler runs on table action click
     const userTable = fixture.debugElement.query(By.directive(UserListingComponent));
+
+    jest.spyOn(userService, 'getUserById').mockReturnValue(of(mockUserByIdResponse));
+
     const actionSpy = jest.spyOn(component, 'fetchUsers');
-    userTable.triggerEventHandler('actionClick', { action: 'edit', row: {} });
+
+    userTable.triggerEventHandler('actionClick', { action: 'edit', row: { id: 1 } });
     expect(actionSpy).not.toHaveBeenCalled(); // replace if needed
   });
 
@@ -453,5 +478,200 @@ describe('UserManagementComponent', () => {
         filters: {},
       }),
     );
+  });
+
+  it('should open user dialog and set selected user', () => {
+    component.openUserDialog(mockUserRow);
+    expect(component.selectedUser()).toEqual(mockUserRow);
+    expect(component.showUserDialog()).toBe(true);
+  });
+
+  it('should close user dialog and reset selected user', () => {
+    component.closeUserDialog();
+    expect(component.selectedUser()).toBeNull();
+    expect(component.showUserDialog()).toBe(false);
+  });
+
+  it('should call handleUserSave with correct arguments when onSaveUser is triggered', () => {
+    const formData = new FormData();
+    const isEdit = true;
+    const event = { formData, isEdit };
+
+    const mockResponse = {
+      statusCode: 200,
+      message: 'User updated',
+      result: true,
+      data: null,
+    };
+
+    userService.createOrUpdateUser.mockReturnValue(of(mockResponse));
+    const handleUserSaveSpy = jest.spyOn(component, 'handleUserSave');
+
+    component.onSaveUser(event);
+
+    expect(handleUserSaveSpy).toHaveBeenCalledWith(formData, isEdit);
+  });
+
+  it('should handle user creation success', () => {
+    const mockResponse: ApiResponse<null> = {
+      result: true,
+      statusCode: 201,
+      message: 'User created successfully',
+      data: null,
+    };
+
+    userService.createOrUpdateUser.mockReturnValue(of(mockResponse));
+    const spyFetch = jest.spyOn(component, 'fetchUsers').mockImplementation();
+    const spyClose = jest.spyOn(component, 'closeUserDialog');
+
+    component.handleUserSave(new FormData(), false);
+
+    expect(snackbarService.showSuccess).toHaveBeenCalledWith(
+      'User created successfully',
+      'Success',
+    );
+    expect(spyFetch).toHaveBeenCalled();
+    expect(spyClose).toHaveBeenCalled();
+  });
+
+  it('should handle user update success', () => {
+    const mockResponse: ApiResponse<null> = {
+      result: true,
+      statusCode: 200,
+      message: 'User updated successfully',
+      data: null,
+    };
+
+    userService.createOrUpdateUser.mockReturnValue(of(mockResponse));
+    const spyFetch = jest.spyOn(component, 'fetchUsers').mockImplementation();
+    const spyClose = jest.spyOn(component, 'closeUserDialog');
+
+    component.handleUserSave(new FormData(), true);
+
+    expect(snackbarService.showSuccess).toHaveBeenCalledWith(
+      'User updated successfully',
+      'Success',
+    );
+    expect(spyFetch).toHaveBeenCalled();
+    expect(spyClose).toHaveBeenCalled();
+  });
+
+  it('should handle user creation failure (201 not returned)', () => {
+    const mockResponse: ApiResponse<null> = {
+      result: false,
+      statusCode: 400,
+      message: 'Bad request',
+      data: null,
+    };
+
+    userService.createOrUpdateUser.mockReturnValue(of(mockResponse));
+    const spyFetch = jest.spyOn(component, 'fetchUsers').mockImplementation();
+    const spyClose = jest.spyOn(component, 'closeUserDialog');
+
+    component.handleUserSave(new FormData(), false);
+
+    expect(snackbarService.showError).toHaveBeenCalledWith('Bad request', 'Error 400');
+    expect(spyFetch).not.toHaveBeenCalled();
+    expect(spyClose).not.toHaveBeenCalled();
+  });
+
+  it('should handle user creation error', () => {
+    const errorResponse = {
+      error: { message: 'Internal server error' },
+    };
+
+    userService.createOrUpdateUser.mockReturnValue(throwError(() => errorResponse));
+    const spyFetch = jest.spyOn(component, 'fetchUsers').mockImplementation();
+    const spyClose = jest.spyOn(component, 'closeUserDialog');
+
+    component.handleUserSave(new FormData(), false);
+
+    expect(snackbarService.showError).toHaveBeenCalledWith('Internal server error', 'Error');
+    expect(spyFetch).not.toHaveBeenCalled();
+    expect(spyClose).not.toHaveBeenCalled();
+  });
+
+  it('should load user for edit', () => {
+    const userId = 1;
+    const spyLoadUser = jest.spyOn(component, 'loadUserForEdit').mockImplementation();
+
+    component.handleUserAction({ action: 'edit', row: { id: userId } });
+
+    expect(spyLoadUser).toHaveBeenCalledWith(userId);
+  });
+
+  it('should load user data and open dialog on success', () => {
+    const userId = 1;
+
+    const user: UserFormData = {
+      id: userId,
+      fullName: 'Test User',
+      userName: 'testuser',
+      email: 'test@example.com',
+      password: 'securepass123',
+      bio: 'Test bio',
+      profilePic: '',
+    };
+
+    const mockResponse: ApiResponse<typeof user> = {
+      result: true,
+      statusCode: 200,
+      message: 'User fetched successfully',
+      data: user,
+    };
+
+    const spyGetUser = jest.spyOn(userService, 'getUserById').mockReturnValue(of(mockResponse));
+    const spyOpenDialog = jest.spyOn(component, 'openUserDialog');
+
+    component.loadUserForEdit(userId);
+
+    expect(spyGetUser).toHaveBeenCalledWith(userId);
+    expect(spyOpenDialog).toHaveBeenCalledWith(user);
+  });
+
+  it('should show error if user fetch fails (non-200)', () => {
+    const userId = 1;
+
+    const mockErrorResponse: ApiResponse<UserFormData> = {
+      result: false,
+      statusCode: 404,
+      message: 'User not found',
+      data: null as unknown as UserFormData,
+    };
+
+    const spyGetUser = jest
+      .spyOn(userService, 'getUserById')
+      .mockReturnValue(of(mockErrorResponse));
+    const spyOpenDialog = jest.spyOn(component, 'openUserDialog');
+
+    component.loadUserForEdit(userId);
+
+    expect(spyGetUser).toHaveBeenCalledWith(userId);
+    expect(snackbarService.showError).toHaveBeenCalledWith('User not found', 'Error 404');
+    expect(spyOpenDialog).not.toHaveBeenCalled(); // dialog should not open
+  });
+
+  it('should show error if user fetch throws error', () => {
+    const userId = 1;
+    const errorMessage = 'Fetch failed';
+
+    const errorResponse = {
+      error: {
+        message: errorMessage,
+      },
+    };
+
+    const spyGetUser = jest
+      .spyOn(userService, 'getUserById')
+      .mockReturnValue(throwError(() => errorResponse));
+
+    const spySnackbar = jest.spyOn(snackbarService, 'showError');
+    const spyOpenDialog = jest.spyOn(component, 'openUserDialog');
+
+    component.loadUserForEdit(userId);
+
+    expect(spyGetUser).toHaveBeenCalledWith(userId);
+    expect(spySnackbar).toHaveBeenCalledWith(errorMessage, 'Error');
+    expect(spyOpenDialog).not.toHaveBeenCalled();
   });
 });
