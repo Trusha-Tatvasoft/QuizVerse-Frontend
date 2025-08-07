@@ -12,6 +12,7 @@ import { MasterLayoutComponent } from './pages/layout/master-layout/master-layou
 import { CardComponent } from './shared/components/card/card.component';
 import { UserManagementComponent } from './pages/admin/user-management/user-management.component';
 import { UnauthorizedComponent } from './shared/components/unauthorized/unauthorized.component';
+import { QuestionPoolComponent } from './pages/admin/question-pool/question-pool.component';
 
 export const routes: Routes = [
   {
@@ -67,6 +68,11 @@ export const routes: Routes = [
         component: UserManagementComponent,
         title: 'Quizeverse | User Management',
       },
+      {
+        path: Navigations.QuestionPool,
+        component: QuestionPoolComponent,
+        title: 'Quizeverse | Question Pool Management',
+      },
     ],
   },
   {
@@ -83,7 +89,7 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'unauthorized',
+    path: Navigations.Unauthorized,
     component: UnauthorizedComponent,
     title: 'QuizVerse | Unauthorized',
   },

@@ -216,7 +216,7 @@ export class RegisterComponent implements OnDestroy {
   }
 
   // Handle cancel button click
-  // onCancel(): void {}
+  onCancel(): void {}
 
   ngOnDestroy(): void {
     this.destroy$.next();
