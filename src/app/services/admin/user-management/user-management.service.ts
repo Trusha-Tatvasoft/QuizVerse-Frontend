@@ -7,6 +7,7 @@ import { PaginatedDataResponse } from '../../../shared/interfaces/paginated-data
 import { UserListData } from '../../../pages/admin/user-management/interfaces/user-list-data.interface';
 import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
+import { UserFormData } from '../../../pages/admin/user-management/interfaces/user-form-data.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -38,5 +39,26 @@ export class UserManagementService {
     return this.http.post(`${environment.baseUrl}/${EndPoints.UserExport}`, request, {
       responseType: 'blob',
     });
+  }
+
+  /**
+   * Fetch a user by ID.
+   * @param id - User ID
+   * @returns Observable of user form data.
+   */
+  getUserById(id: number): Observable<ApiResponse<UserFormData>> {
+    return this.http
+      .get<ApiResponse<UserFormData>>(`${environment.baseUrl}/${EndPoints.GetUserById}/${id}`)
+      .pipe(map((res) => res));
+  }
+
+  /**
+   * Create or update a user.
+   * @param userData - FormData containing user details.
+   */
+  createOrUpdateUser(userData: FormData): Observable<ApiResponse<null>> {
+    return this.http
+      .post<ApiResponse<null>>(`${environment.baseUrl}/${EndPoints.CreateOrUpdateUser}`, userData)
+      .pipe(map((res) => res));
   }
 }
