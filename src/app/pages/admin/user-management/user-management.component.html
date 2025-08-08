@@ -1,6 +1,6 @@
-<main class="user-management">
-  <h2 class="page-heading">User Management</h2>
-  <div class="user-page-header">
+<main class="admin-management-page">
+  <h2 class="admin-page-heading">User Management</h2>
+  <div class="admin-page-header">
     <app-page-header
       [icon]="userConfig.icon"
       [title]="userConfig.title"
@@ -8,7 +8,7 @@
       [theme]="userConfig.theme"
     ></app-page-header>
   </div>
-  <div class="user-management-toolbar">
+  <div class="admin-management-toolbar">
     <app-search-input
       [placeholder]="searchInputConfig.placeholder"
       [control]="searchControl"
@@ -50,6 +50,7 @@
       <app-outline-button
         [outlineButtonConfig]="addUserButtonConfig"
         class="add-user"
+        (buttonClicked)="openUserDialog()"
       ></app-outline-button>
       <app-filled-button
         [filledButtonConfig]="exportButtonConfig"
@@ -64,5 +65,17 @@
     [totalItems]="totalItems()"
     (pageChange)="onPageChange($event)"
     (sortChange)="onSortChange($event)"
+    (actionClick)="handleUserAction($event)"
   ></app-user-table>
 </main>
+
+@if (showUserDialog()) {
+  <div class="dialog-backdrop">
+    <app-user-form-dialog
+      [user]="selectedUser()"
+      (closeDialog)="closeUserDialog()"
+      (saveUser)="onSaveUser($event)"
+    >
+    </app-user-form-dialog>
+  </div>
+}

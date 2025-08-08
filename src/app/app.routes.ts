@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { Navigations } from './shared/enums/navigation';
 import { authGuard } from './guards/auth.guard';
-
 import { LandingPageComponent } from './pages/layout/landing-page/landing-page.component';
 import { LoginSignupComponent } from './core/auth/components/login-signup/login-signup.component';
 import { ForgotPasswordComponent } from './core/auth/components/forgot-password/forgot-password.component';
@@ -13,6 +12,8 @@ import { CardComponent } from './shared/components/card/card.component';
 import { UserManagementComponent } from './pages/admin/user-management/user-management.component';
 import { UnauthorizedComponent } from './shared/components/unauthorized/unauthorized.component';
 import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard.component';
+import { QuestionPoolComponent } from './pages/admin/question-pool/question-pool.component';
+import { adminDashboardHeaderConfig } from './pages/admin/admin-dashboard/configs/admin-dashboard-header.configs';
 
 export const routes: Routes = [
   {
@@ -66,12 +67,17 @@ export const routes: Routes = [
       {
         path: Navigations.Dashboard,
         component: AdminDashboardComponent,
-        title: 'Quizeverse | Admin Dashboard',
+        title: 'Quizeverse | Dashboard ',
       },
       {
         path: Navigations.Users,
         component: UserManagementComponent,
         title: 'Quizeverse | User Management',
+      },
+      {
+        path: Navigations.QuestionPool,
+        component: QuestionPoolComponent,
+        title: 'Quizeverse | Question Pool Management',
       },
     ],
   },
@@ -82,6 +88,11 @@ export const routes: Routes = [
     data: { roles: ['player'] },
     children: [
       {
+        path: Navigations.Dashboard,
+        component: CardComponent,
+        title: 'Quizeverse | Dashboard ',
+      },
+      {
         path: Navigations.Users,
         component: CardComponent,
         title: 'Quizeverse | User Management',
@@ -89,7 +100,7 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'unauthorized',
+    path: Navigations.Unauthorized,
     component: UnauthorizedComponent,
     title: 'QuizVerse | Unauthorized',
   },

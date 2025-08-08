@@ -1,0 +1,83 @@
+.admin-management-toolbar {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+
+  .serach-container,
+  .filter-btn-container {
+    width: 100%;
+  }
+
+  .question-pool-search {
+    flex: 1;
+    width: 100%;
+
+    @media (max-width: 726px) {
+      width: 100%;
+    }
+  }
+
+  .question-pool-filters {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    width: 100%;
+
+    .filter-select {
+      min-width: 160px;
+
+      @media (max-width: 726px) {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 726px) {
+      flex-direction: column;
+      width: 100%;
+    }
+  }
+
+  .add-question-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
+    max-width: 156px;
+    width: 100%;
+
+    @media (max-width: 726px) {
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    @media (max-width: 1500px) {
+      display: none;
+    }
+
+    @media (max-width: 580px) {
+      display: inline;
+      max-width: 100%;
+    }
+  }
+
+  .add-question-btn-tablet {
+    display: none;
+
+    @media (max-width: 1500px) {
+      display: inline;
+    }
+
+    @media (max-width: 580px) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1500px) {
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 726px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

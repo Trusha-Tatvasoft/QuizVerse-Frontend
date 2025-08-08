@@ -13,4 +13,6 @@ export enum EndPoints {
   getUserEngagementData = 'AdminDashboard/get-user-engagement-data',
   getPerformaceScoreData = 'AdminDashboard/get-performance-score-data',
   getRevenueTrendData = 'AdminDashboard/get-revenue-trend-data',
+  GetUserById = 'Users/get-user-by-id',
+  CreateOrUpdateUser = 'Users/create-or-update-user',
 }
