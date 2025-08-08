@@ -1,4 +1,12 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnDestroy,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import { CommonModule } from '@angular/common';
@@ -16,7 +24,6 @@ import {
 } from '../../configs/register.component.config';
 import { TogglePasswordDirective } from '../toggle-password.directive';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
-import { RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { RegisterService } from '../../services/register.service';
@@ -26,9 +33,9 @@ import {
   platformMessages,
 } from '../../../../utils/constants';
 import { RegisterCredential } from '../../interfaces/register.interface';
-import { TextButtonComponent } from '../../../../shared/components/text-button/text-button.component';
 import { OutlineButtonComponent } from '../../../../shared/components/outline-button/outline-button.component';
 import { selectedTabIndexSignal } from '../login-signup/login-signup.component';
+import { UserFormData } from '../../../../pages/admin/user-management/interfaces/user-form-data.interface';
 
 @Component({
   selector: 'app-register',
@@ -41,8 +48,6 @@ import { selectedTabIndexSignal } from '../login-signup/login-signup.component';
     TogglePasswordDirective,
     MatInputModule,
     MatFormField,
-    RouterLink,
-    TextButtonComponent,
     OutlineButtonComponent,
   ],
   templateUrl: './register.component.html',
@@ -62,12 +67,15 @@ export class RegisterComponent implements OnDestroy {
   updateUserButton = updateUserButtonConfig;
   createUserButton = createUserButtonConfig;
 
-  isLogin = false;
-  isEditMode = false;
-  selectedFile: File | null = null;
+  @Input() user: UserFormData | null = null;
+  @Input() isLogin = false;
+  @Input() isEditMode = false;
+  @Output() saveUser = new EventEmitter<{ formData: FormData; isEdit: boolean }>();
+  @Output() formCancelled = new EventEmitter<void>();
 
   registerForm: FormGroup;
   userForm: FormGroup;
+  selectedFile: File | null = null;
 
   private readonly destroy$ = new Subject<void>();
 
@@ -94,6 +102,49 @@ export class RegisterComponent implements OnDestroy {
         {} as Record<string, unknown>,
       ),
     );
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['isEditMode'] && this.isEditMode) {
+      // Remove password fields and validators in edit mode
+      ['password', 'confirmPassword'].forEach((field) => {
+        const control = this.userForm.get(field);
+        if (control) {
+          control.clearValidators();
+          control.setValue('');
+          control.updateValueAndValidity();
+        }
+      });
+
+      // Optionally remove password fields from userFields UI-wise
+      this.userFields = this.userFields.filter(
+        (field) => field.name !== 'password' && field.name !== 'confirmPassword',
+      );
+    }
+
+    if (changes['user'] && this.user) {
+      this.userForm.patchValue({
+        fullName: this.user.fullName || '',
+        username: this.user.userName || '',
+        email: this.user.email || '',
+        bio: this.user.bio || '',
+        profilePicture: this.user.profilePic || '',
+      });
+    }
+  }
+
+  get displayFileName(): string {
+    if (this.selectedFile?.name) {
+      return this.selectedFile.name;
+    }
+
+    const profilePicValue = this.userForm.get('profilePicture')?.value;
+
+    if (typeof profilePicValue === 'string') {
+      return profilePicValue.split('/').pop() || 'No file chosen';
+    }
+
+    return 'No file chosen';
   }
 
   // Get dynamic validation error message for a given field
@@ -197,13 +248,39 @@ export class RegisterComponent implements OnDestroy {
   }
 
   // Submit user form (for user update or create actions)
-  createUserFormSubmit() {
+  createUserFormSubmit(): void {
+    if (this.isEditMode) {
+      ['password', 'confirmPassword'].forEach((field) => {
+        const control = this.userForm.get(field);
+        control?.clearValidators();
+        control?.setValue('');
+        control?.updateValueAndValidity();
+      });
+    }
+
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
       return;
     }
 
-    // Add submission logic
+    const userFormData = new FormData();
+
+    Object.entries(this.userForm.value).forEach(([key, value]) => {
+      const skipInEdit = this.isEditMode && ['password', 'confirmPassword'].includes(key);
+      if (skipInEdit || value === null || value === '') return;
+
+      userFormData.append(key, String(value));
+    });
+
+    if (this.selectedFile) {
+      userFormData.append('profilePic', this.selectedFile);
+    }
+
+    if (this.isEditMode && this.user?.id) {
+      userFormData.append('id', String(this.user.id));
+    }
+
+    this.saveUser.emit({ formData: userFormData, isEdit: this.isEditMode });
   }
 
   // Determine which form to submit based on tab
@@ -216,7 +293,9 @@ export class RegisterComponent implements OnDestroy {
   }
 
   // Handle cancel button click
-  onCancel(): void {}
+  cancel(): void {
+    this.formCancelled.emit();
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
