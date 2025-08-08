@@ -89,9 +89,9 @@ export class LoginComponent implements OnDestroy {
           const role = token ? this.authService.getRoleFromToken(token) : null;
 
           if (role === 'admin') {
-            this.router.navigate([Navigations.Admin]);
+            this.router.navigate([`${Navigations.Admin}/${Navigations.Dashboard}`]);
           } else {
-            this.router.navigate([Navigations.User]);
+            this.router.navigate([`${Navigations.User}/${Navigations.Dashboard}`]);
           }
           this.snackbar.showSuccess('Welcome back!', 'You have been successfully logged in!');
         },

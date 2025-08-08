@@ -7,7 +7,7 @@ export enum Navigations {
   ResetLinkInvalid = 'reset-link-invalid',
 
   User = 'user',
-  Dashboard = '',
+  Dashboard = 'dashboard',
   BrowseQuizzes = 'browse-quizzes',
   Battles = 'battles',
   Tournaments = 'tournaments',

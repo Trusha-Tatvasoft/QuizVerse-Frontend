@@ -306,3 +306,34 @@ export const userActionMessages = {
   statusUpdated: 'User status updated',
 };
 //#endregion
+
+export const DateFilterType = {
+  last7Days: 'last7days',
+  last30days: 'last30days',
+  lastMonth: 'lastMonth',
+  lastYear: 'lastYear',
+  allTime: 'allTime',
+};
+
+export const filterOptions = [
+  { label: 'Last 7 Days', value: DateFilterType.last7Days },
+  { label: 'Last 30 Days', value: DateFilterType.last30days },
+  { label: 'Last Month', value: DateFilterType.lastMonth },
+  { label: 'Last Year', value: DateFilterType.lastYear },
+  { label: 'All Time', value: DateFilterType.allTime },
+];
+
+export const months = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
