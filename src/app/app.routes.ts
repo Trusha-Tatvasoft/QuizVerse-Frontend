@@ -64,6 +64,11 @@ export const routes: Routes = [
     data: { roles: ['admin'] },
     children: [
       {
+        path: Navigations.Dashboard,
+        component: CardComponent,
+        title: 'Quizeverse | Dashboard ',
+      },
+      {
         path: Navigations.Users,
         component: UserManagementComponent,
         title: 'Quizeverse | User Management',
@@ -81,6 +86,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: { roles: ['player'] },
     children: [
+      {
+        path: Navigations.Dashboard,
+        component: CardComponent,
+        title: 'Quizeverse | Dashboard ',
+      },
       {
         path: Navigations.Users,
         component: CardComponent,
