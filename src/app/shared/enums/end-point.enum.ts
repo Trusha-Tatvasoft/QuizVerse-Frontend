@@ -11,4 +11,5 @@ export enum EndPoints {
   VerifyTokenRestPassword = 'Authentication/verify-token-reset-password',
   GetUserById = 'Users/get-user-by-id',
   CreateOrUpdateUser = 'Users/create-or-update-user',
+  UpdateUserStatusByAction = 'Users/update-user-status-by-action',
 }

@@ -9,6 +9,7 @@ import { UserListData } from '../../../pages/admin/user-management/interfaces/us
 import { PaginatedDataResponse } from '../../../shared/interfaces/paginated-data-response.interface';
 import { provideHttpClient } from '@angular/common/http';
 import { UserFormData } from '../../../pages/admin/user-management/interfaces/user-form-data.interface';
+import { UserAction, UserStatus } from '../../../shared/enums/user-management.enum';
 
 describe('UserManagementService', () => {
   let service: UserManagementService;
@@ -341,5 +342,57 @@ describe('UserManagementService', () => {
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.CreateOrUpdateUser}`);
     expect(req.request.method).toBe('POST');
     req.flush({ message: 'Invalid data' }, { status: 400, statusText: 'Bad Request' });
+  });
+
+  it('should call PUT API and return expected ApiResponse when updating user status', () => {
+    const payload = {
+      id: 123,
+      action: UserAction.UpdateStatus,
+      newStatus: UserStatus.Active,
+    };
+
+    const mockResponse: ApiResponse<null> = {
+      result: true,
+      statusCode: 200,
+      message: 'User status updated successfully',
+      data: null,
+    };
+
+    service.updateUserStatusByAction(payload).subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+      expect(response.result).toBe(true);
+      expect(response.statusCode).toBe(200);
+      expect(response.message).toBe('User status updated successfully');
+    });
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.UpdateUserStatusByAction}`);
+    expect(req.request.method).toBe('PUT');
+    expect(req.request.body).toEqual(payload);
+    req.flush(mockResponse);
+  });
+
+  it('should call PUT API and handle deletion action correctly', () => {
+    const payload = {
+      id: 456,
+      action: UserAction.Delete,
+    };
+
+    const mockResponse: ApiResponse<null> = {
+      result: true,
+      statusCode: 200,
+      message: 'User deleted successfully',
+      data: null,
+    };
+
+    service.updateUserStatusByAction(payload).subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+      expect(response.result).toBe(true);
+      expect(response.statusCode).toBe(200);
+    });
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.UpdateUserStatusByAction}`);
+    expect(req.request.method).toBe('PUT');
+    expect(req.request.body).toEqual(payload);
+    req.flush(mockResponse);
   });
 });

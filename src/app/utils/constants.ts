@@ -265,3 +265,44 @@ export const getRefreshTokenExpiryDate = (rememberMe: boolean) => {
 export const userExportFilePrefix = 'User';
 
 export const exportFileNameTemplate = '{prefix}_export_{date}.xlsx';
+
+//#region User Management Constants
+export const userActions = {
+  EDIT: 'edit',
+  DELETE: 'delete',
+  BLOCK: 'block',
+  ACTIVATE: 'check_circle_outline',
+  INACTIVATE: 'remove_circle_outline',
+};
+
+export const userSaveMessages = {
+  updated: 'updated',
+  created: 'created',
+  success: 'Success',
+  error: 'Error',
+  serverError: 'Server Error',
+  successMessage: (action: string) => `User ${action} successfully`,
+  errorMessage: (action: string) => `Failed to ${action} user`,
+};
+
+export const userLoadMessages = {
+  fetchError: 'Failed to fetch user',
+  serverError: 'Server error while fetching user',
+  error: 'Error',
+};
+
+export const userStatusMessages = {
+  actionFailed: 'Action failed',
+  serverError: 'Server error during user action',
+  success: 'Success',
+  error: 'Error',
+};
+
+export const userActionMessages = {
+  deleted: 'User deleted successfully',
+  activated: 'User activated successfully',
+  suspended: 'User suspended successfully',
+  inactivated: 'User inactivated successfully',
+  statusUpdated: 'User status updated',
+};
+//#endregion
