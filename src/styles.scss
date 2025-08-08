@@ -311,3 +311,7 @@ app-data-table {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.cdk-overlay-backdrop {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}

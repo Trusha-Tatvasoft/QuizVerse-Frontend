@@ -453,6 +453,23 @@
   }
 }
 
+.custom-dialog-radius .mat-mdc-dialog-surface {
+  border-radius: 0.5rem !important;
+}
+
+.custom-form-field-text.mat-form-field-invalid,
+.custom-form-field.mat-form-field-invalid {
+  .mdc-text-field--invalid.mat-mdc-text-field-wrapper {
+    border-color: var(--color-error) !important;
+    box-shadow: 0 0 0 1px var(--color-error) !important;
+    &:hover,
+    &:focus-within {
+      border-color: var(--color-error) !important;
+      box-shadow: 0 0 0 1px var(--color-error) !important;
+    }
+  }
+}
+
 .stats-card {
   --mdc-elevated-card-container-elevation: none;
 }

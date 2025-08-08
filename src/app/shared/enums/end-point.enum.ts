@@ -15,4 +15,5 @@ export enum EndPoints {
   getRevenueTrendData = 'AdminDashboard/get-revenue-trend-data',
   GetUserById = 'Users/get-user-by-id',
   CreateOrUpdateUser = 'Users/create-or-update-user',
+  UpdateUserStatusByAction = 'Users/update-user-status-by-action',
 }

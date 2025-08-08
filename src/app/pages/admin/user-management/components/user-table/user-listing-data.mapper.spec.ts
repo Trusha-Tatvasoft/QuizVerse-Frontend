@@ -145,7 +145,7 @@ describe('UserManagementComponent', () => {
   it('should fallback to empty string if profilePic is missing', () => {
     const userWithoutProfilePic = { ...mockUsers[0], profilePic: undefined };
     const result = userToUserListingTableData(userWithoutProfilePic) as any;
-    expect(result.fullname.image).toBe('http://localhost:5041/uploads/undefined');
+    expect(result.fullname.image).toBe('');
   });
 
   // Use null as fallback if lastLogin is uninitialized
