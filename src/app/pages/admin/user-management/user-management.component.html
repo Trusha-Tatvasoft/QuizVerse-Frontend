@@ -50,6 +50,7 @@
       <app-outline-button
         [outlineButtonConfig]="addUserButtonConfig"
         class="add-user"
+        (buttonClicked)="openUserDialog()"
       ></app-outline-button>
       <app-filled-button
         [filledButtonConfig]="exportButtonConfig"
@@ -64,5 +65,17 @@
     [totalItems]="totalItems()"
     (pageChange)="onPageChange($event)"
     (sortChange)="onSortChange($event)"
+    (actionClick)="handleUserAction($event)"
   ></app-user-table>
 </main>
+
+@if (showUserDialog()) {
+  <div class="dialog-backdrop">
+    <app-user-form-dialog
+      [user]="selectedUser()"
+      (closeDialog)="closeUserDialog()"
+      (saveUser)="onSaveUser($event)"
+    >
+    </app-user-form-dialog>
+  </div>
+}
