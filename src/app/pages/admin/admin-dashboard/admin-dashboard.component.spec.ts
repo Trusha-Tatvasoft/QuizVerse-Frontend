@@ -93,4 +93,14 @@ describe('AdminDashboardComponent (Jest)', () => {
     expect(usersCard?.subtitleColor).toBe('green');
     expect(quizCard?.subtitleColor).toBe('red');
   });
+
+  it('should clean up destroy$ subject on destroy', () => {
+    const destroySpy = jest.spyOn((component as any).destroy, 'next');
+    const completeSpy = jest.spyOn((component as any).destroy, 'complete');
+
+    component.ngOnDestroy();
+
+    expect(destroySpy).toHaveBeenCalledTimes(1);
+    expect(completeSpy).toHaveBeenCalledTimes(1);
+  });
 });

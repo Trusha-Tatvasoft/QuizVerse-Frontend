@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { CardComponent } from '../../../shared/components/card/card.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,6 +12,7 @@ import { adminDashboardHeaderConfig } from './configs/admin-dashboard-header.con
 import { insightCardsConfig } from './configs/insight-cards-configs';
 import { AdminDashboardDataService } from '../../../services/admin/admin-dashboard/admin-dashboard-data.service';
 import { dashboardStatsCardConfig } from './configs/dashboard-stats-card.configs';
+import { pipe, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -19,7 +20,9 @@ import { dashboardStatsCardConfig } from './configs/dashboard-stats-card.configs
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss',
 })
-export class AdminDashboardComponent implements OnInit {
+export class AdminDashboardComponent implements OnInit, OnDestroy {
+  private readonly destroy = new Subject<void>();
+
   adminDashboardConfig = adminDashboardHeaderConfig;
   insightCards = insightCardsConfig;
   valueColor: CardColor = 'black';
@@ -28,11 +31,19 @@ export class AdminDashboardComponent implements OnInit {
   dashboardStatsConfigs: CardInputConfig[] = [];
 
   ngOnInit(): void {
-    this.dashboardService.getAdminDashboardStats().subscribe((res) => {
-      if (res.result && res.data) {
-        this.dashboardStatsConfigs = this.mapDashboardStatsToCards(res.data);
-      }
-    });
+    this.dashboardService
+      .getAdminDashboardStats()
+      .pipe(takeUntil(this.destroy))
+      .subscribe((res) => {
+        if (res.result && res.data) {
+          this.dashboardStatsConfigs = this.mapDashboardStatsToCards(res.data);
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next();
+    this.destroy.complete();
   }
 
   private mapDashboardStatsToCards(data: AdminDashboardSummary): CardInputConfig[] {

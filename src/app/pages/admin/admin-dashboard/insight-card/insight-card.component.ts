@@ -19,7 +19,6 @@ import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-insight-card',
-
   imports: [
     CommonModule,
     MatIconModule,
@@ -140,7 +139,7 @@ export class InsightCardComponent implements OnInit, OnDestroy {
         start = new Date(today.getFullYear() - 1, 0, 1);
         today.setFullYear(today.getFullYear() - 1, 11, 31);
         break;
-      case 'allTime':
+      case DateFilterType.allTime:
         start = new Date(2000, 0, 1);
         break;
     }
