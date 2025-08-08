@@ -284,6 +284,12 @@
   }
 }
 
+.custom-form-field-override .mat-mdc-text-field-wrapper:hover,
+.custom-form-field-override .mat-mdc-text-field-wrapper:focus-within {
+  border-color: var(--global-secondary-color) !important;
+  box-shadow: 0 0 0 1px var(--global-secondary-color) !important;
+}
+
 .custom-form-field-file {
   @extend %base-custom-form-field;
 
