@@ -67,7 +67,7 @@ export const routes: Routes = [
       {
         path: Navigations.Dashboard,
         component: AdminDashboardComponent,
-        title: 'Quizeverse | Dashboard ',
+        title: 'Quizeverse | Admin Dashboard ',
       },
       {
         path: Navigations.Users,
