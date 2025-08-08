@@ -10,6 +10,7 @@ import { UserListData } from '../../interfaces/user-list-data.interface';
  */
 export function userToUserListingTableData(user: UserListData): TableData {
   return {
+    id: user.id,
     fullname: {
       name: user.fullName,
       email: user.email,

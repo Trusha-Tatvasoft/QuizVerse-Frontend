@@ -8,6 +8,7 @@ import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { UserListData } from '../../../pages/admin/user-management/interfaces/user-list-data.interface';
 import { PaginatedDataResponse } from '../../../shared/interfaces/paginated-data-response.interface';
 import { provideHttpClient } from '@angular/common/http';
+import { UserFormData } from '../../../pages/admin/user-management/interfaces/user-form-data.interface';
 
 describe('UserManagementService', () => {
   let service: UserManagementService;
@@ -53,6 +54,30 @@ describe('UserManagementService', () => {
         attemptedQuizzes: 3,
       },
     ],
+  };
+
+  const mockUser: UserFormData = {
+    id: 1,
+    fullName: 'John Doe',
+    email: 'john@example.com',
+    userName: 'johndoe',
+    bio: 'Software Developer',
+    password: '',
+    profilePic: '',
+  };
+
+  const userFetchedMockResponse: ApiResponse<UserFormData> = {
+    result: true,
+    statusCode: 200,
+    message: 'User fetched successfully',
+    data: mockUser,
+  };
+
+  const userCreateUpdateMockResponse: ApiResponse<null> = {
+    result: true,
+    statusCode: 200,
+    message: 'User created/updated successfully',
+    data: null,
   };
 
   const mockApiResponse: ApiResponse<PaginatedDataResponse<UserListData>> = {
@@ -249,5 +274,72 @@ describe('UserManagementService', () => {
       status: 500,
       statusText: 'Internal Server Error',
     });
+  });
+
+  it('should fetch user data by ID', () => {
+    const userId = 1;
+
+    service.getUserById(userId).subscribe((response) => {
+      expect(response).toEqual(userFetchedMockResponse);
+      expect(response.data.id).toBe(userId);
+    });
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetUserById}/${userId}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(userFetchedMockResponse);
+  });
+
+  it('should handle error if request fails', () => {
+    const userId = 1;
+    const errorMsg = '404 Not Found';
+
+    service.getUserById(userId).subscribe({
+      next: () => fail('Expected error, but got success response'),
+      error: (error) => {
+        expect(error.status).toBe(404);
+        expect(error.statusText).toBe('Not Found');
+      },
+    });
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetUserById}/${userId}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(errorMsg, { status: 404, statusText: 'Not Found' });
+  });
+
+  it('should successfully create or update a user', () => {
+    const formData = new FormData();
+    formData.append('fullName', 'Jane Doe');
+    formData.append('email', 'jane@example.com');
+    formData.append('username', 'janedoe');
+    formData.append('bio', 'Frontend Developer');
+
+    service.createOrUpdateUser(formData).subscribe((response) => {
+      expect(response).toEqual(userCreateUpdateMockResponse);
+      expect(response.result).toBe(true);
+      expect(response.statusCode).toBe(200);
+      expect(response.message).toBe('User created/updated successfully');
+    });
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.CreateOrUpdateUser}`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body instanceof FormData).toBe(true);
+    req.flush(userCreateUpdateMockResponse);
+  });
+
+  it('should handle HTTP error response', () => {
+    const formData = new FormData();
+    formData.append('username', 'invalid_user');
+
+    service.createOrUpdateUser(formData).subscribe({
+      next: () => fail('Expected an error, but got success'),
+      error: (error) => {
+        expect(error.status).toBe(400);
+        expect(error.statusText).toBe('Bad Request');
+      },
+    });
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.CreateOrUpdateUser}`);
+    expect(req.request.method).toBe('POST');
+    req.flush({ message: 'Invalid data' }, { status: 400, statusText: 'Bad Request' });
   });
 });
