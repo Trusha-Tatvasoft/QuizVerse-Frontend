@@ -3,6 +3,7 @@ import { of } from 'rxjs';
 import { ChartDataPoint } from '../interfaces/chart-data-point.interface';
 import { InsightCardComponent } from './insight-card.component';
 import { AdminDashboardDataService } from '../../../../services/admin/admin-dashboard/admin-dashboard-data.service';
+import { DateFilterType, filterOptions } from '../../../../utils/constants';
 
 describe('InsightCardComponent', () => {
   let component: InsightCardComponent;
@@ -55,15 +56,9 @@ describe('InsightCardComponent', () => {
   // Default values
   it('should initialize with default values', () => {
     component.ngOnInit();
-    expect(component.selectedFilter).toBe('last7days');
+    expect(component.selectedFilter).toBe(DateFilterType.last7Days);
     expect(component.chartData).toBeNull();
-    expect(component.filterOptions).toEqual([
-      { label: 'Last 7 Days', value: 'last7days' },
-      { label: 'Last 30 Days', value: 'last30days' },
-      { label: 'Last Month', value: 'lastMonth' },
-      { label: 'Last Year', value: 'lastYear' },
-      { label: 'All Time', value: 'allTime' },
-    ]);
+    expect(component.filterOptions).toEqual(filterOptions);
   });
 
   // Chart loading logic
@@ -122,9 +117,9 @@ describe('InsightCardComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
     tick();
-    component.onFilterChange('last30days');
+    component.onFilterChange(DateFilterType.last30days);
     tick();
-    expect(component.selectedFilter).toBe('last30days');
+    expect(component.selectedFilter).toBe(DateFilterType.last30days);
     expect(mockDashboardService.getUserEngagementData).toHaveBeenCalledTimes(3);
   }));
 
@@ -135,17 +130,17 @@ describe('InsightCardComponent', () => {
   });
 
   it('should return correct display date for lastYear', () => {
-    const result = (component as any).toDisplayDate('2024-05-10', 'lastYear');
+    const result = (component as any).toDisplayDate('2024-05-10', DateFilterType.lastYear);
     expect(result).toBe('May-2024');
   });
 
   it('should return correct display date for allTime', () => {
-    const result = (component as any).toDisplayDate('2024-03-15', 'allTime');
+    const result = (component as any).toDisplayDate('2024-03-15', DateFilterType.allTime);
     expect(result).toBe('2024');
   });
 
   it('should return correct display date for last7days', () => {
-    const result = (component as any).toDisplayDate('2024-05-10', 'last7days');
+    const result = (component as any).toDisplayDate('2024-05-10', DateFilterType.last7Days);
     expect(result).toBe('10-05-2024');
   });
 
@@ -164,7 +159,7 @@ describe('InsightCardComponent', () => {
     expect(chart.datasets[0].data).toEqual([100, 200]);
   });
 
-  // 📅 Filter range tests
+  //  Filter range tests
   it('should return correct filter dates for last7days', () => {
     const today = new Date();
     const expectedStart = new Date();
@@ -191,7 +186,7 @@ describe('InsightCardComponent', () => {
     expect(result.endDate).toBe((component as any).toIsoDateString(today));
   });
 
-  // ✅ New tests for 'lastMonth'
+  // New tests for 'lastMonth'
 
   it('should return correct filter dates for lastYear', () => {
     // The component implementation modifies the today variable, so we need to replicate that logic
@@ -251,4 +246,14 @@ describe('InsightCardComponent', () => {
     tick();
     expect(component.chartData).toBeNull();
   }));
+
+  it('should clean up destroy$ subject on destroy', () => {
+    const destroySpy = jest.spyOn((component as any).destroy, 'next');
+    const completeSpy = jest.spyOn((component as any).destroy, 'complete');
+
+    component.ngOnDestroy();
+
+    expect(destroySpy).toHaveBeenCalledTimes(1);
+    expect(completeSpy).toHaveBeenCalledTimes(1);
+  });
 });

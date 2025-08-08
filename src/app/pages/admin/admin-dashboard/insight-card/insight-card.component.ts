@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,6 +14,8 @@ import {
   doughnutChartOptionsConfig,
   lineChartOptionsConfig,
 } from '../configs/chart-options.config';
+import { DateFilterType, filterOptions, months } from '../../../../utils/constants';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-insight-card',
@@ -28,28 +30,27 @@ import {
   templateUrl: './insight-card.component.html',
   styleUrl: './insight-card.component.scss',
 })
-export class InsightCardComponent implements OnInit {
+export class InsightCardComponent implements OnInit, OnDestroy {
   @Input() card!: InsightCards;
 
   selectedFilter: string;
-
-  filterOptions = [
-    { label: 'Last 7 Days', value: 'last7days' },
-    { label: 'Last 30 Days', value: 'last30days' },
-    { label: 'Last Month', value: 'lastMonth' },
-    { label: 'Last Year', value: 'lastYear' },
-    { label: 'All Time', value: 'allTime' },
-  ];
+  filterOptions = filterOptions;
+  months = months;
 
   chartData: { labels: string[]; datasets: ChartDataset[] } | null = null;
   chartType!: ChartType;
   chartOptions!: ChartConfiguration['options'];
-
+  private readonly destroy = new Subject<void>();
   private readonly dashboardService = inject(AdminDashboardDataService);
 
   ngOnInit(): void {
-    this.selectedFilter = 'last7days';
+    this.selectedFilter = DateFilterType.last7Days;
     this.loadChartData();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next();
+    this.destroy.complete();
   }
 
   onFilterChange(filter: string): void {
@@ -66,6 +67,7 @@ export class InsightCardComponent implements OnInit {
       case 'engagement':
         this.dashboardService
           .getUserEngagementData({ start_date: startDate, end_date: endDate })
+          .pipe(takeUntil(this.destroy))
           .subscribe((res) => {
             if (!res?.result || !res?.data) return;
             this.chartData = this.buildChartData(res.data, 'Engagement');
@@ -77,6 +79,7 @@ export class InsightCardComponent implements OnInit {
       case 'performance':
         this.dashboardService
           .getPerformaceScoreData({ start_date: startDate, end_date: endDate })
+          .pipe(takeUntil(this.destroy))
           .subscribe((res) => {
             if (!res?.result || !res?.data) return;
             this.chartData = this.buildChartData(res.data, 'Performance');
@@ -88,6 +91,7 @@ export class InsightCardComponent implements OnInit {
       case 'revenue':
         this.dashboardService
           .getRevenueTrendData({ start_date: startDate, end_date: endDate })
+          .pipe(takeUntil(this.destroy))
           .subscribe((res) => {
             if (!res?.result || !res?.data) return;
             this.chartData = this.buildChartData(res.data, 'Revenue');
@@ -122,17 +126,17 @@ export class InsightCardComponent implements OnInit {
     let start = new Date(today);
 
     switch (filter) {
-      case 'last7days':
+      case DateFilterType.last7Days:
         start.setDate(today.getDate() - 6);
         break;
-      case 'last30days':
+      case DateFilterType.last30days:
         start.setDate(today.getDate() - 29);
         break;
-      case 'lastMonth':
+      case DateFilterType.lastMonth:
         start = new Date(today.getFullYear(), today.getMonth() - 1, 1);
         today.setDate(0);
         break;
-      case 'lastYear':
+      case DateFilterType.lastYear:
         start = new Date(today.getFullYear() - 1, 0, 1);
         today.setFullYear(today.getFullYear() - 1, 11, 31);
         break;
@@ -166,20 +170,6 @@ export class InsightCardComponent implements OnInit {
   }
 
   private getMonthShortName(month: number): string {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
     return months[month - 1];
   }
 }
