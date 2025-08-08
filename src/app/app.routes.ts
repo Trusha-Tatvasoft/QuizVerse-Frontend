@@ -12,6 +12,7 @@ import { MasterLayoutComponent } from './pages/layout/master-layout/master-layou
 import { CardComponent } from './shared/components/card/card.component';
 import { UserManagementComponent } from './pages/admin/user-management/user-management.component';
 import { UnauthorizedComponent } from './shared/components/unauthorized/unauthorized.component';
+import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -62,6 +63,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: { roles: ['admin'] },
     children: [
+      {
+        path: Navigations.Dashboard,
+        component: AdminDashboardComponent,
+        title: 'Quizeverse | Admin Dashboard',
+      },
       {
         path: Navigations.Users,
         component: UserManagementComponent,
