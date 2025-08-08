@@ -25,7 +25,10 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot): P
 
   if (publicOnly && isValid) {
     const roleString = authService.getRoleFromToken(token || '')?.toLowerCase();
-    const target = roleString === 'admin' ? `/${Navigations.Admin}` : `/${Navigations.User}`;
+    const target =
+      roleString === 'admin'
+        ? `/${Navigations.Admin}/${Navigations.Dashboard}`
+        : `/${Navigations.User}/${Navigations.Dashboard}`;
     router.navigate([target]);
     return false;
   }
