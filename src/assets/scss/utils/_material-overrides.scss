@@ -456,3 +456,8 @@
 .custom-dialog-radius .mat-mdc-dialog-surface {
   border-radius: 0.5rem !important;
 }
+
+.mdc-text-field--invalid {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 1px #ef4444 !important;
+}
