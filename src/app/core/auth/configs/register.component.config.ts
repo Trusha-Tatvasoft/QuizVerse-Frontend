@@ -239,6 +239,6 @@ export const userFormFields: DynamicFormField[] = [
 
 export const uploadButtonConfig: ButtonConfig = {
   label: 'Choose File',
-  variant: 'primary',
+  variant: 'secondary',
   fontWeight: 500,
 };
