@@ -1,0 +1,65 @@
+<main class="admin-management-page">
+  <h2 class="admin-page-heading">Question Pool</h2>
+  <div class="admin-page-header">
+    <app-page-header
+      [icon]="questionPoolConfig.icon"
+      [title]="questionPoolConfig.title"
+      [subtitle]="questionPoolConfig.subtitle"
+      [theme]="questionPoolConfig.theme"
+    ></app-page-header>
+  </div>
+  <div class="admin-management-toolbar">
+    <div class="flex gap-4 serach-container">
+      <app-search-input
+        [placeholder]="searchInputConfig.placeholder"
+        [control]="searchControl"
+        (search)="onSearchInputChange($event)"
+        class="question-pool-search"
+      ></app-search-input>
+      <div class="add-question-btn-tablet">
+        <app-filled-button [filledButtonConfig]="addQuestionButtonConfig"></app-filled-button>
+      </div>
+    </div>
+
+    <div class="w-100 flex filter-btn-container">
+      <div class="question-pool-filters">
+        <!-- Category Filter -->
+        <mat-form-field appearance="outline" class="filter-select">
+          <mat-select
+            [(value)]="selectedCategory"
+            (selectionChange)="onFilterChange()"
+            placeholder="All Category"
+          >
+            <mat-option [value]="''">All Category</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Difficulty Filter -->
+        <mat-form-field appearance="outline" class="filter-select">
+          <mat-select
+            [(value)]="selectedDifficulty"
+            (selectionChange)="onFilterChange()"
+            placeholder="All Difficulty"
+          >
+            <mat-option [value]="''">All Difficulty</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Type Filter -->
+        <mat-form-field appearance="outline" class="filter-select">
+          <mat-select
+            [(value)]="selectedType"
+            (selectionChange)="onFilterChange()"
+            placeholder="All Types"
+          >
+            <mat-option [value]="''">All Types</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="add-question-btn">
+      <app-filled-button [filledButtonConfig]="addQuestionButtonConfig"></app-filled-button>
+    </div>
+  </div>
+  <app-question-pool-table></app-question-pool-table>
+</main>
