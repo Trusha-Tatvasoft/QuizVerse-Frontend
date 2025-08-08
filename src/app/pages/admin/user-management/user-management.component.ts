@@ -26,6 +26,8 @@ import {
 } from '../../../utils/constants';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { generateExportFileName } from '../../../utils/generate-export-file-name.util';
+import { UserFormDialogComponent } from './components/user-form-dialog/user-form-dialog.component';
+import { UserFormData } from './interfaces/user-form-data.interface';
 
 @Component({
   selector: 'app-user-management',
@@ -36,11 +38,15 @@ import { generateExportFileName } from '../../../utils/generate-export-file-name
     MatSelectModule,
     OutlineButtonComponent,
     FilledButtonComponent,
+    UserFormDialogComponent,
   ],
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.scss',
 })
 export class UserManagementComponent implements OnInit, OnDestroy {
+  showUserDialog = signal(false);
+  selectedUser = signal<UserFormData | null>(null); // Null for add, object for edit
+
   // Inject services
   userService = inject(UserManagementService);
   snackbar = inject(SnackbarService);
@@ -212,6 +218,81 @@ export class UserManagementComponent implements OnInit, OnDestroy {
             );
           }
         },
+      });
+  }
+
+  openUserDialog(user: UserFormData | null = null): void {
+    this.selectedUser.set(user);
+    this.showUserDialog.set(true);
+  }
+
+  closeUserDialog(): void {
+    this.showUserDialog.set(false);
+    this.selectedUser.set(null);
+  }
+
+  onSaveUser(event: { formData: FormData; isEdit: boolean }): void {
+    this.handleUserSave(event.formData, event.isEdit);
+  }
+
+  handleUserSave(userFormData: FormData, isEdit = false): void {
+    this.userService
+      .createOrUpdateUser(userFormData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          const isSuccess = isEdit ? res.statusCode === 200 : res.statusCode === 201;
+          const action = isEdit ? 'updated' : 'created';
+
+          if (isSuccess) {
+            this.snackbar.showSuccess(`User ${action} successfully`, 'Success');
+          } else {
+            this.snackbar.showError(
+              res.message || `Failed to ${action} user`,
+              `Error ${res.statusCode}`,
+            );
+          }
+
+          if (isSuccess) {
+            this.fetchUsers();
+            this.closeUserDialog();
+          }
+        },
+        error: (err) => {
+          this.snackbar.showError(err?.error?.message || 'Server Error', 'Error');
+        },
+      });
+  }
+
+  handleUserAction(event: { action: string; row: TableData }): void {
+    const user = event.row;
+    switch (event.action) {
+      case 'edit':
+        this.loadUserForEdit(user['id'] as number);
+        break;
+    }
+  }
+
+  loadUserForEdit(userId: number): void {
+    this.userService
+      .getUserById(userId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.statusCode === 200 && res.data) {
+            this.openUserDialog(res.data);
+          } else {
+            this.snackbar.showError(
+              res.message || 'Failed to fetch user',
+              `Error ${res.statusCode}`,
+            );
+          }
+        },
+        error: (err) =>
+          this.snackbar.showError(
+            err?.error?.message || 'Server error while fetching user',
+            'Error',
+          ),
       });
   }
 }

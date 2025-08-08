@@ -34,6 +34,7 @@
                 [formControlName]="field.name"
                 [placeholder]="field.placeholder"
                 [attr.autocomplete]="'off'"
+                [readonly]="isEditMode && field.name === 'email'"
                 required
               />
 
@@ -74,11 +75,14 @@
                 class="custom-upload-button"
               ></app-filled-button>
               <span class="selected-file-name"
-                >{{ selectedFile?.name || 'No file chosen' }}
-                <mat-icon *ngIf="selectedFile" (click)="selectedFile = null" class="clear-icon"
-                  >cancel</mat-icon
-                >
+                >{{ displayFileName }}
+                @if (selectedFile || userForm.get('profilePic')?.value) {
+                  <mat-icon (click)="selectedFile = null" class="clear-icon">cancel</mat-icon>
+                }
               </span>
+            </div>
+            <div class="error-message">
+              {{ getError(field.name) }}
             </div>
           </div>
         }
@@ -88,13 +92,13 @@
 
   @if (isLogin) {
     <div class="dialog-actions">
-      <app-filled-button
-        [filledButtonConfig]="cancelButton"
-        (buttonClicked)="onCancel()"
-      ></app-filled-button>
       <app-outline-button
-        [outlineButtonConfig]="isEditMode ? updateUserButton : createUserButton"
+        [outlineButtonConfig]="cancelButton"
+        (buttonClicked)="cancel()"
       ></app-outline-button>
+      <app-filled-button
+        [filledButtonConfig]="isEditMode ? updateUserButton : createUserButton"
+      ></app-filled-button>
     </div>
   } @else {
     <div class="col-span-2 sm:col-span-1">
