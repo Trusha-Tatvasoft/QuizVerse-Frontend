@@ -1,0 +1,34 @@
+<main class="admin-management-page">
+  <h2 class="admin-page-heading">Quiz Difficulty Level</h2>
+
+  <div class="admin-page-header">
+    <app-page-header
+      [icon]="userConfig.icon"
+      [title]="userConfig.title"
+      [subtitle]="userConfig.subtitle"
+      [theme]="userConfig.theme"
+    ></app-page-header>
+  </div>
+
+  <div class="admin-management-toolbar">
+    <div class="heading">
+      <h1>Difficulty Levels</h1>
+    </div>
+
+    <div class="admin-management-btns">
+      <app-filled-button
+        [filledButtonConfig]="addDifficultyButtonConfig"
+        (buttonClicked)="openAddDifficultyDialgue()"
+        class="add-difficulty"
+      ></app-filled-button>
+    </div>
+  </div>
+
+  <app-data-table
+    [columns]="tableConfig.columns"
+    [tableTitle]="tableConfig.title"
+    [tableDescription]="tableConfig.description"
+    [dataSource]="dataSource()"
+  >
+  </app-data-table>
+</main>

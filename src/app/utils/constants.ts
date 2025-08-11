@@ -337,3 +337,7 @@ export const months = [
   'Nov',
   'Dec',
 ];
+
+//#region Skip loader const
+export const skipLoader = 'X-Skip-Loader';
+//#endregion

@@ -13,7 +13,7 @@ import { UserManagementComponent } from './pages/admin/user-management/user-mana
 import { UnauthorizedComponent } from './shared/components/unauthorized/unauthorized.component';
 import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard.component';
 import { QuestionPoolComponent } from './pages/admin/question-pool/question-pool.component';
-import { adminDashboardHeaderConfig } from './pages/admin/admin-dashboard/configs/admin-dashboard-header.configs';
+import { QuizDifficultyLevelComponent } from './pages/admin/quiz-difficulty-level/quiz-difficulty-level.component';
 
 export const routes: Routes = [
   {
@@ -73,6 +73,11 @@ export const routes: Routes = [
         path: Navigations.Users,
         component: UserManagementComponent,
         title: 'Quizeverse | User Management',
+      },
+      {
+        path: Navigations.Difficulties,
+        component: QuizDifficultyLevelComponent,
+        title: 'Quizeverse | Difficulty Level',
       },
       {
         path: Navigations.QuestionPool,

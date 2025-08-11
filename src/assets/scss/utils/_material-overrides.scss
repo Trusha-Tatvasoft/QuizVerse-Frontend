@@ -473,3 +473,30 @@
 .stats-card {
   --mdc-elevated-card-container-elevation: none;
 }
+
+//for All mat dialogue title and action
+
+.dialog-header {
+  h2[mat-dialog-title] {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0;
+    color: #111827;
+    padding: 0px !important;
+  }
+
+  .dialog-sub-header {
+    font-size: 0.875rem;
+    color: #6b7280;
+    display: block;
+    margin-top: 0.25rem;
+  }
+}
+
+.mat-mdc-dialog-actions {
+  padding: 0px !important;
+}
+
+.mat-mdc-dialog-surface {
+  border-radius: 13px !important;
+}

@@ -15,5 +15,8 @@ export enum EndPoints {
   getRevenueTrendData = 'AdminDashboard/get-revenue-trend-data',
   GetUserById = 'Users/get-user-by-id',
   CreateOrUpdateUser = 'Users/create-or-update-user',
+  QuizDifficultyLevel = 'QuizDifficultyLevel/get-quiz-difficulty-list',
+  QuizDifficultyNameAvailable = 'QuizDifficultyLevel/is-difficulty-name-available',
+  CreateQuizDifficultyLevel = 'QuizDifficultyLevel/create-difficulty-level',
   UpdateUserStatusByAction = 'Users/update-user-status-by-action',
 }
