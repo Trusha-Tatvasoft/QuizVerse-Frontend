@@ -8,6 +8,7 @@ import { UserListData } from '../../../pages/admin/user-management/interfaces/us
 import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { UserFormData } from '../../../pages/admin/user-management/interfaces/user-form-data.interface';
+import { UserAction, UserStatus } from '../../../shared/enums/user-management.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -59,6 +60,22 @@ export class UserManagementService {
   createOrUpdateUser(userData: FormData): Observable<ApiResponse<null>> {
     return this.http
       .post<ApiResponse<null>>(`${environment.baseUrl}/${EndPoints.CreateOrUpdateUser}`, userData)
+      .pipe(map((res) => res));
+  }
+
+  /**
+   * Update user status by action (delete or status change).
+   * @param payload - Object containing user ID, action type, and optional new status.
+   */
+  updateUserStatusByAction(payload: {
+    id: number;
+    action: UserAction;
+    newStatus?: UserStatus;
+  }): Observable<ApiResponse<null>> {
+    return this.http
+      .put<
+        ApiResponse<null>
+      >(`${environment.baseUrl}/${EndPoints.UpdateUserStatusByAction}`, payload)
       .pipe(map((res) => res));
   }
 }

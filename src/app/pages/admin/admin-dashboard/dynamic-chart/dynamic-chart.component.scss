@@ -1,0 +1,42 @@
+.card-chart {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+  width: 100%;
+
+  @media (max-width: 1024px) {
+    height: 280px;
+  }
+
+  @media (max-width: 768px) {
+    height: 220px;
+  }
+
+  @media (max-width: 640px) {
+    height: 200px;
+  }
+
+  @media (max-width: 480px) {
+    height: 180px;
+  }
+
+  @media (max-width: 425px) {
+    height: 160px;
+  }
+
+  @media (max-width: 375px) {
+    height: 140px;
+  }
+
+  @media (max-width: 360px) {
+    height: 130px;
+  }
+
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+    max-width: 100%;
+    object-fit: contain;
+  }
+}
