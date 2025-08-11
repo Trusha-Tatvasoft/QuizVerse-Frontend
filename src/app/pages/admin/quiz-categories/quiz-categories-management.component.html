@@ -1,0 +1,30 @@
+<main class="admin-management-page">
+  <h2 class="admin-page-heading">Quiz Categories</h2>
+  <div class="admin-page-header">
+    <app-page-header
+      [icon]="quizCategoryConfig.icon"
+      [title]="quizCategoryConfig.title"
+      [subtitle]="quizCategoryConfig.subtitle"
+      [theme]="quizCategoryConfig.theme"
+    ></app-page-header>
+  </div>
+  <div class="admin-management-toolbar">
+    <app-search-input
+      [placeholder]="searchInputConfig.placeholder"
+      [control]="searchControl"
+      (search)="onSearchInputChange($event)"
+      class="quiz-category-search"
+    ></app-search-input>
+
+    <div class="add-category-btn">
+      <app-filled-button [filledButtonConfig]="addCategoryButtonConfig"></app-filled-button>
+    </div>
+  </div>
+
+  <app-quiz-category-table
+    [dataSource]="dataSource()"
+    [totalItems]="totalItems()"
+    (pageChange)="onPageChange($event)"
+    (sortChange)="onSortChange($event)"
+  ></app-quiz-category-table>
+</main>

@@ -13,6 +13,7 @@ import { CardComponent } from './shared/components/card/card.component';
 import { UserManagementComponent } from './pages/admin/user-management/user-management.component';
 import { UnauthorizedComponent } from './shared/components/unauthorized/unauthorized.component';
 import { QuestionPoolComponent } from './pages/admin/question-pool/question-pool.component';
+import { QuizCategoriesManagementComponent } from './pages/admin/quiz-categories/quiz-categories-management.component';
 
 export const routes: Routes = [
   {
@@ -72,6 +73,11 @@ export const routes: Routes = [
         path: Navigations.Users,
         component: UserManagementComponent,
         title: 'Quizeverse | User Management',
+      },
+      {
+        path: Navigations.Categories,
+        component: QuizCategoriesManagementComponent,
+        title: 'Quizeverse | Quiz Categories Management',
       },
       {
         path: Navigations.QuestionPool,
