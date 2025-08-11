@@ -11,4 +11,7 @@ export enum EndPoints {
   VerifyTokenRestPassword = 'Authentication/verify-token-reset-password',
   GetUserById = 'Users/get-user-by-id',
   CreateOrUpdateUser = 'Users/create-or-update-user',
+  QuizDifficultyLevel = 'QuizDifficultyLevel/get-quiz-difficulty-list',
+  QuizDifficultyNameAvailable = 'QuizDifficultyLevel/is-difficulty-name-available',
+  CreateQuizDifficultyLevel = 'QuizDifficultyLevel/create-difficulty-level',
 }

@@ -265,3 +265,7 @@ export const getRefreshTokenExpiryDate = (rememberMe: boolean) => {
 export const userExportFilePrefix = 'User';
 
 export const exportFileNameTemplate = '{prefix}_export_{date}.xlsx';
+
+//#region Skip loader const
+export const skipLoader = 'X-Skip-Loader';
+//#endregion
