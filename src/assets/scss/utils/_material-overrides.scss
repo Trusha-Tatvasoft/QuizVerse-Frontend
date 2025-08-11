@@ -453,6 +453,27 @@
   }
 }
 
+.custom-dialog-radius .mat-mdc-dialog-surface {
+  border-radius: 0.5rem !important;
+}
+
+.custom-form-field-text.mat-form-field-invalid,
+.custom-form-field.mat-form-field-invalid {
+  .mdc-text-field--invalid.mat-mdc-text-field-wrapper {
+    border-color: var(--color-error) !important;
+    box-shadow: 0 0 0 1px var(--color-error) !important;
+    &:hover,
+    &:focus-within {
+      border-color: var(--color-error) !important;
+      box-shadow: 0 0 0 1px var(--color-error) !important;
+    }
+  }
+}
+
+.stats-card {
+  --mdc-elevated-card-container-elevation: none;
+}
+
 //for All mat dialogue title and action
 
 .dialog-header {
@@ -460,13 +481,13 @@
     font-size: 1.5rem;
     font-weight: 500;
     margin: 0;
-    color: #111827; // dark heading
+    color: #111827;
     padding: 0px !important;
   }
 
   .dialog-sub-header {
     font-size: 0.875rem;
-    color: #6b7280; // subtle gray
+    color: #6b7280;
     display: block;
     margin-top: 0.25rem;
   }

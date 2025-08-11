@@ -17,13 +17,17 @@
     .icon {
       padding-right: 24px;
     }
+
+    @media (max-width: 576px) {
+      justify-content: center;
+    }
   }
 
   // Content body styling
   .dialog-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     padding: 20px 0 10px;
     color: #808080;
@@ -39,7 +43,11 @@
 
     .message-text {
       font-size: 14px;
-      text-align: center;
+      text-align: left;
+
+      @media (max-width: 576px) {
+        text-align: center;
+      }
     }
   }
 }
@@ -51,4 +59,8 @@ mat-dialog-actions {
   justify-content: flex-end;
   padding: 10px 0 16px;
   gap: 15px;
+
+  @media (max-width: 576px) {
+    justify-content: center;
+  }
 }
