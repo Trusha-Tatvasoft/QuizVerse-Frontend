@@ -6,7 +6,6 @@ import {
   quizHeaderConfig,
 } from './configs/quiz-difficulty-level.config';
 import { TableComponent } from '../../../shared/components/table/table.component';
-import { UserListingComponent } from '../user-management/components/user-table/user-listing.component';
 import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
 import { AddDifficultyLevelComponent } from './components/add-difficulty-level/add-difficulty-level.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -19,13 +18,7 @@ import { platformMessages } from '../../../utils/constants';
 
 @Component({
   selector: 'app-quiz-difficulty-level',
-  imports: [
-    PageHeaderComponent,
-    TableComponent,
-    UserListingComponent,
-    FilledButtonComponent,
-    CommonModule,
-  ],
+  imports: [PageHeaderComponent, TableComponent, FilledButtonComponent, CommonModule],
   templateUrl: './quiz-difficulty-level.component.html',
   styleUrl: './quiz-difficulty-level.component.scss',
 })

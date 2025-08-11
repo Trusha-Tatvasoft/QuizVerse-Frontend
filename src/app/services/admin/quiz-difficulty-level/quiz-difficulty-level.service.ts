@@ -18,6 +18,7 @@ export class QuizDifficultyLevelService {
       `${environment.baseUrl}/${EndPoints.QuizDifficultyLevel}`,
     );
   }
+
   checkNameExists(name: string): Observable<ApiResponse<boolean>> {
     return this.http.get<ApiResponse<boolean>>(
       `${environment.baseUrl}/${EndPoints.QuizDifficultyNameAvailable}/${encodeURIComponent(name)}`,

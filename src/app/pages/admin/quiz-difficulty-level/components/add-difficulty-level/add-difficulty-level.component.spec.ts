@@ -205,6 +205,7 @@ describe('AddDifficultyLevelComponent (Jest)', () => {
     expect(control?.hasError('server')).toBe(false);
     expect(control?.errors).toBeNull();
   }));
+
   it('should create form controls with correct validators from config', () => {
     component.difficultyFields.forEach((field) => {
       const control = component.difficultyForm.get(field.name);
@@ -215,6 +216,7 @@ describe('AddDifficultyLevelComponent (Jest)', () => {
       }
     });
   });
+
   it('should return platformMessages.errorMessage when server error exists but no server error message is set', () => {
     const control = component.difficultyForm.get('name');
     control?.setErrors({ server: true });
@@ -222,6 +224,7 @@ describe('AddDifficultyLevelComponent (Jest)', () => {
     const error = component.getError('name');
     expect(error).toBe(platformMessages.errorMessage);
   });
+
   it('should return early in validateName if value is empty', () => {
     const spy = jest.spyOn(mockDifficultyService, 'checkNameExists');
     component.difficultyForm.get('name')?.setValue(''); // empty value
@@ -250,6 +253,7 @@ describe('AddDifficultyLevelComponent (Jest)', () => {
       platformMessages.errorMessage,
     );
   }));
+
   it('should show platformMessages.errorMessage if API error has no message', fakeAsync(() => {
     component.difficultyForm.setValue({ name: 'Test', description: 'Desc' });
     const err = { error: {}, statusCode: 500 }; // no message in error object
@@ -275,6 +279,7 @@ describe('AddDifficultyLevelComponent (Jest)', () => {
       platformMessages.errorMessage,
     );
   }));
+
   it('should show snackbar error when backend returns 5xx error', fakeAsync(() => {
     const errorResponse = { error: { message: 'Internal Server Error' }, status: 500 };
 
@@ -289,6 +294,7 @@ describe('AddDifficultyLevelComponent (Jest)', () => {
       'Internal Server Error',
     );
   }));
+
   it('should use platformMessages.errorMessage when backend does not send message', fakeAsync(() => {
     const errorResponse = { error: {}, status: 500 }; // no message key
 

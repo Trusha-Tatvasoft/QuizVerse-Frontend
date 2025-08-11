@@ -120,6 +120,7 @@ describe('QuizDifficultyLevelComponent (Jest)', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
   it('should call fetchDifficultyLevels on init', () => {
     const fetchSpy = jest.spyOn(component, 'fetchDifficultyLevels').mockImplementation(() => {});
     component.ngOnInit();
