@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { QuizCategoriesManagementComponent } from './quiz-categories-management.component';
 import { of, throwError } from 'rxjs';
 import { provideHttpClient } from '@angular/common/http';
@@ -10,9 +10,8 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 import { SearchInputComponent } from '../../../shared/components/search-input/search-input.component';
 import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
 import { QuizCategoryTableComponent } from './components/quiz-category-table/quiz-category-table.component';
-import { platformMessages } from '../../../utils/constants';
+import { platformMessages, debounceTimeValue } from '../../../utils/constants';
 
-// --- Mock Data ---
 const mockResponse = {
   statusCode: 200,
   message: 'Success',
@@ -73,9 +72,9 @@ describe('QuizCategoriesManagementComponent (Jest)', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call fetchQuizCategories on init', () => {
+  it('should call fetchQuizCategories on ngOnInit', () => {
     const fetchSpy = jest.spyOn(component as any, 'fetchQuizCategories');
-    fixture.detectChanges(); // triggers ngOnInit
+    fixture.detectChanges();
     expect(fetchSpy).toHaveBeenCalled();
   });
 
@@ -141,15 +140,14 @@ describe('QuizCategoriesManagementComponent (Jest)', () => {
     expect(component.sort().sortDescending).toBe(true);
   });
 
-  it('should call fetchQuizCategories and emit search term on onSearchInputChange', () => {
-    const fetchSpy = jest.spyOn(component as any, 'fetchQuizCategories');
-    const searchSpy = jest.spyOn(component['searchSubject$'], 'next');
+  it('should debounce and call fetchQuizCategories after search input change', fakeAsync(() => {
+    jest.spyOn(component as any, 'fetchQuizCategories');
 
     component.onSearchInputChange('science');
+    tick(debounceTimeValue + 1);
 
-    expect(fetchSpy).toHaveBeenCalled();
-    expect(searchSpy).toHaveBeenCalledWith('science');
-  });
+    expect((component as any).fetchQuizCategories).toHaveBeenCalled();
+  }));
 
   it('should show error snackbar when fetch fails with error object', () => {
     const errorResponse = {

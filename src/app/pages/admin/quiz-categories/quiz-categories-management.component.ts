@@ -11,8 +11,12 @@ import { FormControl } from '@angular/forms';
 import { QuizCategoryTableComponent } from './components/quiz-category-table/quiz-category-table.component';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { TableData } from '../../../shared/interfaces/table-component.interface';
-import { platformMessages, tablePaginationConfig } from '../../../utils/constants';
-import { Subject, takeUntil } from 'rxjs';
+import {
+  debounceTimeValue,
+  platformMessages,
+  tablePaginationConfig,
+} from '../../../utils/constants';
+import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { PaginationRequest } from '../../../shared/interfaces/pagination-request.interface';
 import { categoryToCategoryTableData } from './components/quiz-category-table/quiz-category-table.mapper';
 import { QuizCategoryManagementService } from '../../../services/admin/quiz-category-management/quiz-category-management.service';
@@ -54,8 +58,15 @@ export class QuizCategoriesManagementComponent implements OnInit, OnDestroy {
     this.fetchQuizCategories();
   }
 
+  getFilteredData(): void {
+    this.searchSubject$.pipe(debounceTime(debounceTimeValue)).subscribe(() => {
+      this.pagination.set({ ...this.pagination(), pageNumber: 1 });
+      this.fetchQuizCategories();
+    });
+  }
+
   onSearchInputChange(value: string): void {
-    this.fetchQuizCategories();
+    this.getFilteredData();
     this.searchSubject$.next(value);
   }
 
