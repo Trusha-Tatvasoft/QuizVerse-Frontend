@@ -290,6 +290,17 @@ app-data-table {
   }
 }
 
+//Quiz Category Management Buttons
+.admin-management-page {
+  .admin-management-toolbar {
+    .add-category-btn {
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
 //form feild
 .form-field {
   font-size: 0.875rem;
