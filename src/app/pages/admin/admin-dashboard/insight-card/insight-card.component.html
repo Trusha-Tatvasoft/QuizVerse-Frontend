@@ -1,0 +1,25 @@
+<div class="insights-column">
+  <div class="insight-card" [ngClass]="'card-' + card.type">
+    <div class="insight-card-header">
+      <div class="header-left">
+        <mat-icon class="card-icon">{{ card.icon }}</mat-icon>
+        <div class="card-title">{{ card.title }}</div>
+      </div>
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-select
+          [value]="selectedFilter"
+          (selectionChange)="onFilterChange($event.value)"
+          placeholder="Select Filter"
+        >
+          <mat-option *ngFor="let option of filterOptions" [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    @if (chartData) {
+      <app-line-chart [chartData]="chartData" [chartType]="chartType" [chartOptions]="chartOptions">
+      </app-line-chart>
+    }
+  </div>
+</div>

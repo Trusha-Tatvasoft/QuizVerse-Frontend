@@ -13,7 +13,7 @@ import {
 } from './configs/user-management.config';
 import { FormControl } from '@angular/forms';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
-import { UserRoles, UserStatus } from '../../../shared/enums/user-management.enum';
+import { UserAction, UserRoles, UserStatus } from '../../../shared/enums/user-management.enum';
 import { PaginationRequest } from '../../../shared/interfaces/pagination-request.interface';
 import { TableData } from '../../../shared/interfaces/table-component.interface';
 import { UserManagementService } from '../../../services/admin/user-management/user-management.service';
@@ -22,12 +22,26 @@ import {
   debounceTimeValue,
   platformMessages,
   tablePaginationConfig,
+  userActionMessages,
+  userActions,
   userExportFilePrefix,
+  userLoadMessages,
+  userSaveMessages,
+  userStatusMessages,
 } from '../../../utils/constants';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { generateExportFileName } from '../../../utils/generate-export-file-name.util';
 import { UserFormDialogComponent } from './components/user-form-dialog/user-form-dialog.component';
 import { UserFormData } from './interfaces/user-form-data.interface';
+import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  activateUserDialog,
+  deleteUserDialog,
+  inactivateUserDialog,
+  suspendUserDialog,
+} from './configs/user-confirmation-dialog.config';
+import { ConfirmationDialogData } from '../../../shared/interfaces/confirmation-dialog.interface';
 
 @Component({
   selector: 'app-user-management',
@@ -50,6 +64,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   // Inject services
   userService = inject(UserManagementService);
   snackbar = inject(SnackbarService);
+  dialog = inject(MatDialog);
 
   // Header and button configs
   userConfig = userHeaderConfig;
@@ -242,14 +257,17 @@ export class UserManagementComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res) => {
           const isSuccess = isEdit ? res.statusCode === 200 : res.statusCode === 201;
-          const action = isEdit ? 'updated' : 'created';
+          const action = isEdit ? userSaveMessages.updated : userSaveMessages.created;
 
           if (isSuccess) {
-            this.snackbar.showSuccess(`User ${action} successfully`, 'Success');
+            this.snackbar.showSuccess(
+              userSaveMessages.successMessage(action),
+              userSaveMessages.success,
+            );
           } else {
             this.snackbar.showError(
-              res.message || `Failed to ${action} user`,
-              `Error ${res.statusCode}`,
+              res.message || userSaveMessages.errorMessage(action),
+              `${userSaveMessages.error} ${res.statusCode}`,
             );
           }
 
@@ -259,7 +277,10 @@ export class UserManagementComponent implements OnInit, OnDestroy {
           }
         },
         error: (err) => {
-          this.snackbar.showError(err?.error?.message || 'Server Error', 'Error');
+          this.snackbar.showError(
+            err?.error?.message || userSaveMessages.serverError,
+            userSaveMessages.error,
+          );
         },
       });
   }
@@ -267,8 +288,32 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   handleUserAction(event: { action: string; row: TableData }): void {
     const user = event.row;
     switch (event.action) {
-      case 'edit':
+      case userActions.EDIT:
         this.loadUserForEdit(user['id'] as number);
+        break;
+      case userActions.DELETE:
+        this.openConfirmationDialog(deleteUserDialog, () =>
+          this.updateUserStatus(user['id'] as number, UserAction.Delete),
+        );
+        break;
+      case userActions.BLOCK:
+        this.openConfirmationDialog(suspendUserDialog, () =>
+          this.updateUserStatus(
+            user['id'] as number,
+            UserAction.UpdateStatus,
+            UserStatus.Suspended,
+          ),
+        );
+        break;
+      case userActions.ACTIVATE:
+        this.openConfirmationDialog(activateUserDialog, () =>
+          this.updateUserStatus(user['id'] as number, UserAction.UpdateStatus, UserStatus.Active),
+        );
+        break;
+      case userActions.INACTIVATE:
+        this.openConfirmationDialog(inactivateUserDialog, () =>
+          this.updateUserStatus(user['id'] as number, UserAction.UpdateStatus, UserStatus.Inactive),
+        );
         break;
     }
   }
@@ -283,16 +328,70 @@ export class UserManagementComponent implements OnInit, OnDestroy {
             this.openUserDialog(res.data);
           } else {
             this.snackbar.showError(
-              res.message || 'Failed to fetch user',
-              `Error ${res.statusCode}`,
+              res.message || userLoadMessages.fetchError,
+              `${userLoadMessages.error} ${res.statusCode}`,
             );
           }
         },
         error: (err) =>
           this.snackbar.showError(
-            err?.error?.message || 'Server error while fetching user',
-            'Error',
+            err?.error?.message || userLoadMessages.serverError,
+            userLoadMessages.error,
           ),
       });
+  }
+
+  openConfirmationDialog(dialogData: ConfirmationDialogData, onConfirm: () => void): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '600px',
+      disableClose: true,
+      data: dialogData,
+      panelClass: 'custom-dialog-radius',
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) onConfirm();
+    });
+  }
+
+  updateUserStatus(userId: number, action: UserAction, newStatus?: UserStatus): void {
+    this.userService
+      .updateUserStatusByAction({ id: userId, action, newStatus })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.statusCode === 200) {
+            this.snackbar.showSuccess(
+              this.getActionMessage(action, newStatus),
+              userStatusMessages.success,
+            );
+            this.fetchUsers();
+          } else {
+            this.snackbar.showError(
+              res.message || userStatusMessages.actionFailed,
+              `${userStatusMessages.error} ${res.statusCode}`,
+            );
+          }
+        },
+        error: (err) =>
+          this.snackbar.showError(
+            err?.error?.message || userStatusMessages.serverError,
+            userStatusMessages.error,
+          ),
+      });
+  }
+
+  getActionMessage(action: UserAction, status?: UserStatus): string {
+    if (action === UserAction.Delete) return userActionMessages.deleted;
+    switch (status) {
+      case UserStatus.Active:
+        return userActionMessages.activated;
+      case UserStatus.Suspended:
+        return userActionMessages.suspended;
+      case UserStatus.Inactive:
+        return userActionMessages.inactivated;
+      default:
+        return userActionMessages.statusUpdated;
+    }
   }
 }

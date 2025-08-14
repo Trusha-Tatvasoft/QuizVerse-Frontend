@@ -14,7 +14,7 @@ export function userToUserListingTableData(user: UserListData): TableData {
     fullname: {
       name: user.fullName,
       email: user.email,
-      image: `${environment.imageBaseUrl}/${user.profilePic}` || '', // Fallback to empty string if profilePic is not available
+      image: user.profilePic ? `${environment.imageBaseUrl}/${user.profilePic}` : '',
     },
     role: {
       tagConfig: {
