@@ -8,3 +8,8 @@ export enum UserStatus {
   Inactive = 2,
   Suspended = 3,
 }
+
+export enum UserAction {
+  Delete = 1,
+  UpdateStatus = 2,
+}

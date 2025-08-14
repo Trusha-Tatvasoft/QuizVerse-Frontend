@@ -1,0 +1,42 @@
+.heading {
+  font-size: 30px;
+  font-weight: 600;
+
+  @media (max-width: 600px) {
+    font-size: 20px;
+  }
+}
+
+.admin-management-toolbar {
+  display: flex !important;
+  justify-content: space-between;
+
+  .heading {
+    font-size: 30px;
+    font-weight: 600;
+
+    @media (max-width: 600px) {
+      font-size: 20px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    flex-direction: column;
+    justify-content: start;
+    width: 100%;
+
+    .admin-management-btns {
+      width: 100% !important;
+
+      .add-difficulty {
+        .filled-button {
+          width: 100% !important;
+        }
+      }
+    }
+
+    .heading {
+      width: 100%;
+    }
+  }
+}
