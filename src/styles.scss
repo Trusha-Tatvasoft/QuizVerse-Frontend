@@ -290,6 +290,39 @@ app-data-table {
   }
 }
 
+//Quiz Category Management Buttons
+.admin-management-page {
+  .admin-management-toolbar {
+    .add-category-btn {
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+//form feild
+.form-field {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #000000;
+}
+
+//add quiz difficulty level
+.admin-management-toolbar {
+  @media (max-width: 400px) {
+    .admin-management-btns {
+      width: 100% !important;
+
+      .add-difficulty {
+        .filled-button {
+          width: 100% !important;
+        }
+      }
+    }
+  }
+}
+
 /* Width of the scrollbar */
 ::-webkit-scrollbar {
   width: 2px;
@@ -310,4 +343,8 @@ app-data-table {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+.cdk-overlay-backdrop {
+  background-color: rgba(0, 0, 0, 0.8) !important;
 }
