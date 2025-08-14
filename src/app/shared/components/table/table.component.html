@@ -124,14 +124,10 @@
               }
 
               @case ('question-pool') {
-                @if (row[column.key]?.length > 0) {
-                  <div class="question-pool-container">
-                    @for (item of row[column.key]; track item.question) {
-                      <div class="question-card">
-                        <p class="question-text">{{ item.question }}</p>
-                        <p class="correct-answer">Correct: {{ item.correctAnswer }}</p>
-                      </div>
-                    }
+                @if (row[column.key]) {
+                  <div class="question-card">
+                    <p class="question-text">{{ row[column.key].question }}</p>
+                    <p class="correct-answer">Correct: {{ row[column.key].correctAnswer }}</p>
                   </div>
                 }
               }
