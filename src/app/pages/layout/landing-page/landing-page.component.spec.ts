@@ -14,6 +14,7 @@ import { of, Subject, throwError } from 'rxjs';
 import { LandingPageDataService } from '../../../services/user/landing-page/landing-page-data.service';
 import { LandingPageStats } from '../../../shared/interfaces/landing-page-stats.interface';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
+import { AuthService } from '../../../core/auth/services/auth.service';
 
 describe('LandingPageComponent (Jest)', () => {
   let component: LandingPageComponent;
@@ -44,6 +45,7 @@ describe('LandingPageComponent (Jest)', () => {
         provideRouter([]),
         { provide: LandingPageDataService, useValue: mockLandingPageDataService },
         { provide: SnackbarService, useValue: { showError: jest.fn() } },
+        { provide: AuthService, useValue: { logout: jest.fn() } },
       ],
     }).compileComponents();
 
