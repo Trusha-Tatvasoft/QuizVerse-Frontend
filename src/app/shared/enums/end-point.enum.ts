@@ -20,4 +20,5 @@ export enum EndPoints {
   QuizDifficultyNameAvailable = 'QuizDifficultyLevel/is-difficulty-name-available',
   CreateQuizDifficultyLevel = 'QuizDifficultyLevel/create-difficulty-level',
   UpdateUserStatusByAction = 'Users/update-user-status-by-action',
+  QuizManagementStats = 'QuizManagement/get-quiz-card-data',
 }
