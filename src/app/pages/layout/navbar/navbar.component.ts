@@ -9,7 +9,6 @@ import { FilledButtonComponent } from '../../../shared/components/filled-button/
 import {
   deleteButtonConfig,
   getStartedButtonConfig,
-  logOutUserDialog,
   markAsAllReadButtonConfig,
   markAsReadButtonConfig,
   signInButtonConfig,
@@ -25,9 +24,6 @@ import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
 import { plateformName } from '../../../utils/constants';
 import { AuthService } from '../../../core/auth/services/auth.service';
-import { ConfirmationDialogData } from '../../../shared/interfaces/confirmation-dialog.interface';
-import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-navbar',
@@ -72,8 +68,6 @@ export class NavbarComponent {
   plateformName = plateformName;
   showNotifications = false;
   menuOpen = false;
-  dialog = inject(MatDialog);
-
   private previousWidth = window.innerWidth;
 
   ngOnInit(): void {
@@ -118,23 +112,6 @@ export class NavbarComponent {
   sidebarClosedByBackdrop(): void {
     this.menuOpen = false;
     this.closeSidebar.emit();
-  }
-
-  openConfirmationDialog(dialogData: ConfirmationDialogData, onConfirm: () => void): void {
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '600px',
-      disableClose: true,
-      data: dialogData,
-      panelClass: 'custom-dialog-radius',
-    });
-
-    dialogRef.afterClosed().subscribe((confirmed) => {
-      if (confirmed) onConfirm();
-    });
-  }
-
-  logOutConfirmationDialog() {
-    this.openConfirmationDialog(logOutUserDialog, () => this.logout());
   }
 
   logout() {

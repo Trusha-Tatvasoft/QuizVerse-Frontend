@@ -221,40 +221,4 @@ describe('NavbarComponent', () => {
     component.logout();
     expect(authServiceMock.logout).toHaveBeenCalled();
   });
-
-  it('should call onConfirm when openConfirmationDialog is confirmed', () => {
-    const onConfirmSpy = jest.fn();
-    const dialogRefMock = {
-      afterClosed: () => ({
-        subscribe: (cb: (confirmed: boolean) => void) => cb(true),
-      }),
-    };
-    const dialogSpy = jest.spyOn(component.dialog, 'open').mockReturnValue(dialogRefMock as any);
-
-    const dialogData = { title: 'Test', message: 'Are you sure?' } as any;
-    component.openConfirmationDialog(dialogData, onConfirmSpy);
-
-    expect(dialogSpy).toHaveBeenCalledWith(
-      expect.any(Function),
-      expect.objectContaining({
-        width: '600px',
-        disableClose: true,
-        data: dialogData,
-        panelClass: 'custom-dialog-radius',
-      }),
-    );
-    expect(onConfirmSpy).toHaveBeenCalled();
-  });
-
-  it('should call logout when logOutConfirmationDialog is confirmed', () => {
-    const logoutSpy = jest.spyOn(component, 'logout');
-    jest.spyOn(component.dialog, 'open').mockReturnValue({
-      afterClosed: () => ({
-        subscribe: (cb: (confirmed: boolean) => void) => cb(true),
-      }),
-    } as any);
-
-    component.logOutConfirmationDialog();
-    expect(logoutSpy).toHaveBeenCalled();
-  });
 });
