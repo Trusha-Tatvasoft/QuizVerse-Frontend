@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { DropDownType } from '../../enums/dropdown-types.enum';
 import { CommonListDropDown } from '../../interfaces/common-dropdown.interface';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../enums/end-point.enum';
 import { SnackbarService } from '../snackbar/snackbar.service';
@@ -25,7 +25,7 @@ export class DropdownService {
 
     return this.http.get<ApiResponse<CommonListDropDown[]>>(url, { headers }).pipe(
       map((res) => res.data),
-      catchError((err) => {
+      catchError(() => {
         this.snackbar.showError('Error', 'Failed to load the dropdown');
         return of([]);
       }),

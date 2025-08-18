@@ -37,7 +37,7 @@ import { questionPoolToTableData } from './components/question-pool-listing/ques
   templateUrl: './question-pool.component.html',
   styleUrl: './question-pool.component.scss',
 })
-export class QuestionPoolComponent {
+export class QuestionPoolComponent implements OnInit, OnDestroy {
   // Inject services
   private readonly questionPoolService = inject(QuestionPoolService);
   private readonly snackbar = inject(SnackbarService);
@@ -158,5 +158,10 @@ export class QuestionPoolComponent {
           this.snackbar.showError(message, `Error ${status}`);
         },
       });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -6,6 +6,7 @@ import {
 
 export function questionPoolToTableData(pool: QuestionPoolListData): TableData {
   return {
+    id: pool.id,
     queText: {
       question: pool.queText,
       correctAnswer: getCorrectAnswer(pool.queOptionsAns),
