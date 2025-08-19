@@ -5,18 +5,23 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { yellow } from '../../../utils/constants';
 import { mockDataNotifications } from './navbar-mock-data';
 import { Navigations } from '../../../shared/enums/navigation';
+import { AuthService } from '../../../core/auth/services/auth.service';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
   let warning = yellow;
+  let authServiceMock: { logout: jest.Mock };
 
   const mockNotifications = mockDataNotifications;
 
   beforeEach(async () => {
+    authServiceMock = { logout: jest.fn() };
+
     await TestBed.configureTestingModule({
       imports: [NavbarComponent],
       schemas: [NO_ERRORS_SCHEMA],
+      providers: [{ provide: AuthService, useValue: authServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavbarComponent);
@@ -210,5 +215,10 @@ describe('NavbarComponent', () => {
     const navSpy = jest.spyOn(component['router'], 'navigate');
     component.loginRedirect();
     expect(navSpy).toHaveBeenCalledWith([Navigations.Login]);
+  });
+
+  it('should call AuthService.logout when logout() is invoked', () => {
+    component.logout();
+    expect(authServiceMock.logout).toHaveBeenCalled();
   });
 });

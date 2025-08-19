@@ -44,4 +44,11 @@ export enum EndPoints {
   DeleteQuestion = 'QuestionPool/delete-question',
   GetQuestionPrevirew = 'QuestionPool/get-question-preview',
   // #endregion
+
+  // #region QuizCategory
+  CreateOrUpdateQuizCategory = 'QuizCategory/create-or-update-quiz-category',
+  GetQuizCategoryById = 'QuizCategory/get-quiz-category-by-id',
+  UpdateQuizCategoryByAction = 'QuizCategory/update-quiz-category-by-action',
+  CheckQuizCategoryNameAvailable = 'QuizCategory/is-category-name-available',
+  // #endregion
 }

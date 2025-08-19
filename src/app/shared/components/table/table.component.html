@@ -77,8 +77,10 @@
                   <div class="action-icons">
                     @for (action of row[column.key]; track action) {
                       <app-text-button
+                        [matTooltip]="action.tooltip || action.icon"
+                        matTooltipPosition="below"
                         [textButtonConfig]="{
-                          matIcon: action,
+                          matIcon: action.icon,
                           iconFontSet: 'material-icons-outlined',
                           variant: 'secondary',
                           type: 'button',
