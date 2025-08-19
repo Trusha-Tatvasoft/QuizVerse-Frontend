@@ -7,3 +7,10 @@ export interface QuizCategoryList {
   createdDate: string;
   quizCount: number;
 }
+
+export interface SaveQuizCategory {
+  id?: number;
+  categoryName: string;
+  description: string;
+  icon?: string | null;
+}

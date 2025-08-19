@@ -9,28 +9,28 @@ export const questionPoolPaginationConfig = {
 
 export const questionPoolColumnsConfig: ColumnDef[] = [
   {
-    key: 'questionPool',
+    key: 'queText',
     label: 'Question',
     type: 'question-pool',
-    isSortable: false,
+    isSortable: true,
   },
   {
-    key: 'type',
+    key: 'queTypeName',
     label: 'Type',
     type: 'tag',
-    isSortable: false,
+    isSortable: true,
   },
   {
-    key: 'category',
+    key: 'categoryName',
     label: 'Category',
     type: 'text',
-    isSortable: false,
+    isSortable: true,
   },
   {
-    key: 'difficulty',
+    key: 'queDifficultyName',
     label: 'Difficulty',
     type: 'tag',
-    isSortable: false,
+    isSortable: true,
   },
   {
     key: 'actions',
@@ -66,7 +66,11 @@ export const questionPoolMockData: TableData[] = [
         textColor: 'green',
       },
     },
-    actions: ['visibility', 'edit', 'delete'],
+    actions: [
+      { icon: 'visibility', tooltip: 'View Question' },
+      { icon: 'edit', tooltip: 'Edit Question' },
+      { icon: 'delete', tooltip: 'Delete Question' },
+    ],
   },
   {
     questionPool: [
@@ -93,7 +97,11 @@ export const questionPoolMockData: TableData[] = [
         textColor: 'green',
       },
     },
-    actions: ['visibility', 'edit', 'delete'],
+    actions: [
+      { icon: 'visibility', tooltip: 'View Question' },
+      { icon: 'edit', tooltip: 'Edit Question' },
+      { icon: 'delete', tooltip: 'Delete Question' },
+    ],
   },
   {
     questionPool: [
@@ -120,7 +128,11 @@ export const questionPoolMockData: TableData[] = [
         textColor: 'orange',
       },
     },
-    actions: ['visibility', 'edit', 'delete'],
+    actions: [
+      { icon: 'visibility', tooltip: 'View Question' },
+      { icon: 'edit', tooltip: 'Edit Question' },
+      { icon: 'delete', tooltip: 'Delete Question' },
+    ],
   },
   {
     questionPool: [
@@ -147,6 +159,10 @@ export const questionPoolMockData: TableData[] = [
         textColor: 'red',
       },
     },
-    actions: ['visibility', 'edit', 'delete'],
+    actions: [
+      { icon: 'visibility', tooltip: 'View Question' },
+      { icon: 'edit', tooltip: 'Edit Question' },
+      { icon: 'delete', tooltip: 'Delete Question' },
+    ],
   },
 ];

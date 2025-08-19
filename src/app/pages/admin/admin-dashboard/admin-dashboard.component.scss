@@ -6,7 +6,6 @@
 
   .dashboard-body {
     .dashboard-main {
-      padding: 1rem;
       box-sizing: border-box;
 
       /* Analytics Section */
@@ -23,7 +22,7 @@
 
       /* Section Header */
       .section-header-content {
-        padding: 1.5rem;
+        padding: 0 1rem;
 
         @media (max-width: 768px) {
           padding: 1rem;
@@ -69,8 +68,10 @@
             font-size: 14px;
           }
 
-          @media (max-width: 768px) {
+          @media (max-width: 767px) {
             font-size: 12px;
+            display: flex;
+            justify-content: center;
           }
 
           @media (max-width: 480px) {

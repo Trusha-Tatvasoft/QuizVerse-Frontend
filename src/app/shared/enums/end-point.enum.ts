@@ -1,5 +1,6 @@
 export enum EndPoints {
   LandingPageData = 'LandingPage/get-landing-page-data',
+  DropDownData = 'DropDownData/get-dropdown-data',
   UserTableData = 'Users/get-users-by-pagination',
   Login = 'authentication/login',
   RefreshToken = 'authentication/refersh-token',
@@ -21,4 +22,9 @@ export enum EndPoints {
   CreateQuizDifficultyLevel = 'QuizDifficultyLevel/create-difficulty-level',
   UpdateUserStatusByAction = 'Users/update-user-status-by-action',
   QuizManagementStats = 'QuizManagement/get-quiz-card-data',
+  QuestionPoolList = 'QuestionPool/get-question-pool-list',
+  CreateOrUpdateQuizCategory = 'QuizCategory/create-or-update-quiz-category',
+  GetQuizCategoryById = 'QuizCategory/get-quiz-category-by-id',
+  UpdateQuizCategoryByAction = 'QuizCategory/update-quiz-category-by-action',
+  CheckQuizCategoryNameAvailable = 'QuizCategory/is-category-name-available',
 }

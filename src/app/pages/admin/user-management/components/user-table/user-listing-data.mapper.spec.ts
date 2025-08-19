@@ -167,7 +167,9 @@ describe('UserManagementComponent', () => {
   it('should include "block" if user is not suspended', () => {
     const user = { ...mockUsers[0], status: UserStatus.Active };
     const result = userToUserListingTableData(user) as any;
-    expect(result.actions).toContain('block');
+
+    const hasBlockAction = result.actions.some((action: any) => action.icon === 'block');
+    expect(hasBlockAction).toBe(true);
   });
 
   // "block" action should be excluded if user is suspended
@@ -182,11 +184,18 @@ describe('UserManagementComponent', () => {
     const activeUser = { ...mockUsers[0], status: UserStatus.Active };
     const inactiveUser = { ...mockUsers[0], status: UserStatus.Inactive };
 
-    const activeActions = userToUserListingTableData(activeUser)['actions'];
-    const inactiveActions = userToUserListingTableData(inactiveUser)['actions'];
+    const activeActions = userToUserListingTableData(activeUser)['actions'] as unknown[];
+    const inactiveActions = userToUserListingTableData(inactiveUser)['actions'] as unknown[];
 
-    expect(activeActions).toContain('remove_circle_outline');
-    expect(inactiveActions).toContain('check_circle_outline');
+    const hasRemoveCircle = activeActions.some(
+      (action) => (action as { icon: string }).icon === 'remove_circle_outline',
+    );
+    const hasCheckCircle = inactiveActions.some(
+      (action) => (action as { icon: string }).icon === 'check_circle_outline',
+    );
+
+    expect(hasRemoveCircle).toBe(true);
+    expect(hasCheckCircle).toBe(true);
   });
 
   // Properly display "0" attemptedQuizzes with label and text

@@ -77,8 +77,10 @@
                   <div class="action-icons">
                     @for (action of row[column.key]; track action) {
                       <app-text-button
+                        [matTooltip]="action.tooltip || action.icon"
+                        matTooltipPosition="below"
                         [textButtonConfig]="{
-                          matIcon: action,
+                          matIcon: action.icon,
                           iconFontSet: 'material-icons-outlined',
                           variant: 'secondary',
                           type: 'button',
@@ -124,14 +126,10 @@
               }
 
               @case ('question-pool') {
-                @if (row[column.key]?.length > 0) {
-                  <div class="question-pool-container">
-                    @for (item of row[column.key]; track item.question) {
-                      <div class="question-card">
-                        <p class="question-text">{{ item.question }}</p>
-                        <p class="correct-answer">Correct: {{ item.correctAnswer }}</p>
-                      </div>
-                    }
+                @if (row[column.key]) {
+                  <div class="question-card">
+                    <p class="question-text">{{ row[column.key].question }}</p>
+                    <p class="correct-answer">Correct: {{ row[column.key].correctAnswer }}</p>
                   </div>
                 }
               }

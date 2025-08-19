@@ -3,7 +3,7 @@ import { of } from 'rxjs';
 import { ChartDataPoint } from '../interfaces/chart-data-point.interface';
 import { InsightCardComponent } from './insight-card.component';
 import { AdminDashboardDataService } from '../../../../services/admin/admin-dashboard/admin-dashboard-data.service';
-import { DateFilterType, filterOptions } from '../../../../utils/constants';
+import { dateFilterType, filterOptions } from '../../../../utils/constants';
 
 describe('InsightCardComponent', () => {
   let component: InsightCardComponent;
@@ -56,7 +56,7 @@ describe('InsightCardComponent', () => {
   // Default values
   it('should initialize with default values', () => {
     component.ngOnInit();
-    expect(component.selectedFilter).toBe(DateFilterType.last7Days);
+    expect(component.selectedFilter).toBe(dateFilterType.last7Days);
     expect(component.chartData).toBeNull();
     expect(component.filterOptions).toEqual(filterOptions);
   });
@@ -117,9 +117,9 @@ describe('InsightCardComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
     tick();
-    component.onFilterChange(DateFilterType.last30days);
+    component.onFilterChange(dateFilterType.last30days);
     tick();
-    expect(component.selectedFilter).toBe(DateFilterType.last30days);
+    expect(component.selectedFilter).toBe(dateFilterType.last30days);
     expect(mockDashboardService.getUserEngagementData).toHaveBeenCalledTimes(3);
   }));
 
@@ -130,17 +130,17 @@ describe('InsightCardComponent', () => {
   });
 
   it('should return correct display date for lastYear', () => {
-    const result = (component as any).toDisplayDate('2024-05-10', DateFilterType.lastYear);
+    const result = (component as any).toDisplayDate('2024-05-10', dateFilterType.lastYear);
     expect(result).toBe('May-2024');
   });
 
   it('should return correct display date for allTime', () => {
-    const result = (component as any).toDisplayDate('2024-03-15', DateFilterType.allTime);
+    const result = (component as any).toDisplayDate('2024-03-15', dateFilterType.allTime);
     expect(result).toBe('2024');
   });
 
   it('should return correct display date for last7days', () => {
-    const result = (component as any).toDisplayDate('2024-05-10', DateFilterType.last7Days);
+    const result = (component as any).toDisplayDate('2024-05-10', dateFilterType.last7Days);
     expect(result).toBe('10-05-2024');
   });
 

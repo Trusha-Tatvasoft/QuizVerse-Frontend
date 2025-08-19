@@ -47,10 +47,13 @@ export function userToUserListingTableData(user: UserListData): TableData {
       extraText: 'quizzes',
     },
     actions: [
-      'edit',
-      'delete',
-      ...(user.status !== UserStatus.Suspended ? ['block'] : []), // Add "block" only if not suspended
-      user.status === UserStatus.Active ? 'remove_circle_outline' : 'check_circle_outline', // Toggle action based on status
+      { icon: 'edit', tooltip: 'Edit User' },
+      { icon: 'delete', tooltip: 'Delete User' },
+      ...(user.status !== UserStatus.Suspended ? [{ icon: 'block', tooltip: 'Suspend User' }] : []), // Add "block" only if not suspended
+      {
+        icon: user.status === UserStatus.Active ? 'remove_circle_outline' : 'check_circle_outline',
+        tooltip: user.status === UserStatus.Active ? 'Deactivate User' : 'Activate User',
+      }, // Toggle action based on status
     ],
   };
 }
