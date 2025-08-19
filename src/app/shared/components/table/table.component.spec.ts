@@ -59,11 +59,12 @@ describe('TableComponent', () => {
     expect(spy).toHaveBeenCalledWith({ active: '', direction: '' });
   });
 
-  it('should emit actionClick on icon button click', () => {
+  it('should emit actionClick with action.icon on icon button click', () => {
     const spy = jest.spyOn(component.actionClick, 'emit');
     const row = { name: 'Alice' };
+    const action = { icon: 'edit', tooltip: 'Edit User' };
 
-    component.onActionClick('edit', row);
+    component.onActionClick(action, row);
 
     expect(spy).toHaveBeenCalledWith({ action: 'edit', row });
   });

@@ -98,8 +98,8 @@ export class TableComponent implements OnInit, OnChanges {
     this.sortChange.emit({ active: sort.active, direction: sort.direction });
   }
 
-  onActionClick(action: string, row: TableData) {
-    this.actionClick.emit({ action, row });
+  onActionClick(action: { icon: string; tooltip?: string }, row: TableData) {
+    this.actionClick.emit({ action: action.icon, row });
   }
 
   /**

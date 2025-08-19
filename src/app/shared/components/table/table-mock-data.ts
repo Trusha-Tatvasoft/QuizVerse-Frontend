@@ -207,13 +207,21 @@ export const mixedData: TableData[] = [
     email: 'jane.doe@example.com',
     price: { amount: 499.99, currencyCode: 'INR' },
     purchasedOn: '2024-12-01T00:00:00.000Z',
-    actions: ['visibility', 'edit', 'delete'],
+    actions: [
+      { icon: 'visibility', tooltip: 'View details' },
+      { icon: 'edit', tooltip: 'Edit record' },
+      { icon: 'delete', tooltip: 'Delete record' },
+    ],
   },
   {
     name: 'John Smith',
     email: 'john.smith@example.com',
     price: { amount: 299.5, currencyCode: 'INR' },
     purchasedOn: '2024-11-20T00:00:00.000Z',
-    actions: ['visibility', 'edit', 'delete'],
+    actions: [
+      { icon: 'visibility' },
+      { icon: 'edit', tooltip: 'Edit record' },
+      { icon: 'delete', tooltip: 'Delete record' },
+    ],
   },
 ];
