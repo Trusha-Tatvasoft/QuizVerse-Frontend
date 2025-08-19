@@ -1,4 +1,4 @@
-import { ColumnDef, TableData } from '../../../../shared/interfaces/table-component.interface';
+import { ColumnDef } from '../../../../shared/interfaces/table-component.interface';
 import { tablePaginationConfig } from '../../../../utils/constants';
 
 export const questionPoolPaginationConfig = {
@@ -9,28 +9,28 @@ export const questionPoolPaginationConfig = {
 
 export const questionPoolColumnsConfig: ColumnDef[] = [
   {
-    key: 'questionPool',
+    key: 'queText',
     label: 'Question',
     type: 'question-pool',
-    isSortable: false,
+    isSortable: true,
   },
   {
-    key: 'type',
+    key: 'queTypeName',
     label: 'Type',
     type: 'tag',
-    isSortable: false,
+    isSortable: true,
   },
   {
-    key: 'category',
+    key: 'categoryName',
     label: 'Category',
     type: 'text',
-    isSortable: false,
+    isSortable: true,
   },
   {
-    key: 'difficulty',
+    key: 'queDifficultyName',
     label: 'Difficulty',
     type: 'tag',
-    isSortable: false,
+    isSortable: true,
   },
   {
     key: 'actions',

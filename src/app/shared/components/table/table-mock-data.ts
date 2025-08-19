@@ -20,14 +20,11 @@ export const questionPoolColumns: ColumnDef[] = [
 export const questionPoolData: TableData[] = [
   {
     quiz: 'General Science',
-    questionPool: [
-      { question: 'What is H2O?', correctAnswer: 'Water' },
-      { question: 'What gas do plants absorb?', correctAnswer: 'CO2' },
-    ],
+    questionPool: { question: 'What is H2O?', correctAnswer: 'Water' },
   },
   {
     quiz: 'Algebra Basics',
-    questionPool: [{ question: 'Solve x in 2x = 6', correctAnswer: '3' }],
+    questionPool: { question: 'Solve x in 2x = 6', correctAnswer: '3' },
   },
 ];
 
