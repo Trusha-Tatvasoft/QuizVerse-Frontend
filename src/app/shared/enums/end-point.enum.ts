@@ -21,11 +21,10 @@ export enum EndPoints {
   QuizDifficultyNameAvailable = 'QuizDifficultyLevel/is-difficulty-name-available',
   CreateQuizDifficultyLevel = 'QuizDifficultyLevel/create-difficulty-level',
   UpdateUserStatusByAction = 'Users/update-user-status-by-action',
-
   QuestionPoolList = 'QuestionPool/get-question-pool-list',
-
   CreateOrUpdateQuizCategory = 'QuizCategory/create-or-update-quiz-category',
   GetQuizCategoryById = 'QuizCategory/get-quiz-category-by-id',
   UpdateQuizCategoryByAction = 'QuizCategory/update-quiz-category-by-action',
   CheckQuizCategoryNameAvailable = 'QuizCategory/is-category-name-available',
+  BattleManagementList = 'BattleManagement/get-battle-list',
 }

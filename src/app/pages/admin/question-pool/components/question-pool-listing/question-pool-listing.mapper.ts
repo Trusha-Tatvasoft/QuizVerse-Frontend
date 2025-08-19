@@ -38,7 +38,7 @@ function getCorrectAnswer(options: QueOptionsAndAns[]): string {
   return correctOption ? correctOption.value : 'N/A';
 }
 
-function getDifficultyColor(difficulty: string): { bg: string; text: string } {
+export function getDifficultyColor(difficulty: string): { bg: string; text: string } {
   switch (difficulty.toLowerCase()) {
     case 'easy':
       return { bg: 'light-green', text: 'green' };
