@@ -49,6 +49,11 @@ export class BattleManagementComponent implements OnInit, OnDestroy {
     this.loadBattles();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   loadBattles() {
     this.battleService
       .getBattles()
@@ -65,12 +70,6 @@ export class BattleManagementComponent implements OnInit, OnDestroy {
   }
 
   openAddBattleDialgue() {}
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   editBattle() {}
   deleteBattle() {}
 }
