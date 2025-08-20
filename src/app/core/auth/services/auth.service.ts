@@ -149,5 +149,7 @@ export class AuthService {
     this.cookieService.delete(accessTokenKey, '/');
     this.cookieService.delete(refreshTokenKey, '/');
     this.currentRole$.next(null);
+    this.router.navigate([Navigations.Login]);
+    this.snackbar.showSuccess('Logout Successfully!');
   }
 }

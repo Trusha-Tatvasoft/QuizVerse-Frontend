@@ -35,10 +35,13 @@ export function categoryToCategoryTableData(category: QuizCategoryList): TableDa
     },
     createdDate: category.createdDate,
     actions: [
-      'visibility',
-      'edit',
-      'delete',
-      isActive ? 'remove_circle_outline' : 'check_circle_outline',
-    ], // toggle action
+      { icon: 'visibility', tooltip: 'View Category' },
+      { icon: 'edit', tooltip: 'Edit Category' },
+      { icon: 'delete', tooltip: 'Delete Category' },
+      {
+        icon: isActive ? 'remove_circle_outline' : 'check_circle_outline',
+        tooltip: isActive ? 'Deactivate Category' : 'Activate Category',
+      },
+    ],
   };
 }

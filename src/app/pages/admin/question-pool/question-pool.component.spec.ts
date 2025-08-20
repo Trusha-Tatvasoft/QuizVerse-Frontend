@@ -12,8 +12,12 @@ import { SearchInputComponent } from '../../../shared/components/search-input/se
 import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
 import { QuestionPoolListingComponent } from './components/question-pool-listing/question-pool-listing.component';
 import { MatSelectModule } from '@angular/material/select';
-import { debounceTimeValue, platformMessages } from '../../../utils/constants';
+import { debounceTimeValue, platformMessages, questionAction } from '../../../utils/constants';
 import { DropDownType } from '../../../shared/enums/dropdown-types.enum';
+import { TableData } from '../../../shared/interfaces/table-component.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { QuestionPreviewDialogComponent } from './components/question-preview-dialog/question-preview-dialog.component';
 
 const mockDropdownData = {
   categories: [
@@ -61,6 +65,7 @@ const mockResponse = {
 
 const questionPoolServiceMock = {
   getQuestionPoolList: jest.fn().mockReturnValue(of(mockResponse)),
+  deleteQuestion: jest.fn().mockReturnValue(of({ statusCode: 200 })),
 };
 
 const dropdownServiceMock = {
@@ -69,11 +74,17 @@ const dropdownServiceMock = {
 
 const snackbarMock = {
   showError: jest.fn(),
+  showSuccess: jest.fn(),
+};
+
+const matDialogMock = {
+  open: jest.fn(),
 };
 
 describe('QuestionPoolComponent (Jest)', () => {
   let component: QuestionPoolComponent;
   let fixture: ComponentFixture<QuestionPoolComponent>;
+  let matDialog: MatDialog;
 
   beforeEach(async () => {
     dropdownServiceMock.getDropdownData.mockImplementation((type: DropDownType) => {
@@ -102,6 +113,7 @@ describe('QuestionPoolComponent (Jest)', () => {
         { provide: QuestionPoolService, useValue: questionPoolServiceMock },
         { provide: DropdownService, useValue: dropdownServiceMock },
         { provide: SnackbarService, useValue: snackbarMock },
+        { provide: MatDialog, useValue: matDialogMock },
         provideHttpClient(),
         provideHttpClientTesting(),
       ],
@@ -109,6 +121,8 @@ describe('QuestionPoolComponent (Jest)', () => {
 
     fixture = TestBed.createComponent(QuestionPoolComponent);
     component = fixture.componentInstance;
+
+    matDialog = TestBed.inject(MatDialog);
   });
 
   afterEach(() => {
@@ -252,4 +266,116 @@ describe('QuestionPoolComponent (Jest)', () => {
     expect(dropdownServiceMock.getDropdownData).toHaveBeenCalledTimes(3);
     expect(questionPoolServiceMock.getQuestionPoolList).toHaveBeenCalled();
   }));
+
+  describe('handleQuestionAction', () => {
+    it('should call confirmAndDeleteQuestion for DELETE action', () => {
+      jest.spyOn(component, 'confirmAndDeleteQuestion');
+
+      matDialogMock.open.mockReturnValue({
+        afterClosed: () => of(true),
+      });
+
+      const question = { id: 123 } as TableData;
+      component.handleQuestionAction({ action: questionAction.DELETE, row: question });
+
+      expect(component.confirmAndDeleteQuestion).toHaveBeenCalledWith(123);
+    });
+
+    it('should call openQuestionPreviewDialog for VIEW action', () => {
+      const spy = jest.spyOn(component, 'openQuestionPreviewDialog');
+      const question = { id: 456 } as TableData;
+      component.handleQuestionAction({ action: questionAction.VIEW, row: question });
+      expect(spy).toHaveBeenCalledWith(456);
+    });
+  });
+
+  describe('confirmAndDeleteQuestion', () => {
+    it('should open confirmation dialog and delete question on confirm success', fakeAsync(() => {
+      const openSpy = jest.spyOn(matDialogMock, 'open').mockReturnValue({
+        afterClosed: () => of(true),
+      } as any);
+
+      questionPoolServiceMock.deleteQuestion.mockReturnValue(of({ statusCode: 200 }));
+
+      jest.spyOn(component, 'fetchQuestionPoolList').mockImplementation(jest.fn());
+
+      component.dataSource.set([{ id: 101 } as TableData]);
+      component.pagination.set({ pageNumber: 2, pageSize: 10 });
+
+      component.confirmAndDeleteQuestion(101);
+
+      tick(); // <-- wait for async inside to complete
+
+      expect(openSpy).toHaveBeenCalledWith(ConfirmationDialogComponent, expect.any(Object));
+      expect(questionPoolServiceMock.deleteQuestion).toHaveBeenCalledWith(101);
+      expect(snackbarMock.showSuccess).toHaveBeenCalledWith(
+        'Success',
+        platformMessages.deleteQuesSuccess,
+      );
+      expect(component.pagination().pageNumber).toBe(1);
+    }));
+
+    it('should show error snackbar if delete returns non-200 status', fakeAsync(() => {
+      const openSpy = jest.spyOn(matDialogMock, 'open').mockReturnValue({
+        afterClosed: () => of(true),
+      } as any);
+
+      questionPoolServiceMock.deleteQuestion.mockReturnValue(
+        of({ statusCode: 500, message: 'Delete failed' }),
+      );
+
+      component.confirmAndDeleteQuestion(101);
+
+      tick();
+
+      expect(openSpy).toHaveBeenCalled();
+      expect(questionPoolServiceMock.deleteQuestion).toHaveBeenCalled();
+      expect(snackbarMock.showError).toHaveBeenCalledWith('Error', 'Delete failed');
+    }));
+
+    it('should show error snackbar on delete error', fakeAsync(() => {
+      const openSpy = jest.spyOn(matDialogMock, 'open').mockReturnValue({
+        afterClosed: () => of(true),
+      } as any);
+
+      questionPoolServiceMock.deleteQuestion.mockReturnValue(
+        throwError(() => ({ error: { message: 'Network error' } })),
+      );
+
+      component.confirmAndDeleteQuestion(101);
+
+      tick();
+
+      expect(openSpy).toHaveBeenCalled();
+      expect(questionPoolServiceMock.deleteQuestion).toHaveBeenCalled();
+      expect(snackbarMock.showError).toHaveBeenCalledWith('Error', 'Network error');
+    }));
+
+    it('should not call delete if dialog is cancelled', fakeAsync(() => {
+      const openSpy = jest.spyOn(matDialogMock, 'open').mockReturnValue({
+        afterClosed: () => of(false),
+      } as any);
+
+      component.confirmAndDeleteQuestion(101);
+
+      tick();
+
+      expect(openSpy).toHaveBeenCalled();
+      expect(questionPoolServiceMock.deleteQuestion).not.toHaveBeenCalled();
+      expect(snackbarMock.showError).not.toHaveBeenCalled();
+      expect(snackbarMock.showSuccess).not.toHaveBeenCalled();
+    }));
+  });
+
+  describe('openQuestionPreviewDialog', () => {
+    it('should open question preview dialog with correct config', () => {
+      component.openQuestionPreviewDialog(123);
+
+      expect(matDialogMock.open).toHaveBeenCalledWith(QuestionPreviewDialogComponent, {
+        width: '600px',
+        maxHeight: '80vh',
+        data: { id: 123 },
+      });
+    });
+  });
 });

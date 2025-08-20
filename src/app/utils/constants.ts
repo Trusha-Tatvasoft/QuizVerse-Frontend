@@ -231,6 +231,12 @@ export const platformMessages = {
   tokenRefreshFailedMessage: 'Unexpected response.',
   tokenInvalidMessage: 'Token refresh failed',
   //#endregion
+
+  //#region QuestionPool Messages
+  failedLoadQuesPreview: 'Failed to load question details',
+  deleteQuesSuccess: 'Question Deleted Successfully!!',
+  deleteQuesFailure: 'Failed to delete question',
+  //#endregion
 };
 //#endregion
 
@@ -341,6 +347,14 @@ export const months = [
 
 //#region Skip loader const
 export const skipLoader = 'X-Skip-Loader';
+//#endregion
+
+//#region Question Action
+export const questionAction = {
+  EDIT: 'edit',
+  DELETE: 'delete',
+  VIEW: 'visibility',
+};
 //#endregion
 
 //#region

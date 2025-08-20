@@ -1,4 +1,5 @@
 import { ButtonConfig } from '../../../shared/interfaces/button-config.interface';
+import { ConfirmationDialogData } from '../../../shared/interfaces/confirmation-dialog.interface';
 
 export const textButtonConfig: ButtonConfig = {
   label: '',
@@ -52,4 +53,21 @@ export const viewAllDetailsButtonConfig: ButtonConfig = {
   iconFontSet: 'material-icons-outlined',
   imagePosition: 'left',
   variant: 'secondary',
+};
+
+export const cancelButtonConfig: ButtonConfig = {
+  label: 'Cancel',
+  variant: 'secondary',
+};
+
+export const logOutButtonConfig: ButtonConfig = {
+  label: 'Log Out',
+  variant: 'secondary',
+};
+
+export const logOutUserDialog: ConfirmationDialogData = {
+  title: 'Log Out Confimation',
+  message: 'Are you sure you want to log-out this session?',
+  confirmButtonConfig: logOutButtonConfig,
+  cancelButtonConfig: cancelButtonConfig,
 };
