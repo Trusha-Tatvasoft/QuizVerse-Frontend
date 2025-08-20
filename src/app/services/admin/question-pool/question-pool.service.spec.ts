@@ -100,4 +100,45 @@ describe('QuestionPoolService', () => {
     expect(req.request.method).toBe('POST');
     req.flush(emptyResponse);
   });
+
+  it('should call deleteQuestion with correct URL', () => {
+    const deleteId = 5;
+    const deleteUrl = `${environment.baseUrl}/${EndPoints.DeleteQuestion}/${deleteId}`;
+    const mockDeleteResponse = { result: true, statusCode: 200, message: 'Deleted', data: {} };
+
+    service.deleteQuestion(deleteId).subscribe((res) => {
+      expect(res).toEqual(mockDeleteResponse);
+    });
+
+    const req = httpMock.expectOne(deleteUrl);
+    expect(req.request.method).toBe('DELETE');
+    req.flush(mockDeleteResponse);
+  });
+
+  it('should fetch question preview with skipLoader header', () => {
+    const previewId = 10;
+    const previewUrl = `${environment.baseUrl}/${EndPoints.GetQuestionPrevirew}/${previewId}`;
+    const mockPreviewResponse = {
+      result: true,
+      statusCode: 200,
+      message: 'Success',
+      data: {
+        id: previewId,
+        questionText: 'Preview question?',
+        questionType: 'Multiple Choice',
+        difficulty: 'Easy',
+        category: 'Category 1',
+        options: [{ id: 1, questionId: previewId, key: 'Answer', value: '42' }],
+      },
+    };
+
+    service.getQuestionPreviewById(previewId).subscribe((res) => {
+      expect(res).toEqual(mockPreviewResponse);
+    });
+
+    const req = httpMock.expectOne(previewUrl);
+    expect(req.request.method).toBe('GET');
+    expect(req.request.headers.get('X-Skip-Loader')).toBe('true');
+    req.flush(mockPreviewResponse);
+  });
 });

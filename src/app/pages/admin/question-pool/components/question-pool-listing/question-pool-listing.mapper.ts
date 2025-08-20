@@ -29,7 +29,11 @@ export function questionPoolToTableData(pool: QuestionPoolListData): TableData {
         textColor: getDifficultyColor(pool.queDifficultyName).text,
       },
     },
-    actions: ['visibility', 'edit', 'delete'],
+    actions: [
+      { icon: 'visibility', tooltip: 'View Question' },
+      { icon: 'edit', tooltip: 'Edit Question' },
+      { icon: 'delete', tooltip: 'Delete Question' },
+    ],
   };
 }
 
