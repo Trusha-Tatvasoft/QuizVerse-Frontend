@@ -1,4 +1,4 @@
-import { ColumnDef } from '../../../../shared/interfaces/table-component.interface';
+import { ColumnDef, TableData } from '../../../../shared/interfaces/table-component.interface';
 import { tablePaginationConfig } from '../../../../utils/constants';
 
 export const questionPoolPaginationConfig = {
