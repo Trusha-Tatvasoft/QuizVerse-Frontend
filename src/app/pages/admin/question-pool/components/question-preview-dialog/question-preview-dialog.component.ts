@@ -19,17 +19,22 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./question-preview-dialog.component.scss'],
 })
 export class QuestionPreviewDialogComponent implements OnInit {
-  questionData: QuestionDetail;
-
   private readonly questionPoolService = inject(QuestionPoolService);
   private readonly snackbar = inject(SnackbarService);
   private readonly dialogRef = inject(MatDialogRef<QuestionPreviewDialogComponent>);
   private readonly data = inject<{ id: number }>(MAT_DIALOG_DATA);
 
+  questionData: QuestionDetail;
+
   private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
     this.fetchQuestion();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   closeDialog(): void {
@@ -57,11 +62,6 @@ export class QuestionPreviewDialogComponent implements OnInit {
       backgroundColor: colors.bg,
       textColor: colors.text,
     };
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   private fetchQuestion(): void {
