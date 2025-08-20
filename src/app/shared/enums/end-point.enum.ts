@@ -51,4 +51,8 @@ export enum EndPoints {
   UpdateQuizCategoryByAction = 'QuizCategory/update-quiz-category-by-action',
   CheckQuizCategoryNameAvailable = 'QuizCategory/is-category-name-available',
   // #endregion
+
+  // #region QuizManagement
+  QuizManagementStats = 'QuizManagement/get-quiz-card-data',
+  // #endregion
 }
