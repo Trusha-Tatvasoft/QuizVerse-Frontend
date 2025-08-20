@@ -15,6 +15,7 @@ import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-das
 import { QuestionPoolComponent } from './pages/admin/question-pool/question-pool.component';
 import { QuizCategoriesManagementComponent } from './pages/admin/quiz-categories/quiz-categories-management.component';
 import { QuizDifficultyLevelComponent } from './pages/admin/quiz-difficulty-level/quiz-difficulty-level.component';
+import { QuizManagementComponent } from './pages/admin/quiz-management/quiz-management.component';
 
 export const routes: Routes = [
   {
@@ -74,6 +75,11 @@ export const routes: Routes = [
         path: Navigations.Users,
         component: UserManagementComponent,
         title: 'Quizeverse | User Management',
+      },
+      {
+        path: Navigations.Quizzes,
+        component: QuizManagementComponent,
+        title: 'Quizeverse | Quiz Management',
       },
       {
         path: Navigations.Categories,
