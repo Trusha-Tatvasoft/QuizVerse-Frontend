@@ -60,18 +60,17 @@ export class QuizCategoryManagementService {
     categoryName: string,
     id?: number,
   ): Observable<ApiResponse<boolean>> {
-    let url = `${environment.baseUrl}/${EndPoints.CheckQuizCategoryNameAvailable}/${encodeURIComponent(categoryName)}`;
-
-    if (id !== undefined && id !== null) {
-      url += `/${id}`;
-    }
-
-    return this.http
-      .get<ApiResponse<boolean>>(url, {
+    return this.http.get<ApiResponse<boolean>>(
+      `${environment.baseUrl}/${EndPoints.CheckQuizCategoryNameAvailable}`,
+      {
+        params: {
+          categoryName: categoryName,
+          ...(id !== undefined && id !== null ? { id: id.toString() } : {}),
+        },
         headers: new HttpHeaders({
           [skipLoader]: 'true',
         }),
-      })
-      .pipe(map((res) => res));
+      },
+    );
   }
 }

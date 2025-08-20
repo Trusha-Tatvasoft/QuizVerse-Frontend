@@ -65,18 +65,20 @@ export class AddEditQuizCategoryComponent implements OnInit, OnDestroy {
 
   private readonly destroy$ = new Subject<void>();
 
-  constructor() {
+  ngOnInit(): void {
     const formControls = Object.fromEntries(
       this.categoryFields.map((field) => [field.name, ['', field.validators ?? []]]),
     );
     this.categoryForm = this.fb.group(formControls);
-  }
-
-  ngOnInit(): void {
     if (this.data) {
       this.fillForm();
     }
     this.watchIcon();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private fillForm(): void {
@@ -190,10 +192,5 @@ export class AddEditQuizCategoryComponent implements OnInit, OnDestroy {
   onCancel(): void {
     this.close.emit({ refresh: false });
     this.resetCategoryForm();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

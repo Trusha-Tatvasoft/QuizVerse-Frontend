@@ -153,7 +153,7 @@ describe('QuizCategoryManagementService', () => {
       .subscribe((res) => expect(res).toEqual(mockResponse));
 
     const req = httpMock.expectOne(
-      `${environment.baseUrl}/${EndPoints.CheckQuizCategoryNameAvailable}/Math`,
+      `${environment.baseUrl}/${EndPoints.CheckQuizCategoryNameAvailable}?categoryName=Math`,
     );
     expect(req.request.method).toBe('GET');
     expect(req.request.headers.get(skipLoader)).toBe('true');
@@ -173,11 +173,10 @@ describe('QuizCategoryManagementService', () => {
       .subscribe((res) => expect(res).toEqual(mockResponse));
 
     const req = httpMock.expectOne(
-      `${environment.baseUrl}/${EndPoints.CheckQuizCategoryNameAvailable}/Math/5`,
+      `${environment.baseUrl}/${EndPoints.CheckQuizCategoryNameAvailable}?categoryName=Math&id=5`,
     );
     expect(req.request.method).toBe('GET');
     expect(req.request.headers.get(skipLoader)).toBe('true');
-
     req.flush(mockResponse);
   });
 });
