@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideHttpClient, HttpClient } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { QuizCategoryManagementService } from './quiz-category-management.service';
 import { PaginationRequest } from '../../../shared/interfaces/pagination-request.interface';
@@ -11,7 +11,6 @@ import {
 } from '../../../pages/admin/quiz-categories/interface/quiz-category-list-data.interface';
 import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
-import { HttpHeaders } from '@angular/common/http';
 import { skipLoader } from '../../../utils/constants';
 
 describe('QuizCategoryManagementService', () => {
@@ -72,6 +71,26 @@ describe('QuizCategoryManagementService', () => {
     req.flush(mockResponse);
   });
 
+  it('should handle error when fetching quiz category list', () => {
+    const request: PaginationRequest = {
+      pageNumber: 1,
+      pageSize: 10,
+      searchTerm: '',
+      sortColumn: '',
+      sortDescending: false,
+      filters: {},
+    };
+
+    service.getQuizCategoryList(request).subscribe({
+      error: (error) => {
+        expect(error.status).toBe(500);
+      },
+    });
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.QuizCategoryTableData}`);
+    req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
+  });
+
   it('should create or update quiz category', () => {
     const payload: SaveQuizCategory = {
       id: 0,
@@ -97,6 +116,26 @@ describe('QuizCategoryManagementService', () => {
     req.flush(mockResponse);
   });
 
+  it('should handle error when creating/updating quiz category', () => {
+    const payload: SaveQuizCategory = {
+      id: 0,
+      categoryName: 'Math',
+      description: 'desc',
+      icon: null,
+    };
+
+    service.createOrUpdateQuizCategory(payload).subscribe({
+      error: (error) => {
+        expect(error.status).toBe(400);
+      },
+    });
+
+    const req = httpMock.expectOne(
+      `${environment.baseUrl}/${EndPoints.CreateOrUpdateQuizCategory}`,
+    );
+    req.flush('Bad Request', { status: 400, statusText: 'Bad Request' });
+  });
+
   it('should get category by id', () => {
     const mockResponse: ApiResponse<QuizCategoryList> = {
       result: true,
@@ -120,6 +159,17 @@ describe('QuizCategoryManagementService', () => {
     req.flush(mockResponse);
   });
 
+  it('should handle error when getting category by id', () => {
+    service.getCategoryById(99).subscribe({
+      error: (error) => {
+        expect(error.status).toBe(404);
+      },
+    });
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetQuizCategoryById}/99`);
+    req.flush('Not Found', { status: 404, statusText: 'Not Found' });
+  });
+
   it('should update quiz category by action', () => {
     const payload = { id: 1, action: 1, newStatus: 1 };
     const mockResponse: ApiResponse<null> = {
@@ -138,6 +188,21 @@ describe('QuizCategoryManagementService', () => {
     );
     expect(req.request.method).toBe('PUT');
     req.flush(mockResponse);
+  });
+
+  it('should handle error when updating quiz category by action', () => {
+    const payload = { id: 1, action: 1, newStatus: 1 };
+
+    service.updateQuizCategoryByAction(payload).subscribe({
+      error: (error) => {
+        expect(error.status).toBe(500);
+      },
+    });
+
+    const req = httpMock.expectOne(
+      `${environment.baseUrl}/${EndPoints.UpdateQuizCategoryByAction}`,
+    );
+    req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
   });
 
   it('should check quiz category name availability without id', () => {
@@ -178,5 +243,18 @@ describe('QuizCategoryManagementService', () => {
     expect(req.request.method).toBe('GET');
     expect(req.request.headers.get(skipLoader)).toBe('true');
     req.flush(mockResponse);
+  });
+
+  it('should handle error when checking category name availability', () => {
+    service.checkQuizCategoryNameAvailable('Math', 10).subscribe({
+      error: (error) => {
+        expect(error.status).toBe(500);
+      },
+    });
+
+    const req = httpMock.expectOne(
+      `${environment.baseUrl}/${EndPoints.CheckQuizCategoryNameAvailable}?categoryName=Math&id=10`,
+    );
+    req.flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
   });
 });
