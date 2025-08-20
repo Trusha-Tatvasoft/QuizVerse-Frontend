@@ -22,6 +22,7 @@ describe('categoryToCategoryTableData', () => {
         icon: 'science',
       },
       description: 'Science quizzes',
+      id: 1,
       quizCount: {
         tagConfig: {
           id: 'quizCount-1',
@@ -42,7 +43,7 @@ describe('categoryToCategoryTableData', () => {
         },
       },
       createdDate: '2025-08-06T00:00:00Z',
-      actions: ['visibility', 'edit', 'delete'],
+      actions: ['visibility', 'edit', 'delete', 'remove_circle_outline'],
     });
   });
 

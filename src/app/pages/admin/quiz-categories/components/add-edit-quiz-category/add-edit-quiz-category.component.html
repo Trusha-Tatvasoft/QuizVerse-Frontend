@@ -1,0 +1,104 @@
+<div class="main-dialog-content">
+  <!-- Header -->
+  <div class="dialog-header px-5 py-3 flex justify-between items-start">
+    <div>
+      <h2 mat-dialog-title>{{ data ? 'Edit Category' : 'Add New Category' }}</h2>
+      <span class="dialog-sub-header">
+        {{ data ? 'Update this quiz category' : 'Create a new quiz category' }}
+      </span>
+    </div>
+
+    <!-- Close Button -->
+    <button
+      type="button"
+      class="close-button"
+      (click)="onCancel()"
+      (keydown.enter)="onCancel()"
+      (keydown.space)="onCancel()"
+      aria-label="Close dialog"
+      tabindex="0"
+      disableRipple
+    >
+      <mat-icon class="close-icon">close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Form -->
+  <form
+    [formGroup]="categoryForm"
+    class="p-5 custom-form-field-override custom-form-icon-override"
+    (ngSubmit)="onSubmit()"
+  >
+    <div class="grid gap-3 pb-3">
+      @for (field of categoryFields; track field.name) {
+        <div class="form-field">
+          <mat-label class="mb-2">{{ field.label }}</mat-label>
+
+          <mat-form-field
+            [ngClass]="[
+              field.type === 'textarea' ? 'custom-form-field-text' : 'custom-form-field',
+              'full-width',
+              'mt-3',
+            ]"
+            appearance="outline"
+            floatLabel="auto"
+          >
+            <mat-icon fontSet="material-icons-outlined" matPrefix>
+              {{ field.icon || 'category' }}
+            </mat-icon>
+
+            @if (field.type === 'textarea') {
+              <textarea
+                matInput
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="3"
+                cdkAutosizeMaxRows="10"
+                [id]="field.name"
+                [formControlName]="field.name"
+                [placeholder]="field.placeholder"
+                autocomplete="off"
+              ></textarea>
+            } @else if (field.type === 'select') {
+              <mat-select
+                [id]="field.name"
+                [formControlName]="field.name"
+                [placeholder]="field.placeholder"
+              >
+                <mat-option *ngFor="let option of field.options" [value]="option.value">
+                  <mat-icon class="mr-2" fontSet="material-icons-outlined">{{
+                    option.value
+                  }}</mat-icon>
+                  {{ option.label }}
+                </mat-option>
+              </mat-select>
+            } @else {
+              <!-- Name field special case: run validateName on blur -->
+              <input
+                matInput
+                [id]="field.name"
+                [type]="field.type"
+                [formControlName]="field.name"
+                [placeholder]="field.placeholder"
+                autocomplete="off"
+                (blur)="field.name === 'name' && validateName()"
+              />
+            }
+
+            <mat-error>
+              {{ getError(field.name) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      }
+    </div>
+
+    <!-- Actions -->
+    <mat-dialog-actions class="dialog-actions flex justify-end gap-3 p-0">
+      <app-outline-button
+        [outlineButtonConfig]="cancelButton"
+        (buttonClicked)="onCancel()"
+      ></app-outline-button>
+      <app-filled-button [filledButtonConfig]="addButton" class="w-auto"></app-filled-button>
+    </mat-dialog-actions>
+  </form>
+</div>
