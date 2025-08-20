@@ -37,16 +37,13 @@ export class QuestionPreviewDialogComponent implements OnInit {
   }
 
   getDifficultyColor(difficulty: string): { bg: TagColor; text: TagColor } {
-    switch (difficulty.toLowerCase()) {
-      case 'easy':
-        return { bg: 'lightGreen', text: 'green' };
-      case 'medium':
-        return { bg: 'lightYellow', text: 'yellow' };
-      case 'hard':
-        return { bg: 'lightRed', text: 'red' };
-      default:
-        return { bg: 'lightOrange', text: 'orange' };
-    }
+    const difficultyMap: Record<string, { bg: TagColor; text: TagColor }> = {
+      easy: { bg: 'lightGreen', text: 'green' },
+      medium: { bg: 'lightYellow', text: 'yellow' },
+      hard: { bg: 'lightRed', text: 'red' },
+    };
+
+    return difficultyMap[difficulty.toLowerCase()] ?? { bg: 'lightOrange', text: 'orange' };
   }
 
   getDifficultyTagConfig(difficulty: string): TagInputConfig {
