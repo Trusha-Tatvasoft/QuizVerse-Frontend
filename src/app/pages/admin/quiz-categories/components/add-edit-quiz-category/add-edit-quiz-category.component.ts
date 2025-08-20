@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ValidationErrorService } from '../../../../../shared/service/validation-error/validation-error.service';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -74,25 +74,32 @@ export class AddEditQuizCategoryComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.data) {
-      this.categoryForm.patchValue({
-        name: this.data.categoryName,
-        description: this.data.description,
-        icon: this.data.icon || defaultIcon,
-      });
-
-      const iconField = quizCategoryFormFeild.find((f) => f.name === 'icon');
-      if (iconField) {
-        iconField.icon = this.data.icon || defaultIcon;
-      }
-      this.addButton.label = updateCategory;
+      this.fillForm();
     }
+    this.watchIcon();
+  }
 
-    this.categoryForm.get('icon')?.valueChanges.subscribe((selectedIcon) => {
-      const iconField = quizCategoryFormFeild.find((f) => f.name === 'icon');
-      if (iconField) {
-        iconField.icon = selectedIcon || defaultIcon;
-      }
+  private fillForm(): void {
+    this.categoryForm.patchValue({
+      name: this.data?.categoryName,
+      description: this.data?.description,
+      icon: this.data?.icon || defaultIcon,
     });
+    this.setIcon(this.data?.icon || defaultIcon);
+    this.addButton.label = updateCategory;
+  }
+
+  private watchIcon(): void {
+    this.categoryForm.get('icon')?.valueChanges.subscribe((selectedIcon) => {
+      this.setIcon(selectedIcon || defaultIcon);
+    });
+  }
+
+  private setIcon(icon: string): void {
+    const iconField = quizCategoryFormFeild.find((f) => f.name === 'icon');
+    if (iconField) {
+      iconField.icon = icon;
+    }
   }
 
   validateName(): void {
@@ -107,7 +114,7 @@ export class AddEditQuizCategoryComponent implements OnInit, OnDestroy {
         next: () => {
           this.serverErrors['name'] = '';
           if (control?.hasError('server')) {
-            control.errors?.['server'];
+            control.setErrors({ ...control.errors, server: null });
             control.updateValueAndValidity({ onlySelf: true });
           }
         },
