@@ -36,7 +36,15 @@ describe('UserFormDialogComponent', () => {
     });
 
     it('should show "Edit User" title when user is present (Edit mode)', () => {
-      component.user = { id: 1, name: 'John' };
+      component.user = {
+        id: 1,
+        fullName: 'John',
+        userName: 'john_doe',
+        email: 'john.doe@example.com',
+        password: 'password123',
+        bio: 'A brief bio about John',
+        profilePic: 'path/to/profile-pic.jpg',
+      };
       fixture.detectChanges();
 
       const title = fixture.debugElement.query(By.css('#dialog-title')).nativeElement;

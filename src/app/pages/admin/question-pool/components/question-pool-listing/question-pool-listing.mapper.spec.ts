@@ -58,7 +58,11 @@ describe('questionPoolToTableData', () => {
       textColor: 'yellow',
     });
 
-    expect(result['actions']).toEqual(['visibility', 'edit', 'delete']);
+    expect(result['actions']).toEqual([
+      { icon: 'visibility', tooltip: 'View Question' },
+      { icon: 'edit', tooltip: 'Edit Question' },
+      { icon: 'delete', tooltip: 'Delete Question' },
+    ]);
   });
 
   it('should return "N/A" when no correct answer key is found', () => {

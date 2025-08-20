@@ -4,6 +4,7 @@ import { SearchInputComponent } from '../../../shared/components/search-input/se
 import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
 import {
   addQuestionButtonConfig,
+  deleteQuestionDialog,
   questionPoolHeaderConfig,
   searchInputConfig,
 } from './configs/question-pool.config';
@@ -19,11 +20,16 @@ import { SnackbarService } from '../../../shared/service/snackbar/snackbar.servi
 import {
   debounceTimeValue,
   platformMessages,
+  questionAction,
   tablePaginationConfig,
 } from '../../../utils/constants';
 import { TableData } from '../../../shared/interfaces/table-component.interface';
 import { PaginationRequest } from '../../../shared/interfaces/pagination-request.interface';
 import { questionPoolToTableData } from './components/question-pool-listing/question-pool-listing.mapper';
+import { ConfirmationDialogData } from '../../../shared/interfaces/confirmation-dialog.interface';
+import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { QuestionPreviewDialogComponent } from './components/question-preview-dialog/question-preview-dialog.component';
 
 @Component({
   selector: 'app-question-pool',
@@ -42,6 +48,7 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
   private readonly questionPoolService = inject(QuestionPoolService);
   private readonly snackbar = inject(SnackbarService);
   private readonly dropdownService = inject(DropdownService);
+  private readonly dialog = inject(MatDialog);
 
   // Header and button configs
   questionPoolConfig = questionPoolHeaderConfig;
@@ -160,6 +167,74 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
       });
   }
 
+  // handle all the question action delete, view, edit etc.
+  handleQuestionAction(event: { action: string; row: TableData }): void {
+    const question = event.row;
+    switch (event.action) {
+      case questionAction.DELETE:
+        this.confirmAndDeleteQuestion(question['id'] as number);
+        break;
+      case questionAction.VIEW:
+        this.openQuestionPreviewDialog(question['id'] as number);
+        break;
+    }
+  }
+
+  // delete question dialog
+  confirmAndDeleteQuestion(questionId: number): void {
+    this.openConfirmationDialog(deleteQuestionDialog, () => {
+      this.questionPoolService
+        .deleteQuestion(questionId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (res) => {
+            if (res.statusCode === 200) {
+              this.snackbar.showSuccess('Success', platformMessages.deleteQuesSuccess);
+
+              // if at last page and only one item goes to previous page
+              const currentData = this.dataSource();
+              const currentPage = this.pagination().pageNumber;
+
+              if (currentData.length === 1 && currentPage > 1) {
+                this.pagination.set({ ...this.pagination(), pageNumber: currentPage - 1 });
+              }
+              this.fetchQuestionPoolList();
+            } else {
+              this.snackbar.showError('Error', res.message || platformMessages.deleteQuesFailure);
+            }
+          },
+          error: (err) => {
+            this.snackbar.showError(
+              'Error',
+              err?.error?.message || platformMessages.unavailableMessage,
+            );
+          },
+        });
+    });
+  }
+
+  openConfirmationDialog(dialogData: ConfirmationDialogData, onConfirm: () => void): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '600px',
+      disableClose: true,
+      data: dialogData,
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) onConfirm();
+    });
+  }
+
+  // question perview dialog
+  openQuestionPreviewDialog(questionId: number) {
+    this.dialog.open(QuestionPreviewDialogComponent, {
+      width: '600px',
+      maxHeight: '80vh',
+      data: { id: questionId },
+    });
+  }
+
+  // unsubscribe the subscribers
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
