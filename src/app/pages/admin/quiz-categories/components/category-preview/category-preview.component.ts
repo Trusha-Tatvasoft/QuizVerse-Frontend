@@ -1,5 +1,4 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { TagComponent } from '../../../../../shared/components/tag/tag.component';
 import { activeTagConfig, inActiveTagConfig } from '../../configs/quiz-category-management.config';
