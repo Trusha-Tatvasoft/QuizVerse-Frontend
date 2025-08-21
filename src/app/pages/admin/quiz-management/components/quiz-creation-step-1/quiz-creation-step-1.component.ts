@@ -29,6 +29,7 @@ import { QuizCreationService } from '../../../../../services/admin/quiz-manageme
 import { QuizStep1Data } from '../../../../../shared/interfaces/quiz-creation.interface';
 import { quizCRUDMessages } from '../../../../../utils/constants';
 import { Subject, takeUntil } from 'rxjs';
+import { DropDownType } from '../../../../../shared/enums/dropdown-types.enum';
 
 @Component({
   selector: 'app-quiz-creation-step-1',
@@ -308,7 +309,7 @@ export class QuizCreationStep1Component {
   //Data from db
   getDifficultyLevels() {
     this.quizCreationService
-      .getDropDownData(2)
+      .getDropDownData(DropDownType.QuizDifficulty)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
@@ -334,7 +335,7 @@ export class QuizCreationStep1Component {
   // Data from DB for Quiz Categories
   getQuizCategories() {
     this.quizCreationService
-      .getDropDownData(1)
+      .getDropDownData(DropDownType.QuizCategory)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
@@ -362,7 +363,7 @@ export class QuizCreationStep1Component {
   // Question difficulty fields
   getDifficultyQuestionFields() {
     return this.quizCreationService
-      .getDropDownData(4)
+      .getDropDownData(DropDownType.QuestionDifficulty)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
@@ -400,7 +401,7 @@ export class QuizCreationStep1Component {
 
   getTags(): void {
     this.quizCreationService
-      .getDropDownData(3)
+      .getDropDownData(DropDownType.QuizTag)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {

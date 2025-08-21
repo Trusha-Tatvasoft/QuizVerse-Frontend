@@ -45,6 +45,8 @@ export enum EndPoints {
   QuestionPoolList = 'QuestionPool/get-question-pool-list',
   DeleteQuestion = 'QuestionPool/delete-question',
   GetQuestionPrevirew = 'QuestionPool/get-question-preview',
+  CreateOrUpdateQuestion = 'QuestionPool/create-or-update-question',
+  SaveQuestions = 'QuestionPool/save-questions',
   PreviewQuestionsFromCsv = 'QuestionPool/preview-questions-from-csv',
   PreviewQuestionsFromExcel = 'QuestionPool/preview-questions-from-excel',
   // #endregion
