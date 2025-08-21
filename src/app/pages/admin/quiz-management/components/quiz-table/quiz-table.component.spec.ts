@@ -12,9 +12,9 @@ describe('QuizTableComponent', () => {
   const mockDataSource: TableData[] = [
     {
       id: 9,
-      quiz_title: 'Gk Quizes',
-      category_name: 'Technology',
-      quiz_difficulty_level: {
+      quizTitle: 'Gk Quizes',
+      categoryName: 'Technology',
+      quizDifficultyLevel: {
         tagConfig: {
           id: 'Medium',
           label: 'Medium',
@@ -23,8 +23,8 @@ describe('QuizTableComponent', () => {
           textColor: 'orange',
         },
       },
-      total_question: 10,
-      no_of_person_attempted: 0,
+      totalQuestion: 10,
+      noOfPersonAttempted: 0,
       status: {
         tagConfig: {
           id: '1',
@@ -34,7 +34,7 @@ describe('QuizTableComponent', () => {
           textColor: 'green',
         },
       },
-      created_date: '2025-08-11T18:12:11.32978',
+      createdDate: '2025-08-11T18:12:11.32978',
       actions: [
         { icon: 'visibility', tooltip: 'Preview Quiz' },
         { icon: 'edit', tooltip: 'Edit Quiz' },

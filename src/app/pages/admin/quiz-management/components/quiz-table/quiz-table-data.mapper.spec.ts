@@ -146,14 +146,14 @@ describe('QuizManagementComponent', () => {
     // Validates that API quiz data is transformed correctly to table format
     component.fetchQuizzes();
     const tableRow = component.dataSource()[0] as {
-      quiz_title: string;
-      category_name: string;
-      quiz_difficulty_level: { tagConfig: { label: string } };
+      quizTitle: string;
+      categoryName: string;
+      quizDifficultyLevel: { tagConfig: { label: string } };
     };
 
-    expect(tableRow.quiz_title).toBe('General Knowledge Basics');
-    expect(tableRow.category_name).toBe('General Knowledge');
-    expect(tableRow.quiz_difficulty_level.tagConfig.label).toBe('Easy');
+    expect(tableRow.quizTitle).toBe('General Knowledge Basics');
+    expect(tableRow.categoryName).toBe('General Knowledge');
+    expect(tableRow.quizDifficultyLevel.tagConfig.label).toBe('Easy');
   });
 
   // Status mapping should return correct label, color, and background

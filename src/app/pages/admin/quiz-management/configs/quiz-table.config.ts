@@ -4,31 +4,31 @@ import { tablePaginationConfig } from '../../../../utils/constants';
 // Configuration for quiz table columns
 export const quizTableColumnsConfig: ColumnDef[] = [
   {
-    key: 'quiz_title',
+    key: 'quizTitle',
     label: 'Title',
     type: 'text',
     isSortable: true,
   },
   {
-    key: 'category_name',
+    key: 'categoryName',
     label: 'Category',
     type: 'text',
     isSortable: true,
   },
   {
-    key: 'quiz_difficulty_level',
+    key: 'quizDifficultyLevel',
     label: 'Difficulty',
     type: 'tag', // Display as tag component
     isSortable: true,
   },
   {
-    key: 'total_question',
+    key: 'totalQuestion',
     label: 'Questions',
     type: 'text',
     isSortable: true,
   },
   {
-    key: 'no_of_person_attempted',
+    key: 'noOfPersonAttempted',
     label: 'Participants',
     type: 'text',
     isSortable: true,
@@ -40,7 +40,7 @@ export const quizTableColumnsConfig: ColumnDef[] = [
     isSortable: true,
   },
   {
-    key: 'created_date',
+    key: 'createdDate',
     label: 'Created',
     type: 'text',
     pipe: 'date', // Format date using Angular DatePipe
