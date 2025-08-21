@@ -37,7 +37,7 @@ export class TabContentDirective {
  */
 @Component({
   selector: 'app-common-tab',
-  imports: [CommonModule, MatTabsModule, MatIconModule, TabContentDirective],
+  imports: [CommonModule, MatTabsModule, MatIconModule],
   templateUrl: './tab.component.html',
   styleUrl: './tab.component.scss',
 })

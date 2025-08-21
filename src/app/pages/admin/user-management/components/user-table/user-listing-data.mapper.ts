@@ -1,7 +1,7 @@
 import { environment } from '../../../../../../environments/environment.dev';
 import { UserStatus } from '../../../../../shared/enums/user-management.enum';
 import { TableData } from '../../../../../shared/interfaces/table-component.interface';
-import { defaultLastLoginDate } from '../../../../../utils/constants';
+import { colors, defaultLastLoginDate } from '../../../../../utils/constants';
 import { UserListData } from '../../interfaces/user-list-data.interface';
 
 /**
@@ -80,12 +80,12 @@ function getStatusLabel(status: number): string {
 function getStatusColor(status: number): { bg: string; text: string } {
   switch (status) {
     case 1:
-      return { bg: 'lightGreen', text: 'green' };
+      return colors.green;
     case 2:
-      return { bg: 'lightYellow', text: 'yellow' };
+      return colors.yellow;
     case 3:
-      return { bg: 'lightBrown', text: 'brown' };
+      return colors.brown;
     default:
-      return { bg: 'lightGray', text: 'gray' };
+      return colors.white;
   }
 }

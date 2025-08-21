@@ -1,6 +1,7 @@
 import { categoryToCategoryTableData } from './quiz-category-table.mapper';
 import { QuizCategoryList } from '../../interface/quiz-category-list-data.interface';
 import { TableData } from '../../../../../shared/interfaces/table-component.interface';
+import { Tooltip } from 'chart.js';
 
 describe('categoryToCategoryTableData', () => {
   it('should map a QuizCategoryList object to TableData correctly', () => {
@@ -22,6 +23,7 @@ describe('categoryToCategoryTableData', () => {
         icon: 'science',
       },
       description: 'Science quizzes',
+      id: 1,
       quizCount: {
         tagConfig: {
           id: 'quizCount-1',
@@ -46,6 +48,7 @@ describe('categoryToCategoryTableData', () => {
         { icon: 'visibility', tooltip: 'View Category' },
         { icon: 'edit', tooltip: 'Edit Category' },
         { icon: 'delete', tooltip: 'Delete Category' },
+        { icon: 'remove_circle_outline', tooltip: 'Deactivate Category' },
       ],
     });
   });
