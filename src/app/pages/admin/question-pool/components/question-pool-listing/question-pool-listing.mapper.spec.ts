@@ -41,7 +41,7 @@ describe('questionPoolToTableData', () => {
     expect(queTypeName.tagConfig).toEqual({
       id: basePool.queTypeId,
       label: basePool.queTypeName,
-      backgroundColor: 'light-gray-color',
+      backgroundColor: 'lightWhite',
       textColor: 'black',
       hasBorder: true,
     });
@@ -54,7 +54,7 @@ describe('questionPoolToTableData', () => {
     expect(queDifficultyName.tagConfig).toEqual({
       id: basePool.queDifficultyId,
       label: basePool.queDifficultyName,
-      backgroundColor: 'light-yellow',
+      backgroundColor: 'lightYellow',
       textColor: 'yellow',
     });
 
@@ -81,10 +81,10 @@ describe('questionPoolToTableData', () => {
 
   it('should assign correct colors for difficulty levels', () => {
     const difficulties = [
-      { name: 'Easy', bg: 'light-green', text: 'green' },
-      { name: 'Medium', bg: 'light-yellow', text: 'yellow' },
-      { name: 'Hard', bg: 'light-red', text: 'red' },
-      { name: 'Unknown', bg: 'light-orange', text: 'orange' },
+      { name: 'Easy', bg: 'lightGreen', text: 'green' },
+      { name: 'Medium', bg: 'lightYellow', text: 'yellow' },
+      { name: 'Hard', bg: 'lightRed', text: 'red' },
+      { name: 'Unknown', bg: 'lightOrange', text: 'orange' },
     ];
 
     difficulties.forEach(({ name, bg, text }) => {

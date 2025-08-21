@@ -1,4 +1,5 @@
 import { BattleStatus, BattleTimeType } from '../../../shared/enums/battle-management.enum';
+import { colors } from '../../../utils/constants';
 import { TagColor } from '../../../utils/types/tag-component.type';
 import { getDifficultyColor } from '../question-pool/components/question-pool-listing/question-pool-listing.mapper';
 import { BattleCardData, BattleManagementData } from './interfaces/battle-management.interface';
@@ -21,8 +22,8 @@ export function battleToBattleCardData(battle: BattleManagementData): BattleCard
       id: `status-${battle.id}`,
       label: BattleStatus[battle.battleStatus],
       type: 'static',
-      backgroundColor: getBattleStatusColor(battle.battleStatus).bg,
-      textColor: getBattleStatusColor(battle.battleStatus).text,
+      backgroundColor: getBattleStatusColor(battle.battleStatus).bg as TagColor,
+      textColor: getBattleStatusColor(battle.battleStatus).text as TagColor,
       isSelected: false,
       hasBorder: true,
     },
@@ -56,17 +57,17 @@ export function battleToBattleCardData(battle: BattleManagementData): BattleCard
   };
 }
 
-function getBattleStatusColor(status: BattleStatus): { bg: TagColor; text: TagColor } {
+export function getBattleStatusColor(status: BattleStatus): { bg: string; text: string } {
   switch (status) {
     case BattleStatus.Active:
-      return { bg: 'lightGreen', text: 'green' };
+      return colors.green;
     case BattleStatus.Completed:
-      return { bg: 'black', text: 'lightWhite' };
+      return colors.black;
     default:
-      return { bg: 'black', text: 'lightWhite' };
+      return colors.black;
   }
 }
 
-function formatBattleTimeLabel(time: BattleTimeType): string {
+export function formatBattleTimeLabel(time: BattleTimeType): string {
   return BattleTimeType[time].replace(/([a-z])([A-Z])/g, '$1 $2');
 }
