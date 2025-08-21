@@ -1,0 +1,73 @@
+<!-- Step 2 -->
+<div class="mb-5">
+  <h2 class="form-heading">Choose Question Creation Method</h2>
+  <span class="text-xs text-gray-500">Select how you want to create questions for your quiz</span>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- cards loop for select question creation method -->
+  @for (option of questionCreationMethodsOptionsStep2; let i = $index; track i) {
+    <div
+      (click)="selectCard(i)"
+      [ngClass]="{
+        'selected-card ': selectedIndexStep2 === i,
+      }"
+      class="flex flex-col p-8 rounded-2xl bg-white border-2 border-gray-300 hover:shadow-lg transition duration-300 cursor-pointer"
+    >
+      <!-- Top content (icon, title, description) -->
+      <div class="flex flex-col items-center text-center flex-grow">
+        <div class="flex items-center justify-center gap-2 mb-4">
+          <!-- First Icon -->
+          <div class="w-[70px] h-[70px] flex items-center justify-center overflow-hidden">
+            <mat-icon
+              [ngClass]="[option.iconColor, 'card-icon-large']"
+              class="text-[40px] inline-block leading-none"
+            >
+              {{ option.icon }}
+            </mat-icon>
+          </div>
+
+          <!-- Second Icon (Only for Last Card) -->
+          @if (i === questionCreationMethodsOptionsStep2.length - 1) {
+            <div class="w-[70px] h-[70px] flex items-center justify-center overflow-hidden">
+              <mat-icon
+                [ngClass]="[option.secondIconColor || option.iconColor, 'card-icon-large']"
+                class="text-[40px] inline-block leading-none"
+              >
+                {{ option.secondIcon }}
+              </mat-icon>
+            </div>
+          }
+        </div>
+
+        <h3 class="font-semibold text-xl mb-3">{{ option.title }}</h3>
+        <p class="text-gray-500 mb-6">{{ option.description }}</p>
+      </div>
+
+      <!-- Button at the bottom -->
+      <div class="flex justify-center mt-auto pt-2">
+        @if (selectedIndexStep2 === i) {
+          <app-filled-button
+            [filledButtonConfig]="
+              i === 0
+                ? selectQuestionMethodSecondaryButton
+                : i === 1
+                  ? selectQuestionMethodPrimaryButton
+                  : selectQuestionMethodDefaultButton
+            "
+          ></app-filled-button>
+        } @else {
+          <app-outline-button
+            [outlineButtonConfig]="
+              i === 0
+                ? selectQuestionMethodSecondaryButton
+                : i === 1
+                  ? selectQuestionMethodPrimaryButton
+                  : selectQuestionMethodDefaultButton
+            "
+          ></app-outline-button>
+        }
+      </div>
+    </div>
+  }
+</div>

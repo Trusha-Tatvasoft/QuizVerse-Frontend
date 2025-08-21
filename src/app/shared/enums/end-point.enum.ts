@@ -41,7 +41,6 @@ export enum EndPoints {
   QuizDifficultyNameAvailable = 'QuizDifficultyLevel/is-difficulty-name-available',
   CreateQuizDifficultyLevel = 'QuizDifficultyLevel/create-difficulty-level',
   // #endregion
-
   // #region QuestionPool
   QuestionPoolList = 'QuestionPool/get-question-pool-list',
   DeleteQuestion = 'QuestionPool/delete-question',
@@ -51,7 +50,6 @@ export enum EndPoints {
   PreviewQuestionsFromCsv = 'QuestionPool/preview-questions-from-csv',
   PreviewQuestionsFromExcel = 'QuestionPool/preview-questions-from-excel',
   // #endregion
-
   // #region QuizCategory
   CreateOrUpdateQuizCategory = 'QuizCategory/create-or-update-quiz-category',
   GetQuizCategoryById = 'QuizCategory/get-quiz-category-by-id',
@@ -62,4 +60,8 @@ export enum EndPoints {
   // #region QuizManagement
   QuizManagementStats = 'QuizManagement/get-quiz-card-data',
   // #endregion
+  CreateOrUpdateQuiz = 'QuizManagement/create-update-quiz',
+  GetQuizById = 'QuizManagement/get-quiz-by-id',
+  ExportQuestions = 'QuizManagement/export-questions-to-csv',
+  DeleteQuiz = 'QuizManagement/delete-quiz',
 }
