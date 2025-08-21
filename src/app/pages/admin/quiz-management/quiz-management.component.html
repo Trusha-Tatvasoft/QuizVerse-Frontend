@@ -36,6 +36,9 @@
             placeholder="All Status"
           >
             <mat-option [value]="''">All Status</mat-option>
+            @for (status of quizStatus; track status.value) {
+              <mat-option [value]="status.value">{{ status.label }}</mat-option>
+            }
           </mat-select>
         </mat-form-field>
 
@@ -47,6 +50,9 @@
             placeholder="All Categories"
           >
             <mat-option [value]="''">All Categories</mat-option>
+            @for (item of categoryList; track item.id) {
+              <mat-option [value]="item.id"> {{ item.name }} </mat-option>
+            }
           </mat-select>
         </mat-form-field>
 
@@ -58,6 +64,9 @@
             placeholder="All Difficulties"
           >
             <mat-option [value]="''">All Difficulties</mat-option>
+            @for (item of difficultyList; track item.id) {
+              <mat-option [value]="item.id"> {{ item.name }} </mat-option>
+            }
           </mat-select>
         </mat-form-field>
       </div>
@@ -66,4 +75,11 @@
       <app-filled-button [filledButtonConfig]="createNewQuizButtonConfig"></app-filled-button>
     </div>
   </div>
+
+  <app-quiz-table
+    [dataSource]="dataSource()"
+    [totalItems]="totalItems()"
+    (pageChange)="onPageChange($event)"
+    (sortChange)="onSortChange($event)"
+  ></app-quiz-table>
 </main>

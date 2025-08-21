@@ -1,6 +1,6 @@
 import { battleToBattleCardData } from './battle-management-list.mapper';
 import { BattleManagementData } from './interfaces/battle-management.interface';
-import { BattleStatus, BattleTimeType } from '../../../shared/enums/battle-management.enum';
+import { BattleCreationStatus, BattleTimeType } from '../../../shared/enums/battle-management.enum';
 import { getDifficultyColor } from '../question-pool/components/question-pool-listing/question-pool-listing.mapper';
 
 jest.mock('../question-pool/components/question-pool-listing/question-pool-listing.mapper', () => ({
@@ -25,7 +25,7 @@ describe('battleToBattleCardData', () => {
       endDate: new Date('2025-08-20T00:00:00Z'),
       battleDifficulty: 'Easy',
       totalQuestion: 15,
-      battleStatus: BattleStatus.Active,
+      battleStatus: BattleCreationStatus.Active,
     };
   });
 
@@ -76,14 +76,14 @@ describe('battleToBattleCardData', () => {
   });
 
   it('should fallback to default colors when status is unknown', () => {
-    mockBattle.battleStatus = 999 as unknown as BattleStatus;
+    mockBattle.battleStatus = 999 as unknown as BattleCreationStatus;
     const result = battleToBattleCardData(mockBattle);
 
     expect(result.statusTag.backgroundColor).toBe('black');
     expect(result.statusTag.textColor).toBe('lightWhite');
   });
   it('should create a valid statusTag for Completed battles', () => {
-    mockBattle.battleStatus = BattleStatus.Completed;
+    mockBattle.battleStatus = BattleCreationStatus.Completed;
     const result = battleToBattleCardData(mockBattle);
 
     expect(result.statusTag.label).toBe('Completed');

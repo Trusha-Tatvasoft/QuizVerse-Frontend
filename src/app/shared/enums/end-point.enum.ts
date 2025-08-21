@@ -60,6 +60,7 @@ export enum EndPoints {
 
   // #region QuizManagement
   QuizManagementStats = 'QuizManagement/get-quiz-card-data',
+  QuizTableData = 'QuizManagement/get-quizzes-by-pagination',
   CreateOrUpdateQuiz = 'QuizManagement/create-update-quiz',
   GetQuizById = 'QuizManagement/get-quiz-by-id',
   ExportQuestions = 'QuizManagement/export-questions-to-csv',
