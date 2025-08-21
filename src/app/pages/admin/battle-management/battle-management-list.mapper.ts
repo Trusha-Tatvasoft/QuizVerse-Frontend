@@ -1,4 +1,4 @@
-import { BattleStatus, BattleTimeType } from '../../../shared/enums/battle-management.enum';
+import { BattleCreationStatus, BattleTimeType } from '../../../shared/enums/battle-management.enum';
 import { colors } from '../../../utils/constants';
 import { TagColor } from '../../../utils/types/tag-component.type';
 import { getDifficultyColor } from '../question-pool/components/question-pool-listing/question-pool-listing.mapper';
@@ -20,7 +20,7 @@ export function battleToBattleCardData(battle: BattleManagementData): BattleCard
 
     statusTag: {
       id: `status-${battle.id}`,
-      label: BattleStatus[battle.battleStatus],
+      label: BattleCreationStatus[battle.battleStatus],
       type: 'static',
       backgroundColor: getBattleStatusColor(battle.battleStatus).bg as TagColor,
       textColor: getBattleStatusColor(battle.battleStatus).text as TagColor,
@@ -57,11 +57,11 @@ export function battleToBattleCardData(battle: BattleManagementData): BattleCard
   };
 }
 
-export function getBattleStatusColor(status: BattleStatus): { bg: string; text: string } {
+export function getBattleStatusColor(status: BattleCreationStatus): { bg: string; text: string } {
   switch (status) {
-    case BattleStatus.Active:
+    case BattleCreationStatus.Active:
       return colors.green;
-    case BattleStatus.Completed:
+    case BattleCreationStatus.Completed:
       return colors.black;
     default:
       return colors.black;

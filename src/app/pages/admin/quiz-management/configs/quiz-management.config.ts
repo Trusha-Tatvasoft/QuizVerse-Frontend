@@ -24,7 +24,7 @@ export const quizManagementHeaderConfig: PageHeaderComponent = {
 
 // Config for the search input field
 export const searchInputConfig = {
-  placeholder: 'Search quizzes(title/category)...',
+  placeholder: 'Search quizzes(title/category/difficulty)...',
 };
 
 // Config for the "Create New Quiz" button

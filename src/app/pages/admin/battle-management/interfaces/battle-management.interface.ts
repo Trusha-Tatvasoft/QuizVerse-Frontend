@@ -1,4 +1,7 @@
-import { BattleStatus, BattleTimeType } from '../../../../shared/enums/battle-management.enum';
+import {
+  BattleCreationStatus,
+  BattleTimeType,
+} from '../../../../shared/enums/battle-management.enum';
 import { TagInputConfig } from '../../../../shared/interfaces/tag-component.interface';
 
 export interface BattleManagementData {
@@ -13,7 +16,7 @@ export interface BattleManagementData {
   totalXp: number;
   totalParticipants: number;
   totalQuestion: number;
-  battleStatus: BattleStatus;
+  battleStatus: BattleCreationStatus;
 }
 
 export interface BattleCardData {
