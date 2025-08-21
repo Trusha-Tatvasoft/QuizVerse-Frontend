@@ -211,7 +211,7 @@ describe('UserManagementComponent', () => {
     { status: 1, expectedLabel: 'Active', bg: 'lightGreen', text: 'green' },
     { status: 2, expectedLabel: 'Inactive', bg: 'lightYellow', text: 'yellow' },
     { status: 3, expectedLabel: 'Suspended', bg: 'lightBrown', text: 'brown' },
-    { status: 99, expectedLabel: 'Unknown', bg: 'lightGray', text: 'gray' },
+    { status: 99, expectedLabel: 'Unknown', bg: 'lightWhite', text: 'black' },
   ])('should map status correctly for status $status', ({ status, expectedLabel, bg, text }) => {
     const user = { ...mockUsers[0], status };
     const result = userToUserListingTableData(user) as any;

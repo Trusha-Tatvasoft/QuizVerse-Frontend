@@ -27,10 +27,10 @@
   @if (isLogin) {
     <div class="navbar__right">
       <!-- Notifications -->
-      <div class="notification-wrapper">
+      <div class="notification-wrapper" #notificationWrapper>
         <app-text-button
           [textButtonConfig]="textButton"
-          (buttonClicked)="toggleNotifications()"
+          (buttonClicked)="toggleNotifications($event)"
           class="wrapper-text-button"
         >
         </app-text-button>

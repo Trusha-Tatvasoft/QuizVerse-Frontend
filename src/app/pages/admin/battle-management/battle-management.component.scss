@@ -1,0 +1,28 @@
+.battle-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #4b5563;
+  height: 100%;
+}
+
+.battle-data {
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+.calender {
+  font-size: 20px;
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 16px;
+  color: #ff4d4d;
+  font-size: 16px;
+  background-color: white;
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+    padding: 12px;
+  }
+}

@@ -107,9 +107,8 @@
   }
 }
 
-// Login SignUp Page Tabs and Question Pool Dialog Tabs Override
-.login-signup-tabs .mat-mdc-tab-list,
-.question-pool-tabs .mat-mdc-tab-list {
+// Login SignUp Page Tabs Override
+.login-signup-tabs .mat-mdc-tab-list {
   background: #f1f5f9 !important;
   border-radius: 0.5rem !important;
   padding: 0.25rem !important;
@@ -119,15 +118,6 @@
   .mat-mdc-tab-labels {
     height: 32px !important;
   }
-}
-
-// question pool create que dialog tabs
-.question-pool-tabs .mdc-tab {
-  width: 150px;
-}
-
-.question-pool-tabs .mat-mdc-tab-header {
-  margin-bottom: 5px;
 }
 
 .mat-mdc-snack-bar-container {

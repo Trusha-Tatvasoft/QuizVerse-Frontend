@@ -2,7 +2,6 @@ export enum EndPoints {
   //#region Common
   LandingPageData = 'LandingPage/get-landing-page-data',
   DropDownData = 'DropDownData/get-dropdown-data',
-  // for adding question from csv/excel
   DownloardSampleCsv = 'assets/templates/sampleCsv.csv',
   DownloardSampleExcel = 'assets/templates/sampleExcel.xlsx',
   //#endregion
@@ -41,15 +40,15 @@ export enum EndPoints {
   QuizDifficultyNameAvailable = 'QuizDifficultyLevel/is-difficulty-name-available',
   CreateQuizDifficultyLevel = 'QuizDifficultyLevel/create-difficulty-level',
   // #endregion
+
   // #region QuestionPool
   QuestionPoolList = 'QuestionPool/get-question-pool-list',
   DeleteQuestion = 'QuestionPool/delete-question',
   GetQuestionPrevirew = 'QuestionPool/get-question-preview',
-  CreateOrUpdateQuestion = 'QuestionPool/create-or-update-question',
-  SaveQuestions = 'QuestionPool/save-questions',
   PreviewQuestionsFromCsv = 'QuestionPool/preview-questions-from-csv',
   PreviewQuestionsFromExcel = 'QuestionPool/preview-questions-from-excel',
   // #endregion
+
   // #region QuizCategory
   CreateOrUpdateQuizCategory = 'QuizCategory/create-or-update-quiz-category',
   GetQuizCategoryById = 'QuizCategory/get-quiz-category-by-id',
@@ -59,9 +58,13 @@ export enum EndPoints {
 
   // #region QuizManagement
   QuizManagementStats = 'QuizManagement/get-quiz-card-data',
-  // #endregion
   CreateOrUpdateQuiz = 'QuizManagement/create-update-quiz',
   GetQuizById = 'QuizManagement/get-quiz-by-id',
   ExportQuestions = 'QuizManagement/export-questions-to-csv',
   DeleteQuiz = 'QuizManagement/delete-quiz',
+  // #endregion
+
+  // #region BattleManagement
+  BattleManagementList = 'BattleManagement/get-battle-list',
+  //#endregion
 }
