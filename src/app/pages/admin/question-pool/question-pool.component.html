@@ -17,7 +17,10 @@
         class="question-pool-search"
       ></app-search-input>
       <div class="add-question-btn-tablet">
-        <app-filled-button [filledButtonConfig]="addQuestionButtonConfig"></app-filled-button>
+        <app-filled-button
+          [filledButtonConfig]="addQuestionButtonConfig"
+          (click)="openQuestionDialog()"
+        ></app-filled-button>
       </div>
     </div>
 
@@ -73,7 +76,10 @@
       </div>
     </div>
     <div class="add-question-btn">
-      <app-filled-button [filledButtonConfig]="addQuestionButtonConfig"></app-filled-button>
+      <app-filled-button
+        [filledButtonConfig]="addQuestionButtonConfig"
+        (click)="openQuestionDialog()"
+      ></app-filled-button>
     </div>
   </div>
   <app-question-pool-table

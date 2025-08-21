@@ -30,6 +30,7 @@ import { ConfirmationDialogData } from '../../../shared/interfaces/confirmation-
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { QuestionPreviewDialogComponent } from './components/question-preview-dialog/question-preview-dialog.component';
+import { QuestionFormDialogComponent } from './components/question-form-dialog/question-form-dialog.component';
 
 @Component({
   selector: 'app-question-pool',
@@ -44,6 +45,7 @@ import { QuestionPreviewDialogComponent } from './components/question-preview-di
   styleUrl: './question-pool.component.scss',
 })
 export class QuestionPoolComponent implements OnInit, OnDestroy {
+  //#region Variables
   // Inject services
   private readonly questionPoolService = inject(QuestionPoolService);
   private readonly snackbar = inject(SnackbarService);
@@ -75,23 +77,34 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
 
   private readonly searchSubject = new Subject<string>();
   private readonly destroy$ = new Subject<void>();
+  //#endregion
 
   ngOnInit(): void {
     this.loadDropdowns();
     this.fetchQuestionPoolList();
   }
 
+  // unsubscribe the subscribers
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  //#region load Dropdown
   loadDropdowns() {
     forkJoin({
       categories: this.dropdownService.getDropdownData(DropDownType.QuizCategory),
       difficulties: this.dropdownService.getDropdownData(DropDownType.QuestionDifficulty),
       types: this.dropdownService.getDropdownData(DropDownType.QuestionType),
-    }).subscribe(({ categories, difficulties, types }) => {
-      this.categoryList = categories;
-      this.difficultyList = difficulties;
-      this.typeList = types;
-    });
+    })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ categories, difficulties, types }) => {
+        this.categoryList = categories;
+        this.difficultyList = difficulties;
+        this.typeList = types;
+      });
   }
+  //#endregion
 
   getFilteredQuestions(): void {
     this.searchSubject.pipe(debounceTime(debounceTimeValue)).subscribe(() => {
@@ -126,6 +139,7 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
     this.fetchQuestionPoolList();
   }
 
+  //#region fetch Questions
   // Fetch user list with filters, sort, pagination
   fetchQuestionPoolList() {
     const request: PaginationRequest = {
@@ -166,7 +180,9 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
         },
       });
   }
+  //#endregion
 
+  //#region handle Question action
   // handle all the question action delete, view, edit etc.
   handleQuestionAction(event: { action: string; row: TableData }): void {
     const question = event.row;
@@ -177,9 +193,14 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
       case questionAction.VIEW:
         this.openQuestionPreviewDialog(question['id'] as number);
         break;
+      case questionAction.EDIT:
+        this.openQuestionDialog('edit', question['id'] as number);
+        break;
     }
   }
+  //#endregion
 
+  //#region delete dialog
   // delete question dialog
   confirmAndDeleteQuestion(questionId: number): void {
     this.openConfirmationDialog(deleteQuestionDialog, () => {
@@ -224,7 +245,31 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
       if (confirmed) onConfirm();
     });
   }
+  //#endregion
 
+  //#region create/edit dialog
+  // dialog for manual question add/edit
+  openQuestionDialog(mode: 'create' | 'edit' = 'create', question?: number) {
+    const dialogRef = this.dialog.open(QuestionFormDialogComponent, {
+      minWidth: '50vw',
+      maxWidth: '100vw',
+      maxHeight: '95vh',
+      autoFocus: false,
+      data: {
+        mode,
+        ...{ id: question },
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((changed) => {
+      if (changed) {
+        this.fetchQuestionPoolList();
+      }
+    });
+  }
+  //#endregion
+
+  //#region preview dialog
   // question perview dialog
   openQuestionPreviewDialog(questionId: number) {
     this.dialog.open(QuestionPreviewDialogComponent, {
@@ -233,10 +278,5 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
       data: { id: questionId },
     });
   }
-
-  // unsubscribe the subscribers
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+  //#endregion
 }
