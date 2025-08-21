@@ -107,8 +107,9 @@
   }
 }
 
-// Login SignUp Page Tabs Override
-.login-signup-tabs .mat-mdc-tab-list {
+// Login SignUp Page Tabs and Question Pool Dialog Tabs Override
+.login-signup-tabs .mat-mdc-tab-list,
+.question-pool-tabs .mat-mdc-tab-list {
   background: #f1f5f9 !important;
   border-radius: 0.5rem !important;
   padding: 0.25rem !important;
@@ -118,6 +119,15 @@
   .mat-mdc-tab-labels {
     height: 32px !important;
   }
+}
+
+// question pool create que dialog tabs
+.question-pool-tabs .mdc-tab {
+  width: 150px;
+}
+
+.question-pool-tabs .mat-mdc-tab-header {
+  margin-bottom: 5px;
 }
 
 .mat-mdc-snack-bar-container {
@@ -277,7 +287,7 @@
         min-height: 40px !important;
 
         .mdc-text-field__input {
-          padding: 14px 0px 10px 0px !important;
+          margin: 14px 0px 10px 0px !important;
         }
       }
     }
@@ -288,6 +298,24 @@
 .custom-form-field-override .mat-mdc-text-field-wrapper:focus-within {
   border-color: var(--global-secondary-color) !important;
   box-shadow: 0 0 0 1px var(--global-secondary-color) !important;
+}
+
+.custom-form-field-override
+  .mat-mdc-form-field.mat-mdc-form-field-type-mat-select
+  .mat-mdc-text-field-wrapper:hover,
+.custom-form-field-override
+  .mat-mdc-form-field.mat-mdc-form-field-type-mat-select
+  .mat-mdc-text-field-wrapper:focus-within {
+  border-color: var(--global-secondary-color) !important;
+  box-shadow: 0 0 0 1px var(--global-secondary-color) !important;
+}
+
+.custom-form-icon-override .mat-mdc-form-field-icon-prefix,
+.custom-form-icon-override .mat-mdc-form-field-icon-suffix {
+  mat-icon {
+    color: #9ca3af;
+    font-size: 18px;
+  }
 }
 
 .custom-form-field-file {

@@ -1,12 +1,24 @@
-import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj, moduleMetadata } from '@storybook/angular';
 import { NavbarComponent } from './navbar.component';
 import { blue, yellow } from '../../../utils/constants';
+import { AuthService } from '../../../core/auth/services/auth.service';
+
+class MockAuthService {
+  logout() {
+    console.log('MockAuthService.logout() called');
+  }
+}
 
 // Standalone components don't need moduleMetadata unless using non-standalone children
 export default {
   title: 'Layout/Navbar',
   component: NavbarComponent,
   tags: ['autodocs'],
+  decorators: [
+    moduleMetadata({
+      providers: [{ provide: AuthService, useClass: MockAuthService }],
+    }),
+  ],
 } as Meta<NavbarComponent>;
 
 type Story = StoryObj<NavbarComponent>;

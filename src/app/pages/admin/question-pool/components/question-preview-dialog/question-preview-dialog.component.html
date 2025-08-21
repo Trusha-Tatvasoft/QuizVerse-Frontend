@@ -1,0 +1,60 @@
+<div class="main-dialog-content p-5">
+  <!-- Header -->
+  <div class="dialog-header mb-3">
+    <h2 mat-dialog-title>Question Preview</h2>
+    <span class="dialog-sub-header">View question details</span>
+  </div>
+  <button mat-icon-button class="close-btn" (click)="closeDialog()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  @if (questionData) {
+    <div mat-dialog-content class="dialog-body">
+      <!-- Question -->
+      <div class="py-2">
+        <strong>Question</strong>
+        <p class="question-text">{{ questionData.questionText }}</p>
+      </div>
+      <!-- Question Info -->
+      <div class="meta">
+        <div class="question-info">
+          <strong>Type:</strong>
+          <span>{{ questionData.questionType }}</span>
+        </div>
+        <div class="question-info">
+          <strong>Difficulty:</strong>
+          <app-tag [tagConfig]="getDifficultyTagConfig(questionData.difficulty)"></app-tag>
+        </div>
+        <div class="question-info">
+          <strong>Category:</strong>
+          <span>{{ questionData.category }}</span>
+        </div>
+      </div>
+
+      <!-- Multiple Choice / True-False -->
+      @if (questionData.questionType === 'Multiple Choice') {
+        <h4>Answer Options</h4>
+        <div class="options-list">
+          @for (option of questionData.options; track option.label) {
+            <div class="option" [class.correct]="option.isCorrect">
+              <span class="option-label">{{ option.label }}</span>
+              <span class="option-value">{{ option.value }}</span>
+              @if (option.isCorrect) {
+                <span class="correct-badge">
+                  <mat-icon fontIcon="check" class="correct-icon"></mat-icon>
+                  <span>Correct</span></span
+                >
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Correct Answer -->
+      <div class="correct-answer">
+        <strong>Correct Answer:</strong>
+        <span class="highlight-answer">{{ questionData.correctAnswer }}</span>
+      </div>
+    </div>
+  }
+</div>

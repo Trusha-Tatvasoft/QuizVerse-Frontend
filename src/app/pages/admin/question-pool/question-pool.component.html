@@ -31,6 +31,11 @@
             placeholder="All Category"
           >
             <mat-option [value]="''">All Category</mat-option>
+            @for (item of categoryList; track item.id) {
+              <mat-option [value]="item.id">
+                {{ item.name }}
+              </mat-option>
+            }
           </mat-select>
         </mat-form-field>
 
@@ -42,6 +47,11 @@
             placeholder="All Difficulty"
           >
             <mat-option [value]="''">All Difficulty</mat-option>
+            @for (item of difficultyList; track item.id) {
+              <mat-option [value]="item.id">
+                {{ item.name }}
+              </mat-option>
+            }
           </mat-select>
         </mat-form-field>
 
@@ -53,6 +63,11 @@
             placeholder="All Types"
           >
             <mat-option [value]="''">All Types</mat-option>
+            @for (item of typeList; track item.id) {
+              <mat-option [value]="item.id">
+                {{ item.name }}
+              </mat-option>
+            }
           </mat-select>
         </mat-form-field>
       </div>
@@ -61,5 +76,11 @@
       <app-filled-button [filledButtonConfig]="addQuestionButtonConfig"></app-filled-button>
     </div>
   </div>
-  <app-question-pool-table></app-question-pool-table>
+  <app-question-pool-table
+    [dataSource]="dataSource()"
+    [totalItems]="totalItems()"
+    (pageChange)="onPageChange($event)"
+    (sortChange)="onSortChange($event)"
+    (actionClick)="handleQuestionAction($event)"
+  ></app-question-pool-table>
 </main>

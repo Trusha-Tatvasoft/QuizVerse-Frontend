@@ -201,6 +201,7 @@ export const plateformName = 'QuizVerse';
 
 export const platformMessages = {
   errorTitle: `Error!`,
+  successTitle: `Success!`,
   errorMessage: `Something went wrong.`,
   resetLinkSendSuccessfully: `Reset link sent successfully.`,
   passwordResetSuccess: `Password reset successfully.`,
@@ -229,6 +230,12 @@ export const platformMessages = {
   tokenRefreshFailedTitle: 'Token refresh failed',
   tokenRefreshFailedMessage: 'Unexpected response.',
   tokenInvalidMessage: 'Token refresh failed',
+  //#endregion
+
+  //#region QuestionPool Messages
+  failedLoadQuesPreview: 'Failed to load question details',
+  deleteQuesSuccess: 'Question Deleted Successfully!!',
+  deleteQuesFailure: 'Failed to delete question',
   //#endregion
 };
 //#endregion
@@ -307,7 +314,7 @@ export const userActionMessages = {
 };
 //#endregion
 
-export const DateFilterType = {
+export const dateFilterType = {
   last7Days: 'last7days',
   last30days: 'last30days',
   lastMonth: 'lastMonth',
@@ -316,11 +323,11 @@ export const DateFilterType = {
 };
 
 export const filterOptions = [
-  { label: 'Last 7 Days', value: DateFilterType.last7Days },
-  { label: 'Last 30 Days', value: DateFilterType.last30days },
-  { label: 'Last Month', value: DateFilterType.lastMonth },
-  { label: 'Last Year', value: DateFilterType.lastYear },
-  { label: 'All Time', value: DateFilterType.allTime },
+  { label: 'Last 7 Days', value: dateFilterType.last7Days },
+  { label: 'Last 30 Days', value: dateFilterType.last30days },
+  { label: 'Last Month', value: dateFilterType.lastMonth },
+  { label: 'Last Year', value: dateFilterType.lastYear },
+  { label: 'All Time', value: dateFilterType.allTime },
 ];
 
 export const months = [
@@ -340,4 +347,17 @@ export const months = [
 
 //#region Skip loader const
 export const skipLoader = 'X-Skip-Loader';
+//#endregion
+
+//#region Question Action
+export const questionAction = {
+  EDIT: 'edit',
+  DELETE: 'delete',
+  VIEW: 'visibility',
+};
+//#endregion
+
+//#region
+export const defaultIcon = 'category';
+export const updateCategory = 'Update Category';
 //#endregion
