@@ -75,7 +75,7 @@
                 class="custom-upload-button"
               ></app-filled-button>
               <span class="selected-file-name"
-                >{{ displayFileName | filenameTruncate }}
+                >{{ displayFileName }}
                 @if (selectedFile || userForm.get('profilePic')?.value) {
                   <mat-icon (click)="selectedFile = null" class="clear-icon">cancel</mat-icon>
                 }

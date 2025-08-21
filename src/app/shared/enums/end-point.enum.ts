@@ -2,6 +2,9 @@ export enum EndPoints {
   //#region Common
   LandingPageData = 'LandingPage/get-landing-page-data',
   DropDownData = 'DropDownData/get-dropdown-data',
+  // for adding question from csv/excel
+  DownloardSampleCsv = 'assets/templates/sampleCsv.csv',
+  DownloardSampleExcel = 'assets/templates/sampleExcel.xlsx',
   //#endregion
 
   //#region Authentication
@@ -43,6 +46,10 @@ export enum EndPoints {
   QuestionPoolList = 'QuestionPool/get-question-pool-list',
   DeleteQuestion = 'QuestionPool/delete-question',
   GetQuestionPrevirew = 'QuestionPool/get-question-preview',
+  CreateOrUpdateQuestion = 'QuestionPool/create-or-update-question',
+  SaveQuestions = 'QuestionPool/save-questions',
+  PreviewQuestionsFromCsv = 'QuestionPool/preview-questions-from-csv',
+  PreviewQuestionsFromExcel = 'QuestionPool/preview-questions-from-excel',
   // #endregion
 
   // #region QuizCategory
@@ -55,8 +62,4 @@ export enum EndPoints {
   // #region QuizManagement
   QuizManagementStats = 'QuizManagement/get-quiz-card-data',
   // #endregion
-
-  // #region BattleManagement
-  BattleManagementList = 'BattleManagement/get-battle-list',
-  //#endregion
 }

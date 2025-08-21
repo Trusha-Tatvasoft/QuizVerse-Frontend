@@ -74,6 +74,13 @@ describe('QuestionPreviewDialogComponent', () => {
     expect(dialogRefMock.close).toHaveBeenCalled();
   });
 
+  it('should return correct difficulty colors', () => {
+    expect(component.getDifficultyColor('easy')).toEqual({ bg: 'lightGreen', text: 'green' });
+    expect(component.getDifficultyColor('medium')).toEqual({ bg: 'lightYellow', text: 'yellow' });
+    expect(component.getDifficultyColor('hard')).toEqual({ bg: 'lightRed', text: 'red' });
+    expect(component.getDifficultyColor('unknown')).toEqual({ bg: 'lightOrange', text: 'orange' });
+  });
+
   it('should return correct tag config for difficulty', () => {
     const config = component.getDifficultyTagConfig('Easy');
     expect(config.label).toBe('Easy');

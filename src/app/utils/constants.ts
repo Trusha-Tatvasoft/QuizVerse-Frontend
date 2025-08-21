@@ -357,21 +357,7 @@ export const questionAction = {
 };
 //#endregion
 
-//#region QuizCategory
+//#region
 export const defaultIcon = 'category';
 export const updateCategory = 'Update Category';
-//#endregion
-
-//#region TagColors
-export const colors = {
-  green: { bg: 'lightGreen', text: 'green' },
-  red: { bg: 'lightRed', text: 'red' },
-  yellow: { bg: 'lightYellow', text: 'yellow' },
-  blue: { bg: 'lightBlue', text: 'blue' },
-  purple: { bg: 'lightPurple', text: 'purple' },
-  orange: { bg: 'lightOrange', text: 'orange' },
-  black: { bg: 'black', text: 'lightWhite' },
-  white: { bg: 'lightWhite', text: 'black' },
-  brown: { bg: 'lightBrown', text: 'brown' },
-};
 //#endregion

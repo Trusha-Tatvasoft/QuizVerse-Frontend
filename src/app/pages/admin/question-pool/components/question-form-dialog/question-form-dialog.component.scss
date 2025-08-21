@@ -1,0 +1,33 @@
+.dialog-container {
+  padding: 20px;
+
+  .question-dialog-header {
+    margin-bottom: 25px;
+    .dialog-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #222;
+    }
+
+    .dialog-subtitle {
+      font-size: 14px;
+      color: #666;
+    }
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    cursor: pointer;
+    z-index: 2;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    mat-icon {
+      font-size: 22px;
+    }
+  }
+}

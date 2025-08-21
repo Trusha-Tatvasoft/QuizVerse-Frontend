@@ -1,13 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  inject,
-  Input,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, HostListener, inject, Input, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -62,11 +53,9 @@ export class NavbarComponent {
 
   @Output() openSidebar = new EventEmitter<void>();
   @Output() closeSidebar = new EventEmitter<void>();
-  @ViewChild('notificationWrapper') notificationWrapper!: ElementRef;
 
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
-  private readonly elementRef = inject(ElementRef);
 
   textButton = textButtonConfig;
   signInButton = signInButtonConfig;
@@ -92,17 +81,6 @@ export class NavbarComponent {
     this.previousWidth = currentWidth;
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    if (
-      this.showNotifications &&
-      this.notificationWrapper &&
-      !this.notificationWrapper.nativeElement.contains(event.target)
-    ) {
-      this.showNotifications = false;
-    }
-  }
-
   private checkWindowSize(currentWidth: number) {
     if (this.previousWidth >= 1024 && currentWidth < 1024) {
       this.menuOpen = false;
@@ -110,8 +88,7 @@ export class NavbarComponent {
     }
   }
 
-  toggleNotifications(event: Event) {
-    event.stopPropagation(); // prevent immediate close
+  toggleNotifications() {
     this.showNotifications = !this.showNotifications;
   }
 

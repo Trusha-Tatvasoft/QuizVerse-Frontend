@@ -11,7 +11,6 @@ import { TagInputConfig } from '../../../../../shared/interfaces/tag-component.i
 import { QuestionDetail } from '../../interfaces/question-pool-preview.interface';
 import { platformMessages } from '../../../../../utils/constants';
 import { Subject, takeUntil } from 'rxjs';
-import { getDifficultyColor } from '../question-pool-listing/question-pool-listing.mapper';
 
 @Component({
   selector: 'app-question-preview-dialog',
@@ -42,16 +41,26 @@ export class QuestionPreviewDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  getDifficultyColor(difficulty: string): { bg: TagColor; text: TagColor } {
+    const difficultyMap: Record<string, { bg: TagColor; text: TagColor }> = {
+      easy: { bg: 'lightGreen', text: 'green' },
+      medium: { bg: 'lightYellow', text: 'yellow' },
+      hard: { bg: 'lightRed', text: 'red' },
+    };
+
+    return difficultyMap[difficulty.toLowerCase()] ?? { bg: 'lightOrange', text: 'orange' };
+  }
+
   getDifficultyTagConfig(difficulty: string): TagInputConfig {
-    const colors = getDifficultyColor(difficulty);
+    const colors = this.getDifficultyColor(difficulty);
     return {
       id: `tag-${difficulty.toLowerCase()}`,
       label: difficulty,
       type: 'static',
       isSelected: false,
       hasBorder: false,
-      backgroundColor: colors.bg as TagColor,
-      textColor: colors.text as TagColor,
+      backgroundColor: colors.bg,
+      textColor: colors.text,
     };
   }
 

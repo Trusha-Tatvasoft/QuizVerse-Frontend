@@ -1,5 +1,4 @@
 import { TableData } from '../../../../../shared/interfaces/table-component.interface';
-import { colors } from '../../../../../utils/constants';
 import {
   QueOptionsAndAns,
   QuestionPoolListData,
@@ -16,7 +15,7 @@ export function questionPoolToTableData(pool: QuestionPoolListData): TableData {
       tagConfig: {
         id: pool.queTypeId,
         label: pool.queTypeName,
-        backgroundColor: 'lightWhite',
+        backgroundColor: 'light-gray-color',
         textColor: 'black',
         hasBorder: true,
       },
@@ -43,15 +42,15 @@ function getCorrectAnswer(options: QueOptionsAndAns[]): string {
   return correctOption ? correctOption.value : 'N/A';
 }
 
-export function getDifficultyColor(difficulty: string): { bg: string; text: string } {
+function getDifficultyColor(difficulty: string): { bg: string; text: string } {
   switch (difficulty.toLowerCase()) {
     case 'easy':
-      return colors.green;
+      return { bg: 'light-green', text: 'green' };
     case 'medium':
-      return colors.yellow;
+      return { bg: 'light-yellow', text: 'yellow' };
     case 'hard':
-      return colors.red;
+      return { bg: 'light-red', text: 'red' };
     default:
-      return colors.orange; // Fallback for unknown difficulties
+      return { bg: 'light-orange', text: 'orange' };
   }
 }
