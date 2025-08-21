@@ -1,3 +1,6 @@
-Question,Category,Difficulty,Type,Option1,Option2,Option3,Option4,CorrectAnswer
-What is the capital of France?,General Knowledge,Easy,Multiple Choice,Paris,London,Berlin,Madrid,Paris
-What is the square root of 144?,Aptitude And Reasoning,Easy,Short Answer,,,,,12
+Question,Type,Difficulty,Category,Option1,Option2,Option3,Option4,CorrectAnswer
+What is the chemical symbol for water?,Multiple Choice,Easy,Technology,O2,H2O,CO2,HO2,H2O
+The Sun is a star.,True/False,Easy,Technology,,,,,True
+What gas do humans exhale in large amounts?,Short Answer,Medium,Technology,,,,,Carbon dioxide
+Which planet is known as the Red Planet?,Multiple Choice,Easy,Technology,Earth,Mars,Jupiter,Venus,Mars
+The process by which plants make their own food using sunlight is called __________.,Fill in the Blank,Easy,Technology,,,,,Photosynthesis
