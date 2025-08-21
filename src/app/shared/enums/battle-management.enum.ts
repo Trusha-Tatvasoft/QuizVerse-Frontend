@@ -1,4 +1,4 @@
-export enum BattleStatus {
+export enum BattleCreationStatus {
   Active = 1,
   Completed = 2,
 }
