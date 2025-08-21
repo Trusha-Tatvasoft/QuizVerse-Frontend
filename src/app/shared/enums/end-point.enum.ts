@@ -55,4 +55,8 @@ export enum EndPoints {
   // #region QuizManagement
   QuizManagementStats = 'QuizManagement/get-quiz-card-data',
   // #endregion
+
+  // #region BattleManagement
+  BattleManagementList = 'BattleManagement/get-battle-list',
+  //#endregion
 }
