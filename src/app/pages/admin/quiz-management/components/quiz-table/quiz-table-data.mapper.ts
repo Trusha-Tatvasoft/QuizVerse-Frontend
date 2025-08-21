@@ -13,7 +13,7 @@ export function quizToQuizListingTableData(quiz: QuizListData): TableData {
         label: quiz.quizDifficultyLevel,
         type: 'static',
         backgroundColor: colors.black.bg,
-        textColor: colors.white.text,
+        textColor: colors.black.text,
       },
     },
     total_question: quiz.totalQuestion,
