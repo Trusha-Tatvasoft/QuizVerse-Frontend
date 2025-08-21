@@ -7,7 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { QuizManagementService } from '../../../../../services/admin/quiz-management/quiz-management.service';
 import { of } from 'rxjs';
-import { debounceTimeValue } from '../../../../../utils/constants';
+import { color, debounceTimeValue } from '../../../../../utils/constants';
 import { quizToQuizListingTableData } from './quiz-table-data.mapper';
 import { DropdownService } from '../../../../../shared/service/dropdown/dropdown.service';
 
@@ -158,10 +158,10 @@ describe('QuizManagementComponent', () => {
 
   // Status mapping should return correct label, color, and background
   it.each([
-    { status: 1, expectedLabel: 'Draft', bg: 'lightBlue', text: 'blue' },
-    { status: 2, expectedLabel: 'Active', bg: 'lightGreen', text: 'green' },
-    { status: 3, expectedLabel: 'Inactive', bg: 'lightYellow', text: 'yellow' },
-    { status: 99, expectedLabel: 'Unknown', bg: 'lightBrown', text: 'brown' },
+    { status: 1, expectedLabel: 'Draft', bg: color.lightBlue, text: color.blue },
+    { status: 2, expectedLabel: 'Active', bg: color.lightGreen, text: color.green },
+    { status: 3, expectedLabel: 'Inactive', bg: color.lightYellow, text: color.yellow },
+    { status: 99, expectedLabel: 'Unknown', bg: color.lightBrown, text: color.brown },
   ])('should map status correctly for status $status', ({ status, expectedLabel, bg, text }) => {
     const quiz = { ...mockQuizzes[0], status };
     const result = quizToQuizListingTableData(quiz) as any;

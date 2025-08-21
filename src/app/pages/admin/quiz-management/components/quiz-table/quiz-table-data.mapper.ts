@@ -1,4 +1,5 @@
 import { TableData } from '../../../../../shared/interfaces/table-component.interface';
+import { color } from '../../../../../utils/constants';
 import { QuizListData } from '../../interfaces/quiz-table-data.interface';
 
 export function quizToQuizListingTableData(quiz: QuizListData): TableData {
@@ -11,8 +12,8 @@ export function quizToQuizListingTableData(quiz: QuizListData): TableData {
         id: quiz.quizDifficultyLevel,
         label: quiz.quizDifficultyLevel,
         type: 'static',
-        backgroundColor: 'black',
-        textColor: 'white',
+        backgroundColor: color.black,
+        textColor: color.white,
       },
     },
     total_question: quiz.totalQuestion,
@@ -51,12 +52,12 @@ function getStatusLabel(status: number): string {
 function getStatusColor(status: number): { bg: string; text: string } {
   switch (status) {
     case 1:
-      return { bg: 'lightBlue', text: 'blue' };
+      return { bg: color.lightBlue, text: color.blue };
     case 2:
-      return { bg: 'lightGreen', text: 'green' };
+      return { bg: color.lightGreen, text: color.green };
     case 3:
-      return { bg: 'lightYellow', text: 'yellow' };
+      return { bg: color.lightYellow, text: color.yellow };
     default:
-      return { bg: 'lightBrown', text: 'brown' };
+      return { bg: color.lightBrown, text: color.brown };
   }
 }

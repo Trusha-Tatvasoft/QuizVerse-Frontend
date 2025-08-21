@@ -361,3 +361,18 @@ export const questionAction = {
 export const defaultIcon = 'category';
 export const updateCategory = 'Update Category';
 //#endregion
+
+//#region
+export const color = {
+  lightBlue: 'lightBlue',
+  lightGreen: 'lightGreen',
+  lightYellow: 'lightYellow',
+  lightBrown: 'lightBrown',
+  blue: 'blue',
+  green: 'green',
+  yellow: 'yellow',
+  brown: 'brown',
+  black: 'black',
+  white: 'white',
+};
+//#endregion
