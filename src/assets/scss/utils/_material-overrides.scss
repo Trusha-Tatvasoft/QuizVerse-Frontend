@@ -528,3 +528,23 @@
 .mat-mdc-dialog-surface {
   border-radius: 13px !important;
 }
+
+// Remove padding icons from mat-input
+.no-icon-mat-btn {
+  .mat-mdc-text-field-wrapper {
+    padding: 0px !important;
+  }
+}
+
+//remove mdc-switch icons
+.mdc-switch__icons {
+  display: none !important;
+}
+
+.no-bottom-margin-select {
+  .mat-mdc-form-field.mat-mdc-form-field-type-mat-select {
+    @include mat.typography-hierarchy($custom-typography, font-family);
+    width: 100%;
+    margin-bottom: 0px;
+  }
+}
