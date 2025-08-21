@@ -301,6 +301,17 @@ app-data-table {
   }
 }
 
+//Question Pool Management Buttons
+.admin-management-page {
+  .admin-management-toolbar {
+    .add-quiz-btn {
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
 //form feild
 .form-field {
   font-size: 0.875rem;

@@ -1,64 +1,60 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { QuestionPoolListingComponent } from './question-pool-listing.component';
-import { TableComponent } from '../../../../../shared/components/table/table.component';
-import {
-  questionPoolColumnsConfig,
-  questionPoolMockData,
-  questionPoolPaginationConfig,
-} from '../../configs/question-pool-table.config';
-import { CommonModule } from '@angular/common';
+import type { TableData } from '../../../../../shared/interfaces/table-component.interface';
 
 describe('QuestionPoolListingComponent', () => {
   let component: QuestionPoolListingComponent;
-  let fixture: ComponentFixture<QuestionPoolListingComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [CommonModule, TableComponent, QuestionPoolListingComponent],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(QuestionPoolListingComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  beforeEach(() => {
+    component = new QuestionPoolListingComponent();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have correct columns, paginationConfig, and dataSource', () => {
-    expect(component.columns).toEqual(questionPoolColumnsConfig);
-    expect(component.paginationConfig).toEqual(questionPoolPaginationConfig);
-    expect(component.dataSource).toEqual(questionPoolMockData);
+  it('should initialize inputs with default values', () => {
+    expect(component.dataSource).toEqual([]);
+    expect(component.totalItems).toBe(0);
   });
 
-  it('should compute totalItems correctly', () => {
-    expect(component.totalItems).toBe(questionPoolMockData.length);
+  describe('tableTitle getter', () => {
+    it('returns totalItems count when totalItems is set', () => {
+      component.totalItems = 100;
+      component.dataSource = [{}, {}, {}] as TableData[];
+      expect(component.tableTitle).toBe('Question Pool (100)');
+    });
+
+    it('returns dataSource length when totalItems is zero or falsy', () => {
+      component.totalItems = 0;
+      component.dataSource = [{}, {}, {}] as TableData[];
+      expect(component.tableTitle).toBe('Question Pool (3)');
+    });
   });
 
-  it('should compute tableTitle correctly', () => {
-    const expectedTitle = `Question Pool (${questionPoolMockData.length})`;
-    expect(component.tableTitle).toBe(expectedTitle);
+  it('should emit pageChange event on onPageChange()', () => {
+    const spy = jest.spyOn(component.pageChange, 'emit');
+    const pageEvent = { pageIndex: 1, pageSize: 10 };
+
+    component.onPageChange(pageEvent);
+
+    expect(spy).toHaveBeenCalledWith(pageEvent);
   });
 
-  it('should call onActionClick with correct parameters', () => {
-    const spy = jest.spyOn(component, 'onActionClick');
-    const mockEvent = { action: 'edit', row: questionPoolMockData[0] };
-    component.onActionClick(mockEvent);
-    expect(spy).toHaveBeenCalledWith(mockEvent);
+  it('should emit sortChange event on onSortChange()', () => {
+    const spy = jest.spyOn(component.sortChange, 'emit');
+    const sortEvent = { active: 'queText', direction: 'asc' };
+
+    component.onSortChange(sortEvent);
+
+    expect(spy).toHaveBeenCalledWith(sortEvent);
   });
 
-  it('should call onPageChange with correct parameters', () => {
-    const spy = jest.spyOn(component, 'onPageChange');
-    const mockEvent = { pageIndex: 1, pageSize: 10 };
-    component.onPageChange(mockEvent);
-    expect(spy).toHaveBeenCalledWith(mockEvent);
-  });
+  it('should emit actionClick event on onActionClick()', () => {
+    const spy = jest.spyOn(component.actionClick, 'emit');
+    const actionEvent = { action: 'edit', row: {} as TableData };
 
-  it('should call onSortChange with correct parameters', () => {
-    const spy = jest.spyOn(component, 'onSortChange');
-    const mockEvent = { active: 'title', direction: 'asc' };
-    component.onSortChange(mockEvent);
-    expect(spy).toHaveBeenCalledWith(mockEvent);
+    component.onActionClick(actionEvent);
+
+    expect(spy).toHaveBeenCalledWith(actionEvent);
   });
 });

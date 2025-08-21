@@ -42,7 +42,11 @@ describe('categoryToCategoryTableData', () => {
         },
       },
       createdDate: '2025-08-06T00:00:00Z',
-      actions: ['visibility', 'edit', 'delete'],
+      actions: [
+        { icon: 'visibility', tooltip: 'View Category' },
+        { icon: 'edit', tooltip: 'Edit Category' },
+        { icon: 'delete', tooltip: 'Delete Category' },
+      ],
     });
   });
 

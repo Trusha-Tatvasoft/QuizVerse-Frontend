@@ -12,7 +12,7 @@ import { adminDashboardHeaderConfig } from './configs/admin-dashboard-header.con
 import { insightCardsConfig } from './configs/insight-cards-configs';
 import { AdminDashboardDataService } from '../../../services/admin/admin-dashboard/admin-dashboard-data.service';
 import { dashboardStatsCardConfig } from './configs/dashboard-stats-card.configs';
-import { pipe, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',

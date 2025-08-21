@@ -31,6 +31,10 @@ export function categoryToCategoryTableData(category: QuizCategoryList): TableDa
       },
     },
     createdDate: category.createdDate,
-    actions: ['visibility', 'edit', 'delete'],
+    actions: [
+      { icon: 'visibility', tooltip: 'View Category' },
+      { icon: 'edit', tooltip: 'Edit Category' },
+      { icon: 'delete', tooltip: 'Delete Category' },
+    ],
   };
 }

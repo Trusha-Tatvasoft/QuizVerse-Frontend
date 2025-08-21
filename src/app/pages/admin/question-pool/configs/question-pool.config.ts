@@ -1,4 +1,5 @@
 import { ButtonConfig } from '../../../../shared/interfaces/button-config.interface';
+import { ConfirmationDialogData } from '../../../../shared/interfaces/confirmation-dialog.interface';
 
 // Header section config for Question Pool Management page
 export const questionPoolHeaderConfig = {
@@ -20,4 +21,35 @@ export const addQuestionButtonConfig: ButtonConfig = {
   iconFontSet: 'material-icons',
   variant: 'secondary',
   fontWeight: 500,
+};
+
+// Config for the "Question Form" buttons
+export const submitButtonConfig: ButtonConfig = {
+  label: 'Submit',
+  fontWeight: 500,
+  variant: 'secondary',
+  type: 'submit',
+};
+
+export const cancelButtonConfig: ButtonConfig = {
+  label: 'Cancel',
+  fontWeight: 500,
+  variant: 'secondary',
+  type: 'button',
+};
+
+// Config for the "Delete Dialog"
+export const deleteButtonConfig: ButtonConfig = {
+  label: 'Delete Question',
+  fontWeight: 500,
+  variant: 'secondary',
+  type: 'button',
+};
+
+export const deleteQuestionDialog: ConfirmationDialogData = {
+  title: 'Delete Question',
+  message:
+    'Are you sure you want to delete this Question? This action cannot be undone. All question data will be permanently deleted.',
+  confirmButtonConfig: deleteButtonConfig,
+  cancelButtonConfig: cancelButtonConfig,
 };

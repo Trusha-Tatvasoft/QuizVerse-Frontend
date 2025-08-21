@@ -23,6 +23,7 @@ import { Notifications } from '../interfaces/navbar.component.interface';
 import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
 import { plateformName } from '../../../utils/constants';
+import { AuthService } from '../../../core/auth/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -54,6 +55,7 @@ export class NavbarComponent {
   @Output() closeSidebar = new EventEmitter<void>();
 
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
   textButton = textButtonConfig;
   signInButton = signInButtonConfig;
@@ -110,5 +112,9 @@ export class NavbarComponent {
   sidebarClosedByBackdrop(): void {
     this.menuOpen = false;
     this.closeSidebar.emit();
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }
