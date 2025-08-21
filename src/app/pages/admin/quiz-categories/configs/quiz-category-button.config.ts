@@ -11,11 +11,11 @@ export const deleteButtonConfig: ButtonConfig = {
 };
 
 export const activateButtonConfig: ButtonConfig = {
-  label: 'Activate User',
+  label: 'Activate Category',
   variant: 'secondary',
 };
 
 export const inactivateButtonConfig: ButtonConfig = {
-  label: 'Inactivate User',
+  label: 'Inactivate Category',
   variant: 'secondary',
 };

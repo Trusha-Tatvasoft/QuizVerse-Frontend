@@ -36,6 +36,7 @@ import { RegisterCredential } from '../../interfaces/register.interface';
 import { OutlineButtonComponent } from '../../../../shared/components/outline-button/outline-button.component';
 import { selectedTabIndexSignal } from '../login-signup/login-signup.component';
 import { UserFormData } from '../../../../pages/admin/user-management/interfaces/user-form-data.interface';
+import { FilenameTruncatePipe } from '../../../../shared/pipes/filename-truncate/filename-truncate.pipe';
 
 @Component({
   selector: 'app-register',
@@ -49,6 +50,7 @@ import { UserFormData } from '../../../../pages/admin/user-management/interfaces
     MatInputModule,
     MatFormField,
     OutlineButtonComponent,
+    FilenameTruncatePipe,
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss', '../login-signup/login-signup.component.scss'],
