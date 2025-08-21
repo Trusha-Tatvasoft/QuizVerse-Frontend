@@ -32,6 +32,7 @@ describe('AuthService (Jest)', () => {
   const snackbarMock = {
     showError: jest.fn(),
     showInfo: jest.fn(),
+    showSuccess: jest.fn(),
   };
 
   beforeEach(() => {
@@ -187,12 +188,14 @@ describe('AuthService (Jest)', () => {
 
     expect(cookieServiceMock.set).toHaveBeenCalled();
   });
-
-  it('should delete tokens on logout', () => {
+  it('should delete tokens, reset role, navigate to login, and show success on logout', () => {
     service.logout();
+
     expect(cookieServiceMock.delete).toHaveBeenCalledWith(accessTokenKey, '/');
     expect(cookieServiceMock.delete).toHaveBeenCalledWith(refreshTokenKey, '/');
     expect(service.currentRole$.value).toBeNull();
+    expect(routerMock.navigate).toHaveBeenCalledWith([Navigations.Login]);
+    expect(snackbarMock.showSuccess).toHaveBeenCalledWith('Logout Successfully!');
   });
 
   it('should return null if token has no role', () => {

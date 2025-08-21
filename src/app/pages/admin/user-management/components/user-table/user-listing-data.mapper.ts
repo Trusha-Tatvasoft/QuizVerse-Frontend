@@ -1,7 +1,7 @@
 import { environment } from '../../../../../../environments/environment.dev';
 import { UserStatus } from '../../../../../shared/enums/user-management.enum';
 import { TableData } from '../../../../../shared/interfaces/table-component.interface';
-import { defaultLastLoginDate } from '../../../../../utils/constants';
+import { colors, defaultLastLoginDate } from '../../../../../utils/constants';
 import { UserListData } from '../../interfaces/user-list-data.interface';
 
 /**
@@ -47,10 +47,13 @@ export function userToUserListingTableData(user: UserListData): TableData {
       extraText: 'quizzes',
     },
     actions: [
-      'edit',
-      'delete',
-      ...(user.status !== UserStatus.Suspended ? ['block'] : []), // Add "block" only if not suspended
-      user.status === UserStatus.Active ? 'remove_circle_outline' : 'check_circle_outline', // Toggle action based on status
+      { icon: 'edit', tooltip: 'Edit User' },
+      { icon: 'delete', tooltip: 'Delete User' },
+      ...(user.status !== UserStatus.Suspended ? [{ icon: 'block', tooltip: 'Suspend User' }] : []), // Add "block" only if not suspended
+      {
+        icon: user.status === UserStatus.Active ? 'remove_circle_outline' : 'check_circle_outline',
+        tooltip: user.status === UserStatus.Active ? 'Deactivate User' : 'Activate User',
+      }, // Toggle action based on status
     ],
   };
 }
@@ -77,12 +80,12 @@ function getStatusLabel(status: number): string {
 function getStatusColor(status: number): { bg: string; text: string } {
   switch (status) {
     case 1:
-      return { bg: 'lightGreen', text: 'green' };
+      return colors.green;
     case 2:
-      return { bg: 'lightYellow', text: 'yellow' };
+      return colors.yellow;
     case 3:
-      return { bg: 'lightBrown', text: 'brown' };
+      return colors.brown;
     default:
-      return { bg: 'lightGray', text: 'gray' };
+      return colors.white;
   }
 }

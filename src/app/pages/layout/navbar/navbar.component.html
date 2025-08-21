@@ -27,10 +27,10 @@
   @if (isLogin) {
     <div class="navbar__right">
       <!-- Notifications -->
-      <div class="notification-wrapper">
+      <div class="notification-wrapper" #notificationWrapper>
         <app-text-button
           [textButtonConfig]="textButton"
-          (buttonClicked)="toggleNotifications()"
+          (buttonClicked)="toggleNotifications($event)"
           class="wrapper-text-button"
         >
         </app-text-button>
@@ -148,7 +148,7 @@
           <mat-icon fontSet="material-icons-outlined">settings</mat-icon>
           <span>Settings</span>
         </button>
-        <button mat-menu-item class="logout-item">
+        <button mat-menu-item class="logout-item" (click)="logout()">
           <mat-icon>logout</mat-icon>
           <span>Sign out</span>
         </button>

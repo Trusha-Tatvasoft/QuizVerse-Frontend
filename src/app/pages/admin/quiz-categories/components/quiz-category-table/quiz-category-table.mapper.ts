@@ -2,10 +2,13 @@ import { TableData } from '../../../../../shared/interfaces/table-component.inte
 import { QuizCategoryList } from '../../interface/quiz-category-list-data.interface';
 
 /**
- * Maps a QuizCategoryDTO object from the API to a TableData format used by the table component.
+ * Maps a QuizCategoryList object from the API to TableData format used by the table component.
  */
 export function categoryToCategoryTableData(category: QuizCategoryList): TableData {
+  const isActive = category.isActive;
+
   return {
+    id: category.id,
     categoryName: {
       name: category.categoryName,
       icon: category.icon ?? 'category',
@@ -23,14 +26,22 @@ export function categoryToCategoryTableData(category: QuizCategoryList): TableDa
     },
     status: {
       tagConfig: {
-        id: category.isActive ? 'active' : 'inactive',
-        label: category.isActive ? 'Active' : 'Inactive',
+        id: isActive ? 'active' : 'inactive',
+        label: isActive ? 'Active' : 'Inactive',
         type: 'static',
-        backgroundColor: category.isActive ? 'lightGreen' : 'lightBrown',
-        textColor: category.isActive ? 'green' : 'brown',
+        backgroundColor: isActive ? 'lightGreen' : 'lightBrown',
+        textColor: isActive ? 'green' : 'brown',
       },
     },
     createdDate: category.createdDate,
-    actions: ['visibility', 'edit', 'delete'],
+    actions: [
+      { icon: 'visibility', tooltip: 'View Category' },
+      { icon: 'edit', tooltip: 'Edit Category' },
+      { icon: 'delete', tooltip: 'Delete Category' },
+      {
+        icon: isActive ? 'remove_circle_outline' : 'check_circle_outline',
+        tooltip: isActive ? 'Deactivate Category' : 'Activate Category',
+      },
+    ],
   };
 }

@@ -8,6 +8,7 @@ export type TagColor =
   | 'orange'
   | 'blue'
   | 'red'
+  | 'lightWhite'
   | 'lightGreen'
   | 'lightBrown'
   | 'lightPurple'

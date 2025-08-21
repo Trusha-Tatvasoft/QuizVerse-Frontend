@@ -5,18 +5,23 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { yellow } from '../../../utils/constants';
 import { mockDataNotifications } from './navbar-mock-data';
 import { Navigations } from '../../../shared/enums/navigation';
+import { AuthService } from '../../../core/auth/services/auth.service';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
   let warning = yellow;
+  let authServiceMock: { logout: jest.Mock };
 
   const mockNotifications = mockDataNotifications;
 
   beforeEach(async () => {
+    authServiceMock = { logout: jest.fn() };
+
     await TestBed.configureTestingModule({
       imports: [NavbarComponent],
       schemas: [NO_ERRORS_SCHEMA],
+      providers: [{ provide: AuthService, useValue: authServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavbarComponent);
@@ -46,10 +51,14 @@ describe('NavbarComponent', () => {
 
   // Toggles the notifications dropdown open and closed
   it('should toggle notification dropdown', () => {
+    const mockEvent = { stopPropagation: jest.fn() } as unknown as Event;
+
     component.showNotifications = false;
-    component.toggleNotifications();
+    component.toggleNotifications(mockEvent);
+    expect(mockEvent.stopPropagation).toHaveBeenCalled();
     expect(component.showNotifications).toBe(true);
-    component.toggleNotifications();
+
+    component.toggleNotifications(mockEvent);
     expect(component.showNotifications).toBe(false);
   });
 
@@ -128,11 +137,18 @@ describe('NavbarComponent', () => {
   it('should toggle notification panel when text button is clicked', () => {
     component.isLogin = true;
     fixture.detectChanges();
+
     const notifButton = fixture.debugElement.query(By.css('.wrapper-text-button'));
-    notifButton.triggerEventHandler('buttonClicked', null);
+
+    // Mock event with stopPropagation
+    const mockEvent = { stopPropagation: jest.fn() } as unknown as Event;
+
+    notifButton.triggerEventHandler('buttonClicked', mockEvent);
     fixture.detectChanges();
+
     const notifBox = fixture.debugElement.query(By.css('.notification-box'));
     expect(notifBox).toBeTruthy();
+    expect(mockEvent.stopPropagation).toHaveBeenCalled();
   });
 
   // Displays mark-as-read and delete buttons for each notification
@@ -210,5 +226,43 @@ describe('NavbarComponent', () => {
     const navSpy = jest.spyOn(component['router'], 'navigate');
     component.loginRedirect();
     expect(navSpy).toHaveBeenCalledWith([Navigations.Login]);
+  });
+
+  it('should call AuthService.logout when logout() is invoked', () => {
+    component.logout();
+    expect(authServiceMock.logout).toHaveBeenCalled();
+  });
+
+  it('should close notifications when clicking outside notification wrapper', () => {
+    component.isLogin = true;
+    component.showNotifications = true;
+    fixture.detectChanges();
+
+    const wrapperEl = document.createElement('div');
+    component['notificationWrapper'] = { nativeElement: wrapperEl } as any;
+
+    const outsideClick = new MouseEvent('click', { bubbles: true });
+    document.body.dispatchEvent(outsideClick);
+
+    fixture.detectChanges();
+    expect(component.showNotifications).toBe(false);
+  });
+
+  it('should NOT close notifications when clicking inside notification wrapper', () => {
+    component.isLogin = true;
+    component.showNotifications = true;
+    fixture.detectChanges();
+
+    const wrapperEl = document.createElement('div');
+    const insideEl = document.createElement('button');
+    wrapperEl.appendChild(insideEl);
+
+    component['notificationWrapper'] = { nativeElement: wrapperEl } as any;
+
+    const insideClick = new MouseEvent('click', { bubbles: true });
+    insideEl.dispatchEvent(insideClick);
+
+    fixture.detectChanges();
+    expect(component.showNotifications).toBe(true);
   });
 });

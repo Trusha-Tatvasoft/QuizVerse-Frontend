@@ -14,7 +14,7 @@ import {
   doughnutChartOptionsConfig,
   lineChartOptionsConfig,
 } from '../configs/chart-options.config';
-import { DateFilterType, filterOptions, months } from '../../../../utils/constants';
+import { dateFilterType, filterOptions, months } from '../../../../utils/constants';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -43,7 +43,7 @@ export class InsightCardComponent implements OnInit, OnDestroy {
   private readonly dashboardService = inject(AdminDashboardDataService);
 
   ngOnInit(): void {
-    this.selectedFilter = DateFilterType.last7Days;
+    this.selectedFilter = dateFilterType.last7Days;
     this.loadChartData();
   }
 
@@ -125,21 +125,21 @@ export class InsightCardComponent implements OnInit, OnDestroy {
     let start = new Date(today);
 
     switch (filter) {
-      case DateFilterType.last7Days:
+      case dateFilterType.last7Days:
         start.setDate(today.getDate() - 6);
         break;
-      case DateFilterType.last30days:
+      case dateFilterType.last30days:
         start.setDate(today.getDate() - 29);
         break;
-      case DateFilterType.lastMonth:
+      case dateFilterType.lastMonth:
         start = new Date(today.getFullYear(), today.getMonth() - 1, 1);
         today.setDate(0);
         break;
-      case DateFilterType.lastYear:
+      case dateFilterType.lastYear:
         start = new Date(today.getFullYear() - 1, 0, 1);
         today.setFullYear(today.getFullYear() - 1, 11, 31);
         break;
-      case DateFilterType.allTime:
+      case dateFilterType.allTime:
         start = new Date(2000, 0, 1);
         break;
     }
