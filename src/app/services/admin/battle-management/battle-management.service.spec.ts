@@ -5,7 +5,7 @@ import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { BattleManagementData } from '../../../pages/admin/battle-management/interfaces/battle-management.interface';
-import { BattleStatus } from '../../../shared/enums/battle-management.enum';
+import { BattleCreationStatus } from '../../../shared/enums/battle-management.enum';
 
 describe('BattleManagementService', () => {
   let service: BattleManagementService;
@@ -47,7 +47,7 @@ describe('BattleManagementService', () => {
           endDate: new Date('2025-08-20T00:00:00Z'),
           battleDifficulty: 'Easy',
           totalQuestion: 5,
-          battleStatus: BattleStatus.Active, // 👈 must match your enum
+          battleStatus: BattleCreationStatus.Active, // 👈 must match your enum
         },
       ],
     };
