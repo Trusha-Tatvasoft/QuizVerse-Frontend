@@ -1,1 +1,94 @@
-<p>quiz-creation-step-4 works!</p>
+<!-- Step 4 -->
+<div class="mb-5">
+  <h2 class="form-heading">Review and Publish</h2>
+  <span class="text-xs text-gray-500">Review your quiz before publishing</span>
+</div>
+
+<!-- Top: Quiz Info + Questions Summary -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+  <!-- Column 1: Quiz Info -->
+  @if (quizStep1Data) {
+    <div class="mb-4">
+      <h3 class="text-lg font-semibold mb-2">Quiz Information</h3>
+      <p class="text-sm"><span class="font-bold">Title:</span> {{ quizStep1Data.quizTitle }}</p>
+      <p class="text-sm">
+        <span class="font-bold">Category:</span> {{ quizStep1Data.quizCategoryName }}
+      </p>
+      <p class="text-sm">
+        <span class="font-bold">Description:</span> {{ quizStep1Data.description }}
+      </p>
+      <p class="text-sm">
+        <span class="font-bold">Timing:</span> {{ quizStep1Data.quizTiming }} minutes
+      </p>
+      @if (quizStep1Data.isPaid) {
+        <p class="text-sm"><span class="font-bold">Price:</span> {{ quizStep1Data.price }}</p>
+      }
+    </div>
+  }
+
+  <!-- Column 2: Questions Summary -->
+  @if (quizStep1Data) {
+    <div>
+      <h3 class="text-lg font-semibold mb-2">Questions Summary</h3>
+      <p class="text-sm">
+        <span class="font-bold">Total Questions:</span> {{ totalQuestions(quizStep1Data) }}
+      </p>
+      @for (dist of quizStep1Data?.difficultyDistribution; track dist.key) {
+        <p class="text-sm">
+          <span class="font-bold"> {{ dist.key.replace('Questions', '') | titlecase }}: </span>
+          {{ dist.value }}
+        </p>
+      }
+    </div>
+  }
+</div>
+
+<!-- Tags for Quiz -->
+@if (quizStep1Data?.tags?.length) {
+  <div class="flex flex-wrap gap-2 mb-4">
+    @for (tag of quizStep1Data.tags; track $index) {
+      <app-tag [tagConfig]="getTypeTagConfigWithLabelInCS(tag)"></app-tag>
+    }
+  </div>
+}
+
+<!-- Bottom: All Questions -->
+<div>
+  <h3 class="text-lg font-semibold mb-4">Questions</h3>
+  @for (q of selectedQuestions; track $index) {
+    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-sm my-2">
+      <!-- Question number and text -->
+      <div class="text-gray-900 font-semibold">{{ $index + 1 }}. {{ q.queText }}</div>
+
+      <!-- Tags -->
+      <div class="flex flex-wrap gap-2 mt-2">
+        <app-tag [tagConfig]="getTypeTagConfigWithLabelInCS(q.queTypeName!)"></app-tag>
+        <app-tag [tagConfig]="getTagConfigWithDifficultyInCS(q.queDifficultyName!)"></app-tag>
+      </div>
+
+      <!-- MCQ options -->
+      @if (q.queTypeName === 'Multiple Choice') {
+        <div class="mt-2 text-sm text-gray-700">
+          <span class="font-medium">Options:</span> {{ getMCQOptions(q) }}
+        </div>
+      }
+
+      <!-- Answer -->
+      <div class="mt-1 text-sm font-semibold text-green-600">Answer: {{ getAnswer(q) }}</div>
+    </div>
+  }
+</div>
+
+<!-- Action Buttons -->
+<div class="flex gap-2 mt-5">
+  <app-outline-button
+    [outlineButtonConfig]="exportCsvButton"
+    (buttonClicked)="exportCsv()"
+    class="min-width-btn"
+  ></app-outline-button>
+  <app-outline-button
+    [outlineButtonConfig]="previewQuizButton"
+    class="min-width-btn"
+    (buttonClicked)="openPreview()"
+  ></app-outline-button>
+</div>

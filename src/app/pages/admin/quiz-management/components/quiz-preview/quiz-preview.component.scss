@@ -1,0 +1,5 @@
+.questions-container {
+  max-height: calc(80vh - 180px); /* subtract header/tags height */
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
