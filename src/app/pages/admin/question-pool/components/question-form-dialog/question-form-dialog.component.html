@@ -1,1 +1,30 @@
-<p>question-form-dialog works!</p>
+<div class="dialog-container">
+  <div class="question-dialog-header">
+    <div class="dialog-title">
+      {{ mode === 'create' ? 'Create Questions' : 'Edit Question' }}
+    </div>
+    <div class="dialog-subtitle">
+      {{
+        mode === 'create'
+          ? 'Choose how you want to create new questions'
+          : 'Update the question details below'
+      }}
+    </div>
+  </div>
+  <button mat-icon-button class="close-btn" (click)="closeDialog()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  @if (mode === 'create') {
+    <app-common-tab
+      [tabs]="tabs"
+      [selectedIndex]="selectedIndex()"
+      class="question-pool-tabs"
+      (tabChanged)="switchToTab($event)"
+    ></app-common-tab>
+  }
+
+  @if (mode === 'edit') {
+    <app-create-edit-question-form [questionId]="data.id"></app-create-edit-question-form>
+  }
+</div>

@@ -1,1 +1,5 @@
-<p>manual-question-tab works!</p>
+<app-common-tab
+  [tabs]="tabs"
+  [selectedIndex]="selectedIndex()"
+  (tabChanged)="switchToTab($event)"
+></app-common-tab>

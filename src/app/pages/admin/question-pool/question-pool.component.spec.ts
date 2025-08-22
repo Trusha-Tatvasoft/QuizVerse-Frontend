@@ -18,6 +18,7 @@ import { TableData } from '../../../shared/interfaces/table-component.interface'
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { QuestionPreviewDialogComponent } from './components/question-preview-dialog/question-preview-dialog.component';
+import { QuestionFormDialogComponent } from './components/question-form-dialog/question-form-dialog.component';
 
 const mockDropdownData = {
   categories: [
@@ -376,6 +377,58 @@ describe('QuestionPoolComponent (Jest)', () => {
         maxHeight: '80vh',
         data: { id: 123 },
       });
+    });
+  });
+
+  describe('openQuestionDialog', () => {
+    it('should open dialog with create mode by default and refresh on close if changed', fakeAsync(() => {
+      const fetchSpy = jest.spyOn(component, 'fetchQuestionPoolList').mockImplementation(jest.fn());
+      (matDialogMock.open as jest.Mock).mockReturnValue({
+        afterClosed: () => of(true),
+      });
+
+      component.openQuestionDialog();
+
+      tick();
+      expect(matDialogMock.open).toHaveBeenCalledWith(
+        QuestionFormDialogComponent,
+        expect.objectContaining({
+          minWidth: '50vw',
+          maxWidth: '100vw',
+          maxHeight: '95vh',
+          autoFocus: false,
+          data: expect.objectContaining({ mode: 'create' }),
+        }),
+      );
+      expect(fetchSpy).toHaveBeenCalled();
+    }));
+
+    it('should not refresh when dialog closes without changes', fakeAsync(() => {
+      const fetchSpy = jest.spyOn(component, 'fetchQuestionPoolList').mockImplementation(jest.fn());
+      (matDialogMock.open as jest.Mock).mockReturnValue({
+        afterClosed: () => of(false),
+      });
+
+      component.openQuestionDialog('edit', 999);
+
+      tick();
+      expect(matDialogMock.open).toHaveBeenCalledWith(
+        QuestionFormDialogComponent,
+        expect.objectContaining({
+          data: { mode: 'edit', id: 999 },
+        }),
+      );
+      expect(fetchSpy).not.toHaveBeenCalled();
+    }));
+  });
+
+  describe('handleQuestionAction (EDIT)', () => {
+    it('should call openQuestionDialog with edit mode for EDIT action', () => {
+      const spy = jest.spyOn(component, 'openQuestionDialog');
+      const question = { id: 789 } as TableData;
+
+      component.handleQuestionAction({ action: questionAction.EDIT, row: question });
+      expect(spy).toHaveBeenCalledWith('edit', 789);
     });
   });
 });

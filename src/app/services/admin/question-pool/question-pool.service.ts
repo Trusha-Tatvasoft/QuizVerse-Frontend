@@ -9,6 +9,7 @@ import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { environment } from '../../../../environments/environment.dev';
 import { skipLoader } from '../../../utils/constants';
 import { QuestionDetail } from '../../../pages/admin/question-pool/interfaces/question-pool-preview.interface';
+import { QuestionRequest } from '../../../pages/admin/question-pool/interfaces/question-request.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -55,6 +56,19 @@ export class QuestionPoolService {
           [skipLoader]: 'true',
         }),
       },
+    );
+  }
+
+  /**
+   * Create a new question or update an existing one.
+   * @param id - The ID of the question (0 or null for create, existing ID for update).
+   * @param dto - The QuestionRequest payload containing question details.
+   * @returns Observable<ApiResponse<string>> - response message (T/F) from backend.
+   */
+  createOrUpdateQuestion(id: number, dto: QuestionRequest): Observable<ApiResponse<string>> {
+    return this.http.post<ApiResponse<string>>(
+      `${environment.baseUrl}/${EndPoints.CreateOrUpdateQuestion}/${id}`,
+      dto,
     );
   }
 }
