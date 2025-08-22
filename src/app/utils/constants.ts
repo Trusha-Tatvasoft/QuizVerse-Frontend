@@ -394,5 +394,7 @@ export const quizCRUDMessages = {
   fileTypeError: 'Select only Excel or csv.',
   invalideQuizId: 'Invalid quiz id',
   questionAdded: 'Question Added!',
+  quizTitalNotFoundError: 'Quiz name not found',
+  failedToExportQuestions: 'Failed to export questions.',
 };
 //#endregion

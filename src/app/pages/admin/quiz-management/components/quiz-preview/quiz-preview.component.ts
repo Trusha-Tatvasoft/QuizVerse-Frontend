@@ -1,8 +1,6 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
-
-// Angular Material
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -17,7 +15,7 @@ import {
   QuestionsList,
   QuizPreviewData,
 } from '../../../../../shared/interfaces/quiz-creation.interface';
-// Your custom components
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-quiz-preview',
@@ -34,13 +32,12 @@ import {
     TagComponent,
     MatRadioModule,
     FormsModule,
+    MatIcon,
   ],
 })
 export class QuizPreviewComponent {
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: QuizPreviewData,
-    private readonly dialogRef: MatDialogRef<QuizPreviewComponent>,
-  ) {}
+  data = inject<QuizPreviewData>(MAT_DIALOG_DATA);
+  private readonly dialogRef = inject(MatDialogRef<QuizPreviewComponent>);
 
   close() {
     this.dialogRef.close();
@@ -54,7 +51,7 @@ export class QuizPreviewComponent {
     return q.queOptionsAns?.find((a) => a.key === 'answer')?.value || '';
   }
 
-  getAnswerTF(q: QuestionsList): string {
+  getBoolAnswer(q: QuestionsList): string {
     return q.queOptionsAns?.find((a) => a.key === 'answer')?.value.toLowerCase() || '';
   }
 }

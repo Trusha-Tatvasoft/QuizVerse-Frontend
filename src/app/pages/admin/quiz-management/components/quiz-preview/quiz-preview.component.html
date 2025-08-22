@@ -1,19 +1,33 @@
-<div class="p-4 w-full max-w-3xl no-icon-mat-btn">
-  <!-- Header -->
-  <h2 class="text-xl font-semibold">{{ data.quizName }}</h2>
-  <p class="text-gray-600">{{ data.description }}</p>
+<div class="p-4 w-full max-w-3xl no-icon-mat-btn flex flex-col h-[80vh]">
+  <!-- Static Header -->
+  <div class="flex-shrink-0 relative">
+    <!-- Close Button (absolute top-right) -->
+    <button
+      mat-icon-button
+      type="button"
+      class="absolute top-0 right-0 cursor-pointer"
+      (click)="close()"
+      aria-label="Close"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
 
-  <!-- Tags -->
-  <div class="flex gap-2 my-3">
-    @for (tag of data.tags; track tag) {
-      <app-tag [tagConfig]="tag"></app-tag>
-    }
+    <!-- Title + Description -->
+    <h2 class="text-xl font-semibold pr-10">{{ data.quizName }}</h2>
+    <p class="text-gray-600 pr-10">{{ data.description }}</p>
+
+    <!-- Tags -->
+    <div class="flex gap-2 my-3">
+      @for (tag of data.tags; track tag) {
+        <app-tag [tagConfig]="tag"></app-tag>
+      }
+    </div>
+
+    <mat-divider class="my-3"></mat-divider>
   </div>
 
-  <mat-divider class="my-3"></mat-divider>
-
-  <!-- Questions -->
-  <div class="questions-container">
+  <!-- Scrollable Questions -->
+  <div class="questions-container flex-1 overflow-y-auto pr-2">
     @for (q of data.questions; track q.id) {
       <div class="mt-4 mb-4 border border-gray-300 rounded-lg p-3">
         <div class="font-medium">{{ $index + 1 }}. {{ q.queText }}</div>
@@ -53,7 +67,7 @@
             class="w-full custom-form-field low-opacity"
             [floatLabel]="'auto'"
           >
-            <mat-select [value]="getAnswerTF(q)">
+            <mat-select [value]="getBoolAnswer(q)">
               <mat-option value="true">True</mat-option>
               <mat-option value="false">False</mat-option>
             </mat-select>

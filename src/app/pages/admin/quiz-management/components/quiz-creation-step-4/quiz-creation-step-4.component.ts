@@ -19,6 +19,7 @@ import {
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
 import { QuizCreationService } from '../../../../../services/admin/quiz-management/quiz-creation/quiz-creation.service';
 import { Subject, takeUntil } from 'rxjs';
+import { quizCRUDMessages } from '../../../../../utils/constants';
 
 @Component({
   selector: 'app-quiz-creation-step-4',
@@ -99,7 +100,7 @@ export class QuizCreationStep4Component {
 
   exportCsv(): void {
     if (!this.quizStep1Data?.quizTitle) {
-      this.snackbar.showError('Quiz name not found');
+      this.snackbar.showError(quizCRUDMessages.quizTitalNotFoundError);
       return;
     }
 
@@ -131,7 +132,7 @@ export class QuizCreationStep4Component {
           window.URL.revokeObjectURL(url);
         },
         error: () => {
-          this.snackbar.showError('Failed to export questions.');
+          this.snackbar.showError(quizCRUDMessages.failedToExportQuestions);
         },
       });
   }

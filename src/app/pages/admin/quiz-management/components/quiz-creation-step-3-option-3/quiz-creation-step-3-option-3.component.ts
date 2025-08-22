@@ -39,6 +39,11 @@ export class QuizCreationStep3Option3Component {
 
   private readonly destroy$ = new Subject<void>();
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   private downloadFile(fileUrl: string) {
     const link = document.createElement('a');
     link.href = fileUrl;
@@ -46,9 +51,27 @@ export class QuizCreationStep3Option3Component {
     link.click();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  private handleSuccess(data: QuestionResponseDto[]) {
+    const newSelectedQuestions = this.mapQuestions(data);
+    this.selectedQuestions = [...this.selectedQuestions, ...newSelectedQuestions];
+    this.selectedQuestionsChangeFromInnerStep3Option3.emit([...this.selectedQuestions]);
+    this.snackbar.showSuccess(`${newSelectedQuestions.length} questions added!!`);
+  }
+
+  private mapQuestions(data: QuestionResponseDto[]): QuestionsList[] {
+    return (data ?? []).map((q: QuestionResponseDto) => ({
+      id: q.id,
+      categoryId: q.categoryId,
+      queDifficultyId: q.queDifficultyId,
+      queText: q.queText,
+      queTypeId: q.queTypeId,
+      queOptionsAns: q.queOptionsAns.map((opt: QuestionOptionResponseDto) => ({
+        id: opt.id,
+        questionId: opt.questionId,
+        key: opt.key,
+        value: opt.value,
+      })),
+    }));
   }
 
   closeOption() {
@@ -80,66 +103,22 @@ export class QuizCreationStep3Option3Component {
     if (!file) return;
 
     const fileName = file.name.toLowerCase();
+
     if (fileName.endsWith('.csv')) {
       this.quizCreationService
         .getQuestionsFromCsv(file)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
-          next: (res) => {
-            const newSelectedQuestions: QuestionsList[] = res.data.map(
-              (q: QuestionResponseDto) => ({
-                id: q.id,
-                categoryId: q.categoryId,
-                queDifficultyId: q.queDifficultyId,
-                queText: q.queText,
-                queTypeId: q.queTypeId,
-                queOptionsAns: q.queOptionsAns.map((opt: QuestionOptionResponseDto) => ({
-                  id: opt.id,
-                  questionId: opt.questionId,
-                  key: opt.key,
-                  value: opt.value,
-                })),
-              }),
-            );
-
-            this.selectedQuestions = [...this.selectedQuestions, ...newSelectedQuestions];
-            this.selectedQuestionsChangeFromInnerStep3Option3.emit([...this.selectedQuestions]);
-            this.snackbar.showSuccess(`${newSelectedQuestions.length} questions added!!`);
-          },
-          error: (err) => {
-            this.snackbar.showError(err);
-          },
+          next: (res) => this.handleSuccess(res.data),
+          error: (err) => this.snackbar.showError(err),
         });
     } else if (fileName.endsWith('.xls') || fileName.endsWith('.xlsx')) {
       this.quizCreationService
         .getQuestionsFromExcel(file)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
-          next: (res) => {
-            const newSelectedQuestions: QuestionsList[] = (res.data ?? []).map(
-              (q: QuestionResponseDto) => ({
-                id: q.id,
-                categoryId: q.categoryId,
-                queDifficultyId: q.queDifficultyId,
-                queText: q.queText,
-                queTypeId: q.queTypeId,
-                queOptionsAns: q.queOptionsAns.map((opt: QuestionOptionResponseDto) => ({
-                  id: opt.id,
-                  questionId: opt.questionId,
-                  key: opt.key,
-                  value: opt.value,
-                })),
-              }),
-            );
-
-            this.selectedQuestions = [...this.selectedQuestions, ...newSelectedQuestions];
-            this.selectedQuestionsChangeFromInnerStep3Option3.emit([...this.selectedQuestions]);
-
-            this.snackbar.showSuccess(`${newSelectedQuestions.length} questions added!!`);
-          },
-          error: (err) => {
-            this.snackbar.showError(err);
-          },
+          next: (res) => this.handleSuccess(res.data),
+          error: (err) => this.snackbar.showError(err),
         });
     } else {
       this.snackbar.showError(quizCRUDMessages.fileTypeError);

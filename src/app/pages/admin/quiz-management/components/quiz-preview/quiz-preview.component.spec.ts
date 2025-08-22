@@ -56,14 +56,14 @@ describe('QuizPreviewComponent', () => {
     expect(component.getAnswer({} as any)).toBe('');
   });
 
-  it('getAnswerTF should return lowercased answer if present', () => {
+  it('getBoolAnswer should return lowercased answer if present', () => {
     const q: QuestionsList = {
       queOptionsAns: [{ key: 'answer', value: 'TRUE' }],
     } as any;
-    expect(component.getAnswerTF(q)).toBe('true');
+    expect(component.getBoolAnswer(q)).toBe('true');
   });
 
-  it('getAnswerTF should return empty string if no answer', () => {
-    expect(component.getAnswerTF({} as any)).toBe('');
+  it('getBoolAnswer should return empty string if no answer', () => {
+    expect(component.getBoolAnswer({} as any)).toBe('');
   });
 });
