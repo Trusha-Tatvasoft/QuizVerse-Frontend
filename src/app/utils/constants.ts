@@ -236,12 +236,21 @@ export const platformMessages = {
   failedLoadQuesPreview: 'Failed to load question details',
   deleteQuesSuccess: 'Question Deleted Successfully!!',
   deleteQuesFailure: 'Failed to delete question',
+  noQuestionsToSave: 'No questions to save.',
+  saveQuestionsSuccess: 'Questions added successfully.',
+  saveQuestionsFailure: 'Something went wrong while saving questions.',
   //#endregion
 };
 //#endregion
 
 //#region Constant Variables
 export const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+
+export const allowedImportQuestionFileTypes = [
+  'text/csv',
+  'application/vnd.ms-excel', // .xls
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+];
 
 export const maxFileUploadSize = 10 * 1024 * 1024;
 

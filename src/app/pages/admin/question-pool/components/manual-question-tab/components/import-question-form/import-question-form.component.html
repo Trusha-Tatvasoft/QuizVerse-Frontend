@@ -1,1 +1,47 @@
-<p>import-question-form works!</p>
+<div class="template-info">Download templates to see the required format:</div>
+
+<!-- Download Buttons -->
+<div class="template-buttons">
+  <app-outline-button [outlineButtonConfig]="downloadCsvBtn" (click)="DownloadCsv()">
+  </app-outline-button>
+  <app-outline-button [outlineButtonConfig]="downloadExcelBtn" (click)="DownloadExcel()">
+  </app-outline-button>
+</div>
+
+<hr class="section-divider" />
+<div class="section-label">Upload CSV/Excel File</div>
+
+<!-- File Upload Container -->
+<form [formGroup]="uploadForm">
+  <div class="file-input-container">
+    <input
+      #fileInputExcel
+      id="excelFile"
+      type="file"
+      class="file-input"
+      (change)="FileSelected($event)"
+      accept=".csv, .xls, .xlsx"
+    />
+
+    <div class="file-upload-row">
+      <app-filled-button
+        [filledButtonConfig]="uploadButton"
+        (buttonClicked)="fileInputExcel.click()"
+        class="custom-upload-button"
+      ></app-filled-button>
+
+      <span class="selected-file-name">
+        {{ displayFileName }}
+        @if (selectedFile) {
+          <mat-icon (click)="clearSelectedFile(fileInputExcel)" class="clear-icon">cancel</mat-icon>
+        }
+      </span>
+    </div>
+  </div>
+
+  @if (uploadForm.get('file')?.touched && uploadForm.get('file')?.invalid) {
+    <mat-error>
+      {{ getError('file') }}
+    </mat-error>
+  }
+</form>

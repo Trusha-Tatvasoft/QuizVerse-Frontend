@@ -204,4 +204,106 @@ describe('QuestionPoolService', () => {
     expect(req.request.body).toEqual(dto);
     req.flush(mockResponse);
   });
+
+  it('should preview questions from CSV file', () => {
+    const file = new File(['id,question'], 'questions.csv', { type: 'text/csv' });
+    const previewUrl = `${environment.baseUrl}/${EndPoints.PreviewQuestionsFromCsv}`;
+
+    const mockResponse: ApiResponse<QuestionPoolListData[]> = {
+      result: true,
+      statusCode: 200,
+      message: 'Preview success',
+      data: [
+        {
+          id: 1,
+          categoryId: 2,
+          categoryName: 'Category CSV',
+          queDifficultyId: 1,
+          queDifficultyName: 'Easy',
+          queText: 'CSV question?',
+          queTypeId: 5,
+          queTypeName: 'Multiple Choice',
+          queOptionsAns: [{ id: 1, questionId: 1, key: 'Answer', value: '42' }],
+        },
+      ],
+    };
+
+    service.previewQuestionsFromCsv(file).subscribe((res) => {
+      expect(res.length).toBe(1);
+      expect(res[0].queText).toBe('CSV question?');
+    });
+
+    const req = httpMock.expectOne(previewUrl);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body instanceof FormData).toBe(true);
+    req.flush(mockResponse);
+  });
+
+  it('should preview questions from Excel file', () => {
+    const file = new File(['excel-data'], 'questions.xlsx', { type: 'application/vnd.ms-excel' });
+    const previewUrl = `${environment.baseUrl}/${EndPoints.PreviewQuestionsFromExcel}`;
+
+    const mockResponse: ApiResponse<QuestionPoolListData[]> = {
+      result: true,
+      statusCode: 200,
+      message: 'Preview success',
+      data: [
+        {
+          id: 2,
+          categoryId: 3,
+          categoryName: 'Category Excel',
+          queDifficultyId: 2,
+          queDifficultyName: 'Medium',
+          queText: 'Excel question?',
+          queTypeId: 6,
+          queTypeName: 'True/False',
+          queOptionsAns: [{ id: 2, questionId: 2, key: 'Answer', value: 'Yes' }],
+        },
+      ],
+    };
+
+    service.previewQuestionsFromExcel(file).subscribe((res) => {
+      expect(res.length).toBe(1);
+      expect(res[0].queText).toBe('Excel question?');
+    });
+
+    const req = httpMock.expectOne(previewUrl);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body instanceof FormData).toBe(true);
+    req.flush(mockResponse);
+  });
+
+  it('should save questions after preview', () => {
+    const saveUrl = `${environment.baseUrl}/${EndPoints.SaveQuestions}`;
+    const questions: QuestionPoolListData[] = [
+      {
+        id: 3,
+        categoryId: 4,
+        categoryName: 'Category Save',
+        queDifficultyId: 3,
+        queDifficultyName: 'Hard',
+        queText: 'Saved question?',
+        queTypeId: 7,
+        queTypeName: 'Short Answer',
+        queOptionsAns: [{ id: 3, questionId: 3, key: 'Answer', value: 'Saved' }],
+      },
+    ];
+
+    const mockResponse: ApiResponse<string> = {
+      result: true,
+      statusCode: 200,
+      message: 'Questions saved successfully',
+      data: 'OK',
+    };
+
+    service.saveQuestions(questions).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+      expect(res.message).toBe('Questions saved successfully');
+    });
+
+    const req = httpMock.expectOne(saveUrl);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(questions);
+    req.flush(mockResponse);
+  });
 });

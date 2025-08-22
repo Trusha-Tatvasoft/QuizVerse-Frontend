@@ -1,1 +1,66 @@
-<p>import-question-preview works!</p>
+<div class="dialog-container">
+  <div class="question-dialog-header">
+    <div class="dialog-title">Preview Questions</div>
+    <div class="dialog-subtitle">Review the questions before adding them to your pool</div>
+  </div>
+  <button mat-icon-button class="close-btn" (click)="closeDialog()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <mat-dialog-content>
+    @for (q of questions; track $index) {
+      <!-- Question info -->
+      <div class="question-preview">
+        <div>
+          <div class="question-text">{{ $index + 1 }}. {{ q.queText }}</div>
+          <div class="question-info">
+            <div class="question-item">
+              <span class="question-label">Type: </span>
+              <span class="question-value">{{ q.queTypeName }}</span>
+            </div>
+            <div class="question-item">
+              <span class="question-label">Difficulty: </span>
+              <span class="question-value">{{ q.queDifficultyName }}</span>
+            </div>
+            <div class="question-item">
+              <span class="question-label">Category: </span>
+              <span class="question-value">{{ q.categoryName }}</span>
+            </div>
+          </div>
+
+          <!-- Show Options if any -->
+          @if (hasOptions(q.queOptionsAns)) {
+            <div class="question-item">
+              <span class="question-label">Options: </span>
+              <span class="question-value">{{ getOptionsString(q.queOptionsAns) }}</span>
+            </div>
+          }
+
+          <!-- Correct Answer -->
+          <div class="question-item">
+            <span class="question-label text-black">Correct Answer: </span>
+            <span class="question-value">{{ getAnswerString(q.queOptionsAns) }}</span>
+          </div>
+        </div>
+
+        <button mat-icon-button (click)="removeQuestion($index)">
+          <mat-icon class="cursor-pointer">delete</mat-icon>
+        </button>
+      </div>
+    } @empty {
+      <div>No Questions to preview</div>
+    }
+  </mat-dialog-content>
+
+  <!-- Actions -->
+  <div class="dialog-actions p-2">
+    <app-outline-button
+      [outlineButtonConfig]="cancelBtn"
+      (click)="closeDialog()"
+    ></app-outline-button>
+    <app-filled-button
+      [filledButtonConfig]="submitBtn"
+      (buttonClicked)="addQuestions()"
+    ></app-filled-button>
+  </div>
+</div>

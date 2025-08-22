@@ -182,3 +182,18 @@ export function buildFieldsByQuestionType(type: number): DynamicFormField[] {
       return [];
   }
 }
+
+export const importQuestionFormFields: DynamicFormField[] = [
+  {
+    name: 'file',
+    label: 'Upload File',
+    type: 'file',
+    placeholder: 'Choose a file',
+    icon: 'upload',
+    validators: [Validators.required],
+    validationMessages: {
+      required: 'A file is required.',
+      fileType: 'Only .csv, .xls, or .xlsx formats are allowed.',
+    },
+  },
+];
