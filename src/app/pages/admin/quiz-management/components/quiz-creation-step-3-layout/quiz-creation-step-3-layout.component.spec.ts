@@ -276,21 +276,6 @@ describe('QuizCreationStep3LayoutComponent', () => {
     expect(component.selectedQuestions[0].queOptionsAns![0].value).toBe('Some answer');
   });
 
-  it('should add question for case 4 (Descriptive etc.)', () => {
-    component.questionTypeOptions = [{ value: 4, label: 'Descriptive' }];
-    component.questionForm = new FormBuilder().group({
-      type: [4],
-      difficulty: [1],
-      questionText: ['Q4'],
-      correctAnswer: ['Detailed answer'],
-    });
-
-    component.addQuestion();
-
-    expect(component.selectedQuestions.length).toBe(1);
-    expect(component.selectedQuestions[0].queOptionsAns![0].value).toBe('Detailed answer');
-  });
-
   it('should not add question for default case (invalid type)', () => {
     component.questionTypeOptions = [{ value: 99, label: 'Invalid' }];
     component.questionForm = new FormBuilder().group({

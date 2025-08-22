@@ -42,6 +42,7 @@ import { ConfirmationDialogData } from '../../../../../shared/interfaces/confirm
 import { ConfirmationDialogComponent } from '../../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DropDownType } from '../../../../../shared/enums/dropdown-types.enum';
+import { QuestionType } from '../../../../../shared/enums/quiz-management.enum';
 
 @Component({
   selector: 'app-quiz-creation-step-3-layout',
@@ -242,7 +243,7 @@ export class QuizCreationStep3LayoutComponent {
       let queOptionsAns: { id: number; key: string; value: string }[] = [];
 
       switch (formValue.type) {
-        case 1:
+        case QuestionType.MultipleOptions:
           const options = [
             formValue.option1,
             formValue.option2,
@@ -262,14 +263,13 @@ export class QuizCreationStep3LayoutComponent {
           ];
           break;
 
-        case 2: // True/False
+        case QuestionType.TrueFalse:
           queOptionsAns = [
             { id: 1, key: 'answer', value: formValue.correctAnswer ? 'True' : 'False' },
           ];
           break;
 
-        case 3:
-        case 4:
+        case QuestionType.ShortAnswer || QuestionType.FillInTheBlank:
           queOptionsAns = [{ id: 1, key: 'answer', value: formValue.correctAnswer }];
           break;
 
