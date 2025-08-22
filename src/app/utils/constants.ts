@@ -375,3 +375,24 @@ export const colors = {
   brown: { bg: 'lightBrown', text: 'brown' },
 };
 //#endregion
+
+//#region Quiz Crud Messages
+export const quizCRUDMessages = {
+  quizSaved: 'Quiz saved successfully!',
+  editQuizTitle: 'Edit Quiz',
+  editQuizSubtitle: 'Design and configure a quiz for the platform',
+  quizDrafSaved: 'Quiz save as draft successfully!',
+  featureNotAvailable: 'This feature is not available yet. Please select another method.',
+  questionCreationMethodSelectError: 'Please select a question creation method.',
+  totalQuestionsError: (count: number) =>
+    `Please select the ${count} number of questions as per your quiz settings.`,
+  maxDifficultyQuestionsError: (difficultyLimit: number, difficultyName: string) =>
+    `Max ${difficultyLimit} ${difficultyName} questions allowed.`,
+  difficultyWiseQuestionSelectionError: 'Please select the questions as per your quiz settings.',
+  minimumNumberOfQuestionError: 'Total questions must be at least 5.',
+  mcqOptionError: 'Correct answer must match one of the options.',
+  fileTypeError: 'Select only Excel or csv.',
+  invalideQuizId: 'Invalid quiz id',
+  questionAdded: 'Question Added!',
+};
+//#endregion
