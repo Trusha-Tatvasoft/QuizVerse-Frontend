@@ -21,6 +21,7 @@ import { TableData } from '../../../shared/interfaces/table-component.interface'
 import {
   debounceTimeValue,
   platformMessages,
+  quizActions,
   tablePaginationConfig,
 } from '../../../utils/constants';
 import { PaginationRequest } from '../../../shared/interfaces/pagination-request.interface';
@@ -30,6 +31,12 @@ import { DropDownType } from '../../../shared/enums/dropdown-types.enum';
 import { DropdownService } from '../../../shared/service/dropdown/dropdown.service';
 import { QuizStatus } from '../../../shared/enums/quiz-management.enum';
 import { quizToQuizListingTableData } from './components/quiz-table/quiz-table-data.mapper';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogData } from '../../../shared/interfaces/confirmation-dialog.interface';
+import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { Router } from '@angular/router';
+import { deleteQuizDialog } from './configs/quiz-confirmation-dialog.config';
+import { Navigations } from '../../../shared/enums/navigation';
 
 @Component({
   selector: 'app-quiz-management',
@@ -49,6 +56,8 @@ export class QuizManagementComponent implements OnInit {
   quizManagementService = inject(QuizManagementService);
   dropdownService = inject(DropdownService);
   snackbar = inject(SnackbarService);
+  dialog = inject(MatDialog);
+  router = inject(Router);
 
   // Header and button configs
   quizConfig = quizManagementHeaderConfig;
@@ -208,6 +217,78 @@ export class QuizManagementComponent implements OnInit {
           const message = error?.error?.message || error?.message || 'Unexpected error occurred';
           const status = error?.status || 'Unknown';
           this.snackbar.showError(message, `Error ${status}`);
+        },
+      });
+  }
+
+  navigateToQuizCreation(): void {
+    this.router.navigate([
+      `/${Navigations.Admin}/${Navigations.Quizzes}/${Navigations.QuizCreation}`,
+    ]);
+  }
+
+  handleQuizAction(event: { action: string; row: TableData }): void {
+    const quiz = event.row;
+    switch (event.action) {
+      case quizActions.VISIBILITY:
+        break;
+      case quizActions.EDIT:
+        // Encode quiz id to base64 and navigate
+        const encodedId = btoa((quiz['id'] as number).toString());
+        this.router.navigate([
+          `/${Navigations.Admin}/${Navigations.Quizzes}/${Navigations.QuizCreation}`,
+          encodedId,
+        ]);
+        break;
+      case quizActions.DELETE:
+        this.openConfirmationDialog(deleteQuizDialog, () => this.deleteQuiz(quiz['id'] as number));
+        break;
+    }
+  }
+
+  openConfirmationDialog(dialogData: ConfirmationDialogData, onConfirm: () => void): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '600px',
+      disableClose: true,
+      data: dialogData,
+      panelClass: 'custom-dialog-radius',
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) onConfirm();
+    });
+  }
+
+  deleteQuiz(quizId: number): void {
+    this.quizManagementService
+      .deleteQuiz(quizId)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: (res) => {
+          if (res.statusCode === 200) {
+            this.snackbar.showSuccess('Success', platformMessages.deleteQuizSuccess);
+
+            // Handle pagination if last item on the last page
+            const currentData = this.dataSource();
+            const currentPage = this.pagination().pageNumber;
+
+            if (currentData.length === 1 && currentPage > 1) {
+              this.pagination.set({
+                ...this.pagination(),
+                pageNumber: currentPage - 1,
+              });
+            }
+
+            this.fetchQuizzes();
+          } else {
+            this.snackbar.showError('Error', res.message || platformMessages.deleteQuizFailure);
+          }
+        },
+        error: (err) => {
+          this.snackbar.showError(
+            'Error',
+            err?.error?.message || platformMessages.unavailableMessage,
+          );
         },
       });
   }

@@ -237,6 +237,11 @@ export const platformMessages = {
   deleteQuesSuccess: 'Question Deleted Successfully!!',
   deleteQuesFailure: 'Failed to delete question',
   //#endregion
+
+  //#region QuizManagement Messages
+  deleteQuizSuccess: 'Quiz Deleted Successfully!!',
+  deleteQuizFailure: 'Failed to delete quiz',
+  //#endregion
 };
 //#endregion
 
@@ -373,6 +378,14 @@ export const colors = {
   black: { bg: 'black', text: 'lightWhite' },
   white: { bg: 'lightWhite', text: 'black' },
   brown: { bg: 'lightBrown', text: 'brown' },
+};
+//#endregion
+
+//#region Quiz Management Constants
+export const quizActions = {
+  VISIBILITY: 'visibility',
+  EDIT: 'edit',
+  DELETE: 'delete',
 };
 //#endregion
 

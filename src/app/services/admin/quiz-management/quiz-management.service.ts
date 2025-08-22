@@ -39,4 +39,15 @@ export class QuizManagementService {
       >(`${environment.baseUrl}/${EndPoints.QuizTableData}`, request)
       .pipe(map((res) => res)); // Extract `data` from wrapped ApiResponse
   }
+
+  /**
+   * Delete a quiz by its ID.
+   * @param id - The ID of the quiz to delete.
+   * @returns Observable<ApiResponse<object>> - response from backend after deletion.
+   */
+  deleteQuiz(id: number): Observable<ApiResponse<object>> {
+    return this.http.delete<ApiResponse<object>>(
+      `${environment.baseUrl}/${EndPoints.DeleteQuiz}/${id}`,
+    );
+  }
 }
