@@ -2,9 +2,9 @@
 
 <!-- Download Buttons -->
 <div class="template-buttons">
-  <app-outline-button [outlineButtonConfig]="downloadCsvBtn" (click)="DownloadCsv()">
+  <app-outline-button [outlineButtonConfig]="downloadCsvBtn" (click)="downloadCsv()">
   </app-outline-button>
-  <app-outline-button [outlineButtonConfig]="downloadExcelBtn" (click)="DownloadExcel()">
+  <app-outline-button [outlineButtonConfig]="downloadExcelBtn" (click)="downloadExcel()">
   </app-outline-button>
 </div>
 
@@ -19,7 +19,7 @@
       id="excelFile"
       type="file"
       class="file-input"
-      (change)="FileSelected($event)"
+      (change)="fileSelected($event)"
       accept=".csv, .xls, .xlsx"
     />
 

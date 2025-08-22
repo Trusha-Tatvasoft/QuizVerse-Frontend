@@ -207,6 +207,9 @@ describe('QuestionPoolService', () => {
 
   it('should preview questions from CSV file', () => {
     const file = new File(['id,question'], 'questions.csv', { type: 'text/csv' });
+    const formData = new FormData();
+    formData.append('file', file);
+
     const previewUrl = `${environment.baseUrl}/${EndPoints.PreviewQuestionsFromCsv}`;
 
     const mockResponse: ApiResponse<QuestionPoolListData[]> = {
@@ -228,7 +231,7 @@ describe('QuestionPoolService', () => {
       ],
     };
 
-    service.previewQuestionsFromCsv(file).subscribe((res) => {
+    service.previewQuestionsFromCsv(formData).subscribe((res) => {
       expect(res.length).toBe(1);
       expect(res[0].queText).toBe('CSV question?');
     });
@@ -241,6 +244,9 @@ describe('QuestionPoolService', () => {
 
   it('should preview questions from Excel file', () => {
     const file = new File(['excel-data'], 'questions.xlsx', { type: 'application/vnd.ms-excel' });
+    const formData = new FormData();
+    formData.append('file', file);
+
     const previewUrl = `${environment.baseUrl}/${EndPoints.PreviewQuestionsFromExcel}`;
 
     const mockResponse: ApiResponse<QuestionPoolListData[]> = {
@@ -262,7 +268,7 @@ describe('QuestionPoolService', () => {
       ],
     };
 
-    service.previewQuestionsFromExcel(file).subscribe((res) => {
+    service.previewQuestionsFromExcel(formData).subscribe((res) => {
       expect(res.length).toBe(1);
       expect(res[0].queText).toBe('Excel question?');
     });

@@ -529,6 +529,10 @@
   border-radius: 13px !important;
 }
 
+.mat-mdc-dialog-surface.mdc-dialog__surface {
+  background-color: white;
+}
+
 // Remove padding icons from mat-input
 .no-icon-mat-btn {
   .mat-mdc-text-field-wrapper {

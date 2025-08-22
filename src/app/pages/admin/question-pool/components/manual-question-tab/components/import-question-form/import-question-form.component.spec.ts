@@ -64,7 +64,7 @@ describe('ImportQuestionFormComponent', () => {
     const linkMock = { href: '', download: '', click: jest.fn() };
     const createElementSpy = jest.spyOn(document, 'createElement').mockReturnValue(linkMock as any);
 
-    component.DownloadCsv();
+    component.downloadCsv();
 
     expect(linkMock.href).toBe('assets/templates/sampleCsv.csv');
     expect(linkMock.download).toBe('sampleCsv.csv');
@@ -77,7 +77,7 @@ describe('ImportQuestionFormComponent', () => {
     const linkMock = { href: '', download: '', click: jest.fn() };
     const createElementSpy = jest.spyOn(document, 'createElement').mockReturnValue(linkMock as any);
 
-    component.DownloadExcel();
+    component.downloadExcel();
 
     expect(linkMock.href).toBe('assets/templates/sampleExcel.xlsx');
     expect(linkMock.download).toBe('sampleExcel.xlsx');
@@ -103,7 +103,7 @@ describe('ImportQuestionFormComponent', () => {
     const invalidFile = new File([''], 'invalid.txt', { type: 'text/plain' });
     const event = { target: { files: [invalidFile] } } as any;
 
-    component.FileSelected(event);
+    component.fileSelected(event);
 
     const control = component.uploadForm.get('file');
     expect(control?.errors).toEqual({ fileType: true });
@@ -118,10 +118,15 @@ describe('ImportQuestionFormComponent', () => {
     const mockQuestions = [{ id: 1, questionText: 'Test Question' }];
     questionPoolServiceMock.previewQuestionsFromCsv.mockReturnValue(of(mockQuestions));
 
-    component.FileSelected(event);
+    component.fileSelected(event);
 
     expect(component.selectedFile).toBe(csvFile);
-    expect(questionPoolServiceMock.previewQuestionsFromCsv).toHaveBeenCalledWith(csvFile);
+
+    expect(questionPoolServiceMock.previewQuestionsFromCsv).toHaveBeenCalled();
+    const formDataArg = questionPoolServiceMock.previewQuestionsFromCsv.mock.calls[0][0];
+    expect(formDataArg instanceof FormData).toBe(true);
+    expect(formDataArg.get('file')).toBe(csvFile);
+
     expect(dialogMock.open).toHaveBeenCalledWith(
       ImportQuestionPreviewComponent,
       expect.objectContaining({
@@ -134,15 +139,18 @@ describe('ImportQuestionFormComponent', () => {
     const excelFile = new File([''], 'questions.xlsx', {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
-
     const event = { target: { files: [excelFile] } } as any;
-    const mockQuestions = [{ id: 1, questionText: 'Test Excel Question' }];
 
+    const mockQuestions = [{ id: 1, questionText: 'Test Excel Question' }];
     questionPoolServiceMock.previewQuestionsFromExcel.mockReturnValue(of(mockQuestions));
 
-    component.FileSelected(event);
+    component.fileSelected(event);
 
-    expect(questionPoolServiceMock.previewQuestionsFromExcel).toHaveBeenCalledWith(excelFile);
+    expect(questionPoolServiceMock.previewQuestionsFromExcel).toHaveBeenCalled();
+    const formDataArg = questionPoolServiceMock.previewQuestionsFromExcel.mock.calls[0][0];
+    expect(formDataArg instanceof FormData).toBe(true);
+    expect(formDataArg.get('file')).toBe(excelFile);
+
     expect(dialogMock.open).toHaveBeenCalledWith(
       ImportQuestionPreviewComponent,
       expect.objectContaining({
@@ -159,7 +167,7 @@ describe('ImportQuestionFormComponent', () => {
       throwError(() => ({ error: { message: 'Preview failed' } })),
     );
 
-    component.FileSelected(event);
+    component.fileSelected(event);
 
     expect(snackbarMock.showError).toHaveBeenCalledWith('Error', 'Preview failed');
   });

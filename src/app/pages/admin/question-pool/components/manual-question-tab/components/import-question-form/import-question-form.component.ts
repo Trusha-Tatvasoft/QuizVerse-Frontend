@@ -92,11 +92,11 @@ export class ImportQuestionFormComponent {
     return this.validationErrorService.getErrorMessage(control, messages, fieldName);
   }
 
-  DownloadCsv() {
+  downloadCsv() {
     this.downloadFile(`${EndPoints.DownloardSampleCsv}`);
   }
 
-  DownloadExcel() {
+  downloadExcel() {
     this.downloadFile(`${EndPoints.DownloardSampleExcel}`);
   }
 
@@ -107,7 +107,7 @@ export class ImportQuestionFormComponent {
     link.click();
   }
 
-  FileSelected(event: Event): void {
+  fileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
 
     if (input?.files?.length) {
@@ -129,11 +129,14 @@ export class ImportQuestionFormComponent {
       this.selectedFile = file;
       this.uploadForm.patchValue({ file });
 
+      const formData = new FormData();
+      formData.append('file', file);
+
       let request$: Observable<QuestionPoolListData[]>;
       if (fileName.endsWith('.csv')) {
-        request$ = this.questionPoolService.previewQuestionsFromCsv(file);
+        request$ = this.questionPoolService.previewQuestionsFromCsv(formData);
       } else {
-        request$ = this.questionPoolService.previewQuestionsFromExcel(file);
+        request$ = this.questionPoolService.previewQuestionsFromExcel(formData);
       }
 
       request$.subscribe({

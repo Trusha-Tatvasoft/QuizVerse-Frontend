@@ -77,10 +77,7 @@ export class QuestionPoolService {
    * @param file - The CSV file containing questions.
    * @returns Observable<QuestionPoolListData[]> - parsed question list from backend.
    */
-  previewQuestionsFromCsv(file: File): Observable<QuestionPoolListData[]> {
-    const formData = new FormData();
-    formData.append('file', file);
-
+  previewQuestionsFromCsv(formData: FormData): Observable<QuestionPoolListData[]> {
     return this.http
       .post<
         ApiResponse<QuestionPoolListData[]>
@@ -93,10 +90,7 @@ export class QuestionPoolService {
    * @param file - The Excel file containing questions.
    * @returns Observable<QuestionPoolListData[]> - parsed question list from backend.
    */
-  previewQuestionsFromExcel(file: File): Observable<QuestionPoolListData[]> {
-    const formData = new FormData();
-    formData.append('file', file);
-
+  previewQuestionsFromExcel(formData: FormData): Observable<QuestionPoolListData[]> {
     return this.http
       .post<
         ApiResponse<QuestionPoolListData[]>
