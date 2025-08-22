@@ -29,4 +29,6 @@ export enum Navigations {
   Notifications = 'notification-center',
 
   Unauthorized = 'unauthorized',
+
+  QuizCreation = 'quiz-creation',
 }

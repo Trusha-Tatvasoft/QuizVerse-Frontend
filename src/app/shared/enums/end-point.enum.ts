@@ -61,6 +61,7 @@ export enum EndPoints {
   // #region QuizManagement
   QuizManagementStats = 'QuizManagement/get-quiz-card-data',
   QuizTableData = 'QuizManagement/get-quizzes-by-pagination',
+  DeleteQuiz = 'QuizManagement/delete-quiz',
   // #endregion
 
   // #region BattleManagement

@@ -5,7 +5,6 @@ import { QuizManagementService } from '../../../services/admin/quiz-management/q
 import { QuizManagementSummary } from './interfaces/quiz-management-summary.interface';
 import { of, throwError } from 'rxjs';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
-import { CardInputConfig } from '../../../shared/interfaces/card-component.interface';
 import { DropdownService } from '../../../shared/service/dropdown/dropdown.service';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { DropDownType } from '../../../shared/enums/dropdown-types.enum';
@@ -14,8 +13,12 @@ import { SearchInputComponent } from '../../../shared/components/search-input/se
 import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
 import { QuizTableComponent } from './components/quiz-table/quiz-table.component';
 import { MatSelectModule } from '@angular/material/select';
-import { debounceTimeValue } from '../../../utils/constants';
+import { debounceTimeValue, platformMessages, quizActions } from '../../../utils/constants';
 import { By } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { Navigations } from '../../../shared/enums/navigation';
 
 const mockSummary: QuizManagementSummary = {
   totalQuiz: 10,
@@ -77,6 +80,7 @@ const mockQuizResponse = {
 const quizManagementService = {
   getQuizManagementStats: jest.fn(),
   getQuizzes: jest.fn(),
+  deleteQuiz: jest.fn(),
 };
 
 const dropdownServiceMock = {
@@ -86,6 +90,14 @@ const dropdownServiceMock = {
 const snackbarMock = {
   showError: jest.fn(),
   showSuccess: jest.fn(),
+};
+
+const routerMock = {
+  navigate: jest.fn(),
+};
+
+const dialogMock = {
+  open: jest.fn(),
 };
 
 describe('QuizManagementComponent', () => {
@@ -127,6 +139,14 @@ describe('QuizManagementComponent', () => {
         {
           provide: SnackbarService,
           useValue: snackbarMock,
+        },
+        {
+          provide: Router,
+          useValue: routerMock,
+        },
+        {
+          provide: MatDialog,
+          useValue: dialogMock,
         },
       ],
     }).compileComponents();
@@ -278,6 +298,112 @@ describe('QuizManagementComponent', () => {
 
     it('should generate correct filter lists for statuses', () => {
       expect(component.quizStatus.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('navigateToQuizCreation', () => {
+    it('should navigate to quiz creation page', () => {
+      component.navigateToQuizCreation();
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.Admin}/${Navigations.Quizzes}/${Navigations.QuizCreation}`,
+      ]);
+    });
+  });
+
+  describe('handleQuizAction', () => {
+    it('should navigate with encoded id for EDIT action', () => {
+      const quiz = { id: 123 };
+      component.handleQuizAction({ action: quizActions.EDIT, row: quiz as any });
+      const encodedId = btoa('123');
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.Admin}/${Navigations.Quizzes}/${Navigations.QuizCreation}`,
+        encodedId,
+      ]);
+    });
+
+    it('should open confirmation dialog and delete quiz on DELETE action (confirmed)', () => {
+      const quiz = { id: 99 };
+      const afterClosed$ = of(true);
+      dialogMock.open.mockReturnValue({ afterClosed: () => afterClosed$ });
+      const deleteSpy = jest.spyOn(component, 'deleteQuiz').mockImplementation();
+
+      component.handleQuizAction({ action: quizActions.DELETE, row: quiz as any });
+
+      expect(dialogMock.open).toHaveBeenCalledWith(ConfirmationDialogComponent, expect.any(Object));
+      expect(deleteSpy).toHaveBeenCalledWith(99);
+    });
+
+    it('should not call deleteQuestion if dialog is cancelled', () => {
+      const quiz = { id: 55 };
+      dialogMock.open.mockReturnValue({ afterClosed: () => of(false) });
+      const deleteSpy = jest.spyOn(component, 'deleteQuiz').mockImplementation();
+
+      component.handleQuizAction({ action: quizActions.DELETE, row: quiz as any });
+
+      expect(deleteSpy).not.toHaveBeenCalled();
+    });
+
+    // test cases for quiz visibility
+    // it('should handle VISIBILITY action gracefully', () => {
+    // });
+  });
+
+  describe('deleteQuestion', () => {
+    const quizId = 5;
+
+    it('should show success snackbar and refetch quizzes on statusCode=200', () => {
+      const fetchSpy = jest.spyOn(component, 'fetchQuizzes').mockImplementation();
+      jest.spyOn(component, 'dataSource').mockReturnValue([{}]);
+      jest.spyOn(component, 'pagination').mockReturnValue({
+        pageNumber: 1,
+        pageSize: 5,
+      });
+
+      quizManagementService.deleteQuiz.mockReturnValue(of({ statusCode: 200 }));
+
+      component.deleteQuiz(quizId);
+
+      expect(snackbarMock.showSuccess).toHaveBeenCalledWith(
+        'Success',
+        platformMessages.deleteQuizSuccess,
+      );
+      expect(fetchSpy).toHaveBeenCalled();
+    });
+
+    it('should adjust pagination when last item on non-first page is deleted', () => {
+      const fetchSpy = jest.spyOn(component, 'fetchQuizzes').mockImplementation();
+      jest.spyOn(component, 'dataSource').mockReturnValue([{}]); // only one item left
+
+      component.pagination.set({ pageNumber: 2, pageSize: 5 });
+
+      const paginationSetSpy = jest.spyOn(component.pagination, 'set');
+
+      quizManagementService.deleteQuiz.mockReturnValue(of({ statusCode: 200 }));
+
+      component.deleteQuiz(quizId);
+
+      expect(paginationSetSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ pageNumber: 1, pageSize: 5 }),
+      );
+      expect(fetchSpy).toHaveBeenCalled();
+    });
+
+    it('should show error snackbar when statusCode !== 200', () => {
+      quizManagementService.deleteQuiz.mockReturnValue(of({ statusCode: 400, message: 'fail' }));
+
+      component.deleteQuiz(quizId);
+
+      expect(snackbarMock.showError).toHaveBeenCalledWith('Error', 'fail');
+    });
+
+    it('should show error snackbar on API error', () => {
+      quizManagementService.deleteQuiz.mockReturnValue(
+        throwError(() => ({ error: { message: 'network error' } })),
+      );
+
+      component.deleteQuiz(quizId);
+
+      expect(snackbarMock.showError).toHaveBeenCalledWith('Error', 'network error');
     });
   });
 });
