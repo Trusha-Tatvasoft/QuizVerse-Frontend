@@ -29,6 +29,7 @@ import {
   updateDropdownOptions,
 } from './create-edit-question-form.hepler';
 import { uniqueOptionsGroupValidator } from './create-edit-question-form.validator';
+import { ValidationErrorService } from '../../../../../../../shared/service/validation-error/validation-error.service';
 
 @Component({
   selector: 'app-create-edit-question-form',
@@ -54,6 +55,7 @@ export class CreateEditQuestionFormComponent implements OnInit, OnDestroy {
   private readonly dropdownService = inject(DropdownService);
   private readonly questionService = inject(QuestionPoolService);
   private readonly snackbar = inject(SnackbarService);
+  private readonly validationErrorService = inject(ValidationErrorService);
   private readonly fb = inject(FormBuilder);
 
   private readonly destroy$ = new Subject<void>();
@@ -162,17 +164,12 @@ export class CreateEditQuestionFormComponent implements OnInit, OnDestroy {
 
   getError(fieldName: string): string | null {
     const control = this.form.get(fieldName);
-    if (!control || !control.errors) return null;
+    if (!control) return null;
 
     const field = this.fields.find((f) => f.name === fieldName);
     const messages = field?.validationMessages ?? {};
 
-    for (const errorKey in control.errors) {
-      if (messages[errorKey]) {
-        return messages[errorKey];
-      }
-    }
-    return 'Invalid field';
+    return this.validationErrorService.getErrorMessage(control, messages, fieldName);
   }
 
   createOrUpdateQuestion() {
@@ -198,7 +195,7 @@ export class CreateEditQuestionFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  closeDailog() {
+  closeDialog() {
     this.dialogRef.close();
   }
 }

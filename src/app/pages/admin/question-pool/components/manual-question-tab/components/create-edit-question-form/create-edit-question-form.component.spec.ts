@@ -13,6 +13,7 @@ import { QuestionPoolService } from '../../../../../../../services/admin/questio
 import { SnackbarService } from '../../../../../../../shared/service/snackbar/snackbar.service';
 import { buildBaseFields } from '../../../../configs/question-pool-dialog.config';
 import { uniqueOptionsGroupValidator } from './create-edit-question-form.validator';
+import { ValidationErrorService } from '../../../../../../../shared/service/validation-error/validation-error.service';
 
 // Mock helper functions
 jest.mock('./create-edit-question-form.hepler', () => ({
@@ -49,6 +50,7 @@ describe('CreateEditQuestionFormComponent', () => {
     createOrUpdateQuestion: jest.fn(),
   };
   const mockSnackbar = { showSuccess: jest.fn(), showError: jest.fn() };
+  const mockValidationErrorService = { getErrorMessage: jest.fn() };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -59,6 +61,7 @@ describe('CreateEditQuestionFormComponent', () => {
         { provide: DropdownService, useValue: mockDropdownService },
         { provide: QuestionPoolService, useValue: mockQuestionService },
         { provide: SnackbarService, useValue: mockSnackbar },
+        { provide: ValidationErrorService, useValue: mockValidationErrorService },
       ],
     }).compileComponents();
 
@@ -151,14 +154,14 @@ describe('CreateEditQuestionFormComponent', () => {
     expect(uniqueOptionsGroupValidator).toHaveBeenCalledWith(['option1', 'option2']);
   });
 
-  it('getError should return null when no control or errors', () => {
-    component.baseFields = buildBaseFields();
-    component.fields = [...component.baseFields];
+  it('getError should return null when control not found', () => {
+    component.fields = [{ name: 'test', label: '', type: '', placeholder: '', validators: [] }];
     component.buildForm();
-    expect(component.getError('type')).toBeNull();
+    const result = component.getError('unknown');
+    expect(result).toBeNull();
   });
 
-  it('getError should return validation message if error exists', () => {
+  it('getError should call validationErrorService with control, messages, and fieldName', () => {
     component.fields = [
       {
         name: 'test',
@@ -170,15 +173,28 @@ describe('CreateEditQuestionFormComponent', () => {
       },
     ];
     component.buildForm();
-    component.form.get('test')?.setErrors({ required: true });
-    expect(component.getError('test')).toBe('Field required');
+    const control = component.form.get('test');
+    mockValidationErrorService.getErrorMessage.mockReturnValue('Field required');
+
+    const result = component.getError('test');
+
+    expect(mockValidationErrorService.getErrorMessage).toHaveBeenCalledWith(
+      control,
+      { required: 'Field required' },
+      'test',
+    );
+    expect(result).toBe('Field required');
   });
 
-  it('getError should return default message when error key has no message', () => {
+  it('getError should return whatever validationErrorService returns', () => {
     component.fields = [{ name: 'test', label: '', type: '', placeholder: '', validators: [] }];
     component.buildForm();
-    component.form.get('test')?.setErrors({ random: true });
-    expect(component.getError('test')).toBe('Invalid field');
+    const control = component.form.get('test');
+    mockValidationErrorService.getErrorMessage.mockReturnValue('Some error');
+
+    const result = component.getError('test');
+
+    expect(result).toBe('Some error');
   });
 
   it('createOrUpdateQuestion should call service and show success for valid form', () => {
@@ -225,7 +241,7 @@ describe('CreateEditQuestionFormComponent', () => {
   });
 
   it('closeDialog should call dialogRef.close', () => {
-    component.closeDailog();
+    component.closeDialog();
     expect(mockDialogRef.close).toHaveBeenCalled();
   });
 });
