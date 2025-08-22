@@ -9,13 +9,7 @@ import {
 import { cancelButtonConfig, submitButtonConfig } from '../../../../configs/question-pool.config';
 import { FilledButtonComponent } from '../../../../../../../shared/components/filled-button/filled-button.component';
 import { MatIconModule } from '@angular/material/icon';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { QuestionFormDialogComponent } from '../../../question-form-dialog/question-form-dialog.component';
 import { QuestionPoolService } from '../../../../../../../services/admin/question-pool/question-pool.service';
@@ -25,10 +19,7 @@ import { Observable } from 'rxjs';
 import { SnackbarService } from '../../../../../../../shared/service/snackbar/snackbar.service';
 import { MatInputModule } from '@angular/material/input';
 import { EndPoints } from '../../../../../../../shared/enums/end-point.enum';
-import {
-  allowedImportQuestionFileTypes,
-  platformMessages,
-} from '../../../../../../../utils/constants';
+import { allowedImportQuestionFileTypes } from '../../../../../../../utils/constants';
 import { DynamicFormField } from '../../../../../../../shared/interfaces/dynamic-form-field.interface';
 import { ValidationErrorService } from '../../../../../../../shared/service/validation-error/validation-error.service';
 
