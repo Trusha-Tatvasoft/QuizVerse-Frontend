@@ -8,6 +8,7 @@ import { PaginatedDataResponse } from '../../../shared/interfaces/paginated-data
 import { QuestionPoolListData } from '../../../pages/admin/question-pool/interfaces/question-pool-list-data.interface';
 import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
+import { QuestionRequest } from '../../../pages/admin/question-pool/interfaces/question-request.interface';
 
 describe('QuestionPoolService', () => {
   let service: QuestionPoolService;
@@ -140,5 +141,67 @@ describe('QuestionPoolService', () => {
     expect(req.request.method).toBe('GET');
     expect(req.request.headers.get('X-Skip-Loader')).toBe('true');
     req.flush(mockPreviewResponse);
+  });
+
+  it('should create a new question when id=0', () => {
+    const id = 0;
+    const dto: QuestionRequest = {
+      categoryId: 2,
+      difficultyId: 1,
+      questionText: 'New question?',
+      questionTypeId: 5,
+      options: ['42', '24'],
+      correctAnswer: '42',
+    };
+    const createUrl = `${environment.baseUrl}/${EndPoints.CreateOrUpdateQuestion}/${id}`;
+
+    const mockResponse: ApiResponse<string> = {
+      result: true,
+      statusCode: 201,
+      message: 'Created successfully',
+      data: 'OK',
+    };
+
+    service.createOrUpdateQuestion(id, dto).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+      expect(res.result).toBe(true);
+      expect(res.message).toBe('Created successfully');
+    });
+
+    const req = httpMock.expectOne(createUrl);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(dto);
+    req.flush(mockResponse);
+  });
+
+  it('should update an existing question when id is provided', () => {
+    const id = 99;
+    const dto: QuestionRequest = {
+      categoryId: 2,
+      difficultyId: 2,
+      questionText: 'Updated question?',
+      questionTypeId: 6,
+      options: ['Yes', 'No'],
+      correctAnswer: 'Yes',
+    };
+    const updateUrl = `${environment.baseUrl}/${EndPoints.CreateOrUpdateQuestion}/${id}`;
+
+    const mockResponse: ApiResponse<string> = {
+      result: true,
+      statusCode: 200,
+      message: 'Updated successfully',
+      data: 'OK',
+    };
+
+    service.createOrUpdateQuestion(id, dto).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+      expect(res.result).toBe(true);
+      expect(res.message).toBe('Updated successfully');
+    });
+
+    const req = httpMock.expectOne(updateUrl);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(dto);
+    req.flush(mockResponse);
   });
 });
