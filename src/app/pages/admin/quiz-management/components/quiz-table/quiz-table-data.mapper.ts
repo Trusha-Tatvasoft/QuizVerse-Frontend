@@ -39,9 +39,9 @@ export function quizToQuizListingTableData(quiz: QuizListData): TableData {
 function getStatusLabel(status: number): string {
   switch (status) {
     case 1:
-      return 'Draft';
-    case 2:
       return 'Active';
+    case 2:
+      return 'Draft';
     case 3:
       return 'Inactive';
     default:
@@ -52,9 +52,9 @@ function getStatusLabel(status: number): string {
 function getStatusColor(status: number): { bg: string; text: string } {
   switch (status) {
     case 1:
-      return colors.blue;
-    case 2:
       return colors.green;
+    case 2:
+      return colors.blue;
     case 3:
       return colors.yellow;
     default:

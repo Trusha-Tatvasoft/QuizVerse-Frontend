@@ -1,5 +1,5 @@
 export enum QuizStatus {
-  Draft = 1,
-  Active = 2,
+  Active = 1,
+  Draft = 2,
   Inactive = 3,
 }
