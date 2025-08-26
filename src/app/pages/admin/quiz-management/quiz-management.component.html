@@ -22,7 +22,10 @@
         class="quiz-pool-search"
       ></app-search-input>
       <div class="add-quiz-btn-tablet">
-        <app-filled-button [filledButtonConfig]="createNewQuizButtonConfig"></app-filled-button>
+        <app-filled-button
+          [filledButtonConfig]="createNewQuizButtonConfig"
+          (buttonClicked)="navigateToQuizCreation()"
+        ></app-filled-button>
       </div>
     </div>
 
@@ -81,5 +84,6 @@
     [totalItems]="totalItems()"
     (pageChange)="onPageChange($event)"
     (sortChange)="onSortChange($event)"
+    (actionClick)="handleQuizAction($event)"
   ></app-quiz-table>
 </main>

@@ -236,12 +236,26 @@ export const platformMessages = {
   failedLoadQuesPreview: 'Failed to load question details',
   deleteQuesSuccess: 'Question Deleted Successfully!!',
   deleteQuesFailure: 'Failed to delete question',
+  noQuestionsToSave: 'No questions to save.',
+  saveQuestionsSuccess: 'Questions added successfully.',
+  saveQuestionsFailure: 'Something went wrong while saving questions.',
+  //#endregion
+
+  //#region QuizManagement Messages
+  deleteQuizSuccess: 'Quiz Deleted Successfully!!',
+  deleteQuizFailure: 'Failed to delete quiz',
   //#endregion
 };
 //#endregion
 
 //#region Constant Variables
 export const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+
+export const allowedImportQuestionFileTypes = [
+  'text/csv',
+  'application/vnd.ms-excel', // .xls
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+];
 
 export const maxFileUploadSize = 10 * 1024 * 1024;
 
@@ -376,6 +390,14 @@ export const colors = {
 };
 //#endregion
 
+//#region Quiz Management Constants
+export const quizActions = {
+  VISIBILITY: 'visibility',
+  EDIT: 'edit',
+  DELETE: 'delete',
+};
+//#endregion
+
 //#region Quiz Crud Messages
 export const quizCRUDMessages = {
   quizSaved: 'Quiz saved successfully!',
@@ -394,5 +416,7 @@ export const quizCRUDMessages = {
   fileTypeError: 'Select only Excel or csv.',
   invalideQuizId: 'Invalid quiz id',
   questionAdded: 'Question Added!',
+  quizTitalNotFoundError: 'Quiz name not found',
+  failedToExportQuestions: 'Failed to export questions.',
 };
 //#endregion

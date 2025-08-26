@@ -158,8 +158,8 @@ describe('QuizManagementComponent', () => {
 
   // Status mapping should return correct label, color, and background
   it.each([
-    { status: 1, expectedLabel: 'Draft', bg: colors.blue.bg, text: colors.blue.text },
-    { status: 2, expectedLabel: 'Active', bg: colors.green.bg, text: colors.green.text },
+    { status: 1, expectedLabel: 'Active', bg: colors.green.bg, text: colors.green.text },
+    { status: 2, expectedLabel: 'Draft', bg: colors.blue.bg, text: colors.blue.text },
     { status: 3, expectedLabel: 'Inactive', bg: colors.yellow.bg, text: colors.yellow.text },
     { status: 99, expectedLabel: 'Unknown', bg: colors.brown.bg, text: colors.brown.text },
   ])('should map status correctly for status $status', ({ status, expectedLabel, bg, text }) => {

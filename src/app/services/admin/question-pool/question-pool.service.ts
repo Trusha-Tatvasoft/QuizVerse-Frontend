@@ -71,4 +71,42 @@ export class QuestionPoolService {
       dto,
     );
   }
+
+  /**
+   * Preview questions from a CSV file before saving.
+   * @param file - The CSV file containing questions.
+   * @returns Observable<QuestionPoolListData[]> - parsed question list from backend.
+   */
+  previewQuestionsFromCsv(formData: FormData): Observable<QuestionPoolListData[]> {
+    return this.http
+      .post<
+        ApiResponse<QuestionPoolListData[]>
+      >(`${environment.baseUrl}/${EndPoints.PreviewQuestionsFromCsv}`, formData)
+      .pipe(map((res) => res.data));
+  }
+
+  /**
+   * Preview questions from an Excel file before saving.
+   * @param file - The Excel file containing questions.
+   * @returns Observable<QuestionPoolListData[]> - parsed question list from backend.
+   */
+  previewQuestionsFromExcel(formData: FormData): Observable<QuestionPoolListData[]> {
+    return this.http
+      .post<
+        ApiResponse<QuestionPoolListData[]>
+      >(`${environment.baseUrl}/${EndPoints.PreviewQuestionsFromExcel}`, formData)
+      .pipe(map((res) => res.data));
+  }
+
+  /**
+   * Save selected questions after previewing CSV/Excel uploads.
+   * @param questions - List of questions selected from preview.
+   * @returns Observable<ApiResponse<string>> - response message after saving.
+   */
+  saveQuestions(questions: QuestionPoolListData[]): Observable<ApiResponse<string>> {
+    return this.http.post<ApiResponse<string>>(
+      `${environment.baseUrl}/${EndPoints.SaveQuestions}`,
+      questions,
+    );
+  }
 }

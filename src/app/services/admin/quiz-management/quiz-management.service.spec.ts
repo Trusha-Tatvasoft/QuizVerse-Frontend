@@ -10,6 +10,7 @@ import { QuizManagementSummary } from '../../../pages/admin/quiz-management/inte
 import { PaginatedDataResponse } from '../../../shared/interfaces/paginated-data-response.interface';
 import { QuizListData } from '../../../pages/admin/quiz-management/interfaces/quiz-table-data.interface';
 import { PaginationRequest } from '../../../shared/interfaces/pagination-request.interface';
+import { platformMessages } from '../../../utils/constants';
 
 describe('QuizManagementService', () => {
   let service: QuizManagementService;
@@ -151,6 +152,47 @@ describe('QuizManagementService', () => {
       expect(req.request.method).toBe('POST');
 
       req.flush(errorMsg, { status: 503, statusText: 'Service Unavailable' });
+    });
+  });
+
+  describe('deleteQuiz', () => {
+    const quizId = 123;
+
+    const mockDeleteResponse: ApiResponse<object> = {
+      result: true,
+      statusCode: 200,
+      message: platformMessages.deleteQuizSuccess,
+      data: {},
+    };
+
+    it('should call DELETE on the correct endpoint and return success response', () => {
+      service.deleteQuiz(quizId).subscribe((res) => {
+        expect(res).toEqual(mockDeleteResponse);
+        expect(res.result).toBe(true);
+        expect(res.statusCode).toBe(200);
+        expect(res.message).toBe(platformMessages.deleteQuizSuccess);
+      });
+
+      const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.DeleteQuiz}/${quizId}`);
+      expect(req.request.method).toBe('DELETE');
+      req.flush(mockDeleteResponse);
+    });
+
+    it('should propagate error when backend deletion fails', () => {
+      const errorMsg = 'Quiz not found';
+
+      service.deleteQuiz(quizId).subscribe({
+        next: () => fail('Expected error, not success'),
+        error: (error) => {
+          expect(error.status).toBe(404);
+          expect(error.statusText).toBe('Not Found');
+        },
+      });
+
+      const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.DeleteQuiz}/${quizId}`);
+      expect(req.request.method).toBe('DELETE');
+
+      req.flush(errorMsg, { status: 404, statusText: 'Not Found' });
     });
   });
 });

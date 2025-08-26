@@ -1,1 +1,79 @@
-<p>quiz-preview works!</p>
+<div class="p-4 w-full max-w-3xl no-icon-mat-btn flex flex-col h-[80vh]">
+  <!-- Static Header -->
+  <div class="flex-shrink-0 relative">
+    <!-- Close Button (absolute top-right) -->
+    <button
+      mat-icon-button
+      type="button"
+      class="absolute top-0 right-0 cursor-pointer"
+      (click)="close()"
+      aria-label="Close"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <!-- Title + Description -->
+    <h2 class="text-xl font-semibold pr-10">{{ data.quizName }}</h2>
+    <p class="text-gray-600 pr-10">{{ data.description }}</p>
+
+    <!-- Tags -->
+    <div class="flex gap-2 my-3">
+      @for (tag of data.tags; track tag) {
+        <app-tag [tagConfig]="tag"></app-tag>
+      }
+    </div>
+
+    <mat-divider class="my-3"></mat-divider>
+  </div>
+
+  <!-- Scrollable Questions -->
+  <div class="questions-container flex-1 overflow-y-auto pr-2">
+    @for (q of data.questions; track q.id) {
+      <div class="mt-4 mb-4 border border-gray-300 rounded-lg p-3">
+        <div class="font-medium">{{ $index + 1 }}. {{ q.queText }}</div>
+
+        <!-- Multiple Choice -->
+        @if (q.queTypeName === 'Multiple Choice') {
+          <mat-radio-group [value]="getAnswer(q)" class="mt-2 flex flex-col gap-1">
+            @for (opt of getOptions(q); track opt.key) {
+              <mat-radio-button [value]="opt.value">
+                {{ opt.value }}
+              </mat-radio-button>
+            }
+          </mat-radio-group>
+        }
+
+        <!-- Short Answer / Fill in the Blank -->
+        @if (q.queTypeName === 'Short Answer' || q.queTypeName === 'Fill in the Blank') {
+          <mat-form-field
+            appearance="outline"
+            class="w-full custom-form-field"
+            [floatLabel]="'auto'"
+          >
+            <input
+              matInput
+              type="text"
+              placeholder="Enter your answer"
+              autocomplete="off"
+              [value]="getAnswer(q)"
+            />
+          </mat-form-field>
+        }
+
+        <!-- True / False -->
+        @if (q.queTypeName === 'True/False') {
+          <mat-form-field
+            appearance="outline"
+            class="w-full custom-form-field low-opacity"
+            [floatLabel]="'auto'"
+          >
+            <mat-select [value]="getBoolAnswer(q)">
+              <mat-option value="true">True</mat-option>
+              <mat-option value="false">False</mat-option>
+            </mat-select>
+          </mat-form-field>
+        }
+      </div>
+    }
+  </div>
+</div>
