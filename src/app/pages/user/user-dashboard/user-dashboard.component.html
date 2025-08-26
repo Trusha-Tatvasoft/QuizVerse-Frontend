@@ -1,0 +1,26 @@
+<div class="dashboard-layout admin-management-page">
+  <h2 class="admin-page-heading">Dashboard</h2>
+
+  <div class="dashboard-body">
+    <div class="dashboard-main">
+      <!-- Welcome Banner Component -->
+      <app-welcome-banner [userDetails]="bannerData"> </app-welcome-banner>
+
+      <div class="stats-grid">
+        @for (config of quizStatsConfigs; track config.title) {
+          <app-card [cardConfig]="config"></app-card>
+        }
+      </div>
+
+      <div class="dashboard-grid">
+        <section class="dashboard-section">Recent Quiz Results</section>
+        <section class="dashboard-section">Battle Requests</section>
+        <section class="dashboard-section featured">Featured Quizzes</section>
+        <section class="dashboard-section">
+          <app-rank-progress-card [rankData]="rankData"> </app-rank-progress-card>
+        </section>
+        <section class="dashboard-section">Achievements</section>
+      </div>
+    </div>
+  </div>
+</div>

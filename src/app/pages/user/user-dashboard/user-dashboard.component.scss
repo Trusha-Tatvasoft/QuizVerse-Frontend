@@ -1,0 +1,51 @@
+.dashboard-layout {
+  &.admin-management-page {
+    .dashboard-body {
+      .dashboard-main {
+        .stats-grid {
+          display: grid;
+          gap: 1.25rem;
+          padding: 1.5rem 0;
+          grid-template-columns: 1fr;
+
+          @media (min-width: 768px) {
+            grid-template-columns: repeat(2, 1fr);
+          }
+
+          @media (min-width: 1440px) {
+            grid-template-columns: repeat(4, 1fr);
+          }
+        }
+
+        .dashboard-grid {
+          display: grid;
+          grid-template-columns: 2fr 1fr; // Left wide, right narrow
+          grid-template-rows: auto auto auto;
+          gap: 1.5rem;
+
+          @media (max-width: 1024px) {
+            grid-template-columns: 1fr; // Stack on small screens
+          }
+        }
+
+        .dashboard-section {
+          border: 1px solid #e2e8f0;
+          background: #fff;
+          border-radius: 9px;
+          padding: 1.5rem;
+
+          font-weight: 500;
+          color: #555;
+        }
+
+        /* Featured Quizzes spans two rows */
+        .featured {
+          grid-column: 1;
+          /* stay in left column */
+          grid-row: 2 / span 2;
+          /* take up 2 rows (Rank Progress + Achievements) */
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+.rank-card {
+  background: linear-gradient(145deg, #ffffff, #f9fafb);
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; // space between icon and title
+    margin-bottom: 1rem;
+
+    .header-icon {
+      display: flex;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--green-color);
+    }
+
+    .title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #111827;
+    }
+  }
+
+  /* from 1024px and above → center everything */
+  @media (max-width: 1024px) {
+    .header {
+      justify-content: center;
+      margin-bottom: 0.5rem;
+
+      .header-icon {
+        justify-content: center;
+        align-items: center;
+        font-size: 1.25rem;
+      }
+
+      .title {
+        font-size: 1.25rem;
+      }
+    }
+  }
+}
+
+.rank-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #4b5563;
+  font-weight: 500;
+
+  span {
+    background: #f3f4f6;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+}
+
+.xp-info {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Optional: add a progress bar style */
+app-progress-bar {
+  margin-top: 12px;
+  height: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #e5e7eb;
+
+  .progress {
+    border-radius: 10px;
+    transition: width 0.4s ease;
+  }
+}
