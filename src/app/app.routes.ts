@@ -17,6 +17,7 @@ import { QuizCategoriesManagementComponent } from './pages/admin/quiz-categories
 import { QuizDifficultyLevelComponent } from './pages/admin/quiz-difficulty-level/quiz-difficulty-level.component';
 import { BattleManagementComponent } from './pages/admin/battle-management/battle-management.component';
 import { QuizManagementComponent } from './pages/admin/quiz-management/quiz-management.component';
+import { UserDashboardComponent } from './pages/user/user-dashboard/user-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -112,7 +113,7 @@ export const routes: Routes = [
     children: [
       {
         path: Navigations.Dashboard,
-        component: CardComponent,
+        component: UserDashboardComponent,
         title: 'Quizeverse | Dashboard ',
       },
       {
