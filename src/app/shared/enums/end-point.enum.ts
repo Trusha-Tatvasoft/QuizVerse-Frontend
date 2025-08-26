@@ -70,4 +70,9 @@ export enum EndPoints {
   // #region BattleManagement
   BattleManagementList = 'BattleManagement/get-battle-list',
   //#endregion
+
+  // #region UserDashboard
+  UserDashboardData = 'UserDashboard/get-statistics-data',
+  RankProgressData = 'UserDashboard/get-rank-progress',
+  //#endregion
 }
