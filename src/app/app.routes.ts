@@ -18,6 +18,7 @@ import { QuizDifficultyLevelComponent } from './pages/admin/quiz-difficulty-leve
 import { BattleManagementComponent } from './pages/admin/battle-management/battle-management.component';
 import { QuizManagementComponent } from './pages/admin/quiz-management/quiz-management.component';
 import { QuizCreationLayoutComponent } from './pages/admin/quiz-management/components/quiz-creation-layout/quiz-creation-layout.component';
+import { EmailTemplateComponent } from './pages/admin/email-template/email-template.component';
 
 export const routes: Routes = [
   {
@@ -114,6 +115,11 @@ export const routes: Routes = [
         children: [
           { path: `${Navigations.QuizCreation}/:id`, component: QuizCreationLayoutComponent },
         ],
+      },
+      {
+        path: Navigations.EmailTemplates,
+        title: 'Quizeverse | Email Templates',
+        component: EmailTemplateComponent,
       },
     ],
   },

@@ -70,4 +70,8 @@ export enum EndPoints {
   // #region BattleManagement
   BattleManagementList = 'BattleManagement/get-battle-list',
   //#endregion
+
+  // #region EmailTemplate
+  EmailTemplateList = 'EmailTemplates/get-all-email-templates',
+  //#endregion
 }
