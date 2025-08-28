@@ -5,7 +5,7 @@ import { LeaderboardEntry } from '../interfaces/user-leaderboard.interface';
 import { LeaderboardService } from '../../../../services/user/leaderboard/leaderboard.service';
 import { MatIcon } from '@angular/material/icon';
 import { environment } from '../../../../../environments/environment.dev';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { platformMessages } from '../../../../utils/constants';
 
@@ -135,28 +135,31 @@ export class GlobalRankingsComponent {
    */
   private fetchLeaderboard(): void {
     this.loading = true;
-    this.leaderboardService.getGlobalLeaderboard().subscribe({
-      next: (res) => {
-        const raw = res?.data ?? [];
-        this.leaderboard = raw.map((u) => ({
-          ...u,
-          profilePic: u.profilePic ? `${environment.imageBaseUrl}/${u.profilePic}` : '',
-        }));
+    this.leaderboardService
+      .getGlobalLeaderboard()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          const raw = res?.data ?? [];
+          this.leaderboard = raw.map((u) => ({
+            ...u,
+            profilePic: u.profilePic ? `${environment.imageBaseUrl}/${u.profilePic}` : '',
+          }));
 
-        this.updateVisibleWindow();
-        this.loading = false;
+          this.updateVisibleWindow();
+          this.loading = false;
 
-        // Delay to allow rendering, then scroll to top smoothly
-        setTimeout(() => this.scrollToTop(), 50);
-      },
-      error: (err) => {
-        this.loading = false;
-        this.leaderboard = [];
+          // Delay to allow rendering, then scroll to top smoothly
+          setTimeout(() => this.scrollToTop(), 50);
+        },
+        error: (err) => {
+          this.loading = false;
+          this.leaderboard = [];
 
-        const message = err?.error?.message || platformMessages.errorMessage;
-        this.snackbar.showError(`${platformMessages.errorTitle} ${err.statusCode}`, message);
-      },
-    });
+          const message = err?.error?.message || platformMessages.errorMessage;
+          this.snackbar.showError(`${platformMessages.errorTitle} ${err.statusCode}`, message);
+        },
+      });
   }
 
   /**
