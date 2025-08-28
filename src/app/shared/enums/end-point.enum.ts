@@ -70,4 +70,9 @@ export enum EndPoints {
   // #region BattleManagement
   BattleManagementList = 'BattleManagement/get-battle-list',
   //#endregion
+
+  // #region PlateformSetting
+  GetPlateformSetting = 'PlatformConfiguration/get-platform-configurations',
+  UpdatePlateformSetting = 'PlatformConfiguration/update-platform-configurations',
+  //#endregion
 }

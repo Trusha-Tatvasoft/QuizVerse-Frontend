@@ -420,3 +420,10 @@ export const quizCRUDMessages = {
   failedToExportQuestions: 'Failed to export questions.',
 };
 //#endregion
+
+//#region Plateform Setting Messages
+export const plateformSettingCRUDMessages = {
+  plateformSettingUpdated: 'Platform settings updated successfully',
+  invalidFileType: 'Invalid file type. Please select an image.',
+};
+//#endregion

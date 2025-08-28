@@ -14,11 +14,7 @@
       </button>
     }
     <div class="flex items-center space-x-2 h-12">
-      <div
-        class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-lg logo-small"
-      >
-        {{ plateformName.charAt(0) }}
-      </div>
+      <img [src]="logoPath" alt="Platform Logo" class="logo-small" />
       <div class="logo-big">{{ plateformName }}</div>
     </div>
   </div>

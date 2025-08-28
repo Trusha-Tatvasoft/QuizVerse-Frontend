@@ -3,9 +3,10 @@ import { MasterLayoutComponent } from './master-layout.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { AuthService } from '../../../core/auth/services/auth.service';
-import { of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Component } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 // Dummy sidebar and navbar for ViewChild interaction
 @Component({ selector: 'app-sidebar', template: '' })
@@ -39,6 +40,7 @@ describe('MasterLayoutComponent', () => {
         MockSidebarComponent,
         MockNavbarComponent,
         RouterTestingModule,
+        HttpClientTestingModule,
       ],
       providers: [{ provide: AuthService, useValue: authServiceMock }],
     }).compileComponents();

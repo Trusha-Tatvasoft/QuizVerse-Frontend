@@ -33,6 +33,7 @@ import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
 import { plateformName } from '../../../utils/constants';
 import { AuthService } from '../../../core/auth/services/auth.service';
+import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
 
 @Component({
   selector: 'app-navbar',
@@ -67,6 +68,7 @@ export class NavbarComponent {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
   private readonly elementRef = inject(ElementRef);
+  private readonly platformSettingsService = inject(PlatformSettingsService);
 
   textButton = textButtonConfig;
   signInButton = signInButtonConfig;
@@ -79,10 +81,12 @@ export class NavbarComponent {
   plateformName = plateformName;
   showNotifications = false;
   menuOpen = false;
+  logoPath: string;
   private previousWidth = window.innerWidth;
 
   ngOnInit(): void {
     this.checkWindowSize(window.innerWidth);
+    this.loadPlatformConfig();
   }
 
   @HostListener('window:resize', [])
@@ -108,6 +112,14 @@ export class NavbarComponent {
       this.menuOpen = false;
       this.closeSidebar.emit();
     }
+  }
+
+  private loadPlatformConfig(): void {
+    this.platformSettingsService.platformConfig$.subscribe((config) => {
+      if (config) {
+        this.logoPath = config!.logo ?? 'assets/logo-small.png';
+      }
+    });
   }
 
   toggleNotifications(event: Event) {

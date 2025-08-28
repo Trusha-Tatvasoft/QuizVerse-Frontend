@@ -6,6 +6,7 @@ import { yellow } from '../../../utils/constants';
 import { mockDataNotifications } from './navbar-mock-data';
 import { Navigations } from '../../../shared/enums/navigation';
 import { AuthService } from '../../../core/auth/services/auth.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -19,7 +20,7 @@ describe('NavbarComponent', () => {
     authServiceMock = { logout: jest.fn() };
 
     await TestBed.configureTestingModule({
-      imports: [NavbarComponent],
+      imports: [NavbarComponent, HttpClientTestingModule],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [{ provide: AuthService, useValue: authServiceMock }],
     }).compileComponents();
