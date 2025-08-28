@@ -290,65 +290,59 @@ describe('PlatformSettingsComponent', () => {
       });
     });
 
-    describe('validateAndSetColor', () => {
-      it('should revert to service value if color is white-like', () => {
-        // arrange: put service config in subject
-        (mockPlatformSettingsService as any).platformConfigSubject = {
-          getValue: jest.fn().mockReturnValue({
+    describe('PlatformSettingsComponent color validation logic', () => {
+      describe('validateAndSetColor', () => {
+        it('should revert to service value if color is white-like', () => {
+          // arrange
+          (mockPlatformSettingsService as any).platformConfig$ = of({
             defaultsColors: { primaryColor: '#111111', secondaryColor: '#222222' },
-          }),
-        };
+          });
 
-        // act
-        (component as any).validateAndSetColor('primaryColor', '#FFFFFF');
+          // act
+          (component as any).validateAndSetColor('primaryColor', '#FFFFFF');
 
-        // assert
-        expect(mockSnackbar.showError).toHaveBeenCalledWith(
-          'White or very light colors are not allowed',
-        );
-        expect(component.platformSettingsForm.get('primaryColor')?.value).toBe('#111111');
-      });
+          // assert
+          expect(mockSnackbar.showError).toHaveBeenCalledWith(
+            'White or very light colors are not allowed',
+          );
+          expect(component.platformSettingsForm.get('primaryColor')?.value).toBe('#111111');
+        });
 
-      it('should revert if colors are too similar', () => {
-        (mockPlatformSettingsService as any).platformConfigSubject = {
-          getValue: jest.fn().mockReturnValue({
+        it('should revert if colors are too similar', () => {
+          (mockPlatformSettingsService as any).platformConfig$ = of({
             defaultsColors: { primaryColor: '#111111', secondaryColor: '#222222' },
-          }),
-        };
+          });
 
-        component.platformSettingsForm.get('secondaryColor')?.setValue('#111112');
+          component.platformSettingsForm.get('secondaryColor')?.setValue('#111112');
 
-        (component as any).validateAndSetColor('primaryColor', '#111111');
+          (component as any).validateAndSetColor('primaryColor', '#111111');
 
-        expect(mockSnackbar.showError).toHaveBeenCalledWith(
-          'Primary and secondary colors cannot be the same or too similar',
-        );
-      });
-    });
-
-    describe('revertToServiceValue', () => {
-      it('should fallback to service primaryColor when reverting primaryColor', () => {
-        (mockPlatformSettingsService as any).platformConfigSubject = {
-          getValue: jest.fn().mockReturnValue({
-            defaultsColors: { primaryColor: '#ABCDEF', secondaryColor: '#FEDCBA' },
-          }),
-        };
-
-        (component as any).revertToServiceValue('primaryColor');
-
-        expect(component.platformSettingsForm.get('primaryColor')?.value).toBe('#ABCDEF');
+          expect(mockSnackbar.showError).toHaveBeenCalledWith(
+            'Primary and secondary colors cannot be the same or too similar',
+          );
+        });
       });
 
-      it('should fallback to service secondaryColor when reverting secondaryColor', () => {
-        (mockPlatformSettingsService as any).platformConfigSubject = {
-          getValue: jest.fn().mockReturnValue({
+      describe('revertToServiceValue', () => {
+        it('should fallback to service primaryColor when reverting primaryColor', () => {
+          (mockPlatformSettingsService as any).platformConfig$ = of({
             defaultsColors: { primaryColor: '#ABCDEF', secondaryColor: '#FEDCBA' },
-          }),
-        };
+          });
 
-        (component as any).revertToServiceValue('secondaryColor');
+          (component as any).revertToServiceValue('primaryColor');
 
-        expect(component.platformSettingsForm.get('secondaryColor')?.value).toBe('#FEDCBA');
+          expect(component.platformSettingsForm.get('primaryColor')?.value).toBe('#ABCDEF');
+        });
+
+        it('should fallback to service secondaryColor when reverting secondaryColor', () => {
+          (mockPlatformSettingsService as any).platformConfig$ = of({
+            defaultsColors: { primaryColor: '#ABCDEF', secondaryColor: '#FEDCBA' },
+          });
+
+          (component as any).revertToServiceValue('secondaryColor');
+
+          expect(component.platformSettingsForm.get('secondaryColor')?.value).toBe('#FEDCBA');
+        });
       });
     });
   });

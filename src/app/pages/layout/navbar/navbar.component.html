@@ -14,7 +14,7 @@
       </button>
     }
     <div class="flex items-center space-x-2 h-12">
-      <img [src]="logoPath" alt="Platform Logo" class="logo-small" />
+      <img [src]="logoPath" alt="Platform Logo" class="logo-small" (error)="onImageError()" />
       <div class="logo-big">{{ plateformName }}</div>
     </div>
   </div>

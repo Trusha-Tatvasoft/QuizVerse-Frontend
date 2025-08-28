@@ -421,9 +421,11 @@ export const quizCRUDMessages = {
 };
 //#endregion
 
-//#region Plateform Setting Messages
+//#region Plateform Setting
 export const plateformSettingCRUDMessages = {
   plateformSettingUpdated: 'Platform settings updated successfully',
   invalidFileType: 'Invalid file type. Please select an image.',
 };
+
+export const deaultLogoPath = 'assets/images/logo-small.png';
 //#endregion

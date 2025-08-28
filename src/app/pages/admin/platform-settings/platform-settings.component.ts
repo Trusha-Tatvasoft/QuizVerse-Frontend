@@ -20,6 +20,7 @@ import { PlatformConfigurationResponseDTO } from './interfaces/platform-settings
 import { environment } from '../../../../environments/environment.dev';
 import { plateformSettingCRUDMessages } from '../../../utils/constants';
 import { FilenameTruncatePipe } from '../../../shared/pipes/filename-truncate/filename-truncate.pipe';
+import { Subject, take, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-platform-settings',
@@ -54,9 +55,16 @@ export class PlatformSettingsComponent implements OnInit {
   previewUrl: string | null = null;
   selectedFile: File | null = null;
 
+  private readonly destroy$ = new Subject<void>();
+
   ngOnInit(): void {
     this.initializeForm();
     this.loadPlatformConfigurations();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   // Initialize form from config field
@@ -72,20 +80,23 @@ export class PlatformSettingsComponent implements OnInit {
 
   // Load plateform configuration on page load
   private loadPlatformConfigurations(): void {
-    this.platformSettingsService.getPlatformConfigurations().subscribe({
-      next: (res) => {
-        if (res.result) {
-          this.platformConfig = res.data;
-          this.patchFormValues(res.data);
-          this.previewUrl = `${environment.imageBaseUrl}/${res.data.logo}`;
-        } else {
-          this.snackbar.showError(res.message);
-        }
-      },
-      error: (err) => {
-        this.snackbar.showError(err);
-      },
-    });
+    this.platformSettingsService
+      .getPlatformConfigurations()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.result) {
+            this.platformConfig = res.data;
+            this.patchFormValues(res.data);
+            this.previewUrl = `${environment.imageBaseUrl}/${res.data.logo}`;
+          } else {
+            this.snackbar.showError(res.message);
+          }
+        },
+        error: (err) => {
+          this.snackbar.showError(err);
+        },
+      });
   }
 
   // Fill values in form
@@ -154,15 +165,19 @@ export class PlatformSettingsComponent implements OnInit {
 
   // If validation failed, set default value for colors
   private revertToServiceValue(controlName: string) {
-    const config = this.platformSettingsService['platformConfigSubject'].getValue();
-    if (config?.defaultsColors) {
-      const fallbackColor =
-        controlName === 'primaryColor'
-          ? config.defaultsColors.primaryColor
-          : config.defaultsColors.secondaryColor;
+    this.platformSettingsService.platformConfig$
+      .pipe(take(1))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((config) => {
+        if (config?.defaultsColors) {
+          const fallbackColor =
+            controlName === 'primaryColor'
+              ? config.defaultsColors.primaryColor
+              : config.defaultsColors.secondaryColor;
 
-      this.platformSettingsForm.get(controlName)?.setValue(fallbackColor, { emitEvent: false });
-    }
+          this.platformSettingsForm.get(controlName)?.setValue(fallbackColor, { emitEvent: false });
+        }
+      });
   }
 
   // Error message for form field
@@ -208,18 +223,21 @@ export class PlatformSettingsComponent implements OnInit {
         formData.append('Logo', formValues.siteLogo);
       }
 
-      this.platformSettingsService.updatePlatformConfigurations(formData).subscribe({
-        next: (res) => {
-          if (res.result) {
-            this.snackbar.showSuccess(plateformSettingCRUDMessages.plateformSettingUpdated);
-          } else {
-            this.snackbar.showError(res.message);
-          }
-        },
-        error: (err) => {
-          this.snackbar.showError(err);
-        },
-      });
+      this.platformSettingsService
+        .updatePlatformConfigurations(formData)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (res) => {
+            if (res.result) {
+              this.snackbar.showSuccess(plateformSettingCRUDMessages.plateformSettingUpdated);
+            } else {
+              this.snackbar.showError(res.message);
+            }
+          },
+          error: (err) => {
+            this.snackbar.showError(err);
+          },
+        });
     } else {
       this.platformSettingsForm.markAllAsTouched();
     }

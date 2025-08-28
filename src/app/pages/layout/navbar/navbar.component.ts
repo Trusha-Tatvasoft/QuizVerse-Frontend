@@ -31,7 +31,7 @@ import { OutlineButtonComponent } from '../../../shared/components/outline-butto
 import { Notifications } from '../interfaces/navbar.component.interface';
 import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
-import { plateformName } from '../../../utils/constants';
+import { deaultLogoPath, plateformName } from '../../../utils/constants';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
 
@@ -117,7 +117,7 @@ export class NavbarComponent {
   private loadPlatformConfig(): void {
     this.platformSettingsService.platformConfig$.subscribe((config) => {
       if (config) {
-        this.logoPath = config!.logo ?? 'assets/logo-small.png';
+        this.logoPath = config!.logo ?? deaultLogoPath;
       }
     });
   }
@@ -151,5 +151,9 @@ export class NavbarComponent {
 
   logout() {
     this.authService.logout();
+  }
+
+  onImageError() {
+    this.logoPath = deaultLogoPath;
   }
 }
