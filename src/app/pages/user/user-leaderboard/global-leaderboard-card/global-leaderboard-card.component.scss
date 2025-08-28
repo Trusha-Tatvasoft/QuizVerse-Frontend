@@ -1,0 +1,142 @@
+.leaderboard-card {
+  background: linear-gradient(135deg, #f7f1ff 10%, #eaf3ff 100%);
+  border: 1px solid #e9d5ff;
+  border-radius: 8px;
+  overflow: visible;
+  box-shadow: none !important;
+
+  .card-header {
+    padding: 24px 24px 0 24px;
+
+    .header-content {
+      width: 100%;
+
+      .title-section {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+
+        .trophy-icon {
+          color: var(--global-primary-color);
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+          margin-right: 8px;
+          font-weight: 500;
+        }
+
+        .card-title {
+          color: var(--global-primary-color);
+          font-size: 24px;
+          font-weight: 600;
+          margin: 0;
+          line-height: 1.2;
+          font-weight: 500;
+        }
+      }
+
+      .card-subtitle {
+        color: var(--global-primary-color);
+        font-size: 14px;
+        margin: 0;
+        line-height: 1.4;
+      }
+    }
+  }
+
+  .card-content {
+    padding: 24px;
+    padding-top: 16px;
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      text-align: center;
+
+      .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .stat-value {
+          color: var(--global-primary-color);
+          font-size: 24px;
+          font-weight: 700;
+          line-height: 1.2;
+          margin-bottom: 4px;
+        }
+
+        .stat-label {
+          color: var(--global-primary-color);
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 1.3;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .leaderboard-card {
+    .card-header {
+      padding: 20px 16px 0 16px;
+
+      .header-content {
+        .title-section {
+          .card-title {
+            font-size: 20px;
+          }
+
+          .trophy-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
+        }
+
+        .card-subtitle {
+          font-size: 13px;
+        }
+      }
+    }
+
+    .card-content {
+      padding: 16px;
+
+      .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+
+        .stat-item {
+          .stat-value {
+            font-size: 20px;
+          }
+
+          .stat-label {
+            font-size: 11px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .leaderboard-card {
+    .stats-grid {
+      gap: 24px;
+
+      .stat-item {
+        .stat-value {
+          font-size: 28px;
+        }
+
+        .stat-label {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}

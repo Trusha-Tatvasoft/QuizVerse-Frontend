@@ -262,6 +262,49 @@ app-data-table {
   }
 }
 
+// all page common header styling (User Pages)
+.user-management-page {
+  padding: 24px 32px;
+  background: var(--global-bg-gradient);
+  min-height: 100%;
+
+  @media (min-width: 1024px) {
+    width: calc(100vw - 283px);
+  }
+
+  .user-page-heading {
+    font-size: revert;
+    font-weight: revert;
+    margin-bottom: 24px;
+  }
+
+  .user-page-header {
+    margin-bottom: 24px;
+  }
+
+  .user-management-toolbar {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 1rem;
+    align-items: center;
+    border-radius: 8px;
+    border: 0.5px solid #e2e8f0;
+    background-color: white;
+    margin-bottom: 24px;
+    padding: 24px;
+
+    @media (max-width: 768px) {
+      padding: 16px;
+    }
+    @media (max-width: 480px) {
+      padding: 12px;
+    }
+  }
+  @media (max-width: 1036px) {
+    padding: 24px 16px;
+  }
+}
+
 //User Management Buttons
 .admin-management-page {
   .admin-management-toolbar {
