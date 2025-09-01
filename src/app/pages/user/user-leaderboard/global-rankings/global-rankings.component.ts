@@ -36,10 +36,6 @@ export class GlobalRankingsComponent {
   private touchStartIndex = 0;
   private lastWheelTs = 0;
 
-  private get loggedInUserEntry(): LeaderboardEntry | undefined {
-    return this.leaderboard.find((u) => u.is_loggedin_user);
-  }
-
   ngOnInit(): void {
     this.fetchLeaderboard();
   }
@@ -208,5 +204,9 @@ export class GlobalRankingsComponent {
     this.currentStart = Math.min(Math.max(0, this.currentStart + delta), maxStart);
     this.updateVisibleWindow();
     this.scrollToTop();
+  }
+
+  private get loggedInUserEntry(): LeaderboardEntry | undefined {
+    return this.leaderboard.find((u) => u.is_loggedin_user);
   }
 }
