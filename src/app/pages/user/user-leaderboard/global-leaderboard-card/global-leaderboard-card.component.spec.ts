@@ -94,8 +94,8 @@ describe('GlobalLeaderboardCardComponent', () => {
 
   describe('ngOnDestroy', () => {
     it('should complete destroy subject', () => {
-      const completeSpy = jest.spyOn((component as any).destroy, 'complete');
-      const nextSpy = jest.spyOn((component as any).destroy, 'next');
+      const completeSpy = jest.spyOn((component as any).destroy$, 'complete');
+      const nextSpy = jest.spyOn((component as any).destroy$, 'next');
 
       component.ngOnDestroy();
 

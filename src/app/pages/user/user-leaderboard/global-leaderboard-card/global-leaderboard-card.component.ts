@@ -24,7 +24,7 @@ export class GlobalLeaderboardCardComponent implements OnInit {
   userLeaderboardStats: UserLeaderboardStats = defaultUserLeaderboardStats;
 
   // Private reactive helpers
-  private readonly destroy = new Subject<void>();
+  private readonly destroy$ = new Subject<void>();
 
   /**
    * Fetches the current user's leaderboard statistics from the API.
@@ -37,8 +37,8 @@ export class GlobalLeaderboardCardComponent implements OnInit {
    * Completes the `destroy` Subject to clean up all active subscriptions.
    */
   ngOnDestroy(): void {
-    this.destroy.next();
-    this.destroy.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
@@ -47,7 +47,7 @@ export class GlobalLeaderboardCardComponent implements OnInit {
   private getUserLeaderboardStats(): void {
     this.leaderboardsService
       .getUserLeaderboardStats()
-      .pipe(takeUntil(this.destroy))
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {
           if (res.result && res.data) {

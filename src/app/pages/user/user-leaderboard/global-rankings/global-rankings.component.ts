@@ -16,9 +16,8 @@ import { platformMessages } from '../../../../utils/constants';
   styleUrl: './global-rankings.component.scss',
 })
 export class GlobalRankingsComponent {
-  // Injected services
-  leaderboardService = inject(LeaderboardService);
-  snackbar = inject(SnackbarService);
+  // Template references
+  @ViewChild('list', { static: true }) listRef!: ElementRef<HTMLDivElement>;
 
   // Configs & state
   leaderboard: LeaderboardEntry[] = [];
@@ -27,8 +26,9 @@ export class GlobalRankingsComponent {
   currentStart = 0;
   loading = true;
 
-  // Template references
-  @ViewChild('list', { static: true }) listRef!: ElementRef<HTMLDivElement>;
+  // Injected services
+  leaderboardService = inject(LeaderboardService);
+  snackbar = inject(SnackbarService);
 
   // Private helpers
   private readonly destroy$ = new Subject<void>();
@@ -42,11 +42,6 @@ export class GlobalRankingsComponent {
 
   ngOnInit(): void {
     this.fetchLeaderboard();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   /**
@@ -125,6 +120,11 @@ export class GlobalRankingsComponent {
   /** Replace broken/missing profile pictures with an empty string (fallback) */
   onImageError(entry: LeaderboardEntry) {
     entry.profilePic = '';
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
