@@ -427,5 +427,5 @@ export const plateformSettingCRUDMessages = {
   invalidFileType: 'Invalid file type. Please select an image.',
 };
 
-export const deaultLogoPath = 'assets/images/logo-small.png';
+export const defaultLogoPath = 'assets/images/logo-small.png';
 //#endregion

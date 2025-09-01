@@ -2,11 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NavbarComponent } from './navbar.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { yellow } from '../../../utils/constants';
+import { defaultLogoPath, yellow } from '../../../utils/constants';
 import { mockDataNotifications } from './navbar-mock-data';
 import { Navigations } from '../../../shared/enums/navigation';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { BehaviorSubject, of } from 'rxjs';
+import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -14,15 +16,25 @@ describe('NavbarComponent', () => {
   let warning = yellow;
   let authServiceMock: { logout: jest.Mock };
 
+  let configSubject: BehaviorSubject<any>;
+
   const mockNotifications = mockDataNotifications;
 
   beforeEach(async () => {
+    configSubject = new BehaviorSubject<any>(null);
+
     authServiceMock = { logout: jest.fn() };
 
     await TestBed.configureTestingModule({
       imports: [NavbarComponent, HttpClientTestingModule],
       schemas: [NO_ERRORS_SCHEMA],
-      providers: [{ provide: AuthService, useValue: authServiceMock }],
+      providers: [
+        { provide: AuthService, useValue: authServiceMock },
+        {
+          provide: PlatformSettingsService,
+          useValue: { platformConfig$: configSubject.asObservable() },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavbarComponent);
@@ -265,5 +277,17 @@ describe('NavbarComponent', () => {
 
     fixture.detectChanges();
     expect(component.showNotifications).toBe(true);
+  });
+
+  it('should set logoPath to default on imageError()', () => {
+    component.logoPath = 'somePath.png';
+    component.imageError();
+    expect(component.logoPath).toBe('assets/images/logo-small.png');
+  });
+
+  it('should set logoPath when config has logo', () => {
+    fixture.detectChanges();
+    configSubject.next({ logo: 'assets/images/custom.png' });
+    expect(component.logoPath).toBe('assets/images/custom.png');
   });
 });

@@ -31,7 +31,7 @@ import { OutlineButtonComponent } from '../../../shared/components/outline-butto
 import { Notifications } from '../interfaces/navbar.component.interface';
 import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
-import { deaultLogoPath, plateformName } from '../../../utils/constants';
+import { defaultLogoPath, plateformName } from '../../../utils/constants';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
 
@@ -63,12 +63,8 @@ export class NavbarComponent {
 
   @Output() openSidebar = new EventEmitter<void>();
   @Output() closeSidebar = new EventEmitter<void>();
-  @ViewChild('notificationWrapper') notificationWrapper!: ElementRef;
 
-  private readonly router = inject(Router);
-  private readonly authService = inject(AuthService);
-  private readonly elementRef = inject(ElementRef);
-  private readonly platformSettingsService = inject(PlatformSettingsService);
+  @ViewChild('notificationWrapper') notificationWrapper!: ElementRef;
 
   textButton = textButtonConfig;
   signInButton = signInButtonConfig;
@@ -82,6 +78,11 @@ export class NavbarComponent {
   showNotifications = false;
   menuOpen = false;
   logoPath: string;
+
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+  private readonly platformSettingsService = inject(PlatformSettingsService);
+
   private previousWidth = window.innerWidth;
 
   ngOnInit(): void {
@@ -105,21 +106,6 @@ export class NavbarComponent {
     ) {
       this.showNotifications = false;
     }
-  }
-
-  private checkWindowSize(currentWidth: number) {
-    if (this.previousWidth >= 1024 && currentWidth < 1024) {
-      this.menuOpen = false;
-      this.closeSidebar.emit();
-    }
-  }
-
-  private loadPlatformConfig(): void {
-    this.platformSettingsService.platformConfig$.subscribe((config) => {
-      if (config) {
-        this.logoPath = config!.logo ?? deaultLogoPath;
-      }
-    });
   }
 
   toggleNotifications(event: Event) {
@@ -153,7 +139,22 @@ export class NavbarComponent {
     this.authService.logout();
   }
 
-  onImageError() {
-    this.logoPath = deaultLogoPath;
+  imageError() {
+    this.logoPath = defaultLogoPath;
+  }
+
+  private checkWindowSize(currentWidth: number) {
+    if (this.previousWidth >= 1024 && currentWidth < 1024) {
+      this.menuOpen = false;
+      this.closeSidebar.emit();
+    }
+  }
+
+  private loadPlatformConfig(): void {
+    this.platformSettingsService.platformConfig$.subscribe((config) => {
+      if (config) {
+        this.logoPath = config!.logo ?? defaultLogoPath;
+      }
+    });
   }
 }

@@ -39,11 +39,6 @@ import { Subject, take, takeUntil } from 'rxjs';
   styleUrl: './platform-settings.component.scss',
 })
 export class PlatformSettingsComponent implements OnInit {
-  private readonly fb = inject(FormBuilder);
-  private readonly validationErrorService = inject(ValidationErrorService);
-  private readonly snackbar = inject(SnackbarService);
-  private readonly platformSettingsService = inject(PlatformSettingsService);
-
   // Configs and form fields
   platformSettingHeaderConfiguration = platformSettingHeaderConfig;
   platformSettingsFormFields = platformSettingsFormFields;
@@ -55,129 +50,17 @@ export class PlatformSettingsComponent implements OnInit {
   previewUrl: string | null = null;
   selectedFile: File | null = null;
 
+  // Services
+  private readonly fb = inject(FormBuilder);
+  private readonly validationErrorService = inject(ValidationErrorService);
+  private readonly snackbar = inject(SnackbarService);
+  private readonly platformSettingsService = inject(PlatformSettingsService);
+
   private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
     this.initializeForm();
     this.loadPlatformConfigurations();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  // Initialize form from config field
-  private initializeForm(): void {
-    const group: Record<string, unknown[]> = {};
-
-    this.platformSettingsFormFields.forEach((field) => {
-      group[field.name] = ['', field.validators || []];
-    });
-
-    this.platformSettingsForm = this.fb.group(group);
-  }
-
-  // Load plateform configuration on page load
-  private loadPlatformConfigurations(): void {
-    this.platformSettingsService
-      .getPlatformConfigurations()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (res) => {
-          if (res.result) {
-            this.platformConfig = res.data;
-            this.patchFormValues(res.data);
-            this.previewUrl = `${environment.imageBaseUrl}/${res.data.logo}`;
-          } else {
-            this.snackbar.showError(res.message);
-          }
-        },
-        error: (err) => {
-          this.snackbar.showError(err);
-        },
-      });
-  }
-
-  // Fill values in form
-  private patchFormValues(config: PlatformConfigurationResponseDTO): void {
-    this.platformSettingsForm.patchValue({
-      landingPageQuote: config.quote || '',
-      primaryColor: config.defaultsColors?.primaryColor || '#000000',
-      secondaryColor: config.defaultsColors?.secondaryColor || '#000000',
-    });
-  }
-
-  // Check for color look like white or not
-  private isWhiteLike(hex: string, threshold: number = 200): boolean {
-    const rgb = this.hexToRgb(hex);
-    return rgb.r > threshold && rgb.g > threshold && rgb.b > threshold;
-  }
-
-  // Check for color similarity
-  private areColorsSimilar(hex1: string, hex2: string, tolerance: number = 150): boolean {
-    const rgb1 = this.hexToRgb(hex1);
-    const rgb2 = this.hexToRgb(hex2);
-
-    const diff = Math.abs(rgb1.r - rgb2.r) + Math.abs(rgb1.g - rgb2.g) + Math.abs(rgb1.b - rgb2.b);
-
-    return diff < tolerance;
-  }
-
-  // Hex to rgb
-  private hexToRgb(hex: string): { r: number; g: number; b: number } {
-    hex = hex.replace('#', '');
-    if (hex.length === 3) {
-      hex = hex
-        .split('')
-        .map((c) => c + c)
-        .join('');
-    }
-    const num = parseInt(hex, 16);
-    return {
-      r: (num >> 16) & 255,
-      g: (num >> 8) & 255,
-      b: num & 255,
-    };
-  }
-
-  // Validation for selected colors
-  private validateAndSetColor(controlName: string, newColor: string) {
-    const otherControlName = controlName === 'primaryColor' ? 'secondaryColor' : 'primaryColor';
-    const otherColor = this.platformSettingsForm.get(otherControlName)?.value;
-
-    // Check white-like
-    if (this.isWhiteLike(newColor)) {
-      this.snackbar.showError('White or very light colors are not allowed');
-      this.revertToServiceValue(controlName);
-      return;
-    }
-
-    // Check similarity with the other color
-    if (otherColor && this.areColorsSimilar(newColor, otherColor)) {
-      this.snackbar.showError('Primary and secondary colors cannot be the same or too similar');
-      this.revertToServiceValue(controlName);
-      return;
-    }
-
-    this.platformSettingsForm.get(controlName)?.setValue(newColor, { emitEvent: true });
-  }
-
-  // If validation failed, set default value for colors
-  private revertToServiceValue(controlName: string) {
-    this.platformSettingsService.platformConfig$
-      .pipe(take(1))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((config) => {
-        if (config?.defaultsColors) {
-          const fallbackColor =
-            controlName === 'primaryColor'
-              ? config.defaultsColors.primaryColor
-              : config.defaultsColors.secondaryColor;
-
-          this.platformSettingsForm.get(controlName)?.setValue(fallbackColor, { emitEvent: false });
-        }
-      });
   }
 
   // Error message for form field
@@ -300,5 +183,123 @@ export class PlatformSettingsComponent implements OnInit {
     }
 
     return 'No file chosen';
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // Initialize form from config field
+  private initializeForm(): void {
+    const group: Record<string, unknown[]> = {};
+
+    this.platformSettingsFormFields.forEach((field) => {
+      group[field.name] = ['', field.validators || []];
+    });
+
+    this.platformSettingsForm = this.fb.group(group);
+  }
+
+  // Load plateform configuration on page load
+  private loadPlatformConfigurations(): void {
+    this.platformSettingsService
+      .getPlatformConfigurations()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.result) {
+            this.platformConfig = res.data;
+            this.patchFormValues(res.data);
+            this.previewUrl = `${environment.imageBaseUrl}/${res.data.logo}`;
+          } else {
+            this.snackbar.showError(res.message);
+          }
+        },
+        error: (err) => {
+          this.snackbar.showError(err);
+        },
+      });
+  }
+
+  // Fill values in form
+  private patchFormValues(config: PlatformConfigurationResponseDTO): void {
+    this.platformSettingsForm.patchValue({
+      landingPageQuote: config.quote || '',
+      primaryColor: config.defaultsColors?.primaryColor || '#000000',
+      secondaryColor: config.defaultsColors?.secondaryColor || '#000000',
+    });
+  }
+
+  // Check for color look like white or not
+  private isWhiteLike(hex: string, threshold: number = 200): boolean {
+    const rgb = this.hexToRgb(hex);
+    return rgb.r > threshold && rgb.g > threshold && rgb.b > threshold;
+  }
+
+  // Check for color similarity
+  private areColorsSimilar(hex1: string, hex2: string, tolerance: number = 150): boolean {
+    const rgb1 = this.hexToRgb(hex1);
+    const rgb2 = this.hexToRgb(hex2);
+
+    const diff = Math.abs(rgb1.r - rgb2.r) + Math.abs(rgb1.g - rgb2.g) + Math.abs(rgb1.b - rgb2.b);
+
+    return diff < tolerance;
+  }
+
+  // Hex to rgb
+  private hexToRgb(hex: string): { r: number; g: number; b: number } {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) {
+      hex = hex
+        .split('')
+        .map((c) => c + c)
+        .join('');
+    }
+    const num = parseInt(hex, 16);
+    return {
+      r: (num >> 16) & 255,
+      g: (num >> 8) & 255,
+      b: num & 255,
+    };
+  }
+
+  // Validation for selected colors
+  private validateAndSetColor(controlName: string, newColor: string) {
+    const otherControlName = controlName === 'primaryColor' ? 'secondaryColor' : 'primaryColor';
+    const otherColor = this.platformSettingsForm.get(otherControlName)?.value;
+
+    // Check white-like
+    if (this.isWhiteLike(newColor)) {
+      this.snackbar.showError('White or very light colors are not allowed');
+      this.revertToServiceValue(controlName);
+      return;
+    }
+
+    // Check similarity with the other color
+    if (otherColor && this.areColorsSimilar(newColor, otherColor)) {
+      this.snackbar.showError('Primary and secondary colors cannot be the same or too similar');
+      this.revertToServiceValue(controlName);
+      return;
+    }
+
+    this.platformSettingsForm.get(controlName)?.setValue(newColor, { emitEvent: true });
+  }
+
+  // If validation failed, set default value for colors
+  private revertToServiceValue(controlName: string) {
+    this.platformSettingsService.platformConfig$
+      .pipe(take(1))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((config) => {
+        if (config?.defaultsColors) {
+          const fallbackColor =
+            controlName === 'primaryColor'
+              ? config.defaultsColors.primaryColor
+              : config.defaultsColors.secondaryColor;
+
+          this.platformSettingsForm.get(controlName)?.setValue(fallbackColor, { emitEvent: false });
+        }
+      });
   }
 }
