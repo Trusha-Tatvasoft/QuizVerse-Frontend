@@ -59,43 +59,53 @@ import { platformMessages } from '../../../../../../utils/constants';
   styleUrl: './battle-creation-step-1.component.scss',
 })
 export class BattleCreationStep1Component {
+  // Input values (used for edit mode)
   @Input() initialFormValues: BattleStep1Data;
   @Input() isEditMode: boolean;
+
+  // Outputs
   @Output() formValuesChange = new EventEmitter<BattleStep1Data>();
   @Output() categoryChanged = new EventEmitter();
 
-  private readonly fb = inject(FormBuilder);
-  private readonly validationErrorService = inject(ValidationErrorService);
-  private readonly snackbar = inject(SnackbarService);
-  private readonly battleManagementService = inject(BattleManagementService);
-  private difficultyXpMap: Record<string, number> = {};
-  private difficultyIdMap: Record<string, number> = {};
-  private readonly destroy$ = new Subject<void>();
-
-  public BattleTimeType = BattleTimeType;
-
-  newBattleFields: DynamicFormField[] = battleCreationFormFields; // static fields
+  // Static form fields from config
+  newBattleFields: DynamicFormField[] = battleCreationFormFields;
   newBattleForm: FormGroup;
+
+  // Totals
   totalQuestionsStep1: number = 0;
   totalTimeStep1: number = 0; // in minutes
   totalXPStep1: number = 0;
+
+  // Dropdown options
   battleDifficultyOption: { value: number; label: string }[] = [];
   battleTypeOption: { value: number; label: string }[] = [];
   questionsDifficultyXPOption: QuestionDifficultyXP[] = [];
 
-  // Difficulty (dynamic) fields
+  // Dynamic difficulty fields (questions + time)
   questionFields: DynamicFormField[] = [];
+
+  // Enum accessible in template
+  public BattleTimeType = BattleTimeType;
+
+  // Injected services
+  private readonly fb = inject(FormBuilder);
+  private readonly validationErrorService = inject(ValidationErrorService);
+  private readonly snackbar = inject(SnackbarService);
+  private readonly battleManagementService = inject(BattleManagementService);
+
+  // Internal mappings
+  private difficultyXpMap: Record<string, number> = {};
+  private difficultyIdMap: Record<string, number> = {};
+  private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
     this.loadSelectFieldOptions();
     this.initializeForm();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
+  /**
+   * Initialize form with difficulty fields, static fields and subscriptions
+   */
   initializeForm(): void {
     this.getDifficultyQuestionFields().subscribe({
       next: () => {
@@ -113,18 +123,105 @@ export class BattleCreationStep1Component {
     });
   }
 
+  /**
+   * Returns error message for given field using ValidationErrorService
+   */
+  getError(fieldName: string): string | null {
+    const control = this.newBattleForm.get(fieldName);
+    const field = [...this.newBattleFields, ...this.questionFields].find(
+      (f) => f.name === fieldName,
+    );
+    const customMessages = field?.validationMessages || {};
+    return this.validationErrorService.getErrorMessage(control!, customMessages, fieldName);
+  }
+
+  /**
+   * Validate and submit step1 form
+   */
+  submitStep1Form(): boolean {
+    if (this.newBattleForm.invalid) {
+      this.newBattleForm.markAllAsTouched();
+      return false;
+    }
+
+    // Validate question count
+    if (this.totalQuestionsStep1 < 5 || this.totalQuestionsStep1 > 100) {
+      this.snackbar.showError(platformMessages.minimumNumberOfQuestionError);
+      return false;
+    }
+
+    // Validate total time
+    if (this.totalTimeStep1 > 180 || this.totalTimeStep1 < 2) {
+      this.snackbar.showError(platformMessages.maximumTotalTimeError);
+      return false;
+    }
+
+    // Validate XP
+    if (this.totalXPStep1 <= 0) {
+      this.snackbar.showError(platformMessages.minimumTotalXPError);
+      return false;
+    }
+
+    // Build payload
+    const val = this.newBattleForm.value;
+    const battleCategoryId = val.battleCategory;
+    const battleCategoryField = this.newBattleFields.find((f) => f.name === 'battleCategory');
+    const battleCategoryName =
+      battleCategoryField?.options?.find((opt) => opt.value === battleCategoryId)?.label || '';
+
+    const payload: BattleStep1Data = {
+      ...val,
+      name: val.battleTitle,
+      categoryId: val.battleCategory,
+      difficultyLevelId: val.difficultyLevel,
+      difficultyLevelName:
+        this.battleDifficultyOption.find((opt) => opt.value === val.difficultyLevel)?.label || '',
+      battleType: val.battleType,
+      battleTypeName:
+        this.battleTypeOption.find((opt) => opt.value === val.battleType)?.label || '',
+      totalQuestion: this.totalQuestionsStep1,
+      totalTime: this.totalTimeStep1,
+      totalXp: this.totalXPStep1,
+      battleCategoryName,
+      questionsDifficulty: this.buildQuestionsDifficulty(),
+    };
+
+    // Add start/end date only for TimeLimited type
+    if (val.battleType === BattleTimeType.TimeLimited) {
+      payload.startDate = val.startDate;
+      payload.endDate = val.endDate;
+    }
+
+    this.formValuesChange.emit(payload);
+    return true;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * Load dropdown data for select fields
+   */
   private loadSelectFieldOptions(): void {
     this.getDifficultyLevels();
     this.getQuizCategories();
     this.getBattleTypes();
   }
 
+  /**
+   * Emit categoryChanged when category value changes
+   */
   private categoryChange(): void {
     this.newBattleForm.get('battleCategory')?.valueChanges.subscribe(() => {
       this.categoryChanged.emit();
     });
   }
 
+  /**
+   * Setup subscriptions to update totals on question/time field changes
+   */
   private setupQuestionCountLogic(): void {
     this.questionFields.forEach((field) => {
       this.newBattleForm.get(field.name)?.valueChanges.subscribe(() => {
@@ -134,6 +231,9 @@ export class BattleCreationStep1Component {
     this.updateTotals();
   }
 
+  /**
+   * Emit initial form state (for parent component)
+   */
   private emitInitialFormState(): void {
     const val = this.newBattleForm.value;
     const categoryId = val.battleCategory;
@@ -159,7 +259,7 @@ export class BattleCreationStep1Component {
       questionsDifficulty: this.buildQuestionsDifficulty(),
     };
 
-    // Include startDate and endDate only if battleType is TimeLimited
+    // Add dates only if TimeLimited
     if (val.battleType === BattleTimeType.TimeLimited) {
       formData.startDate = val.startDate;
       formData.endDate = val.endDate;
@@ -168,6 +268,9 @@ export class BattleCreationStep1Component {
     this.formValuesChange.emit(formData);
   }
 
+  /**
+   * Recalculate totals (questions, time, XP)
+   */
   public updateTotals(): void {
     let totalQuestions = 0;
     let totalTime = 0;
@@ -180,29 +283,33 @@ export class BattleCreationStep1Component {
       const value = Number(control.value) || 0;
       const difficultyName: string = field.name.replace(/(Questions)/, '').toLowerCase();
 
+      // Sum total questions
       if (field.name.toLowerCase().includes('questions')) {
         totalQuestions += value;
       }
 
+      // Calculate XP
       if (this.difficultyXpMap[difficultyName]) {
         totalXP += value * this.difficultyXpMap[difficultyName];
       }
 
+      // Calculate time (questions * time per question)
       if (field.name.toLowerCase().includes('time')) {
-        // multiply time per question by number of questions in that difficulty
         const difficulty = field.name.replace('Time', 'Questions');
         const questionsControl = this.newBattleForm.get(difficulty);
         const numQuestions = Number(questionsControl?.value) || 0;
-
         totalTime += numQuestions * value;
       }
     });
 
     this.totalQuestionsStep1 = totalQuestions;
-    this.totalTimeStep1 = totalTime / 60; // in minutes
+    this.totalTimeStep1 = totalTime / 60; // convert seconds → minutes
     this.totalXPStep1 = totalXP;
   }
 
+  /**
+   * Build questionsDifficulty array for payload
+   */
   private buildQuestionsDifficulty(): BattleQuestionDifficulty[] {
     const questionsDifficulty: BattleQuestionDifficulty[] = [];
     this.questionFields.forEach((field) => {
@@ -227,6 +334,9 @@ export class BattleCreationStep1Component {
     return questionsDifficulty;
   }
 
+  /**
+   * Build reactive form with static + dynamic fields
+   */
   private buildForm(): void {
     const allFields = [...this.newBattleFields, ...this.questionFields];
 
@@ -260,7 +370,7 @@ export class BattleCreationStep1Component {
             initialValue = this.initialFormValues?.[mappedFieldName as keyof BattleStep1Data] ?? '';
           }
 
-          // Validators must be array of functions
+          // Add validators
           const validators = Array.isArray(field.validators)
             ? field.validators.filter((v) => typeof v === 'function')
             : [];
@@ -273,17 +383,23 @@ export class BattleCreationStep1Component {
     );
   }
 
+  /**
+   * Restore values from @Input initialFormValues
+   */
   private restoreInitialValues(): void {
     if (!this.initialFormValues) return;
 
     this.newBattleForm.patchValue(this.initialFormValues, { emitEvent: false });
-    // Trigger the battleType change logic manually
+    // Apply validators for battleType if needed
     const battleType = this.newBattleForm.get('battleType')?.value;
     if (battleType !== undefined) {
       this.applyBattleTypeValidators(battleType);
     }
   }
 
+  /**
+   * Apply validators for TimeLimited battles
+   */
   private applyBattleTypeValidators(battleType: BattleTimeType) {
     const startDateControl = this.newBattleForm.get('startDate');
     const endDateControl = this.newBattleForm.get('endDate');
@@ -306,6 +422,9 @@ export class BattleCreationStep1Component {
     endDateControl?.updateValueAndValidity();
   }
 
+  /**
+   * Listen to form changes and emit updated form values
+   */
   private setupFormValueChanges(): void {
     this.newBattleForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe((val) => {
       const categoryId = val.battleCategory;
@@ -332,6 +451,9 @@ export class BattleCreationStep1Component {
     });
   }
 
+  /**
+   * Fetch difficulty levels dropdown
+   */
   private getDifficultyLevels(): void {
     this.battleManagementService
       .getDropDownData(DropDownType.QuizDifficulty)
@@ -358,6 +480,9 @@ export class BattleCreationStep1Component {
       });
   }
 
+  /**
+   * Fetch quiz categories dropdown
+   */
   private getQuizCategories(): void {
     this.battleManagementService
       .getDropDownData(DropDownType.QuizCategory)
@@ -385,6 +510,9 @@ export class BattleCreationStep1Component {
       });
   }
 
+  /**
+   * Build battle type dropdown options
+   */
   private getBattleTypes(): void {
     const battleTypes = Object.keys(BattleTimeType).filter((key) => isNaN(Number(key))) as Array<
       keyof typeof BattleTimeType
@@ -409,6 +537,9 @@ export class BattleCreationStep1Component {
     }
   }
 
+  /**
+   * Listen for battleType changes → update validators + emit form state
+   */
   private setupBattleTypeChanges(): void {
     this.newBattleForm
       .get('battleType')
@@ -418,7 +549,10 @@ export class BattleCreationStep1Component {
         this.emitInitialFormState();
       });
   }
-
+  /**
+   * Fetches the question difficulty XP configuration from the service
+   * and dynamically builds form fields for each difficulty level.
+   */
   private getDifficultyQuestionFields() {
     return this.battleManagementService.getQuestionDifficultyXP().pipe(
       takeUntil(this.destroy$),
@@ -472,68 +606,5 @@ export class BattleCreationStep1Component {
         },
       }),
     );
-  }
-
-  getError(fieldName: string): string | null {
-    const control = this.newBattleForm.get(fieldName);
-    const field = [...this.newBattleFields, ...this.questionFields].find(
-      (f) => f.name === fieldName,
-    );
-    const customMessages = field?.validationMessages || {};
-    return this.validationErrorService.getErrorMessage(control!, customMessages, fieldName);
-  }
-
-  submitStep1Form(): boolean {
-    if (this.newBattleForm.invalid) {
-      this.newBattleForm.markAllAsTouched();
-      return false;
-    }
-
-    if (this.totalQuestionsStep1 < 5 || this.totalQuestionsStep1 > 100) {
-      this.snackbar.showError(platformMessages.minimumNumberOfQuestionError);
-      return false;
-    }
-
-    if (this.totalTimeStep1 > 180 || this.totalTimeStep1 < 2) {
-      this.snackbar.showError(platformMessages.maximumTotalTimeError);
-      return false;
-    }
-
-    if (this.totalXPStep1 <= 0) {
-      this.snackbar.showError(platformMessages.minimumTotalXPError);
-      return false;
-    }
-
-    const val = this.newBattleForm.value;
-    const battleCategoryId = val.battleCategory;
-    const battleCategoryField = this.newBattleFields.find((f) => f.name === 'battleCategory');
-    const battleCategoryName =
-      battleCategoryField?.options?.find((opt) => opt.value === battleCategoryId)?.label || '';
-
-    const payload: BattleStep1Data = {
-      ...val,
-      name: val.battleTitle,
-      categoryId: val.battleCategory,
-      difficultyLevelId: val.difficultyLevel,
-      difficultyLevelName:
-        this.battleDifficultyOption.find((opt) => opt.value === val.difficultyLevel)?.label || '',
-      battleType: val.battleType,
-      battleTypeName:
-        this.battleTypeOption.find((opt) => opt.value === val.battleType)?.label || '',
-      totalQuestion: this.totalQuestionsStep1,
-      totalTime: this.totalTimeStep1,
-      totalXp: this.totalXPStep1,
-      battleCategoryName,
-      questionsDifficulty: this.buildQuestionsDifficulty(),
-    };
-
-    // Include startDate and endDate only if battleType is TimeLimited
-    if (val.battleType === BattleTimeType.TimeLimited) {
-      payload.startDate = val.startDate;
-      payload.endDate = val.endDate;
-    }
-
-    this.formValuesChange.emit(payload);
-    return true;
   }
 }

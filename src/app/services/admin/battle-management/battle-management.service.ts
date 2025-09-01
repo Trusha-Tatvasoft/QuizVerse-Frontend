@@ -24,6 +24,10 @@ import { ExportQuizQuestionsRequestDto } from '../../../shared/interfaces/quiz-c
 export class BattleManagementService {
   private readonly http = inject(HttpClient);
 
+  /**
+   * Fetch the list of battles and map them into battle card data.
+   * Returns an empty array if the response is invalid.
+   */
   getBattles(): Observable<ReturnType<typeof battleToBattleCardData>[]> {
     return this.http
       .get<
@@ -38,8 +42,8 @@ export class BattleManagementService {
   }
 
   /**
-   * Fetch dropdown values for a given type (e.g. categories, difficulty levels, etc.)
-   * @param type dropdown type identifier
+   * Fetch dropdown values based on a given type (e.g., category, difficulty, etc.).
+   * @param type Identifier for the dropdown data type
    */
   getDropDownData(type: number): Observable<ApiResponse<DropDownData[]>> {
     return this.http
@@ -50,8 +54,7 @@ export class BattleManagementService {
   }
 
   /**
-   * Fetch dropdown values for a given type (e.g. categories, difficulty levels, etc.)
-   * @param type dropdown type identifier
+   * Fetch XP values for each question difficulty level.
    */
   getQuestionDifficultyXP(): Observable<ApiResponse<QuestionDifficultyXP[]>> {
     return this.http
@@ -62,8 +65,8 @@ export class BattleManagementService {
   }
 
   /**
-   * Fetch paginated list of questions for the question pool
-   * @param request pagination + filter request payload
+   * Fetch a paginated and filtered list of questions from the question pool.
+   * @param request Pagination and filter parameters
    */
   getQuestions(
     request: PaginationRequest,
@@ -76,8 +79,8 @@ export class BattleManagementService {
   }
 
   /**
-   * Import questions from a CSV file
-   * @param file CSV file containing battle questions
+   * Preview questions by importing them from a CSV file.
+   * @param file CSV file containing questions
    */
   getQuestionsFromCsv(file: File): Observable<ApiResponse<QuestionResponseDto[]>> {
     const formData = new FormData();
@@ -90,8 +93,8 @@ export class BattleManagementService {
   }
 
   /**
-   * Import questions from an Excel file
-   * @param file Excel file containing battle questions
+   * Preview questions by importing them from an Excel file.
+   * @param file Excel file containing questions
    */
   getQuestionsFromExcel(file: File): Observable<ApiResponse<QuestionResponseDto[]>> {
     const formData = new FormData();
@@ -104,8 +107,8 @@ export class BattleManagementService {
   }
 
   /**
-   * Export battle questions to a CSV file
-   * @param request export request payload containing battleName & questions
+   * Export battle questions to a downloadable CSV file.
+   * @param request Export payload (includes battleName and questions)
    */
   exportCsv(request: ExportQuizQuestionsRequestDto): Observable<Blob> {
     return this.http.post(`${environment.baseUrl}/${EndPoints.ExportQuestions}`, request, {
@@ -114,8 +117,8 @@ export class BattleManagementService {
   }
 
   /**
-   * Delete a battle by its ID
-   * @param battleId battle identifier
+   * Delete a battle by its ID.
+   * @param battleId Unique identifier of the battle
    */
   deleteBattle(battleId: number): Observable<ApiResponse<null>> {
     return this.http
@@ -124,8 +127,8 @@ export class BattleManagementService {
   }
 
   /**
-   * Fetch quiz details by battle ID
-   * @param battleId battle identifier
+   * Fetch details of a single battle by its ID.
+   * @param battleId Unique identifier of the battle
    */
   getBattle(battleId: number): Observable<ApiResponse<BattleResponse>> {
     return this.http.get<ApiResponse<BattleResponse>>(
@@ -134,8 +137,8 @@ export class BattleManagementService {
   }
 
   /**
-   * Create a new battle or update an existing battle
-   * @param request battle save request payload
+   * Create a new battle or update an existing one.
+   * @param request Payload containing battle details
    */
   createOrUpdateBattle(request: SaveBattleRequest): Observable<ApiResponse<null>> {
     return this.http.post<ApiResponse<null>>(
