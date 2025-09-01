@@ -56,10 +56,12 @@ import { FilenameTruncatePipe } from '../../../../shared/pipes/filename-truncate
   styleUrls: ['./register.component.scss', '../login-signup/login-signup.component.scss'],
 })
 export class RegisterComponent implements OnDestroy {
-  private readonly fb = inject(FormBuilder);
-  private readonly validationErrorService = inject(ValidationErrorService);
-  private readonly snackbarService = inject(SnackbarService);
-  private readonly registerService = inject(RegisterService);
+  @Input() user: UserFormData | null = null;
+  @Input() isLogin = false;
+  @Input() isEditMode = false;
+
+  @Output() saveUser = new EventEmitter<{ formData: FormData; isEdit: boolean }>();
+  @Output() formCancelled = new EventEmitter<void>();
 
   registerFields = registerFormFields;
   userFields = userFormFields;
@@ -69,16 +71,14 @@ export class RegisterComponent implements OnDestroy {
   updateUserButton = updateUserButtonConfig;
   createUserButton = createUserButtonConfig;
 
-  @Input() user: UserFormData | null = null;
-  @Input() isLogin = false;
-  @Input() isEditMode = false;
-  @Output() saveUser = new EventEmitter<{ formData: FormData; isEdit: boolean }>();
-  @Output() formCancelled = new EventEmitter<void>();
-
   registerForm: FormGroup;
   userForm: FormGroup;
   selectedFile: File | null = null;
 
+  private readonly fb = inject(FormBuilder);
+  private readonly validationErrorService = inject(ValidationErrorService);
+  private readonly snackbarService = inject(SnackbarService);
+  private readonly registerService = inject(RegisterService);
   private readonly destroy$ = new Subject<void>();
 
   // Initialize forms with dynamic fields and validators
@@ -303,16 +303,6 @@ export class RegisterComponent implements OnDestroy {
     this.formCancelled.emit();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  // Return active form based on login mode
-  private getActiveForm(): FormGroup {
-    return this.isLogin ? this.userForm : this.registerForm;
-  }
-
   // Check if username is available and set validation errors if not
   validateUserName(): void {
     const form = this.getActiveForm();
@@ -375,5 +365,15 @@ export class RegisterComponent implements OnDestroy {
           }
         },
       });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // Return active form based on login mode
+  private getActiveForm(): FormGroup {
+    return this.isLogin ? this.userForm : this.registerForm;
   }
 }
