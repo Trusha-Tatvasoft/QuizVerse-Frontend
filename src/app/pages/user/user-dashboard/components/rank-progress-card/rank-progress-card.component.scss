@@ -24,7 +24,7 @@
   /* from 1024px and above → center everything */
   @media (max-width: 1024px) {
     .header {
-      justify-content: center;
+      justify-content: start;
       margin-bottom: 0.5rem;
 
       .header-icon {

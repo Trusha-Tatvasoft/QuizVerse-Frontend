@@ -74,5 +74,9 @@ export enum EndPoints {
   // #region UserDashboard
   UserDashboardData = 'UserDashboard/get-statistics-data',
   RankProgressData = 'UserDashboard/get-rank-progress',
+  GetFeaturedQuizzes = 'UserDashboard/get-featured-quizzes',
+  GetBattleRequests = 'UserDashboard/get-battle-requests',
+  UpdateBattleRequestStatus = 'UserDashboard/update-battle-request-status',
+  GetRecentQuizzes = 'UserDashboard/get-recent-quizzes',
   //#endregion
 }

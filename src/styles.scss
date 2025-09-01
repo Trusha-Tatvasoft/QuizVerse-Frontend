@@ -403,3 +403,37 @@ app-data-table {
     }
   }
 }
+
+.user-dashboard-primary-button {
+  .filled-button.secondary {
+    padding: 0.45rem 0.9rem;
+    font-size: 14px;
+  }
+  .outline-button {
+    padding: 0.45rem 0.9rem;
+    font-size: 14px;
+    border: 1.5px solid var(--global-secondary-color);
+  }
+
+  @media (max-width: 425px) {
+    .text-button {
+      width: 100%;
+    }
+  }
+}
+
+.user-dashboard-text-button {
+  .text-button {
+    width: 100%;
+  }
+}
+
+.user-dashboard-tag {
+  app-tag {
+    .tag-container {
+      .tag {
+        border: 1px solid var(--black-color);
+      }
+    }
+  }
+}

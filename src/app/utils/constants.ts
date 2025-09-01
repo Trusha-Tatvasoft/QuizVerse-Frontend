@@ -246,6 +246,16 @@ export const platformMessages = {
   deleteQuizFailure: 'Failed to delete quiz',
   //#endregion
 };
+
+//#region Battle Request Messages
+export const battleRequestMessages = {
+  accepted: (userName: string) => `You accepted battle request from ${userName}`,
+  declined: (userName: string) => `You declined battle request from ${userName}`,
+  acceptFailed: (userName: string) => `Failed to accept battle request from ${userName}`,
+  declineFailed: (userName: string) => `Failed to decline battle request from ${userName}`,
+};
+//#endregion
+
 //#endregion
 
 //#region Constant Variables

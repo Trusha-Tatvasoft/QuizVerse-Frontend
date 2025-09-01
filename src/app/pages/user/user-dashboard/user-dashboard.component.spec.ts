@@ -75,10 +75,8 @@ describe('UserDashboardComponent', () => {
     component.ngOnInit();
 
     expect(mockUserDashboardService.getDashboardData).toHaveBeenCalled();
-    expect(mockUserDashboardService.getRankProgress).toHaveBeenCalled();
-
     expect(component.bannerData).toEqual(mockDashboardData.banner);
-    expect(component.rankData).toEqual(mockRankData);
+    expect(component.quizStatsConfigs.length).toBe(Object.keys(mockDashboardData.card).length);
   });
 
   it('should load dashboard data successfully', () => {
@@ -115,26 +113,5 @@ describe('UserDashboardComponent', () => {
     expect(cards[0]).toHaveProperty('title');
     expect(cards[0]).toHaveProperty('value');
     expect(cards[0]).toHaveProperty('icon');
-  });
-
-  it('should load rank progress data successfully', () => {
-    const rankData = { currentRank: 3, previousRank: 4, progressPercentage: 50 };
-    mockUserDashboardService.getRankProgress.mockReturnValue(of(rankData));
-
-    component['loadRankProgressData']();
-
-    expect(mockUserDashboardService.getRankProgress).toHaveBeenCalled();
-    expect(component.rankData).toEqual(rankData);
-  });
-
-  it('should handle rank progress error', () => {
-    mockUserDashboardService.getRankProgress.mockReturnValue(throwError(() => new Error('Error')));
-
-    component['loadRankProgressData']();
-
-    expect(mockSnackbarService.showError).toHaveBeenCalledWith(
-      expect.any(String),
-      expect.any(String),
-    );
   });
 });

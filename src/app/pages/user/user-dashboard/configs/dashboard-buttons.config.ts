@@ -13,3 +13,40 @@ export const browseQuizzesButtonConfig: ButtonConfig = {
   matIcon: 'menu_book',
   imagePosition: 'left',
 };
+
+export const viewAllButtonConfig: ButtonConfig = {
+  label: 'View All',
+  variant: 'secondary',
+};
+
+export const acceptButtonConfig: ButtonConfig = {
+  label: 'Accept',
+  variant: 'secondary',
+};
+
+export const declineButtonConfig: ButtonConfig = {
+  label: 'Decline',
+  variant: 'secondary',
+};
+
+export const playButtonConfig: ButtonConfig = {
+  label: 'Play',
+  variant: 'secondary',
+  matIcon: 'play_arrow',
+  imagePosition: 'left',
+};
+
+export const loadMoreButtonConfig: ButtonConfig = {
+  label: 'Load More',
+  variant: 'secondary',
+};
+
+export const showLessButtonConfig: ButtonConfig = {
+  label: 'Show Less',
+  variant: 'secondary',
+};
+
+export const viewAllAchievementButtonConfig: ButtonConfig = {
+  label: 'View All Achievements',
+  variant: 'secondary',
+};

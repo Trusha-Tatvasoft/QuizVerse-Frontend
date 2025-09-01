@@ -13,25 +13,30 @@ import { platformMessages } from '../../../utils/constants';
 import { UserDashboardService } from '../../../services/user/user-dashboard/user-dashboard.service';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { Subject, takeUntil } from 'rxjs';
-import { RankProgress } from './interfaces/rank-progress.interface';
+import { FeaturedQuizComponent } from './components/featured-quiz/featured-quiz.component';
+import { BattleRequestComponent } from './components/battle-request/battle-request.component';
+import { RecentQuizResultComponent } from './components/recent-quiz-result/recent-quiz-result.component';
+import { AchievementComponent } from './components/achievement/achievement.component';
+import { defaultBannerData } from './configs/default-banner-data.config';
 
 @Component({
   selector: 'app-user-dashboard',
-  imports: [WelcomeBannerComponent, CardComponent, RankProgressCardComponent],
+  imports: [
+    WelcomeBannerComponent,
+    CardComponent,
+    RankProgressCardComponent,
+    FeaturedQuizComponent,
+    BattleRequestComponent,
+    RecentQuizResultComponent,
+    AchievementComponent,
+  ],
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.scss'],
 })
 export class UserDashboardComponent implements OnInit, OnDestroy {
   quizStatsConfigs: CardInputConfig[] = [];
-  bannerData = { userName: 'user', currentRank: 0 };
+  bannerData = defaultBannerData;
   valueColor: CardColor = 'black';
-
-  rankData: RankProgress = {
-    currentRank: '',
-    nextRank: '',
-    xpNeeded: 0,
-    progressPercent: 0,
-  };
 
   private readonly userDashboardService = inject(UserDashboardService);
   private readonly snackBarService = inject(SnackbarService);
@@ -39,7 +44,6 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadDashboardData();
-    this.loadRankProgressData();
   }
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -79,22 +83,5 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
         iconColor: config.iconColor,
       };
     });
-  }
-
-  private loadRankProgressData(): void {
-    this.userDashboardService
-      .getRankProgress()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (data) => {
-          this.rankData = data;
-        },
-        error: () => {
-          this.snackBarService.showError(
-            platformMessages.errorTitle,
-            platformMessages.errorMessage,
-          );
-        },
-      });
   }
 }

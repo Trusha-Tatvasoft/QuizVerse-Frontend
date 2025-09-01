@@ -1,0 +1,59 @@
+<div class="battle-requests">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <mat-icon class="header-icon">person</mat-icon>
+      <span class="title">Battle Requests</span>
+    </div>
+  </div>
+
+  <!-- Requests List -->
+  <div class="requests-list">
+    @if (requests.length > 0) {
+      @for (request of requests; track request.senderUserName) {
+        <div class="profile-details">
+          <div class="request-card">
+            <!-- Avatar -->
+            <div class="avatar">
+              @if (request.displayImage) {
+                <img
+                  [src]="request.displayImage"
+                  [alt]="request.senderUserName"
+                  class="avatar-img"
+                  (error)="handleImageError($event, request)"
+                />
+              } @else {
+                <div class="initials {{ request.initialsColor }}">
+                  {{ request.initials }}
+                </div>
+              }
+            </div>
+
+            <!-- Request Info -->
+            <div class="requests-info">
+              <strong>{{ request.senderUserName }}</strong>
+              <p>{{ request.battleCategory }} • {{ request.battleDifficulty }}</p>
+              <span class="time">{{ request.timeAgo }}</span>
+            </div>
+          </div>
+          <!-- Actions -->
+          <div class="request-button user-dashboard-primary-button">
+            <app-filled-button [filledButtonConfig]="acceptButton" (click)="acceptRequest(request)">
+            </app-filled-button>
+
+            <app-outline-button
+              [outlineButtonConfig]="declineButton"
+              (click)="declineRequest(request)"
+            >
+            </app-outline-button>
+          </div>
+        </div>
+      }
+    } @else {
+      <div class="no-requests">
+        <mat-icon>hourglass_empty</mat-icon>
+        <p>No battle requests available right now.</p>
+      </div>
+    }
+  </div>
+</div>

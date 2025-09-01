@@ -1,0 +1,29 @@
+<div class="achievements">
+  <div class="header">
+    <mat-icon class="header-icon">emoji_events</mat-icon>
+    <h3 class="title">Achievements</h3>
+  </div>
+
+  <div class="achievement-list">
+    <div
+      class="achievement-card"
+      *ngFor="let achievement of achievements"
+      [ngClass]="achievement.earned ? 'earned' : 'locked'"
+    >
+      <div class="achievement-icon">
+        <mat-icon>emoji_events</mat-icon>
+      </div>
+      <div class="achievement-info">
+        <strong>{{ achievement.name }}</strong>
+        <p>{{ achievement.description }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer user-dashboard-text-button">
+    <app-text-button
+      [textButtonConfig]="viewAllAchievementButton"
+      (buttonClicked)="viewAllAchievement()"
+    ></app-text-button>
+  </div>
+</div>

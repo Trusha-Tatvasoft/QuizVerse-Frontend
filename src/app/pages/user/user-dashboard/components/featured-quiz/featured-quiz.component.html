@@ -1,0 +1,54 @@
+<div class="featured-quizzes">
+  <div class="header">
+    <div class="header-left">
+      <mat-icon class="header-icon">star_outline</mat-icon>
+      <span class="title">Featured Quizzes</span>
+    </div>
+    <span class="subtitle">Popular quizzes trending today</span>
+  </div>
+
+  @if (quizzesWithTags.length > 0) {
+    <div class="quiz-list">
+      <div class="quiz-card" *ngFor="let quiz of quizzesWithTags">
+        <div class="quiz-content">
+          <div class="quiz-info">
+            <h3>{{ quiz.quizName }}</h3>
+            <p class="meta">
+              <span class="category">{{ quiz.categoryName }}</span>
+              <span class="meta-item">
+                <mat-icon>group_outlined</mat-icon>
+                {{ quiz.totalAttempts }}
+              </span>
+              <span class="meta-item">
+                <mat-icon>star_outline</mat-icon>
+                {{ quiz.rating }}
+              </span>
+            </p>
+          </div>
+          <div class="quiz-tag user-dashboard-tag">
+            <app-tag [tagConfig]="quiz.tag"></app-tag>
+          </div>
+        </div>
+
+        <div class="quiz-actions user-dashboard-primary-button">
+          <app-filled-button [filledButtonConfig]="playButtonConfig" (click)="playQuiz(quiz)">
+          </app-filled-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer user-dashboard-text-button">
+      <app-text-button
+        *ngIf="hasMore"
+        [textButtonConfig]="loadMoreButtonConfig"
+        (click)="handleFooterAction()"
+      >
+      </app-text-button>
+    </div>
+  } @else {
+    <div class="no-requests">
+      <mat-icon>hourglass_empty</mat-icon>
+      <p>No featured quizzes are available right now. Please check back later.</p>
+    </div>
+  }
+</div>

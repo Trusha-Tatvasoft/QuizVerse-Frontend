@@ -1,0 +1,127 @@
+.achievements {
+  background: #fff;
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+
+    .header-icon {
+      font-size: 1.5rem;
+      color: var(--global-secondary-color);
+    }
+
+    .title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #111827;
+    }
+  }
+
+  /* Achievements list */
+  .achievement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  /* Achievement card */
+  .achievement-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    background: #f9fafb;
+
+    .achievement-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+
+      mat-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    .achievement-info {
+      display: flex;
+      flex-direction: column;
+
+      strong {
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      p {
+        font-size: 0.85rem;
+        margin: 0;
+      }
+    }
+
+    &.earned {
+      background: #ecfdf5;
+      border: 1px solid #bbf7d0;
+
+      .achievement-icon {
+        background: #bbf7d0;
+
+        mat-icon {
+          color: #047857;
+        }
+      }
+
+      .achievement-info strong {
+        color: #065f46;
+      }
+
+      .achievement-info p {
+        color: #047857;
+      }
+    }
+
+    &.locked {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+
+      .achievement-icon {
+        background: #e5e7eb;
+
+        mat-icon {
+          color: #9ca3af;
+        }
+      }
+
+      .achievement-info strong {
+        color: #6b7280;
+      }
+
+      .achievement-info p {
+        color: #9ca3af;
+      }
+    }
+  }
+
+  /* Footer link */
+  .footer {
+    margin-top: 1rem;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .header {
+      justify-content: start;
+    }
+
+    .achievement-card {
+      padding: 0.75rem;
+    }
+  }
+}
