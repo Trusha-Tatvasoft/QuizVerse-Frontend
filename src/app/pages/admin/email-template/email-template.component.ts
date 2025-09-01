@@ -38,16 +38,9 @@ export class EmailTemplateComponent {
 
   private readonly destroy$ = new Subject<void>();
 
-  //#region Lifecycle
   ngOnInit(): void {
     this.loadEmailTemplates();
   }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-  //#endregion
 
   //#region API Call EmailList
   loadEmailTemplates(): void {
@@ -99,4 +92,9 @@ export class EmailTemplateComponent {
   //#region Create Email Dialog
   openEmailTemplateDialgue() {}
   //#endregion
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
