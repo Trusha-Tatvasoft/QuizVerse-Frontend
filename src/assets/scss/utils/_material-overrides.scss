@@ -552,3 +552,10 @@
     margin-bottom: 0px;
   }
 }
+
+// Date Picker button on the date field styling
+.mat-datepicker-toggle {
+  position: relative;
+  left: 15px;
+  top: 3px;
+}

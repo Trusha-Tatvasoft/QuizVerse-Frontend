@@ -245,6 +245,23 @@ export const platformMessages = {
   deleteQuizSuccess: 'Quiz Deleted Successfully!!',
   deleteQuizFailure: 'Failed to delete quiz',
   //#endregion
+
+  //#region BattleManagement Messages
+  battleSaved: 'Battle saved successfully!',
+  battleUpdated: 'Battle updated successfully!',
+  editBattleTitle: 'Edit Battle',
+  editBattleSubtitle: 'Update battle information and settings',
+  minimumNumberOfQuestionError: 'Total questions must be between 5 and 100.',
+  maximumTotalTimeError: 'Total Time must be between 2 minutes and 180 minutes.',
+  minimumTotalXPError: 'Total questions must be greater than 0.',
+  deleteBattleSuccess: 'Battle Deleted Successfully!!',
+  deleteBattleFailure: 'Failed to delete battle',
+  invalideBattleId: 'Invalid battle id',
+  totalQuestionsError: (count: number) =>
+    `Please select the ${count} number of questions as per your battle settings.`,
+  difficultyWiseQuestionSelectionError: 'Please select the questions as per your battle settings.',
+  battleTitleNotFoundError: 'Battle name not found',
+  //#endregion
 };
 //#endregion
 
@@ -409,7 +426,9 @@ export const quizCRUDMessages = {
   totalQuestionsError: (count: number) =>
     `Please select the ${count} number of questions as per your quiz settings.`,
   maxDifficultyQuestionsError: (difficultyLimit: number, difficultyName: string) =>
-    `Max ${difficultyLimit} ${difficultyName} questions allowed.`,
+    difficultyLimit === 0
+      ? `No ${difficultyName} questions allowed.`
+      : `Max ${difficultyLimit} ${difficultyName} questions allowed.`,
   difficultyWiseQuestionSelectionError: 'Please select the questions as per your quiz settings.',
   minimumNumberOfQuestionError: 'Total questions must be at least 5.',
   mcqOptionError: 'Correct answer must match one of the options.',

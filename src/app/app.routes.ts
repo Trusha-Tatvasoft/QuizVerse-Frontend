@@ -18,6 +18,7 @@ import { QuizDifficultyLevelComponent } from './pages/admin/quiz-difficulty-leve
 import { BattleManagementComponent } from './pages/admin/battle-management/battle-management.component';
 import { QuizManagementComponent } from './pages/admin/quiz-management/quiz-management.component';
 import { QuizCreationLayoutComponent } from './pages/admin/quiz-management/components/quiz-creation-layout/quiz-creation-layout.component';
+import { BattleCreationLayoutComponent } from './pages/admin/battle-management/components/battle-creation-layout/battle-creation-layout.component';
 
 export const routes: Routes = [
   {
@@ -113,6 +114,18 @@ export const routes: Routes = [
         title: 'Quizeverse | Quiz Management',
         children: [
           { path: `${Navigations.QuizCreation}/:id`, component: QuizCreationLayoutComponent },
+        ],
+      },
+      {
+        path: Navigations.BattlesAdmin,
+        title: 'Quizeverse | Battle Management',
+        children: [{ path: Navigations.BattleCreation, component: BattleCreationLayoutComponent }],
+      },
+      {
+        path: Navigations.BattlesAdmin,
+        title: 'Quizeverse | Battle Management',
+        children: [
+          { path: `${Navigations.BattleUpdation}/:id`, component: BattleCreationLayoutComponent },
         ],
       },
     ],

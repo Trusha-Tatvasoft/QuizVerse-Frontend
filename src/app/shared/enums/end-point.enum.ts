@@ -69,5 +69,12 @@ export enum EndPoints {
 
   // #region BattleManagement
   BattleManagementList = 'BattleManagement/get-battle-list',
+  CreateOrUpdateBattle = 'BattleManagement/create-update-battle',
+  GetBattleById = 'BattleManagement/get-battle-by-id',
+  DeleteBattle = 'BattleManagement/delete-Battle',
+  //#endregion
+
+  // #region QuestionDifficulty
+  QuestionDifficultyXP = 'QuestionDifficulty/get-battle-question-difficulty-data',
   //#endregion
 }
