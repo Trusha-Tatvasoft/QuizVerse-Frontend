@@ -25,9 +25,6 @@ import { Subject, takeUntil } from 'rxjs';
   ],
 })
 export class EmailTemplateComponent {
-  private readonly emailService = inject(EmailTemplateService);
-  private readonly snackbar = inject(SnackbarService);
-
   createTemplateButtonConfig = createTemplateButtonConfig;
   emailHeaderConfig = emailHeaderConfig;
   columnsConfig = emailTableColumnsConfig;
@@ -35,6 +32,9 @@ export class EmailTemplateComponent {
   dataSource: WritableSignal<TableData[]> = signal([]);
   totalItems = signal<number>(0);
   sort = signal({ sortColumn: 'id', sortDescending: false });
+
+  private readonly emailService = inject(EmailTemplateService);
+  private readonly snackbar = inject(SnackbarService);
 
   private readonly destroy$ = new Subject<void>();
 
