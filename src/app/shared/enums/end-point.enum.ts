@@ -14,6 +14,8 @@ export enum EndPoints {
   ResetPassword = 'Authentication/reset-password',
   RegisterUser = 'Authentication/register-user',
   VerifyTokenRestPassword = 'Authentication/verify-token-reset-password',
+  UserNameAvailable = 'Authentication/is-username-available',
+  EmailAvailable = 'Authentication/is-email-available',
   // #endregion
 
   // #region Admin DashBoard
