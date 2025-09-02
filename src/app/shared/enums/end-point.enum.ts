@@ -14,6 +14,8 @@ export enum EndPoints {
   ResetPassword = 'Authentication/reset-password',
   RegisterUser = 'Authentication/register-user',
   VerifyTokenRestPassword = 'Authentication/verify-token-reset-password',
+  UserNameAvailable = 'Authentication/is-username-available',
+  EmailAvailable = 'Authentication/is-email-available',
   // #endregion
 
   // #region Admin DashBoard
@@ -76,5 +78,10 @@ export enum EndPoints {
 
   // #region QuestionDifficulty
   QuestionDifficultyXP = 'QuestionDifficulty/get-battle-question-difficulty-data',
+  //#endregion
+
+  // #region UserLeaderboards
+  UserLeaderboardStats = 'Leaderboard/get-user-leaderboard-stats',
+  GlobalLeaderboard = 'Leaderboard/get-leaderboard-gloabal-ranking',
   //#endregion
 }

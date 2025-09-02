@@ -1,0 +1,69 @@
+<div class="leaderboard-container">
+  <h3 class="leaderboard-title">
+    <mat-icon class="mr-2 star-outline">star_border</mat-icon>
+    Top Quiz Masters
+  </h3>
+
+  <p class="leaderboard-subtitle">All-time leaderboard based on total XP earned</p>
+
+  <div #list class="leaderboard-list" tabindex="0" (wheel)="onWheel($event)">
+    <ng-container *ngIf="!loading && leaderboard.length > 0; else noData">
+      <ng-container *ngFor="let entry of visibleWindow; trackBy: trackByRank">
+        <div class="leaderboard-item" [class.current-user]="entry.is_loggedin_user">
+          <!-- 1. Rank / Medal -->
+          <div class="rank-icon">
+            <ng-container [ngSwitch]="entry.rank">
+              <mat-icon *ngSwitchCase="1" class="gold">military_tech</mat-icon>
+              <mat-icon *ngSwitchCase="2" class="silver">military_tech</mat-icon>
+              <mat-icon *ngSwitchCase="3" class="bronze">military_tech</mat-icon>
+              <span *ngSwitchDefault>{{ entry.rank }}</span>
+            </ng-container>
+          </div>
+
+          <!-- 2. Profile + Initials -->
+          <div class="profile-wrapper">
+            <img
+              *ngIf="entry.profilePic"
+              [src]="entry.profilePic"
+              alt="{{ entry.userName }}"
+              class="profile-pic"
+              (error)="onImageError(entry)"
+            />
+            <div *ngIf="!entry.profilePic" class="profile-fallback">
+              {{ getInitials(entry.fullName || entry.userName) }}
+            </div>
+          </div>
+
+          <!-- 3 & 4. Username + Level/Streak -->
+          <div class="user-details">
+            <span class="username">{{
+              entry.is_loggedin_user ? 'You (' + entry.userName + ')' : entry.userName
+            }}</span>
+            <span class="meta">
+              Level {{ entry.currentLevel }} • {{ entry.currentStreak }} day streak
+            </span>
+          </div>
+
+          <!-- XP + Rank Trend -->
+          <div class="xp-points">
+            <div class="trend-icon">
+              <mat-icon *ngIf="entry.trend === 1" class="trend-neutral">circle</mat-icon>
+              <mat-icon *ngIf="entry.trend === 2" class="trend-up">trending_up</mat-icon>
+              <mat-icon *ngIf="entry.trend === 3" class="trend-down">trending_down</mat-icon>
+            </div>
+            <div class="xp-text">
+              <span class="xp">{{ entry.totalXp | number }} XP</span>
+              <small>Total Points</small>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+
+  <ng-template #noData>
+    <div class="no-records">
+      <p>No data available.</p>
+    </div>
+  </ng-template>
+</div>
