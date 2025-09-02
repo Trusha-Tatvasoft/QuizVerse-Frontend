@@ -1,0 +1,30 @@
+<mat-card class="leaderboard-card">
+  <mat-card-header class="card-header">
+    <div class="header-content">
+      <div class="title-section">
+        <mat-icon class="trophy-icon">emoji_events</mat-icon>
+        <h2 class="card-title">Global Rankings</h2>
+      </div>
+      <p class="card-subtitle">See how you stack up against quiz masters worldwide</p>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content class="card-content">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-value">#{{ userLeaderboardStats.globalRank }}</div>
+        <div class="stat-label">Your Global Rank</div>
+      </div>
+
+      <div class="stat-item">
+        <div class="stat-value">{{ userLeaderboardStats.totalXp | number }}</div>
+        <div class="stat-label">Your Total XP</div>
+      </div>
+
+      <div class="stat-item">
+        <div class="stat-value">Level {{ userLeaderboardStats.currentLevel }}</div>
+        <div class="stat-label">Your Current Level</div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

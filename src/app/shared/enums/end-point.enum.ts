@@ -70,4 +70,9 @@ export enum EndPoints {
   // #region BattleManagement
   BattleManagementList = 'BattleManagement/get-battle-list',
   //#endregion
+
+  // #region UserLeaderboards
+  UserLeaderboardStats = 'Leaderboard/get-user-leaderboard-stats',
+  GlobalLeaderboard = 'Leaderboard/get-leaderboard-gloabal-ranking',
+  //#endregion
 }
