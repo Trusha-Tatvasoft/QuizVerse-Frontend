@@ -28,6 +28,11 @@ describe('LandingPageComponent (Jest)', () => {
     quote: 'Learn with AI!',
   };
 
+  const mockAuthService = {
+    logout: jest.fn(),
+    currentRole$: of('guest'),
+  };
+
   const mockLandingPageDataService = {
     getStats: jest.fn(),
   };
@@ -45,7 +50,7 @@ describe('LandingPageComponent (Jest)', () => {
         provideRouter([]),
         { provide: LandingPageDataService, useValue: mockLandingPageDataService },
         { provide: SnackbarService, useValue: { showError: jest.fn() } },
-        { provide: AuthService, useValue: { logout: jest.fn() } },
+        { provide: AuthService, useValue: mockAuthService },
       ],
     }).compileComponents();
 

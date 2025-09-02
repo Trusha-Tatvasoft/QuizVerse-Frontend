@@ -19,6 +19,7 @@ import { BattleManagementComponent } from './pages/admin/battle-management/battl
 import { QuizManagementComponent } from './pages/admin/quiz-management/quiz-management.component';
 import { QuizCreationLayoutComponent } from './pages/admin/quiz-management/components/quiz-creation-layout/quiz-creation-layout.component';
 import { UserLeaderboardComponent } from './pages/user/user-leaderboard/user-leaderboard.component';
+import { UserProfileComponent } from './pages/user/user-profile/user-profile.component';
 
 export const routes: Routes = [
   {
@@ -128,6 +129,11 @@ export const routes: Routes = [
         path: Navigations.Dashboard,
         component: CardComponent,
         title: 'Quizeverse | Dashboard ',
+      },
+      {
+        path: Navigations.Profile,
+        component: UserProfileComponent,
+        title: 'Quizeverse | Profile ',
       },
       {
         path: Navigations.Users,

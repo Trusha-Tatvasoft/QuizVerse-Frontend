@@ -6,22 +6,32 @@ import { yellow } from '../../../utils/constants';
 import { mockDataNotifications } from './navbar-mock-data';
 import { Navigations } from '../../../shared/enums/navigation';
 import { AuthService } from '../../../core/auth/services/auth.service';
+import { Router } from '@angular/router';
+import { of } from 'rxjs';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
   let warning = yellow;
-  let authServiceMock: { logout: jest.Mock };
+  let authServiceMock: { logout: jest.Mock; currentRole$: any };
+  let routerMock: { navigate: jest.Mock };
 
   const mockNotifications = mockDataNotifications;
 
   beforeEach(async () => {
-    authServiceMock = { logout: jest.fn() };
+    authServiceMock = {
+      logout: jest.fn(),
+      currentRole$: of('user'), // 👈 fix: provide observable
+    };
+    routerMock = { navigate: jest.fn() };
 
     await TestBed.configureTestingModule({
       imports: [NavbarComponent],
       schemas: [NO_ERRORS_SCHEMA],
-      providers: [{ provide: AuthService, useValue: authServiceMock }],
+      providers: [
+        { provide: AuthService, useValue: authServiceMock },
+        { provide: Router, useValue: routerMock },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavbarComponent);
@@ -264,5 +274,43 @@ describe('NavbarComponent', () => {
 
     fixture.detectChanges();
     expect(component.showNotifications).toBe(true);
+  });
+
+  describe('goToProfile', () => {
+    it('should navigate to admin profile when role is admin', () => {
+      component.role = 'admin';
+      component.goToProfile();
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.Admin}/${Navigations.Profile}`,
+      ]);
+    });
+
+    it('should navigate to user profile when role is not admin', () => {
+      component.role = 'user';
+      component.goToProfile();
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.User}/${Navigations.Profile}`,
+      ]);
+    });
+  });
+
+  describe('goToSetting', () => {
+    it('should navigate to admin settings with tab query param', () => {
+      component.role = 'admin';
+      component.goToSetting();
+      expect(routerMock.navigate).toHaveBeenCalledWith(
+        [`/${Navigations.Admin}/${Navigations.Profile}/`],
+        { queryParams: { tab: 2 } },
+      );
+    });
+
+    it('should navigate to user settings with tab query param', () => {
+      component.role = 'user';
+      component.goToSetting();
+      expect(routerMock.navigate).toHaveBeenCalledWith(
+        [`/${Navigations.User}/${Navigations.Profile}`],
+        { queryParams: { tab: 2 } },
+      );
+    });
   });
 });

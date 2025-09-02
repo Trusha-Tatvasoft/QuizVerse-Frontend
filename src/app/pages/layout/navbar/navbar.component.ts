@@ -68,6 +68,8 @@ export class NavbarComponent {
   private readonly authService = inject(AuthService);
   private readonly elementRef = inject(ElementRef);
 
+  role: string | null = null;
+
   textButton = textButtonConfig;
   signInButton = signInButtonConfig;
   getStartedButton = getStartedButtonConfig;
@@ -83,6 +85,10 @@ export class NavbarComponent {
 
   ngOnInit(): void {
     this.checkWindowSize(window.innerWidth);
+
+    this.authService.currentRole$.subscribe((role) => {
+      this.role = role;
+    });
   }
 
   @HostListener('window:resize', [])
@@ -135,6 +141,24 @@ export class NavbarComponent {
   sidebarClosedByBackdrop(): void {
     this.menuOpen = false;
     this.closeSidebar.emit();
+  }
+
+  goToProfile() {
+    const route =
+      this.role === 'admin'
+        ? `/${Navigations.Admin}/${Navigations.Profile}`
+        : `/${Navigations.User}/${Navigations.Profile}`;
+
+    this.router.navigate([route]);
+  }
+
+  goToSetting() {
+    const route =
+      this.role === 'admin'
+        ? `/${Navigations.Admin}/${Navigations.Profile}/`
+        : `/${Navigations.User}/${Navigations.Profile}`;
+
+    this.router.navigate([route], { queryParams: { tab: 2 } });
   }
 
   logout() {

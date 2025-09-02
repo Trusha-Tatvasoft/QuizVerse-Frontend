@@ -1,40 +1,20 @@
 import { LazyTab } from '../../../../shared/interfaces/tab-component.interface';
-import { TagInputConfig } from '../../../../shared/interfaces/tag-component.interface';
+import { tabLazyComponentMap } from '../../../../utils/tab-component-lazy-map';
 
 export const playerProfileTabConfig: LazyTab[] = [
   {
     id: 'profile-overview',
     label: 'Overview',
-    loadChildren: () =>
-      import('../components/user-overview/user-overview.component').then(
-        (m) => m.UserOverviewComponent,
-      ),
+    loadChildren: tabLazyComponentMap['profile-overview'],
   },
   {
     id: 'achievements',
     label: 'Achievements',
-    loadChildren: () =>
-      import('../components/user-achievement/user-achievement.component').then(
-        (m) => m.UserAchievementComponent,
-      ),
+    loadChildren: tabLazyComponentMap['achievements'],
   },
   {
     id: 'settings',
     label: 'Settings',
-    loadChildren: () =>
-      import('../components/user-profile-setting/user-profile-setting.component').then(
-        (m) => m.UserProfileSettingComponent,
-      ),
+    loadChildren: tabLazyComponentMap['settings'],
   },
 ];
-
-// xp config for recent activity xp tags
-export const xpTagConfig = (xp: number): TagInputConfig => ({
-  id: 'xp',
-  label: `+${xp} XP`,
-  type: 'static',
-  hasBorder: false,
-  backgroundColor: 'black',
-  textColor: 'lightWhite',
-  isSelected: false,
-});
