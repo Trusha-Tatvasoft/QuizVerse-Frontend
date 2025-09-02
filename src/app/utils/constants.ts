@@ -432,3 +432,12 @@ export const emailTemplateTypeLabels: Record<number, string> = {
   [EmailTemplateType.WelComeEmail]: 'Welcome Email',
 };
 //#endregion
+
+//#region Plateform Setting
+export const plateformSettingCRUDMessages = {
+  plateformSettingUpdated: 'Platform settings updated successfully',
+  invalidFileType: 'Invalid file type. Please select an image.',
+};
+
+export const defaultLogoPath = 'assets/images/logo-small.png';
+//#endregion

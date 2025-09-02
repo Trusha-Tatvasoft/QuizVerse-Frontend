@@ -81,4 +81,9 @@ export enum EndPoints {
   UserLeaderboardStats = 'Leaderboard/get-user-leaderboard-stats',
   GlobalLeaderboard = 'Leaderboard/get-leaderboard-gloabal-ranking',
   //#endregion
+
+  // #region PlateformSetting
+  GetPlateformSetting = 'PlatformConfiguration/get-platform-configurations',
+  UpdatePlateformSetting = 'PlatformConfiguration/update-platform-configurations',
+  //#endregion
 }
