@@ -1,6 +1,7 @@
 import { EmailTemplateType } from '../shared/enums/email-template.enum';
 import { Navigations } from '../shared/enums/navigation';
 import { TagInputConfig } from '../shared/interfaces/tag-component.interface';
+import { CardColor } from './types/card-component.type';
 import { TagColor, TagType } from './types/tag-component.type';
 
 //#region snackbar - constant
@@ -431,4 +432,8 @@ export const emailTemplateTypeLabels: Record<number, string> = {
   [EmailTemplateType.ResetPassword]: 'Reset Password',
   [EmailTemplateType.WelComeEmail]: 'Welcome Email',
 };
+//#endregion
+
+// #region user dashboard
+export const valueColor: CardColor = 'black';
 //#endregion
