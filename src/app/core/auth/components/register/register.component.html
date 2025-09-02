@@ -1,7 +1,13 @@
 <form [formGroup]="isLogin ? userForm : registerForm" (ngSubmit)="onSubmit()">
   <div class="grid gap-3 pb-3">
     @for (field of isLogin ? userFields : registerFields; track field.name) {
-      <div class="form-field" [ngClass]="field.gridClass || 'col-span-1 sm:col-span-1'">
+      <div
+        class="form-field"
+        [ngClass]="[
+          field.gridClass || 'col-span-1 sm:col-span-1',
+          isLogin && isEditMode && field.name === 'email' ? 'col-span-1 sm:col-span-2' : '',
+        ]"
+      >
         <mat-label>{{ field.label }}</mat-label>
 
         @if (field.type !== 'file') {

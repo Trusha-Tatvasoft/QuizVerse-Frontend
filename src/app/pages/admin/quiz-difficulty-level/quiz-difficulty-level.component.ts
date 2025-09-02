@@ -74,8 +74,8 @@ export class QuizDifficultyLevelComponent {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.snackbar.showSuccess('Success', result);
+        this.fetchDifficultyLevels();
       }
-      this.fetchDifficultyLevels();
     });
   }
 

@@ -24,6 +24,7 @@ export const cancelButtonConfig: ButtonConfig = {
   label: 'Cancel',
   variant: 'secondary',
   fontWeight: 500,
+  type: 'button',
 };
 
 export const addButtonConfig: ButtonConfig = {

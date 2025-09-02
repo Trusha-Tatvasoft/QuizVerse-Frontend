@@ -31,7 +31,7 @@ import { OutlineButtonComponent } from '../../../shared/components/outline-butto
 import { Notifications } from '../interfaces/navbar.component.interface';
 import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
-import { plateformName } from '../../../utils/constants';
+import { plateformName, roles } from '../../../utils/constants';
 import { AuthService } from '../../../core/auth/services/auth.service';
 
 @Component({
@@ -139,5 +139,26 @@ export class NavbarComponent {
 
   logout() {
     this.authService.logout();
+  }
+
+  navigateToDashboard(): void {
+    if (!this.isLogin) {
+      this.router.navigate([Navigations.Login]);
+      return;
+    }
+
+    const role = this.authService.currentRole$.value?.toLowerCase() || '';
+
+    switch (role) {
+      case roles.admin:
+        this.router.navigate([`/${Navigations.Admin}/${Navigations.Dashboard}`]);
+        break;
+      case roles.player:
+        this.router.navigate([`/${Navigations.User}/${Navigations.Dashboard}`]);
+        break;
+      default:
+        this.router.navigate(['/']);
+        break;
+    }
   }
 }

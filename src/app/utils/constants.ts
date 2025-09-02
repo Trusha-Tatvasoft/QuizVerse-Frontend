@@ -420,3 +420,10 @@ export const quizCRUDMessages = {
   failedToExportQuestions: 'Failed to export questions.',
 };
 //#endregion
+
+//#region Role Constants
+export const roles = {
+  admin: 'admin',
+  player: 'player',
+};
+//#endregion
