@@ -73,6 +73,10 @@ export enum EndPoints {
   BattleManagementList = 'BattleManagement/get-battle-list',
   //#endregion
 
+  // #region EmailTemplate
+  EmailTemplateList = 'EmailTemplates/get-all-email-templates',
+  //#endregion
+
   // #region UserLeaderboards
   UserLeaderboardStats = 'Leaderboard/get-user-leaderboard-stats',
   GlobalLeaderboard = 'Leaderboard/get-leaderboard-gloabal-ranking',

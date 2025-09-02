@@ -18,6 +18,8 @@ import { QuizDifficultyLevelComponent } from './pages/admin/quiz-difficulty-leve
 import { BattleManagementComponent } from './pages/admin/battle-management/battle-management.component';
 import { QuizManagementComponent } from './pages/admin/quiz-management/quiz-management.component';
 import { QuizCreationLayoutComponent } from './pages/admin/quiz-management/components/quiz-creation-layout/quiz-creation-layout.component';
+import { UserDashboardComponent } from './pages/user/user-dashboard/user-dashboard.component';
+import { EmailTemplateComponent } from './pages/admin/email-template/email-template.component';
 import { UserLeaderboardComponent } from './pages/user/user-leaderboard/user-leaderboard.component';
 import { PlatformSettingsComponent } from './pages/admin/platform-settings/platform-settings.component';
 
@@ -118,6 +120,11 @@ export const routes: Routes = [
         ],
       },
       {
+        path: Navigations.EmailTemplates,
+        title: 'Quizeverse | Email Templates',
+        component: EmailTemplateComponent,
+      },
+      {
         path: Navigations.Settings,
         component: PlatformSettingsComponent,
         title: 'Quizeverse | Platform Settings',
@@ -132,7 +139,7 @@ export const routes: Routes = [
     children: [
       {
         path: Navigations.Dashboard,
-        component: CardComponent,
+        component: UserDashboardComponent,
         title: 'Quizeverse | Dashboard ',
       },
       {
