@@ -1,0 +1,35 @@
+<main class="admin-management-page">
+  <h2 class="admin-page-heading">Email Templates</h2>
+
+  <div class="admin-page-header">
+    <app-page-header
+      [icon]="emailHeaderConfig.icon"
+      [title]="emailHeaderConfig.title"
+      [subtitle]="emailHeaderConfig.subtitle"
+      [theme]="emailHeaderConfig.theme"
+    ></app-page-header>
+  </div>
+
+  <div class="admin-management-toolbar">
+    <div class="heading">
+      <h1>Email Templates</h1>
+    </div>
+
+    <div class="admin-management-btns">
+      <app-filled-button
+        [filledButtonConfig]="createTemplateButtonConfig"
+        (buttonClicked)="openEmailTemplateDialgue()"
+        class="add-difficulty"
+      ></app-filled-button>
+    </div>
+  </div>
+
+  <app-data-table
+    [columns]="columnsConfig"
+    [dataSource]="dataSource()"
+    [totalItems]="totalItems()"
+    [applyPaginator]="false"
+    (sortChange)="onSortChange($event)"
+  >
+  </app-data-table>
+</main>

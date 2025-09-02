@@ -1,1 +1,155 @@
-<p>platform-settings works!</p>
+<main class="admin-management-page">
+  <h2 class="admin-page-heading">Platform Settings</h2>
+
+  <div class="admin-page-header">
+    <app-page-header
+      [icon]="platformSettingHeaderConfiguration.icon"
+      [title]="platformSettingHeaderConfiguration.title"
+      [subtitle]="platformSettingHeaderConfiguration.subtitle"
+      [theme]="platformSettingHeaderConfiguration.theme"
+    ></app-page-header>
+  </div>
+
+  <div class="bg-white rounded-lg p-4 mb-5 shadow">
+    <div class="table-header mb-4">
+      <h2 style="display: flex; align-items: center; gap: 6px">
+        <mat-icon>palette</mat-icon> General Platform Settings
+      </h2>
+      <p>Configure the appearance and content of your platform</p>
+    </div>
+
+    <!-- Platform Settings Form -->
+    <form
+      class="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-3 no-icon-mat-btn no-bottom-margin-select"
+      [formGroup]="platformSettingsForm"
+    >
+      @for (field of platformSettingsFormFields; track field.name) {
+        <div class="form-field" [ngClass]="field.gridClass || 'col-span-1'">
+          <mat-label class="font-medium mb-0 block text-sm mb-1">{{ field.label }}</mat-label>
+
+          <!-- Textarea -->
+          @if (field.type === 'textarea') {
+            <mat-form-field appearance="outline" class="w-full custom-form-field-text">
+              <textarea
+                matInput
+                [id]="field.name"
+                [formControlName]="field.name"
+                [placeholder]="field.placeholder"
+                rows="3"
+                class="text-area-height"
+              ></textarea>
+              <mat-error>{{ getError(field.name) }}</mat-error>
+            </mat-form-field>
+          } @else if (field.type === 'file') {
+            <div class="file-input-container">
+              <input
+                #fileInput
+                [id]="field.name"
+                type="file"
+                class="file-input"
+                (change)="fileSelected($event, field.name)"
+                [accept]="'.jpg,.jpeg,.png'"
+              />
+
+              <!-- Upload button + filename row -->
+              <div class="file-upload-row">
+                <app-filled-button
+                  [filledButtonConfig]="chooseFileButtonConfigButton"
+                  (buttonClicked)="fileInput.click()"
+                  class="custom-upload-button"
+                ></app-filled-button>
+
+                <span class="selected-file-name">
+                  {{ displayFileName(field.name) }}
+                  @if (selectedFile || platformSettingsForm.get(field.name)?.value) {
+                    <mat-icon
+                      (click)="removeImage(field.name, fileInput)"
+                      class="clear-icon text-red-600 text-lg leading-none cursor-pointer"
+                    >
+                      cancel
+                    </mat-icon>
+                  }
+                </span>
+              </div>
+
+              <div class="error-message">
+                {{ getError(field.name) }}
+              </div>
+
+              <!-- Hint text -->
+              <p class="mt-1 text-xs text-gray-500">
+                Only image files are allowed (e.g. .jpg, .jpeg, .png).
+              </p>
+            </div>
+
+            <!-- Single Image Preview -->
+            @if (previewUrl) {
+              <div class="mt-3 relative inline-block">
+                <img
+                  [src]="previewUrl"
+                  alt="Preview"
+                  class="min-h-40 min-w-40 max-h-40 rounded shadow border border-gray-300 object-contain"
+                />
+
+                <!-- Remove Icon Button -->
+                <mat-icon
+                  fontIcon="cancel"
+                  class="mat-icon-gray absolute top-2 right-2 clear-icon text-red-600 text-lg leading-none cursor-pointer"
+                  (click)="removeImage(field.name, fileInput)"
+                ></mat-icon>
+              </div>
+            }
+          }
+
+          <!-- Color Picker -->
+          @else if (field.type === 'color') {
+            <div class="flex items-center gap-2 w-full">
+              <!-- Color Picker -->
+              <input
+                type="color"
+                [id]="field.name"
+                [formControlName]="field.name"
+                class="rounded cursor-pointer color-picker-div"
+                (input)="colorChange($event, field.name)"
+              />
+
+              <!-- Text Input -->
+              <mat-form-field appearance="outline" class="w-full custom-form-field">
+                <input
+                  matInput
+                  [id]="field.name + '-text'"
+                  type="text"
+                  [formControlName]="field.name"
+                  [placeholder]="field.placeholder"
+                  (input)="textColorChange($event, field.name)"
+                />
+                <mat-error>{{ getError(field.name) }}</mat-error>
+              </mat-form-field>
+            </div>
+          }
+
+          <!-- Normal Input -->
+          @else {
+            <mat-form-field appearance="outline" class="w-full custom-form-field">
+              <input
+                matInput
+                [id]="field.name"
+                [type]="field.type"
+                [formControlName]="field.name"
+                [placeholder]="field.placeholder"
+              />
+              <mat-error>{{ getError(field.name) }}</mat-error>
+            </mat-form-field>
+          }
+        </div>
+      }
+    </form>
+  </div>
+
+  <div class="flex justify-end">
+    <app-filled-button
+      [filledButtonConfig]="savePlateformButtonConfig"
+      (buttonClicked)="savePlatformConfig()"
+    ></app-filled-button>
+  </div>
+</main>

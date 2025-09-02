@@ -1,3 +1,4 @@
+import { EmailTemplateType } from '../shared/enums/email-template.enum';
 import { Navigations } from '../shared/enums/navigation';
 import { TagInputConfig } from '../shared/interfaces/tag-component.interface';
 import { TagColor, TagType } from './types/tag-component.type';
@@ -427,4 +428,50 @@ export const quizCRUDMessages = {
   quizTitalNotFoundError: 'Quiz name not found',
   failedToExportQuestions: 'Failed to export questions.',
 };
+//#endregion
+
+//#region Email Template
+export const emailTemplateTypeLabels: Record<number, string> = {
+  [EmailTemplateType.AccountSuspension]: 'Account Suspension',
+  [EmailTemplateType.BattleRequest]: 'Battle Request',
+  [EmailTemplateType.EmailVerification]: 'Email Verification',
+  [EmailTemplateType.QuizInvitation]: 'Quiz Invitation',
+  [EmailTemplateType.ResetPassword]: 'Reset Password',
+  [EmailTemplateType.WelcomeEmail]: 'Welcome Email',
+  [EmailTemplateType.NewUser]: 'New User Email',
+};
+
+export const emailActions = {
+  EDIT: 'edit',
+  DELETE: 'delete',
+  PREVIEW: 'visibility',
+  ACTIVATE: 'check_circle_outline',
+  INACTIVATE: 'remove_circle_outline',
+};
+
+export const EmailTemplatePlaceholdersRequired: Record<EmailTemplateType, string[]> = {
+  [EmailTemplateType.AccountSuspension]: ['{{user}}', '{{email}}'],
+  [EmailTemplateType.BattleRequest]: ['{{user}}', '{{opponent}}', '{{battleLink}}'],
+  [EmailTemplateType.EmailVerification]: ['{{user}}', '{{email}}', '{{verificationLink}}'],
+  [EmailTemplateType.QuizInvitation]: ['{{user}}', '{{quizName}}', '{{quizLink}}'],
+  [EmailTemplateType.ResetPassword]: ['{{user}}', '{{email}}', '{{resetLink}}'],
+  [EmailTemplateType.WelcomeEmail]: [
+    '{{user}}',
+    '{{email}}',
+    '{{registrationDate}}',
+    '{{loginUrl}}',
+    '{{year}}',
+    '{{companyName}}',
+  ],
+  [EmailTemplateType.NewUser]: ['{{user}}', '{{password}}', '{{loginUrl}}'],
+};
+//#endregion
+
+//#region Plateform Setting
+export const plateformSettingCRUDMessages = {
+  plateformSettingUpdated: 'Platform settings updated successfully',
+  invalidFileType: 'Invalid file type. Please select an image.',
+};
+
+export const defaultLogoPath = 'assets/images/logo-small.png';
 //#endregion
