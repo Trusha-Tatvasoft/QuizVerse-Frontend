@@ -73,7 +73,7 @@ export class TableComponent implements OnInit, OnChanges {
 
     // Determine whether to show paginator based on data size
     if (this.dataSource && Array.isArray(this.dataSource)) {
-      this.showPaginator = this.totalItems > this.pageSize;
+      this.showPaginator = this.totalItems > tablePaginationConfig.PageSize;
     }
   }
 
