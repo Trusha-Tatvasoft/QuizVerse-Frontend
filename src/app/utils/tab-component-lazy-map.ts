@@ -20,6 +20,7 @@ export const tabLazyComponentMap: Record<string, () => Promise<Type<unknown>>> =
   'register-form': () =>
     import('../core/auth/components/register/register.component').then((m) => m.RegisterComponent),
 
+  // Admin Question Pool Tabs
   'manual-question-tab': () =>
     import(
       '../pages/admin/question-pool/components/manual-question-tab/manual-question-tab.component'
@@ -49,4 +50,18 @@ export const tabLazyComponentMap: Record<string, () => Promise<Type<unknown>>> =
     import(
       '../pages/admin/question-pool/components/ai-question-tab/components/from-web-page/from-web-page.component'
     ).then((m) => m.FromWebPageComponent),
+
+  // Player Profile Tabs
+  'profile-overview': () =>
+    import('../pages/user/user-profile/components/user-overview/user-overview.component').then(
+      (m) => m.UserOverviewComponent,
+    ),
+  achievements: () =>
+    import(
+      '../pages/user/user-profile/components/user-achievement/user-achievement.component'
+    ).then((m) => m.UserAchievementComponent),
+  settings: () =>
+    import(
+      '../pages/user/user-profile/components/user-profile-setting/user-profile-setting.component'
+    ).then((m) => m.UserProfileSettingComponent),
 };
