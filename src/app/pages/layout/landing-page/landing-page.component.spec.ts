@@ -15,6 +15,7 @@ import { LandingPageDataService } from '../../../services/user/landing-page/land
 import { LandingPageStats } from '../../../shared/interfaces/landing-page-stats.interface';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { AuthService } from '../../../core/auth/services/auth.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('LandingPageComponent (Jest)', () => {
   let component: LandingPageComponent;
@@ -40,6 +41,7 @@ describe('LandingPageComponent (Jest)', () => {
         MatIconModule,
         FilledButtonComponent,
         OutlineButtonComponent,
+        HttpClientTestingModule,
       ],
       providers: [
         provideRouter([]),

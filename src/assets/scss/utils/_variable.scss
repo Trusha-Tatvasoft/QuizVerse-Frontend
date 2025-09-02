@@ -37,13 +37,10 @@
     var(--global-secondary-color) 63%
   );
 
-  --global-primary-color-rgb: 147, 51, 234;
-  --global-secondary-color-rgb: 37, 99, 235;
-
   --highlight-gradient: linear-gradient(
     to right,
-    rgba(var(--global-primary-color-rgb), 0.1),
-    rgba(var(--global-secondary-color-rgb), 0.1)
+    color-mix(in srgb, var(--global-primary-color) 10%, transparent),
+    color-mix(in srgb, var(--global-secondary-color) 10%, transparent)
   );
 
   --global-primary-border-color: #e9d5ff;

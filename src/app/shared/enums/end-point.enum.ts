@@ -75,6 +75,9 @@ export enum EndPoints {
 
   // #region EmailTemplate
   EmailTemplateList = 'EmailTemplates/get-all-email-templates',
+  UpdateEmailTemplateByAction = 'EmailTemplates/update-email-template-by-action',
+  GetEmailTemplateById = 'EmailTemplates/get-email-template-by-id',
+  AddOrEditEmailTemplate = 'EmailTemplates/add-or-edit-email-template',
   //#endregion
 
   // #region UserLeaderboards
@@ -89,5 +92,10 @@ export enum EndPoints {
   GetBattleRequests = 'UserDashboard/get-battle-requests',
   UpdateBattleRequestStatus = 'UserDashboard/update-battle-request-status',
   GetRecentQuizzes = 'UserDashboard/get-recent-quizzes',
-  //#endregion
+  // #endregion
+
+  // #region PlateformSetting
+  GetPlateformSetting = 'PlatformConfiguration/get-platform-configurations',
+  UpdatePlateformSetting = 'PlatformConfiguration/update-platform-configurations',
+  // #endregion
 }
