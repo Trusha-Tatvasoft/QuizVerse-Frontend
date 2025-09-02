@@ -56,10 +56,12 @@ import { FilenameTruncatePipe } from '../../../../shared/pipes/filename-truncate
   styleUrls: ['./register.component.scss', '../login-signup/login-signup.component.scss'],
 })
 export class RegisterComponent implements OnDestroy {
-  private readonly fb = inject(FormBuilder);
-  private readonly validationErrorService = inject(ValidationErrorService);
-  private readonly snackbarService = inject(SnackbarService);
-  private readonly registerService = inject(RegisterService);
+  @Input() user: UserFormData | null = null;
+  @Input() isLogin = false;
+  @Input() isEditMode = false;
+
+  @Output() saveUser = new EventEmitter<{ formData: FormData; isEdit: boolean }>();
+  @Output() formCancelled = new EventEmitter<void>();
 
   registerFields = registerFormFields;
   userFields = userFormFields;
@@ -69,16 +71,14 @@ export class RegisterComponent implements OnDestroy {
   updateUserButton = updateUserButtonConfig;
   createUserButton = createUserButtonConfig;
 
-  @Input() user: UserFormData | null = null;
-  @Input() isLogin = false;
-  @Input() isEditMode = false;
-  @Output() saveUser = new EventEmitter<{ formData: FormData; isEdit: boolean }>();
-  @Output() formCancelled = new EventEmitter<void>();
-
   registerForm: FormGroup;
   userForm: FormGroup;
   selectedFile: File | null = null;
 
+  private readonly fb = inject(FormBuilder);
+  private readonly validationErrorService = inject(ValidationErrorService);
+  private readonly snackbarService = inject(SnackbarService);
+  private readonly registerService = inject(RegisterService);
   private readonly destroy$ = new Subject<void>();
 
   // Initialize forms with dynamic fields and validators
@@ -157,6 +157,10 @@ export class RegisterComponent implements OnDestroy {
     const control = form.get(fieldName);
     const field = fieldList.find((f) => f.name === fieldName);
     const customMessages = field?.validationMessages || {};
+
+    if (control?.errors?.['server']) {
+      return control.errors['server'];
+    }
 
     return this.validationErrorService.getErrorMessage(control!, customMessages, fieldName);
   }
@@ -299,8 +303,77 @@ export class RegisterComponent implements OnDestroy {
     this.formCancelled.emit();
   }
 
+  // Check if username is available and set validation errors if not
+  validateUserName(): void {
+    const form = this.getActiveForm();
+    const control = form.get('username');
+    const value = control?.value?.trim();
+
+    if (!value || control?.invalid) return;
+
+    this.registerService
+      .checkUserNameExists(value, this.isEditMode ? this.user?.id : undefined)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          if (control?.hasError('server')) {
+            delete control.errors?.['server'];
+            control.updateValueAndValidity({ onlySelf: true });
+          }
+        },
+        error: (err) => {
+          const status = err.status;
+          const message = err?.error?.message || platformMessages.errorMessage;
+
+          if (status >= 400 && status < 500) {
+            control?.setErrors({ server: message || 'Username already exists' });
+            control?.markAsTouched();
+          } else {
+            this.snackbarService.showError(`${platformMessages.errorTitle} ${status}`, message);
+          }
+        },
+      });
+  }
+
+  // Check if email is available only on add user and set validation errors if not
+  validateEmail(): void {
+    const form = this.getActiveForm();
+    const control = form.get('email');
+    const value = control?.value?.trim();
+
+    if (this.isEditMode || !value || control?.invalid) return;
+
+    this.registerService
+      .checkEmailExists(value)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          if (control?.hasError('server')) {
+            delete control.errors?.['server'];
+            control.updateValueAndValidity({ onlySelf: true });
+          }
+        },
+        error: (err) => {
+          const status = err.status;
+          const message = err?.error?.message || platformMessages.errorMessage;
+
+          if (status >= 400 && status < 500) {
+            control?.setErrors({ server: message || 'Email already exists' });
+            control?.markAsTouched();
+          } else {
+            this.snackbarService.showError(`${platformMessages.errorTitle} ${status}`, message);
+          }
+        },
+      });
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  // Return active form based on login mode
+  private getActiveForm(): FormGroup {
+    return this.isLogin ? this.userForm : this.registerForm;
   }
 }
