@@ -75,6 +75,9 @@ export enum EndPoints {
 
   // #region EmailTemplate
   EmailTemplateList = 'EmailTemplates/get-all-email-templates',
+  UpdateEmailTemplateByAction = 'EmailTemplates/update-email-template-by-action',
+  GetEmailTemplateById = 'EmailTemplates/get-email-template-by-id',
+  AddOrEditEmailTemplate = 'EmailTemplates/add-or-edit-email-template',
   //#endregion
 
   // #region UserLeaderboards
