@@ -4,10 +4,11 @@ import { UserBasicProfile, UserOverview } from './interfaces/user-profile.interf
 import { TagInputConfig } from '../../../shared/interfaces/tag-component.interface';
 import { BadgeType } from '../../../shared/enums/user-profile.enum';
 import { UserBadges } from './interfaces/user-badges.interface';
+import { defaultProfilePic } from '../../../utils/constants';
 
 /** Map profile picture URL */
 export function mapProfilePic(profilePic: string | null): string {
-  return profilePic ? `${environment.imageBaseUrl}/${profilePic}` : 'assets/images/profile.png';
+  return profilePic ? `${environment.imageBaseUrl}/${profilePic}` : defaultProfilePic;
 }
 
 /** Generic mapper for cards config - user profile */
