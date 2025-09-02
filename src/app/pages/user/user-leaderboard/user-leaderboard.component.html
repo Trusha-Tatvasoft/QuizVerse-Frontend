@@ -1,0 +1,16 @@
+<main class="user-management-page">
+  <h2 class="user-page-heading">Leaderboards</h2>
+
+  <div class="user-page-header">
+    <app-global-leaderboard-card></app-global-leaderboard-card>
+  </div>
+
+  <div class="leaderboard-tabs">
+    <app-common-tab
+      [tabs]="tabs"
+      [selectedIndex]="selectedIndex"
+      (tabChanged)="onTabChanged($event)"
+    >
+    </app-common-tab>
+  </div>
+</main>

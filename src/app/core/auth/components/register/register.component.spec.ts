@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { RegisterComponent } from './register.component';
 import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
@@ -30,6 +30,8 @@ describe('RegisterComponent', () => {
           provide: RegisterService,
           useValue: {
             registerUser: jest.fn(),
+            checkUserNameExists: jest.fn(),
+            checkEmailExists: jest.fn(),
           },
         },
         {
@@ -417,5 +419,232 @@ describe('RegisterComponent', () => {
 
     expect(formData.get('profilePic')).toBeInstanceOf(File);
     expect((formData.get('profilePic') as File).name).toBe('avatar.png');
+  });
+
+  describe('getActiveForm', () => {
+    it('should return userForm when isLogin = true', () => {
+      component.isLogin = true;
+      expect(component['getActiveForm']()).toBe(component.userForm);
+    });
+
+    it('should return registerForm when isLogin = false', () => {
+      component.isLogin = false;
+      expect(component['getActiveForm']()).toBe(component.registerForm);
+    });
+  });
+
+  describe('validateUserName', () => {
+    beforeEach(() => {
+      component.isLogin = false;
+      component.isEditMode = false;
+    });
+
+    it('should not call service if username is empty', () => {
+      const control = component.registerForm.get('username');
+      control?.setValue('');
+
+      component.validateUserName();
+
+      expect(registerService.checkUserNameExists).not.toHaveBeenCalled();
+    });
+
+    it('should not call service if control is invalid', () => {
+      const control = component.registerForm.get('username');
+      control?.setValue('testUser');
+      control?.setErrors({ required: true });
+
+      component.validateUserName();
+
+      expect(registerService.checkUserNameExists).not.toHaveBeenCalled();
+    });
+
+    it('should call checkUserNameExists and clear server error on success (new user)', fakeAsync(() => {
+      const control = component.registerForm.get('username');
+      control?.setValue('testUser');
+      control?.setErrors({ server: 'Some error' });
+      control?.setErrors(null);
+
+      (registerService.checkUserNameExists as jest.Mock).mockReturnValue(of({}));
+
+      component.validateUserName();
+      tick();
+
+      expect(registerService.checkUserNameExists).toHaveBeenCalledWith('testUser', undefined);
+      expect(control?.hasError('server')).toBeFalsy();
+    }));
+
+    it('should call checkUserNameExists with user id when editing', fakeAsync(() => {
+      component.isEditMode = true;
+      component.user = { id: 1 } as any;
+
+      const control = component.registerForm.get('username');
+      control?.setValue('testUser');
+
+      (registerService.checkUserNameExists as jest.Mock).mockReturnValue(of({}));
+
+      component.validateUserName();
+      tick();
+
+      expect(registerService.checkUserNameExists).toHaveBeenCalledWith('testUser', 1);
+    }));
+
+    it('should set server error if service returns 400', fakeAsync(() => {
+      const control = component.registerForm.get('username');
+      control?.setValue('testUser');
+
+      (registerService.checkUserNameExists as jest.Mock).mockReturnValue(
+        throwError(() => ({
+          status: 400,
+          error: { message: 'Username already exists' },
+        })),
+      );
+
+      component.validateUserName();
+      tick();
+
+      expect(control?.hasError('server')).toBeTruthy();
+      expect(control?.touched).toBe(true);
+    }));
+
+    it('should show snackbar error if service returns 500', fakeAsync(() => {
+      const control = component.registerForm.get('username');
+      control?.setValue('testUser');
+
+      (registerService.checkUserNameExists as jest.Mock).mockReturnValue(
+        throwError(() => ({
+          status: 500,
+          error: { message: 'Internal Server Error' },
+        })),
+      );
+
+      component.validateUserName();
+      tick();
+
+      expect(snackbarService.showError).toHaveBeenCalledWith(
+        expect.stringContaining('Error'),
+        'Internal Server Error',
+      );
+    }));
+
+    it('should clear existing server error on success response', fakeAsync(() => {
+      component.isLogin = false;
+      component.isEditMode = false;
+
+      const control = component.registerForm.get('username');
+      control?.setValue('testUser');
+      control?.setErrors({ server: 'Some error' });
+
+      control?.markAsTouched();
+      control?.updateValueAndValidity();
+
+      (registerService.checkUserNameExists as jest.Mock).mockReturnValue(of({}));
+
+      component.validateUserName();
+      tick();
+
+      expect(registerService.checkUserNameExists).toHaveBeenCalledWith('testUser', undefined);
+
+      expect(control?.hasError('server')).toBeFalsy();
+    }));
+  });
+
+  describe('validateEmail', () => {
+    beforeEach(() => {
+      component.isLogin = false;
+      component.isEditMode = false;
+    });
+
+    it('should not call checkEmailExists if control is invalid', () => {
+      const control = component.registerForm.get('email');
+      control?.setValue('invalidEmail');
+      control?.setErrors({ required: true });
+
+      component.validateEmail();
+
+      expect(registerService.checkEmailExists).not.toHaveBeenCalled();
+    });
+
+    it('should not call checkEmailExists if no value is entered', () => {
+      const control = component.registerForm.get('email');
+      control?.setValue('');
+
+      component.validateEmail();
+
+      expect(registerService.checkEmailExists).not.toHaveBeenCalled();
+    });
+
+    it('should not call checkEmailExists in edit mode', () => {
+      component.isEditMode = true;
+      const control = component.registerForm.get('email');
+      control?.setValue('test@example.com');
+
+      component.validateEmail();
+
+      expect(registerService.checkEmailExists).not.toHaveBeenCalled();
+    });
+
+    it('should call checkEmailExists when adding a new user with valid email', fakeAsync(() => {
+      const control = component.registerForm.get('email');
+      control?.setValue('test@example.com');
+      control?.setErrors(null);
+
+      (registerService.checkEmailExists as jest.Mock).mockReturnValue(of({}));
+
+      component.validateEmail();
+      tick();
+
+      expect(registerService.checkEmailExists).toHaveBeenCalledWith('test@example.com');
+    }));
+
+    it('should clear existing server error on success response', fakeAsync(() => {
+      component.isLogin = false;
+      component.isEditMode = false;
+
+      const control = component.registerForm.get('email');
+      control?.setValue('test@example.com');
+      control?.setErrors({ server: 'Some error' });
+      control?.markAsTouched();
+      control?.updateValueAndValidity();
+
+      (registerService.checkEmailExists as jest.Mock).mockReturnValue(of({}));
+
+      component.validateEmail();
+      tick();
+
+      expect(registerService.checkEmailExists).toHaveBeenCalledWith('test@example.com');
+      expect(control?.hasError('server')).toBeFalsy();
+    }));
+
+    it('should set server error and mark control as touched for 4xx errors', fakeAsync(() => {
+      const control = component.registerForm.get('email');
+      control?.setValue('test@example.com');
+
+      (registerService.checkEmailExists as jest.Mock).mockReturnValue(
+        throwError(() => ({ status: 409, error: { message: 'Email already exists' } })),
+      );
+
+      component.validateEmail();
+      tick();
+
+      expect(control?.hasError('server')).toBeTruthy();
+      expect(control?.touched).toBeTruthy();
+    }));
+
+    it('should show snackbar error for 5xx errors', fakeAsync(() => {
+      const control = component.registerForm.get('email');
+      control?.setValue('test@example.com');
+
+      (registerService.checkEmailExists as jest.Mock).mockReturnValue(
+        throwError(() => ({ status: 500, error: { message: 'Internal error' } })),
+      );
+
+      component.validateEmail();
+      tick();
+
+      expect(snackbarService.showError).toHaveBeenCalledWith(
+        `${platformMessages.errorTitle} 500`,
+        'Internal error',
+      );
+    }));
   });
 });
