@@ -80,6 +80,10 @@ export enum EndPoints {
   QuestionDifficultyXP = 'QuestionDifficulty/get-battle-question-difficulty-data',
   //#endregion
 
+  // #region EmailTemplate
+  EmailTemplateList = 'EmailTemplates/get-all-email-templates',
+  //#endregion
+
   // #region UserLeaderboards
   UserLeaderboardStats = 'Leaderboard/get-user-leaderboard-stats',
   GlobalLeaderboard = 'Leaderboard/get-leaderboard-gloabal-ranking',
