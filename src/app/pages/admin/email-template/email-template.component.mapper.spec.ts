@@ -39,7 +39,10 @@ describe('emailTemplateToTableData', () => {
     expect(result.actions[0]).toEqual({ icon: 'visibility', tooltip: 'View Template' });
     expect(result.actions[1]).toEqual({ icon: 'edit', tooltip: 'Edit Template' });
     expect(result.actions[2]).toEqual({ icon: 'delete', tooltip: 'Delete Template' });
-    expect(result.actions[3]).toEqual({ icon: 'block', tooltip: 'Deactivate Template' });
+    expect(result.actions[3]).toEqual({
+      icon: 'remove_circle_outline',
+      tooltip: 'Deactivate Template',
+    });
   });
 
   it('should map EmailTemplatesResponseDto to TableData (inactive template)', () => {

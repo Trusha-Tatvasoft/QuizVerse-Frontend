@@ -553,6 +553,12 @@
   }
 }
 
+// Set Material Design colors according to primary and secondary settings
+html {
+  --mat-sys-primary: var(--global-primary-color);
+  --mat-sys-secondary: var(--global-secondary-color);
+}
+
 // Date Picker button on the date field styling
 .mat-datepicker-toggle {
   position: relative;

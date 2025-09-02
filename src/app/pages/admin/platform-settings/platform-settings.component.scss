@@ -1,0 +1,115 @@
+.table-header {
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0 0 3px 0;
+    font-size: 24px;
+    font-weight: 500;
+    color: #000;
+
+    @media (max-width: 768px) {
+      font-size: 20px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 18px;
+    }
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: #64748b;
+
+    @media (max-width: 768px) {
+      font-size: 13px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 12px;
+    }
+  }
+}
+
+.text-area-height {
+  min-height: 50px;
+}
+
+.color-picker-div {
+  height: 38px;
+  margin-bottom: 19px;
+  border: 1px solid #ccc;
+}
+
+.custom-file-input {
+  display: block;
+  width: 100%;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.custom-file-input::-webkit-file-upload-button {
+  margin-right: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background-color: color-mix(in srgb, white 70%, var(--global-secondary-color));
+  color: var(--global-secondary-color);
+  cursor: pointer;
+}
+
+.custom-file-input::-webkit-file-upload-button:hover {
+  background-color: color-mix(in srgb, white 80%, var(--global-secondary-color));
+}
+
+.file-input-container {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1px;
+
+  .file-input {
+    display: none;
+  }
+
+  .file-upload-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 0.375rem;
+    background-color: #fff;
+    width: 100%;
+
+    &:hover {
+      border-color: var(--global-primary-color);
+      box-shadow: 0 0 0 1px var(--global-primary-color);
+    }
+  }
+
+  .error-message {
+    margin-top: -0.25rem;
+    color: #ef4444;
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  .custom-upload-button {
+    flex-shrink: 0;
+  }
+}
+
+.selected-file-name {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.mat-icon-gray {
+  color: #9ca3af;
+}

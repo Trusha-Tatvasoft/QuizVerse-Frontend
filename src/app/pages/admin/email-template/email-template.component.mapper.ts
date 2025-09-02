@@ -34,7 +34,7 @@ export function emailTemplateToTableData(dto: EmailTemplatesResponseDto): TableD
       { icon: 'edit', tooltip: 'Edit Template' },
       { icon: 'delete', tooltip: 'Delete Template' },
       {
-        icon: dto.status ? 'block' : 'check_circle_outline',
+        icon: dto.status ? 'remove_circle_outline' : 'check_circle_outline',
         tooltip: dto.status ? 'Deactivate Template' : 'Activate Template',
       },
     ],
