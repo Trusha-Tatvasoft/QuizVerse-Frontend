@@ -1,3 +1,4 @@
+import { EmailTemplateType } from '../shared/enums/email-template.enum';
 import { Navigations } from '../shared/enums/navigation';
 import { TagInputConfig } from '../shared/interfaces/tag-component.interface';
 import { TagColor, TagType } from './types/tag-component.type';
@@ -418,5 +419,16 @@ export const quizCRUDMessages = {
   questionAdded: 'Question Added!',
   quizTitalNotFoundError: 'Quiz name not found',
   failedToExportQuestions: 'Failed to export questions.',
+};
+//#endregion
+
+//#region Email Template
+export const emailTemplateTypeLabels: Record<number, string> = {
+  [EmailTemplateType.AccountSuspension]: 'Account Suspension',
+  [EmailTemplateType.BattleRequest]: 'Battle Request',
+  [EmailTemplateType.EmailVerification]: 'Email Verification',
+  [EmailTemplateType.QuizInvitation]: 'Quiz Invitation',
+  [EmailTemplateType.ResetPassword]: 'Reset Password',
+  [EmailTemplateType.WelComeEmail]: 'Welcome Email',
 };
 //#endregion
