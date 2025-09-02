@@ -1,7 +1,7 @@
 section {
   height: 100%;
   width: 100%;
-  background: rgba(var(--global-secondary-color-rgb), 0.05);
+  background: color-mix(in srgb, var(--global-secondary-color) 5%, transparent);
 
   .landing-wrapper {
     text-align: center;
@@ -40,7 +40,7 @@ section {
       white-space: nowrap;
       background: var(--highlight-gradient);
       color: var(--global-primary-color);
-      border: 1px solid rgba(var(--global-primary-color-rgb), 0.3);
+      border: 1px solid color-mix(in srgb, var(--global-primary-color) 30%, transparent);
       width: auto;
       max-width: 200px;
 
@@ -102,8 +102,8 @@ section {
       .highlight {
         background: linear-gradient(
           to right,
-          rgba(var(--global-primary-color-rgb), 1) 5%,
-          rgba(var(--global-secondary-color-rgb), 1) 95%
+          color-mix(in srgb, var(--global-primary-color) 100%, transparent) 5%,
+          color-mix(in srgb, var(--global-secondary-color) 100%, transparent) 95%
         );
         background-clip: text;
         -webkit-background-clip: text;
@@ -322,7 +322,7 @@ section {
         box-sizing: border-box;
 
         &:hover {
-          box-shadow: 0 4px 16px rgba(var(--global-secondary-color-rgb), 0.3);
+          box-shadow: 0 4px 16px rgb(from var(--global-secondary-color) r g b / 30%);
         }
 
         @media (max-width: 1024px) {
@@ -549,12 +549,10 @@ section {
           .logo-icon {
             width: 32px;
             height: 32px;
-            background: var(--gradient);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--light-white-color);
             font-weight: bold;
             flex-shrink: 0;
 
