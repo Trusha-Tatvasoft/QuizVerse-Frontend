@@ -11,10 +11,18 @@ import { environment } from '../../../../../../environments/environment.dev';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
 import { battleRequestMessages, platformMessages } from '../../../../../utils/constants';
 import { Subject, takeUntil } from 'rxjs';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { BattleRequestStatus } from '../../../../../shared/enums/user-dashboard.enum';
 
 @Component({
   selector: 'app-battle-request',
-  imports: [MatIconModule, CommonModule, FilledButtonComponent, OutlineButtonComponent],
+  imports: [
+    MatIconModule,
+    CommonModule,
+    FilledButtonComponent,
+    OutlineButtonComponent,
+    MatTooltipModule,
+  ],
   templateUrl: './battle-request.component.html',
   styleUrl: './battle-request.component.scss',
 })
@@ -65,7 +73,7 @@ export class BattleRequestComponent implements OnInit {
     this.dashboardService
       .updateBattleRequestStatus({
         requestId: request.requestId,
-        status: 1,
+        status: BattleRequestStatus.acceptRequest,
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -91,7 +99,7 @@ export class BattleRequestComponent implements OnInit {
     this.dashboardService
       .updateBattleRequestStatus({
         requestId: request.requestId,
-        status: 2,
+        status: BattleRequestStatus.declineRequest,
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
