@@ -534,6 +534,14 @@ export const defaultLogoPath = 'assets/images/logo-small.png';
 
 // #region user dashboard
 export const valueColor: CardColor = 'black';
+
+export const battleRequestMessages = {
+  accepted: (userName: string) => `You accepted battle request from ${userName}`,
+  declined: (userName: string) => `You declined battle request from ${userName}`,
+  acceptFailed: (userName: string) => `Failed to accept battle request from ${userName}`,
+  declineFailed: (userName: string) => `Failed to decline battle request from ${userName}`,
+};
+
 //#endregion
 
 // #region Question Type

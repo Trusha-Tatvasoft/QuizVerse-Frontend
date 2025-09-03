@@ -534,3 +534,10 @@ app-data-table {
     min-height: 100px !important;
   }
 }
+
+.featured-quiz-actions app-filled-button {
+  button {
+    display: block;
+    width: 100% !important;
+  }
+}
