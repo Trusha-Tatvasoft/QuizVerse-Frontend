@@ -210,7 +210,7 @@ export const platformMessages = {
   noDataAvailable: `No data available to export.`,
   errorExport: `Export failed.`,
   registerSuccessfully: `Register Successfully!!`,
-
+  unexpectedError: 'An unexpected error occurred. Please try again later.',
   //#region authMessages
   loginRedirectMessage: 'Redirecting to login.',
   unauthorizedTitle: 'Unauthorized',

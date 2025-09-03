@@ -75,7 +75,10 @@
       </div>
     </div>
     <div class="add-quiz-btn">
-      <app-filled-button [filledButtonConfig]="createNewQuizButtonConfig"></app-filled-button>
+      <app-filled-button
+        [filledButtonConfig]="createNewQuizButtonConfig"
+        (buttonClicked)="navigateToQuizCreation()"
+      ></app-filled-button>
     </div>
   </div>
 

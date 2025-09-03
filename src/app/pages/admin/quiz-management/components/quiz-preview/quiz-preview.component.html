@@ -1,7 +1,6 @@
-<div class="p-4 w-full max-w-3xl no-icon-mat-btn flex flex-col h-[80vh]">
+<div class="p-4 w-full max-w-3xl no-icon-mat-btn flex flex-col h-[80vh] readonly-preview">
   <!-- Static Header -->
   <div class="flex-shrink-0 relative">
-    <!-- Close Button (absolute top-right) -->
     <button
       mat-icon-button
       type="button"
@@ -12,11 +11,9 @@
       <mat-icon>close</mat-icon>
     </button>
 
-    <!-- Title + Description -->
     <h2 class="text-xl font-semibold pr-10">{{ data.quizName }}</h2>
     <p class="text-gray-600 pr-10">{{ data.description }}</p>
 
-    <!-- Tags -->
     <div class="flex gap-2 my-3">
       @for (tag of data.tags; track tag) {
         <app-tag [tagConfig]="tag"></app-tag>
@@ -34,7 +31,10 @@
 
         <!-- Multiple Choice -->
         @if (q.queTypeName === 'Multiple Choice') {
-          <mat-radio-group [value]="getAnswer(q)" class="mt-2 flex flex-col gap-1">
+          <mat-radio-group
+            [value]="getAnswer(q)"
+            class="mt-2 flex flex-col gap-1 pointer-events-none"
+          >
             @for (opt of getOptions(q); track opt.key) {
               <mat-radio-button [value]="opt.value">
                 {{ opt.value }}
@@ -56,6 +56,7 @@
               placeholder="Enter your answer"
               autocomplete="off"
               [value]="getAnswer(q)"
+              readonly
             />
           </mat-form-field>
         }
@@ -64,10 +65,10 @@
         @if (q.queTypeName === 'True/False') {
           <mat-form-field
             appearance="outline"
-            class="w-full custom-form-field low-opacity"
+            class="w-full custom-form-field"
             [floatLabel]="'auto'"
           >
-            <mat-select [value]="getBoolAnswer(q)">
+            <mat-select [value]="getBoolAnswer(q)" disabled>
               <mat-option value="true">True</mat-option>
               <mat-option value="false">False</mat-option>
             </mat-select>
