@@ -247,11 +247,19 @@ export const platformMessages = {
   deleteQuizSuccess: 'Quiz Deleted Successfully!!',
   deleteQuizFailure: 'Failed to delete quiz',
   //#endregion
+
+  //#region profileMessages
+  invalidImageType: 'Only JPG, PNG, and GIF image files are supported!',
+  uploadSuccess: 'Profile photo updated successfully!',
+  uploadFailed: 'Profile upload failed. Please try again.',
+  //#endregion
 };
 //#endregion
 
 //#region Constant Variables
 export const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+
+export const defaultProfilePic = 'assets/images/profile.png';
 
 export const allowedImportQuestionFileTypes = [
   'text/csv',

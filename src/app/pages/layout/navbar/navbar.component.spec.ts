@@ -9,12 +9,14 @@ import { AuthService } from '../../../core/auth/services/auth.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BehaviorSubject, of } from 'rxjs';
 import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
+import { Router } from '@angular/router';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
   let warning = yellow;
-  let authServiceMock: { logout: jest.Mock };
+  let authServiceMock: { logout: jest.Mock; currentRole$: any };
+  let routerMock: { navigate: jest.Mock };
 
   let configSubject: BehaviorSubject<any>;
 
@@ -23,13 +25,18 @@ describe('NavbarComponent', () => {
   beforeEach(async () => {
     configSubject = new BehaviorSubject<any>(null);
 
-    authServiceMock = { logout: jest.fn() };
+    authServiceMock = {
+      logout: jest.fn(),
+      currentRole$: of('user'), // 👈 fix: provide observable
+    };
+    routerMock = { navigate: jest.fn() };
 
     await TestBed.configureTestingModule({
       imports: [NavbarComponent, HttpClientTestingModule],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: AuthService, useValue: authServiceMock },
+        { provide: Router, useValue: routerMock },
         {
           provide: PlatformSettingsService,
           useValue: { platformConfig$: configSubject.asObservable() },
@@ -289,5 +296,43 @@ describe('NavbarComponent', () => {
     fixture.detectChanges();
     configSubject.next({ logo: 'assets/images/custom.png' });
     expect(component.logoPath).toBe('assets/images/custom.png');
+  });
+
+  describe('goToProfile', () => {
+    it('should navigate to admin profile when role is admin', () => {
+      component.role = 'admin';
+      component.goToProfile();
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.Admin}/${Navigations.Profile}`,
+      ]);
+    });
+
+    it('should navigate to user profile when role is not admin', () => {
+      component.role = 'user';
+      component.goToProfile();
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.User}/${Navigations.Profile}`,
+      ]);
+    });
+  });
+
+  describe('goToSetting', () => {
+    it('should navigate to admin settings with tab query param', () => {
+      component.role = 'admin';
+      component.goToSetting();
+      expect(routerMock.navigate).toHaveBeenCalledWith(
+        [`/${Navigations.Admin}/${Navigations.Profile}/`],
+        { queryParams: { tab: 2 } },
+      );
+    });
+
+    it('should navigate to user settings with tab query param', () => {
+      component.role = 'user';
+      component.goToSetting();
+      expect(routerMock.navigate).toHaveBeenCalledWith(
+        [`/${Navigations.User}/${Navigations.Profile}`],
+        { queryParams: { tab: 2 } },
+      );
+    });
   });
 });

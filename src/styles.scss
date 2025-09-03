@@ -221,8 +221,9 @@ app-data-table {
   }
 }
 
-// all page common header styling (Admin Pages)
-.admin-management-page {
+// all page common header styling (Admin Pages/ Player Pages)
+.admin-management-page,
+.player-management-page {
   padding: 24px 32px;
   background: var(--global-bg-gradient);
   min-height: 100%;
@@ -231,17 +232,20 @@ app-data-table {
     width: calc(100vw - 283px);
   }
 
-  .admin-page-heading {
+  .admin-page-heading,
+  .player-page-heading {
     font-size: revert;
     font-weight: revert;
     margin-bottom: 24px;
   }
 
-  .admin-page-header {
+  .admin-page-header,
+  .player-page-header {
     margin-bottom: 24px;
   }
 
-  .admin-management-toolbar {
+  .admin-management-toolbar,
+  .player-management-toolbar {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     gap: 1rem;
@@ -384,6 +388,32 @@ app-data-table {
   }
 }
 
+// user profile
+.form-wrapper {
+  .form-field-wrapper {
+    @media (max-width: 500px) {
+      .btn-container {
+        width: 100% !important;
+        .otp-btn {
+          button {
+            width: 100% !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+.recent-activity {
+  .activity-list {
+    li {
+      .xp-tag .tag-container {
+        width: max-content !important;
+      }
+    }
+  }
+}
+
 /* Width of the scrollbar */
 ::-webkit-scrollbar {
   width: 2px;
@@ -486,5 +516,10 @@ app-data-table {
         border: 1px solid var(--black-color);
       }
     }
+  }
+}
+.profile-card {
+  .mat-mdc-card.mdc-card {
+    min-height: 100px !important;
   }
 }

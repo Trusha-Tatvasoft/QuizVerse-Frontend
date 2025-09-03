@@ -121,6 +121,21 @@
   }
 }
 
+// user profile tabs
+.mat-mdc-tab-list {
+  background: #f1f5f9 !important;
+  border-radius: 0.5rem !important;
+  padding: 0.25rem !important;
+  height: 40px !important;
+
+  .mat-mdc-tab-labels {
+    height: 32px !important;
+  }
+}
+
+.user-profile-tabs .mat-mdc-tab-group.mat-mdc-tab-header {
+  margin-bottom: 0px !important;
+}
 // question pool create que dialog tabs
 .question-pool-tabs .mdc-tab {
   width: 150px;

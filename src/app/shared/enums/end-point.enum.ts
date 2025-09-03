@@ -94,6 +94,18 @@ export enum EndPoints {
   GetRecentQuizzes = 'UserDashboard/get-recent-quizzes',
   // #endregion
 
+  // #region UserProfile
+  GetUserBasicProfile = 'UserProfile/get-user-basic-profile',
+  GetUserOverview = 'UserProfile/get-user-overview',
+  GetUserBadges = 'UserProfile/get-user-badges',
+  UpdateProfilePic = 'UserProfile/update-profile-pic',
+  GetUserProfileSetting = 'UserProfile/get-user-profile-setting',
+  CheckEmailAvailable = 'UserProfile/is-email-available',
+  SendOtp = 'UserProfile/send-otp-to-user',
+  VerifyOtp = 'UserProfile/verify-otp',
+  UpdateUserProfile = 'UserProfile/update-user-profile',
+  // #endregion
+
   // #region PlateformSetting
   GetPlateformSetting = 'PlatformConfiguration/get-platform-configurations',
   UpdatePlateformSetting = 'PlatformConfiguration/update-platform-configurations',
