@@ -85,8 +85,17 @@ export enum EndPoints {
   GlobalLeaderboard = 'Leaderboard/get-leaderboard-gloabal-ranking',
   //#endregion
 
+  // #region UserDashboard
+  UserDashboardData = 'UserDashboard/get-statistics-data',
+  RankProgressData = 'UserDashboard/get-rank-progress',
+  GetFeaturedQuizzes = 'UserDashboard/get-featured-quizzes',
+  GetBattleRequests = 'UserDashboard/get-battle-requests',
+  UpdateBattleRequestStatus = 'UserDashboard/update-battle-request-status',
+  GetRecentQuizzes = 'UserDashboard/get-recent-quizzes',
+  // #endregion
+
   // #region PlateformSetting
   GetPlateformSetting = 'PlatformConfiguration/get-platform-configurations',
   UpdatePlateformSetting = 'PlatformConfiguration/update-platform-configurations',
-  //#endregion
+  // #endregion
 }
