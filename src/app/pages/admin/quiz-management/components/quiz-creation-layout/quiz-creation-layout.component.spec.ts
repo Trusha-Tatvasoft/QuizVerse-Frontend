@@ -9,7 +9,7 @@ import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { of, throwError } from 'rxjs';
-import { quizCRUDMessages } from '../../../../../utils/constants';
+import { platformMessages, quizCRUDMessages } from '../../../../../utils/constants';
 import {
   QuizStep1Data,
   SaveQuizRequest,
@@ -514,10 +514,19 @@ describe('QuizCreationLayoutComponent', () => {
     it('should show error on save failure', fakeAsync(() => {
       component.quizStep1Data = mockQuizStep1Data;
       component.selectedQuestions = mockQuestionsList;
-      quizCreationService.createOrUpdateQuiz.mockReturnValue(throwError(() => 'error'));
+
+      const mockError = {
+        error: {
+          data: [{ errors: ['error'] }],
+        },
+      };
+
+      quizCreationService.createOrUpdateQuiz.mockReturnValue(throwError(() => mockError));
+
       component.saveQuiz();
       tick();
       fixture.detectChanges();
+
       expect(snackbarService.showError).toHaveBeenCalledWith('error');
     }));
   });
@@ -601,81 +610,6 @@ describe('QuizCreationLayoutComponent', () => {
       );
     }));
   });
-
-  // describe('mapBackendQuizResponse', () => {
-  //   it('should map backend response to component data', fakeAsync(() => {
-  //     // Arrange: mock backend response
-  //     const backendResponse: QuizResponse = {
-  //       name: 'Test Quiz',
-  //       categoryId: 1,
-  //       description: 'Test Description',
-  //       totalTime: 30,
-  //       difficultyLevelId: 2,
-  //       isPaid: true,
-  //       price: 10,
-  //       totalQuestion: 5,
-  //       status: QuizStatus.Active,
-  //       tags: [{ name: 'tag1' }, { name: 'tag2' }],
-  //       questions: [
-  //         {
-  //           id: 1,
-  //           category_id: 1,
-  //           que_difficulty_id: 1,
-  //           que_text: 'Test Question',
-  //           que_type_id: 1,
-  //           que_options_ans: [{ id: 1, question_id: 1, key: 'A', value: 'Option A' }],
-  //         },
-  //       ],
-  //       noOfQuestionsPerDifficulty: [
-  //         { que_difficulty_name: 'easy', no_of_questions: 2 },
-  //         { que_difficulty_name: 'medium', no_of_questions: 2 },
-  //         { que_difficulty_name: 'hard', no_of_questions: 1 },
-  //       ],
-  //     };
-
-  //     // Make sure step1Component exists and is mocked
-  //     component.step1Component = { initializeForm: jest.fn() } as any;
-
-  //     // Act: call the mapping function
-  //     component.mapBackendQuizResponse(backendResponse);
-  //     tick();
-  //     fixture.detectChanges();
-
-  //     // Assert: quizStep1Data mapped correctly
-  //     expect(component.quizStep1Data).toEqual({
-  //       quizTitle: 'Test Quiz',
-  //       quizCategory: 1,
-  //       description: 'Test Description',
-  //       quizTiming: 30,
-  //       difficultyLevel: 2,
-  //       isPaid: true,
-  //       price: 10,
-  //       totalQuestions: 5,
-  //       tags: ['tag1', 'tag2'],
-  //       difficultyDistribution: [
-  //         { key: 'easyQuestions', value: 2 },
-  //         { key: 'mediumQuestions', value: 2 },
-  //         { key: 'hardQuestions', value: 1 },
-  //       ],
-  //     });
-
-  //     // Assert: selectedQuestions mapped correctly
-  //     expect(component.selectedQuestions).toEqual([
-  //       {
-  //         id: 1,
-  //         categoryId: 1,
-  //         queDifficultyId: 1,
-  //         queText: 'Test Question',
-  //         queTypeId: 1,
-  //         queOptionsAns: [{ id: 1, question_id: 1, key: 'A', value: 'Option A' }],
-  //       },
-  //     ]);
-
-  //     // Assert: initializeForm called
-  //     expect(component.step1Component.initializeForm).toHaveBeenCalled();
-  //   }));
-
-  // });
 
   describe('loadQuiz', () => {
     it('should load quiz and set edit mode on success', fakeAsync(() => {

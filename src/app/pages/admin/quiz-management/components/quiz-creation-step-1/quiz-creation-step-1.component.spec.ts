@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { QuizCreationStep1Component } from './quiz-creation-step-1.component';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -20,6 +20,7 @@ import { OutlineButtonComponent } from '../../../../../shared/components/outline
 import { QuizStep1Data } from '../../../../../shared/interfaces/quiz-creation.interface';
 import { NgModule } from '@angular/core';
 import { TagInputConfig } from '../../../../../shared/interfaces/tag-component.interface';
+import { quizCRUDMessages } from '../../../../../utils/constants';
 
 @NgModule({})
 class NoopAnimationsModuleMock {}
@@ -309,6 +310,188 @@ describe('QuizCreationStep1Component', () => {
 
       component.addTag();
       expect(component.tagList.length).toBe(1);
+    });
+  });
+
+  describe('submitStep1Form', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      fixture.detectChanges();
+
+      // Mock filteredNewQuizFields for quizCategory lookup
+      component.filteredNewQuizFields = [
+        {
+          name: 'quizCategory',
+          options: [
+            { value: '1', label: 'General Knowledge' },
+            { value: '2', label: 'Science' },
+          ],
+          label: '',
+          type: '',
+          placeholder: '',
+          validators: [],
+        },
+      ];
+
+      // Initialize form with valid default values
+      component.newQuizForm.setValue({
+        quizTitle: 'Test Quiz',
+        quizCategory: '1',
+        difficultyLevel: '2',
+        isPaid: true,
+        price: 10,
+        quizTiming: 60,
+        easyQuestions: 4,
+        mediumQuestions: 4,
+        hardQuestions: 2,
+        description: 'Sample description',
+        tags: '',
+      });
+
+      // Mock totalQuestionsStep1
+      component.totalQuestionsStep1 = 10;
+
+      // Mock tagList
+      component.tagList = [
+        {
+          id: '1',
+          label: 'test',
+          type: 'selectable',
+          isSelected: true,
+          hasBorder: true,
+          backgroundColor: 'blue',
+          textColor: 'white',
+        },
+        {
+          id: '2',
+          label: 'quiz',
+          type: 'selectable',
+          isSelected: true,
+          hasBorder: true,
+          backgroundColor: 'blue',
+          textColor: 'white',
+        },
+      ];
+    });
+
+    it('should return false and mark form as touched if form is invalid', () => {
+      component.newQuizForm.get('quizTitle')?.setValue('');
+      const spy = jest.spyOn(component.newQuizForm, 'markAllAsTouched');
+      const emitSpy = jest.spyOn(component.formValuesChange, 'emit');
+
+      const result = component.submitStep1Form();
+
+      expect(result).toBe(false);
+      expect(spy).toHaveBeenCalled();
+      expect(component.newQuizForm.touched).toBe(true);
+      expect(emitSpy).not.toHaveBeenCalled();
+      expect(snackbar.showError).not.toHaveBeenCalled();
+    });
+
+    it('should return false and show error if totalQuestionsStep1 is less than 5', () => {
+      component.totalQuestionsStep1 = 4;
+      const emitSpy = jest.spyOn(component.formValuesChange, 'emit');
+
+      const result = component.submitStep1Form();
+
+      expect(result).toBe(false);
+      expect(snackbar.showError).toHaveBeenCalledWith(
+        quizCRUDMessages.minimumNumberOfQuestionError,
+      );
+      expect(emitSpy).not.toHaveBeenCalled();
+    });
+
+    it('should return false and show error if totalQuestionsStep1 is more than 100', () => {
+      component.totalQuestionsStep1 = 101;
+      const emitSpy = jest.spyOn(component.formValuesChange, 'emit');
+
+      const result = component.submitStep1Form();
+
+      expect(result).toBe(false);
+      expect(snackbar.showError).toHaveBeenCalledWith(
+        quizCRUDMessages.minimumNumberOfQuestionError,
+      );
+      expect(emitSpy).not.toHaveBeenCalled();
+    });
+
+    it('should emit payload and return true for valid form', () => {
+      const emitSpy = jest.spyOn(component.formValuesChange, 'emit');
+
+      const expectedPayload = {
+        quizTitle: 'Test Quiz',
+        quizCategory: '1',
+        quizCategoryName: 'General Knowledge',
+        difficultyLevel: '2',
+        isPaid: true,
+        price: 10,
+        quizTiming: 60,
+        easyQuestions: 4,
+        mediumQuestions: 4,
+        hardQuestions: 2,
+        description: 'Sample description',
+        tags: ['test', 'quiz'],
+        totalQuestions: 10,
+      };
+
+      const result = component.submitStep1Form();
+
+      expect(result).toBe(true);
+      expect(emitSpy).toHaveBeenCalledWith(expectedPayload);
+      expect(snackbar.showError).not.toHaveBeenCalled();
+    });
+
+    it('should set quizCategoryName to empty string if category not found', () => {
+      component.newQuizForm.get('quizCategory')?.setValue('999');
+      const emitSpy = jest.spyOn(component.formValuesChange, 'emit');
+
+      const expectedPayload = {
+        quizTitle: 'Test Quiz',
+        quizCategory: '999',
+        quizCategoryName: '',
+        difficultyLevel: '2',
+        isPaid: true,
+        price: 10,
+        quizTiming: 60,
+        easyQuestions: 4,
+        mediumQuestions: 4,
+        hardQuestions: 2,
+        description: 'Sample description',
+        tags: ['test', 'quiz'],
+        totalQuestions: 10,
+      };
+
+      const result = component.submitStep1Form();
+
+      expect(result).toBe(true);
+      expect(emitSpy).toHaveBeenCalledWith(expectedPayload);
+      expect(snackbar.showError).not.toHaveBeenCalled();
+    });
+
+    it('should handle empty tagList correctly', () => {
+      component.tagList = [];
+      const emitSpy = jest.spyOn(component.formValuesChange, 'emit');
+
+      const expectedPayload = {
+        quizTitle: 'Test Quiz',
+        quizCategory: '1',
+        quizCategoryName: 'General Knowledge',
+        difficultyLevel: '2',
+        isPaid: true,
+        price: 10,
+        quizTiming: 60,
+        easyQuestions: 4,
+        mediumQuestions: 4,
+        hardQuestions: 2,
+        description: 'Sample description',
+        tags: [],
+        totalQuestions: 10,
+      };
+
+      const result = component.submitStep1Form();
+
+      expect(result).toBe(true);
+      expect(emitSpy).toHaveBeenCalledWith(expectedPayload);
+      expect(snackbar.showError).not.toHaveBeenCalled();
     });
   });
 });
