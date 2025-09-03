@@ -22,6 +22,7 @@ export class MasterLayoutComponent implements OnInit, OnDestroy {
 
   role: UserType = 'player';
   isLogin: boolean = true;
+  isAdmin: boolean = false;
   currentXp: number = 500;
   xpLimit: number = 1000;
   notificationCount: number = 0;
@@ -32,6 +33,7 @@ export class MasterLayoutComponent implements OnInit, OnDestroy {
     this.authService.currentRole$.pipe(takeUntil(this.destroy$)).subscribe((role) => {
       if (role === 'admin' || role === 'player') {
         this.role = role as UserType;
+        this.isAdmin = role === 'admin';
         this.sidebarItems =
           role === 'admin'
             ? navigationItems.AdminRoutes

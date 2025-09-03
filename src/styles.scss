@@ -205,8 +205,10 @@ app-data-table {
   .table-responsive {
     .action-icons {
       gap: 5px !important;
+
       .text-button {
         padding: 8px !important;
+
         .secondary {
           color: #424242;
         }
@@ -219,8 +221,9 @@ app-data-table {
   }
 }
 
-// all page common header styling (Admin Pages)
-.admin-management-page {
+// all page common header styling (Admin Pages/ Player Pages)
+.admin-management-page,
+.player-management-page {
   padding: 24px 32px;
   background: var(--global-bg-gradient);
   min-height: 100%;
@@ -229,17 +232,20 @@ app-data-table {
     width: calc(100vw - 283px);
   }
 
-  .admin-page-heading {
+  .admin-page-heading,
+  .player-page-heading {
     font-size: revert;
     font-weight: revert;
     margin-bottom: 24px;
   }
 
-  .admin-page-header {
+  .admin-page-header,
+  .player-page-header {
     margin-bottom: 24px;
   }
 
-  .admin-management-toolbar {
+  .admin-management-toolbar,
+  .player-management-toolbar {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     gap: 1rem;
@@ -253,10 +259,12 @@ app-data-table {
     @media (max-width: 768px) {
       padding: 16px;
     }
+
     @media (max-width: 480px) {
       padding: 12px;
     }
   }
+
   @media (max-width: 1036px) {
     padding: 24px 16px;
   }
@@ -296,10 +304,12 @@ app-data-table {
     @media (max-width: 768px) {
       padding: 16px;
     }
+
     @media (max-width: 480px) {
       padding: 12px;
     }
   }
+
   @media (max-width: 1036px) {
     padding: 24px 16px;
   }
@@ -313,6 +323,7 @@ app-data-table {
       .export-users {
         flex: 1 1 50%;
         min-width: 0;
+
         button {
           width: 100% !important;
           white-space: nowrap !important;
@@ -377,6 +388,32 @@ app-data-table {
   }
 }
 
+// user profile
+.form-wrapper {
+  .form-field-wrapper {
+    @media (max-width: 500px) {
+      .btn-container {
+        width: 100% !important;
+        .otp-btn {
+          button {
+            width: 100% !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+.recent-activity {
+  .activity-list {
+    li {
+      .xp-tag .tag-container {
+        width: max-content !important;
+      }
+    }
+  }
+}
+
 /* Width of the scrollbar */
 ::-webkit-scrollbar {
   width: 2px;
@@ -412,5 +449,77 @@ app-data-table {
         width: 100% !important;
       }
     }
+  }
+}
+
+.user-dashboard-actions {
+  app-filled-button button {
+    background-color: #9a90cb85 !important;
+    color: #fff !important;
+    width: 166.67px;
+    display: inline-block;
+    margin-right: 1rem;
+
+    &:last-child {
+      margin-right: 1;
+    }
+
+    @media (max-width: 768px) {
+      width: auto;
+      min-width: 140px;
+    }
+
+    @media (max-width: 425px) {
+      width: 100% !important;
+      display: block !important;
+      margin-right: 0 !important;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 375px) {
+      width: 100% !important;
+      font-size: 0.9rem;
+      padding: 0.6rem 0.75rem;
+    }
+  }
+}
+
+.user-dashboard-primary-button {
+  .filled-button.secondary {
+    padding: 0.45rem 0.9rem;
+    font-size: 14px;
+  }
+
+  .outline-button {
+    padding: 0.45rem 0.9rem;
+    font-size: 14px;
+    border: 1.5px solid var(--global-secondary-color);
+  }
+
+  @media (max-width: 425px) {
+    .text-button {
+      width: 100%;
+    }
+  }
+}
+
+.user-dashboard-text-button {
+  .text-button {
+    width: 100%;
+  }
+}
+
+.user-dashboard-tag {
+  app-tag {
+    .tag-container {
+      .tag {
+        border: 1px solid var(--black-color);
+      }
+    }
+  }
+}
+.profile-card {
+  .mat-mdc-card.mdc-card {
+    min-height: 100px !important;
   }
 }

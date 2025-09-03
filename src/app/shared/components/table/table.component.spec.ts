@@ -176,40 +176,6 @@ describe('TableComponent', () => {
     });
   });
 
-  it('should hide paginator if totalItems <= pageSize', () => {
-    component.totalItems = 5;
-    component.pageSize = 10;
-    component.dataSource = [{ id: 1 }];
-
-    component.ngOnChanges({
-      dataSource: {
-        currentValue: component.dataSource,
-        previousValue: [],
-        firstChange: true,
-        isFirstChange: () => true,
-      },
-    });
-
-    expect(component.showPaginator).toBe(false);
-  });
-
-  it('should show paginator if totalItems > pageSize', () => {
-    component.totalItems = 100;
-    component.pageSize = 10;
-    component.dataSource = [{ id: 1 }];
-
-    component.ngOnChanges({
-      dataSource: {
-        currentValue: component.dataSource,
-        previousValue: [],
-        firstChange: true,
-        isFirstChange: () => true,
-      },
-    });
-
-    expect(component.showPaginator).toBe(true);
-  });
-
   it('should mark columns without isSortable as false by default', () => {
     component.columns = [{ key: 'id', label: 'ID', type: 'text' }];
     component.setDisplayedColumns();

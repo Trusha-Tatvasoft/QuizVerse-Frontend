@@ -1,0 +1,144 @@
+.profile-page {
+  .player-management-toolbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+
+    .profile-avatar {
+      position: relative;
+
+      .avatar-img {
+        height: 90px;
+        width: 90px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 1px solid #838282;
+      }
+
+      .avatar-icon {
+        position: absolute;
+        display: flex;
+        bottom: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid #838282;
+        border-radius: 50%;
+        padding: 6px;
+        cursor: pointer;
+
+        mat-icon {
+          font-size: 20px;
+          height: auto;
+          width: auto;
+          color: var(--global-secondary-color);
+
+          @media (max-width: 500px) {
+            font-size: 17px;
+          }
+        }
+      }
+
+      input[type='file'] {
+        display: none;
+      }
+    }
+
+    .profile-info {
+      h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin: 0;
+      }
+
+      p {
+        color: #666;
+      }
+
+      .progress-wrapper {
+        display: flex;
+        align-items: center;
+        margin-top: 12px;
+        gap: 8px;
+        width: 100%;
+
+        .progress-label {
+          font-size: 14px;
+          font-weight: 600;
+          color: #222;
+          white-space: nowrap;
+        }
+
+        .progress-bar-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          width: 100%;
+
+          app-progress-bar {
+            flex: 1;
+            max-width: 280px;
+            width: 150px;
+          }
+
+          .progress-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #444;
+            min-width: 36px;
+            text-align: right;
+          }
+        }
+
+        @media (max-width: 600px) {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 4px;
+
+          .progress-label {
+            margin-bottom: 4px;
+          }
+
+          .progress-bar-row {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 500px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+
+      .profile-avatar {
+        .avatar-img {
+          height: 70px;
+          width: 70px;
+        }
+      }
+
+      .profile-info {
+        h2 {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+
+  .profile-cards {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+    grid-template-columns: 1fr;
+
+    @media (min-width: 500px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1440px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}

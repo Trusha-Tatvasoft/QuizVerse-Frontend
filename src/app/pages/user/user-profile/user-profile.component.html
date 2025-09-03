@@ -1,1 +1,45 @@
-<p>user-profile works!</p>
+<div class="profile-page player-management-page">
+  <h2 class="player-page-heading">Profile</h2>
+
+  <!-- Profile Header -->
+  <div class="player-management-toolbar">
+    <!-- Profile image -->
+    <div class="profile-avatar">
+      <img [src]="profilePicUrl" alt="Profile Avatar" class="avatar-img" />
+
+      <label for="profile-upload" class="avatar-icon">
+        <mat-icon fontSet="material-icons-outlined">photo_camera</mat-icon>
+      </label>
+      <input id="profile-upload" type="file" accept="image/*" (change)="profileUpload($event)" />
+    </div>
+
+    <!-- Profile Info -->
+    <div class="profile-info">
+      <h2>{{ user?.name ?? 'default' }}</h2>
+      <p>{{ user?.rank }} - Member since {{ user?.memberSince | date: 'MMM yyyy' }}</p>
+      <div class="progress-wrapper">
+        <div class="progress-label">Progress to {{ user?.nextRank }} :</div>
+        <div class="progress-bar-row">
+          <app-progress-bar [percentage]="60" theme="primary"></app-progress-bar>
+          <span class="progress-value">{{ user?.progress }}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cards Row -->
+  <div class="profile-cards">
+    @for (config of profileCardConfig; track config.title) {
+      <app-card [cardConfig]="config" class="profile-card"></app-card>
+    }
+  </div>
+
+  <!-- Tabs -->
+  <app-common-tab
+    [tabs]="tabs"
+    [selectedIndex]="selectedTab()"
+    (tabChanged)="switchToTab($event)"
+    class="user-profile-tabs"
+  >
+  </app-common-tab>
+</div>

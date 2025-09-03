@@ -31,7 +31,8 @@ import { OutlineButtonComponent } from '../../../shared/components/outline-butto
 import { Notifications } from '../interfaces/navbar.component.interface';
 import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
-import { defaultLogoPath, plateformName } from '../../../utils/constants';
+import { plateformName, roles } from '../../../utils/constants';
+import { defaultLogoPath } from '../../../utils/constants';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
 
@@ -66,6 +67,8 @@ export class NavbarComponent {
 
   @ViewChild('notificationWrapper') notificationWrapper!: ElementRef;
 
+  role: string | null = null;
+
   textButton = textButtonConfig;
   signInButton = signInButtonConfig;
   getStartedButton = getStartedButtonConfig;
@@ -87,6 +90,10 @@ export class NavbarComponent {
 
   ngOnInit(): void {
     this.checkWindowSize(window.innerWidth);
+
+    this.authService.currentRole$.subscribe((role) => {
+      this.role = role;
+    });
     this.loadPlatformConfig();
   }
 
@@ -135,8 +142,47 @@ export class NavbarComponent {
     this.closeSidebar.emit();
   }
 
+  goToProfile() {
+    const route =
+      this.role === 'admin'
+        ? `/${Navigations.Admin}/${Navigations.Profile}`
+        : `/${Navigations.User}/${Navigations.Profile}`;
+
+    this.router.navigate([route]);
+  }
+
+  goToSetting() {
+    const route =
+      this.role === 'admin'
+        ? `/${Navigations.Admin}/${Navigations.Profile}/`
+        : `/${Navigations.User}/${Navigations.Profile}`;
+
+    this.router.navigate([route], { queryParams: { tab: 2 } });
+  }
+
   logout() {
     this.authService.logout();
+  }
+
+  navigateToDashboard(): void {
+    if (!this.isLogin) {
+      this.router.navigate([Navigations.Login]);
+      return;
+    }
+
+    const role = this.authService.currentRole$.value?.toLowerCase() || '';
+
+    switch (role) {
+      case roles.admin:
+        this.router.navigate([`/${Navigations.Admin}/${Navigations.Dashboard}`]);
+        break;
+      case roles.player:
+        this.router.navigate([`/${Navigations.User}/${Navigations.Dashboard}`]);
+        break;
+      default:
+        this.router.navigate(['/']);
+        break;
+    }
   }
 
   imageError() {

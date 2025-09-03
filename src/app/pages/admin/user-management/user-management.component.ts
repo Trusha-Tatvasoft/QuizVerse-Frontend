@@ -361,6 +361,23 @@ export class UserManagementComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res) => {
           if (res.statusCode === 200) {
+            if (action === UserAction.Delete) {
+              const currentPage = this.pagination().pageNumber;
+              const pageSize = this.pagination().pageSize;
+              const totalItems = this.totalItems() - 1;
+
+              const lastPage = Math.max(Math.ceil(totalItems / pageSize), 1);
+
+              const newPage = Math.min(currentPage, lastPage);
+
+              this.pagination.set({
+                ...this.pagination(),
+                pageNumber: newPage,
+              });
+
+              this.fetchUsers();
+            }
+
             this.snackbar.showSuccess(
               this.getActionMessage(action, newStatus),
               userStatusMessages.success,

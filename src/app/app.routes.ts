@@ -21,6 +21,7 @@ import { QuizCreationLayoutComponent } from './pages/admin/quiz-management/compo
 import { UserDashboardComponent } from './pages/user/user-dashboard/user-dashboard.component';
 import { EmailTemplateComponent } from './pages/admin/email-template/email-template.component';
 import { UserLeaderboardComponent } from './pages/user/user-leaderboard/user-leaderboard.component';
+import { UserProfileComponent } from './pages/user/user-profile/user-profile.component';
 import { PlatformSettingsComponent } from './pages/admin/platform-settings/platform-settings.component';
 import { BattleCreationLayoutComponent } from './pages/admin/battle-management/components/battle-creation-layout/battle-creation-layout.component';
 
@@ -154,6 +155,11 @@ export const routes: Routes = [
         path: Navigations.Dashboard,
         component: UserDashboardComponent,
         title: 'Quizeverse | Dashboard ',
+      },
+      {
+        path: Navigations.Profile,
+        component: UserProfileComponent,
+        title: 'Quizeverse | Profile ',
       },
       {
         path: Navigations.Users,
