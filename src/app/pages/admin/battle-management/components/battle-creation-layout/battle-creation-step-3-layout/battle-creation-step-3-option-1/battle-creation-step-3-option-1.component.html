@@ -1,1 +1,110 @@
-<p>battle-creation-step-3-option-1 works!</p>
+<div>
+  <div class="flex items-center justify-between mb-4">
+    <h4 class="form-heading">Create New Question</h4>
+    <app-outline-button
+      [outlineButtonConfig]="changeMethodButton"
+      class="min-width-btn"
+      (buttonClicked)="closeOption()"
+    ></app-outline-button>
+  </div>
+
+  <form
+    [formGroup]="questionForm"
+    class="grid grid-cols-1 sm:grid-cols-2 gap-4 no-icon-mat-btn no-bottom-margin-select"
+  >
+    @for (field of questionFormFieldForAddQuestionManuallyStep3; track field) {
+      @if (shouldRenderField(field)) {
+        <div class="form-field" [ngClass]="field.gridClass || 'col-span-1'">
+          <mat-label class="font-medium mb-0 block text-sm">{{ field.label }}</mat-label>
+
+          <!-- SPECIAL CASE: correctAnswer for true/false type -->
+          @if (field.name === 'correctAnswer' && isTrueFalseType()) {
+            <mat-form-field
+              appearance="outline"
+              class="w-full custom-form-field"
+              [floatLabel]="'auto'"
+            >
+              <mat-select [formControlName]="field.name" [placeholder]="field.placeholder">
+                <mat-option [value]="true">True</mat-option>
+                <mat-option [value]="false">False</mat-option>
+              </mat-select>
+              <mat-error>
+                {{ getErrorQuestionForm(field.name) }}
+              </mat-error>
+            </mat-form-field>
+          } @else {
+            <!-- SELECT -->
+            @if (field.type === 'select') {
+              <mat-form-field
+                appearance="outline"
+                class="w-full custom-form-field"
+                [floatLabel]="'auto'"
+              >
+                <mat-select [formControlName]="field.name" [placeholder]="field.placeholder">
+                  @for (option of field.options; track option) {
+                    <mat-option [value]="option.value">
+                      {{ option.label }}
+                    </mat-option>
+                  }
+                </mat-select>
+                <mat-error>
+                  {{ getErrorQuestionForm(field.name) }}
+                </mat-error>
+              </mat-form-field>
+            }
+
+            <!-- TEXTAREA -->
+            @if (field.type === 'textarea') {
+              <mat-form-field
+                appearance="outline"
+                class="w-full custom-form-field-text"
+                [floatLabel]="'auto'"
+              >
+                <textarea
+                  matInput
+                  [formControlName]="field.name"
+                  [placeholder]="field.placeholder"
+                  rows="3"
+                ></textarea>
+                <mat-error>
+                  {{ getErrorQuestionForm(field.name) }}
+                </mat-error>
+              </mat-form-field>
+            }
+
+            <!-- TEXT INPUT (default) -->
+            @if (field.type !== 'select' && field.type !== 'textarea') {
+              <mat-form-field
+                appearance="outline"
+                class="w-full custom-form-field"
+                [floatLabel]="'auto'"
+              >
+                <input
+                  matInput
+                  [type]="field.type"
+                  [formControlName]="field.name"
+                  [placeholder]="field.placeholder"
+                  autocomplete="off"
+                />
+                <mat-error>
+                  {{ getErrorQuestionForm(field.name) }}
+                </mat-error>
+              </mat-form-field>
+              @if (isFillInTheBlanksType() && field.name === 'questionText') {
+                <p class="mb-1 text-xs text-gray-500">
+                  Use double curly braces {{ '{{}}' }} where you want the blank to appear in the
+                  question text.
+                </p>
+              }
+            }
+          }
+        </div>
+      }
+    }
+  </form>
+  <app-filled-button
+    [filledButtonConfig]="addQuestionButton"
+    class="min-width-btn"
+    (buttonClicked)="addQuestion()"
+  ></app-filled-button>
+</div>
