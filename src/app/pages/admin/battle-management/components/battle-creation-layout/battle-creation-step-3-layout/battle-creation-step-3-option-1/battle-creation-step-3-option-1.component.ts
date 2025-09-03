@@ -67,7 +67,6 @@ export class BattleCreationStep3Option1Component {
 
   ngOnInit() {
     this.buildQuestionForm();
-    this.updateFieldsBasedOnType(this.questionForm.get('type')?.value);
     this.getDropDownsData();
   }
 
