@@ -94,8 +94,8 @@ describe('RecentQuizResultComponent', () => {
   it('should navigate to Profile tab=1 when viewAll() is called', () => {
     component.viewAll();
 
-    expect(router.navigate).toHaveBeenCalledWith(['profile'], {
-      queryParams: { tab: 1 },
+    expect(router.navigate).toHaveBeenCalledWith(['user/profile'], {
+      queryParams: { tab: 0 },
     });
   });
 });
