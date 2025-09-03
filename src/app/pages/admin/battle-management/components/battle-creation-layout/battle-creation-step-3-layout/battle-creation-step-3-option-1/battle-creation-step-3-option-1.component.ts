@@ -21,7 +21,7 @@ import {
 import { Subject } from 'rxjs';
 import { DynamicFormField } from '../../../../../../../shared/interfaces/dynamic-form-field.interface';
 import { QuestionType } from '../../../../../../../shared/enums/quiz-management.enum';
-import { quizCRUDMessages } from '../../../../../../../utils/constants';
+import { questionTypes, quizCRUDMessages } from '../../../../../../../utils/constants';
 
 @Component({
   selector: 'app-battle-creation-step-3-option-1',
@@ -80,14 +80,14 @@ export class BattleCreationStep3Option1Component {
   isTrueFalseType(): boolean {
     const selectedTypeId = this.questionForm.get('type')?.value;
     const typeOption = this.questionTypeOptions.find((opt) => opt.value === selectedTypeId);
-    return typeOption?.label.toLowerCase() === 'true/false';
+    return typeOption?.label.toLowerCase() === questionTypes.TRUE_FALSE.toLowerCase();
   }
 
   // Check if selected type is Fill In the Blanks
   isFillInTheBlanksType(): boolean {
     const selectedTypeId = this.questionForm.get('type')?.value;
     const typeOption = this.questionTypeOptions.find((opt) => opt.value === selectedTypeId);
-    return typeOption?.label.toLowerCase() === 'fill in the blank';
+    return typeOption?.label.toLowerCase() === questionTypes.FILL_IN_THE_BLANK.toLowerCase();
   }
 
   /**
@@ -101,7 +101,7 @@ export class BattleCreationStep3Option1Component {
 
     // Correct answer always required
     correctAnswerControl.setValidators([Validators.required]);
-    if (typeLabel === 'true/false') {
+    if (typeLabel === questionTypes.TRUE_FALSE.toLowerCase()) {
       correctAnswerControl.setValidators([Validators.required]);
       correctAnswerControl.setValue(null); // reset
     } else {
@@ -113,7 +113,7 @@ export class BattleCreationStep3Option1Component {
       const control = this.questionForm.get(opt);
       if (!control) return;
 
-      if (typeLabel === 'multiple choice') {
+      if (typeLabel === questionTypes.MULTIPLE_CHOICE.toLowerCase()) {
         control.setValidators([Validators.required]);
       } else {
         control.clearValidators();
@@ -136,9 +136,10 @@ export class BattleCreationStep3Option1Component {
     const alwaysVisible = ['type', 'difficulty', 'questionText', 'correctAnswer'];
     if (alwaysVisible.includes(field.name)) return true;
     if (['option1', 'option2', 'option3', 'option4'].includes(field.name)) {
-      return typeLabel === 'multiple choice';
+      return typeLabel === questionTypes.MULTIPLE_CHOICE.toLowerCase();
     }
-    if (field.name === 'correctAnswer' && typeLabel === 'true/false') return true;
+    if (field.name === 'correctAnswer' && typeLabel === questionTypes.TRUE_FALSE.toLowerCase())
+      return true;
 
     return false;
   }

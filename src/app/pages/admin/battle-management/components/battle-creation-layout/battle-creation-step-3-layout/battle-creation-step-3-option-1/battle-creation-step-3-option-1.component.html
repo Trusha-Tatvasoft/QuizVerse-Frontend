@@ -33,68 +33,71 @@
               </mat-error>
             </mat-form-field>
           } @else {
-            <!-- SELECT -->
-            @if (field.type === 'select') {
-              <mat-form-field
-                appearance="outline"
-                class="w-full custom-form-field"
-                [floatLabel]="'auto'"
-              >
-                <mat-select [formControlName]="field.name" [placeholder]="field.placeholder">
-                  @for (option of field.options; track option) {
-                    <mat-option [value]="option.value">
-                      {{ option.label }}
-                    </mat-option>
-                  }
-                </mat-select>
-                <mat-error>
-                  {{ getErrorQuestionForm(field.name) }}
-                </mat-error>
-              </mat-form-field>
-            }
+            @switch (field.type) {
+              <!-- SELECT -->
+              @case ('select') {
+                <mat-form-field
+                  appearance="outline"
+                  class="w-full custom-form-field"
+                  [floatLabel]="'auto'"
+                >
+                  <mat-select [formControlName]="field.name" [placeholder]="field.placeholder">
+                    @for (option of field.options; track option) {
+                      <mat-option [value]="option.value">
+                        {{ option.label }}
+                      </mat-option>
+                    }
+                  </mat-select>
+                  <mat-error>
+                    {{ getErrorQuestionForm(field.name) }}
+                  </mat-error>
+                </mat-form-field>
+              }
 
-            <!-- TEXTAREA -->
-            @if (field.type === 'textarea') {
-              <mat-form-field
-                appearance="outline"
-                class="w-full custom-form-field-text"
-                [floatLabel]="'auto'"
-              >
-                <textarea
-                  matInput
-                  [formControlName]="field.name"
-                  [placeholder]="field.placeholder"
-                  rows="3"
-                ></textarea>
-                <mat-error>
-                  {{ getErrorQuestionForm(field.name) }}
-                </mat-error>
-              </mat-form-field>
-            }
+              <!-- TEXTAREA -->
+              @case ('textarea') {
+                <mat-form-field
+                  appearance="outline"
+                  class="w-full custom-form-field-text"
+                  [floatLabel]="'auto'"
+                >
+                  <textarea
+                    matInput
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder"
+                    rows="3"
+                  ></textarea>
+                  <mat-error>
+                    {{ getErrorQuestionForm(field.name) }}
+                  </mat-error>
+                </mat-form-field>
+              }
 
-            <!-- TEXT INPUT (default) -->
-            @if (field.type !== 'select' && field.type !== 'textarea') {
-              <mat-form-field
-                appearance="outline"
-                class="w-full custom-form-field"
-                [floatLabel]="'auto'"
-              >
-                <input
-                  matInput
-                  [type]="field.type"
-                  [formControlName]="field.name"
-                  [placeholder]="field.placeholder"
-                  autocomplete="off"
-                />
-                <mat-error>
-                  {{ getErrorQuestionForm(field.name) }}
-                </mat-error>
-              </mat-form-field>
-              @if (isFillInTheBlanksType() && field.name === 'questionText') {
-                <p class="mb-1 text-xs text-gray-500">
-                  Use double curly braces {{ '{{}}' }} where you want the blank to appear in the
-                  question text.
-                </p>
+              <!-- TEXT INPUT (default) -->
+              @default {
+                <mat-form-field
+                  appearance="outline"
+                  class="w-full custom-form-field"
+                  [floatLabel]="'auto'"
+                >
+                  <input
+                    matInput
+                    [type]="field.type"
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder"
+                    autocomplete="off"
+                  />
+                  <mat-error>
+                    {{ getErrorQuestionForm(field.name) }}
+                  </mat-error>
+                </mat-form-field>
+
+                @if (isFillInTheBlanksType() && field.name === 'questionText') {
+                  <p class="mb-1 text-xs text-gray-500">
+                    Use double curly braces {{ '{{}}' }} where you want the blank to appear in the
+                    question text.
+                  </p>
+                }
               }
             }
           }

@@ -511,3 +511,12 @@ export const defaultLogoPath = 'assets/images/logo-small.png';
 // #region user dashboard
 export const valueColor: CardColor = 'black';
 //#endregion
+
+// #region Question Type
+export const questionTypes = {
+  MULTIPLE_CHOICE: 'Multiple Choice',
+  TRUE_FALSE: 'True/False',
+  FILL_IN_THE_BLANK: 'Fill in the Blank',
+  SHORT_ANSWER: 'Short Answer',
+};
+// #endregion
