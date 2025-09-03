@@ -10,17 +10,19 @@ import {
   landingPageFeaturesCardsConfig,
   landingPageContent,
 } from '../configs/landing-page.component.config';
-import { of, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
 import { LandingPageDataService } from '../../../services/user/landing-page/landing-page-data.service';
 import { LandingPageStats } from '../../../shared/interfaces/landing-page-stats.interface';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
 
 describe('LandingPageComponent (Jest)', () => {
   let component: LandingPageComponent;
   let fixture: ComponentFixture<LandingPageComponent>;
   let router: Router;
+  let platformConfig$: BehaviorSubject<any>;
 
   const mockStats: LandingPageStats = {
     activePlayer: 5230,
@@ -34,6 +36,8 @@ describe('LandingPageComponent (Jest)', () => {
   };
 
   beforeEach(async () => {
+    platformConfig$ = new BehaviorSubject<any>(null);
+
     await TestBed.configureTestingModule({
       imports: [
         LandingPageComponent,
@@ -48,6 +52,10 @@ describe('LandingPageComponent (Jest)', () => {
         { provide: LandingPageDataService, useValue: mockLandingPageDataService },
         { provide: SnackbarService, useValue: { showError: jest.fn() } },
         { provide: AuthService, useValue: { logout: jest.fn() } },
+        {
+          provide: PlatformSettingsService,
+          useValue: { platformConfig$: platformConfig$.asObservable() },
+        },
       ],
     }).compileComponents();
 
@@ -105,11 +113,6 @@ describe('LandingPageComponent (Jest)', () => {
     expect(component.landingPageContent.stats[0]).toBeUndefined();
   });
 
-  it('should show platform first letter as logo', () => {
-    const logo = fixture.nativeElement.querySelector('.logo-icon');
-    expect(logo.textContent.trim()).toBe('Q');
-  });
-
   it('should render the updated landing quote', () => {
     const quoteEl = fixture.debugElement.query(By.css('.subtitle'));
     expect(quoteEl.nativeElement.textContent.trim()).toBe(mockStats.quote.trim());
@@ -165,5 +168,13 @@ describe('LandingPageComponent (Jest)', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     expect(snackbarSpy).toHaveBeenCalledWith('Something went wrong.', 'Server error');
+  });
+
+  it('should update landingPageContent.quote and logoPath when config has quote and logo', () => {
+    platformConfig$.next({ quote: 'Custom Quote', logo: 'custom-logo.png' });
+    fixture.detectChanges();
+
+    expect(component.landingPageContent.quote).toBe('Custom Quote');
+    expect(component.logoPath).toBe('custom-logo.png');
   });
 });
