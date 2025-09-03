@@ -3,7 +3,7 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 import { CardInputConfig } from '../../../shared/interfaces/card-component.interface';
 import { CardComponent } from '../../../shared/components/card/card.component';
 import { QuizManagementService } from '../../../services/admin/quiz-management/quiz-management.service';
-import { debounceTime, forkJoin, Subject, takeUntil } from 'rxjs';
+import { debounceTime, forkJoin, map, Subject, takeUntil } from 'rxjs';
 import { QuizManagementSummary } from './interfaces/quiz-management-summary.interface';
 import { CardColor } from '../../../utils/types/card-component.type';
 import { SearchInputComponent } from '../../../shared/components/search-input/search-input.component';
@@ -37,6 +37,17 @@ import { ConfirmationDialogComponent } from '../../../shared/components/confirma
 import { Router } from '@angular/router';
 import { deleteQuizDialog } from './configs/quiz-confirmation-dialog.config';
 import { Navigations } from '../../../shared/enums/navigation';
+import { QuizCreationService } from '../../../services/admin/quiz-management/quiz-creation/quiz-creation.service';
+import {
+  QueOptionsAndAnswers,
+  QuestionOptionResponseDto,
+  QuestionResponseDto,
+  QuestionsList,
+  QuizResponse,
+} from '../../../shared/interfaces/quiz-creation.interface';
+import { QuizPreviewComponent } from './components/quiz-preview/quiz-preview.component';
+import { getTagConfigWithCustomization } from '../../../utils/quiz-crud-common-functions.utils';
+import { DropDownData } from '../../../shared/interfaces/drop-down-data.interface';
 
 @Component({
   selector: 'app-quiz-management',
@@ -58,6 +69,7 @@ export class QuizManagementComponent implements OnInit {
   snackbar = inject(SnackbarService);
   dialog = inject(MatDialog);
   router = inject(Router);
+  quizCreationService = inject(QuizCreationService);
 
   // Header and button configs
   quizConfig = quizManagementHeaderConfig;
@@ -152,6 +164,40 @@ export class QuizManagementComponent implements OnInit {
     return quizManagementCards;
   }
 
+  private getLookupMap(type: DropDownType) {
+    return this.quizCreationService.getDropDownData(type).pipe(
+      map((response) => {
+        const map: Record<number, string> = {};
+        response.data?.forEach((item: DropDownData) => (map[item.id] = item.name));
+        return map;
+      }),
+    );
+  }
+
+  private mapQuestions(
+    questions: QuestionResponseDto[],
+    typeMap: Record<number, string>,
+  ): QuestionsList[] {
+    return questions.map(
+      (q): QuestionsList => ({
+        id: q.id,
+        categoryId: q.categoryId,
+        queDifficultyId: q.queDifficultyId,
+        queText: q.queText,
+        queTypeId: q.queTypeId,
+        queTypeName: typeMap[q.queTypeId],
+        queOptionsAns: q.queOptionsAns?.map(
+          (opt: QuestionOptionResponseDto): QueOptionsAndAnswers => ({
+            id: opt.id,
+            questionId: opt.questionId,
+            key: opt.key,
+            value: opt.value,
+          }),
+        ),
+      }),
+    );
+  }
+
   getFilteredQuiz(): void {
     this.searchSubject.pipe(debounceTime(debounceTimeValue)).subscribe(() => {
       this.pagination.set({ ...this.pagination(), pageNumber: 1 });
@@ -231,6 +277,7 @@ export class QuizManagementComponent implements OnInit {
     const quiz = event.row;
     switch (event.action) {
       case quizActions.VISIBILITY:
+        this.previewQuiz(quiz['id'] as number);
         break;
       case quizActions.EDIT:
         // Encode quiz id to base64 and navigate
@@ -290,6 +337,49 @@ export class QuizManagementComponent implements OnInit {
             err?.error?.message || platformMessages.unavailableMessage,
           );
         },
+      });
+  }
+
+  previewQuiz(quizId: number) {
+    this.quizCreationService
+      .getQuiz(quizId)
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: (res) => {
+          this.openPreview(res.data);
+        },
+        error: (err) => {
+          this.snackbar.showError(err);
+        },
+      });
+  }
+
+  openPreview(quizResponse: QuizResponse) {
+    forkJoin({
+      typeMap: this.getLookupMap(DropDownType.QuestionType),
+      categoryMap: this.getLookupMap(DropDownType.QuizCategory),
+    })
+      .pipe(takeUntil(this.destroy))
+      .subscribe({
+        next: ({ typeMap, categoryMap }) => {
+          const mappedQuestions = this.mapQuestions(quizResponse.questions!, typeMap);
+
+          this.dialog.open(QuizPreviewComponent, {
+            width: '800px',
+            height: '80vh',
+            data: {
+              quizName: quizResponse.name,
+              description: quizResponse.description,
+              tags: [
+                getTagConfigWithCustomization(categoryMap[quizResponse.categoryId], false),
+                getTagConfigWithCustomization(`${quizResponse.totalTime} minutes`, true),
+                getTagConfigWithCustomization(`${quizResponse.totalQuestion} questions`, true),
+              ],
+              questions: mappedQuestions,
+            },
+          });
+        },
+        error: (err) => this.snackbar.showError(err),
       });
   }
 }

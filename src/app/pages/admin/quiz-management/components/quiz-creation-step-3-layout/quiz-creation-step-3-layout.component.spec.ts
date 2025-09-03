@@ -6,6 +6,7 @@ import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { of } from 'rxjs';
 import { DynamicFormField } from '../../../../../shared/interfaces/dynamic-form-field.interface';
+import { quizCRUDMessages } from '../../../../../utils/constants';
 
 describe('QuizCreationStep3LayoutComponent', () => {
   let component: QuizCreationStep3LayoutComponent;
@@ -97,6 +98,12 @@ describe('QuizCreationStep3LayoutComponent', () => {
     expect(component.isTrueFalseType()).toBe(true);
   });
 
+  it('should correctly detect fill in the blanks type', () => {
+    component.questionTypeOptions = [{ value: 1, label: 'Fill in the Blank' }];
+    component.questionForm.get('type')?.setValue(1);
+    expect(component.isFillInTheBlanksType()).toBe(true);
+  });
+
   it('should update fields based on type', () => {
     component.questionTypeOptions = [
       { value: 1, label: 'Multiple Choice' },
@@ -139,6 +146,23 @@ describe('QuizCreationStep3LayoutComponent', () => {
       correctAnswer: ['wrongAnswer'],
       option1: ['opt1'],
       option2: ['opt2'],
+      option3: ['opt3'],
+      option4: ['opt4'],
+    });
+    component.addQuestion();
+    expect(snackbar.showError).toHaveBeenCalled();
+    expect(component.selectedQuestions.length).toBe(0);
+  });
+
+  it('should handle addQuestion MCQ error when not unique options', () => {
+    component.questionTypeOptions = [{ value: 1, label: 'Multiple Choice' }];
+    component.questionForm = new FormBuilder().group({
+      type: [1],
+      difficulty: [1],
+      questionText: ['Test'],
+      correctAnswer: ['wrongAnswer'],
+      option1: ['opt1'],
+      option2: ['opt1'],
       option3: ['opt3'],
       option4: ['opt4'],
     });
@@ -261,7 +285,7 @@ describe('QuizCreationStep3LayoutComponent', () => {
     expect(component.selectedQuestions[0].queOptionsAns![0].value).toBe('True');
   });
 
-  it('should add question for case 3 (Subjective/Fill in the Blank)', () => {
+  it('should add question for case 3 (Short Answer)', () => {
     component.questionTypeOptions = [{ value: 3, label: 'Subjective' }];
     component.questionForm = new FormBuilder().group({
       type: [3],
@@ -274,6 +298,43 @@ describe('QuizCreationStep3LayoutComponent', () => {
 
     expect(component.selectedQuestions.length).toBe(1);
     expect(component.selectedQuestions[0].queOptionsAns![0].value).toBe('Some answer');
+  });
+
+  it('should add FillInTheBlank question with formatted blanks (case 4)', () => {
+    component.questionTypeOptions = [{ value: 4, label: 'Fill in the Blank' }];
+    component.questionForm = new FormBuilder().group({
+      type: [4],
+      difficulty: [1],
+      questionText: ['Q with {{}} inside'],
+      correctAnswer: ['ExpectedAnswer'],
+    });
+
+    component.addQuestion();
+
+    expect(component.selectedQuestions.length).toBe(1);
+    // question text should be formatted with "__________"
+    expect(component.selectedQuestions[0].queText).toContain('__________');
+    // answer should be added
+    expect(component.selectedQuestions[0].queOptionsAns![0].value).toBe('ExpectedAnswer');
+  });
+
+  it('should not add FillInTheBlank question if no placeholder exists (case 4)', () => {
+    const spy = jest.spyOn(component['snackbar'], 'showError');
+
+    component.questionTypeOptions = [{ value: 4, label: 'Fill in the Blank' }];
+    component.questionForm = new FormBuilder().group({
+      type: [4],
+      difficulty: [1],
+      questionText: ['Q without placeholder'],
+      correctAnswer: ['ExpectedAnswer'],
+    });
+
+    component.addQuestion();
+
+    expect(component.selectedQuestions.length).toBe(0);
+    expect(spy).toHaveBeenCalledWith(
+      'Question text must contain at least one "{{}}" placeholder for the blank.',
+    );
   });
 
   it('should not add question for default case (invalid type)', () => {
@@ -307,6 +368,90 @@ describe('QuizCreationStep3LayoutComponent', () => {
     component.updateFieldsBasedOnType(1);
 
     expect(spy).not.toHaveBeenCalled();
+  });
+
+  describe('addQuestion duplicate handling', () => {
+    beforeEach(() => {
+      component.selectedQuestions = [];
+    });
+
+    it('should add a new True/False question if no duplicate text exists', () => {
+      component.questionTypeOptions = [{ value: 2, label: 'True/False' }];
+      component.questionForm = new FormBuilder().group({
+        type: [2],
+        difficulty: [1],
+        questionText: ['Q1'],
+        correctAnswer: [true],
+      });
+
+      component.addQuestion();
+
+      expect(component.selectedQuestions.length).toBe(1);
+      expect(component.selectedQuestions[0].queOptionsAns![0].value).toBe('True');
+    });
+
+    it('should add a new Short Answer question with same text but different type', () => {
+      // Add first True/False with text QX
+      component.selectedQuestions.push({
+        queText: 'QX',
+        queTypeId: 2,
+        queTypeName: 'True/False',
+        queDifficultyId: 2,
+        queDifficultyName: 'Easy',
+        queOptionsAns: [{ id: 1, key: 'answer', value: 'True' }],
+      });
+
+      component.questionTypeOptions = [{ value: 3, label: 'Subjective' }];
+      component.questionForm = new FormBuilder().group({
+        type: [3],
+        difficulty: [1],
+        questionText: ['QX'], // same text, different type
+        correctAnswer: ['Answer'],
+      });
+
+      component.addQuestion();
+
+      expect(component.selectedQuestions.length).toBe(2);
+      expect(component.selectedQuestions[1].queOptionsAns![0].value).toBe('Answer');
+    });
+
+    it('should block adding duplicate FillInTheBlank with same text and type', () => {
+      const spy = jest.spyOn(component['snackbar'], 'showError');
+
+      // Add first FillInTheBlank with text
+      component.selectedQuestions.push({
+        queText: 'Q with __________',
+        queTypeId: 4,
+        queOptionsAns: [{ id: 1, key: 'answer', value: 'Ans' }],
+      });
+
+      component.questionTypeOptions = [{ value: 4, label: 'Fill in the Blank' }];
+      component.questionForm = new FormBuilder().group({
+        type: [4],
+        difficulty: [1],
+        questionText: ['Q with {{}}'], // will format to same text
+        correctAnswer: ['Ans'],
+      });
+
+      component.addQuestion();
+
+      expect(component.selectedQuestions.length).toBe(1);
+      expect(spy).toHaveBeenCalledWith(quizCRUDMessages.duplicateQuestionError);
+    });
+
+    it('should not add invalid type (default case)', () => {
+      component.questionTypeOptions = [{ value: 99, label: 'Invalid' }];
+      component.questionForm = new FormBuilder().group({
+        type: [99],
+        difficulty: [1],
+        questionText: ['Invalid Q'],
+        correctAnswer: ['x'],
+      });
+
+      component.addQuestion();
+
+      expect(component.selectedQuestions.length).toBe(0);
+    });
   });
 
   it('should skip updating when option control does not exist', () => {

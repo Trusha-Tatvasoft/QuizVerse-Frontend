@@ -425,6 +425,18 @@ app-data-table {
   }
 }
 
+.no-data-message {
+  text-align: center;
+  padding: 16px;
+  color: #ff4d4d;
+  font-size: 16px;
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+    padding: 12px;
+  }
+}
+
 /* Width of the scrollbar */
 ::-webkit-scrollbar {
   width: 2px;
@@ -532,5 +544,12 @@ app-data-table {
 .profile-card {
   .mat-mdc-card.mdc-card {
     min-height: 100px !important;
+  }
+}
+
+.featured-quiz-actions app-filled-button {
+  button {
+    display: block;
+    width: 100% !important;
   }
 }

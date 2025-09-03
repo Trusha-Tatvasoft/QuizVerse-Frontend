@@ -27,7 +27,7 @@ import {
 import { QuizCreationService } from '../../../../../services/admin/quiz-management/quiz-creation/quiz-creation.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Navigations } from '../../../../../shared/enums/navigation';
-import { quizCRUDMessages } from '../../../../../utils/constants';
+import { platformMessages, quizCRUDMessages } from '../../../../../utils/constants';
 import { Subject, takeUntil } from 'rxjs';
 import { QuizCreationStep3LayoutComponent } from '../quiz-creation-step-3-layout/quiz-creation-step-3-layout.component';
 import { QuizStatus } from '../../../../../shared/enums/quiz-management.enum';
@@ -270,7 +270,13 @@ export class QuizCreationLayoutComponent {
           this.router.navigate([Navigations.Admin, Navigations.Quizzes]);
         },
         error: (err) => {
-          this.snackbar.showError(err);
+          if (err?.error?.data?.length) {
+            if (err.error.data[0]?.errors?.length) {
+              this.snackbar.showError(err.error.data[0].errors[0]);
+            }
+          } else {
+            this.snackbar.showError(err?.message || platformMessages.unexpectedError);
+          }
         },
       });
   }
@@ -314,7 +320,13 @@ export class QuizCreationLayoutComponent {
           this.router.navigate([Navigations.Admin, Navigations.Quizzes]);
         },
         error: (err) => {
-          this.snackbar.showError(err);
+          if (err?.error?.data?.length) {
+            if (err.error.data[0]?.errors?.length) {
+              this.snackbar.showError(err.error.data[0].errors[0]);
+            }
+          } else {
+            this.snackbar.showError(err?.message || platformMessages.unexpectedError);
+          }
         },
       });
   }

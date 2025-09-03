@@ -362,7 +362,9 @@
     .mat-mdc-form-field-flex {
       .mat-mdc-form-field-icon-prefix {
         display: flex;
-        padding-bottom: 42px;
+        flex-direction: column;
+        align-self: flex-start;
+        padding-top: 8px;
       }
     }
   }
