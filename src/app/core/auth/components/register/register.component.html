@@ -42,6 +42,10 @@
                 [attr.autocomplete]="'off'"
                 [readonly]="isEditMode && field.name === 'email'"
                 required
+                (blur)="
+                  field.name === 'username' && validateUserName();
+                  field.name === 'email' && validateEmail()
+                "
               />
 
               @if (field.type === 'password') {
