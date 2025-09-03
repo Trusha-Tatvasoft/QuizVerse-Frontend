@@ -164,6 +164,12 @@ export class QuizCreationStep3LayoutComponent {
     return typeOption?.label.toLowerCase() === 'true/false';
   }
 
+  isFillInTheBlanksType(): boolean {
+    const selectedTypeId = this.questionForm.get('type')?.value;
+    const typeOption = this.questionTypeOptions.find((opt) => opt.value === selectedTypeId);
+    return typeOption?.label.toLowerCase() === 'fill in the blank';
+  }
+
   updateFieldsBasedOnType(selectedTypeId: number): void {
     const typeOption = this.questionTypeOptions.find((opt) => opt.value === selectedTypeId);
     const typeLabel = typeOption?.label.toLowerCase() || '';
@@ -254,6 +260,11 @@ export class QuizCreationStep3LayoutComponent {
             this.snackbar.showError(quizCRUDMessages.mcqOptionError);
             return;
           }
+          const uniqueOptions = new Set(options.map((opt) => opt?.trim().toLowerCase()));
+          if (uniqueOptions.size !== options.length) {
+            this.snackbar.showError(quizCRUDMessages.notUniqueOptions);
+            return;
+          }
           queOptionsAns = [
             { id: 1, key: 'option', value: formValue.option1 },
             { id: 2, key: 'option', value: formValue.option2 },
@@ -269,7 +280,19 @@ export class QuizCreationStep3LayoutComponent {
           ];
           break;
 
-        case QuestionType.ShortAnswer || QuestionType.FillInTheBlank:
+        case QuestionType.ShortAnswer:
+          queOptionsAns = [{ id: 1, key: 'answer', value: formValue.correctAnswer }];
+          break;
+
+        case QuestionType.FillInTheBlank:
+          const question = formValue.questionText;
+          if (question.includes('{{}}')) {
+            const formattedQuestion = question.replace(/\{\{\}\}/g, '__________');
+            formValue.questionText = formattedQuestion;
+          } else {
+            this.snackbar.showError(quizCRUDMessages.fillInTheBlankFormatError);
+            return;
+          }
           queOptionsAns = [{ id: 1, key: 'answer', value: formValue.correctAnswer }];
           break;
 
@@ -308,6 +331,11 @@ export class QuizCreationStep3LayoutComponent {
 
       if (!this.selectedQuestions.some((q) => q.queText === newQuestion.queText)) {
         this.selectedQuestions.push(newQuestion);
+      } else if (!this.selectedQuestions.some((q) => q.queTypeId === newQuestion.queTypeId)) {
+        this.selectedQuestions.push(newQuestion);
+      } else {
+        this.snackbar.showError(quizCRUDMessages.duplicateQuestionError);
+        return;
       }
 
       this.totalQuestionsSelected = this.selectedQuestions.length;

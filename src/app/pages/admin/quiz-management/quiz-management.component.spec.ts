@@ -19,6 +19,10 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { Navigations } from '../../../shared/enums/navigation';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { QuizCreationService } from '../../../services/admin/quiz-management/quiz-creation/quiz-creation.service';
+import { QuizPreviewComponent } from './components/quiz-preview/quiz-preview.component';
+import { QuizResponse } from '../../../shared/interfaces/quiz-creation.interface';
 
 const mockSummary: QuizManagementSummary = {
   totalQuiz: 10,
@@ -100,6 +104,11 @@ const dialogMock = {
   open: jest.fn(),
 };
 
+const quizCreationServiceMock = {
+  getQuiz: jest.fn(),
+  getDropDownData: jest.fn(),
+};
+
 describe('QuizManagementComponent', () => {
   let component: QuizManagementComponent;
   let fixture: ComponentFixture<QuizManagementComponent>;
@@ -126,6 +135,7 @@ describe('QuizManagementComponent', () => {
         QuizManagementComponent,
         QuizTableComponent,
         MatSelectModule,
+        HttpClientTestingModule,
       ],
       providers: [
         {
@@ -147,6 +157,10 @@ describe('QuizManagementComponent', () => {
         {
           provide: MatDialog,
           useValue: dialogMock,
+        },
+        {
+          provide: QuizCreationService,
+          useValue: quizCreationServiceMock,
         },
       ],
     }).compileComponents();
@@ -404,6 +418,106 @@ describe('QuizManagementComponent', () => {
       component.deleteQuiz(quizId);
 
       expect(snackbarMock.showError).toHaveBeenCalledWith('Error', 'network error');
+    });
+  });
+
+  describe('mapQuestions', () => {
+    it('should map QuestionResponseDto to QuestionsList correctly', () => {
+      const mockQuestions = [
+        {
+          id: 1,
+          categoryId: 2,
+          queDifficultyId: 3,
+          queText: 'Sample Question',
+          queTypeId: 4,
+          queOptionsAns: [{ id: 10, questionId: 1, key: 'A', value: 'Option A' }],
+        },
+      ];
+
+      const typeMap = { 4: 'Multiple Choice' };
+      const result = (component as any).mapQuestions(mockQuestions, typeMap);
+
+      expect(result[0].queTypeName).toBe('Multiple Choice');
+      expect(result[0].queOptionsAns![0].value).toBe('Option A');
+    });
+  });
+
+  describe('getLookupMap', () => {
+    it('should return a map of id to name', (done) => {
+      quizCreationServiceMock.getDropDownData.mockReturnValue(
+        of({ data: [{ id: 1, name: 'Math' }] }),
+      );
+
+      (component as any).getLookupMap(DropDownType.QuizCategory).subscribe((map: any) => {
+        expect(map[1]).toBe('Math');
+        done();
+      });
+    });
+  });
+
+  describe('previewQuiz', () => {
+    it('should call openPreview on success', () => {
+      const quizData = { id: 1, questions: [], name: 'Q1' };
+      quizCreationServiceMock.getQuiz.mockReturnValue(of({ data: quizData }));
+      const spy = jest.spyOn(component as any, 'openPreview').mockImplementation();
+
+      component.previewQuiz(1);
+
+      expect(spy).toHaveBeenCalledWith(quizData);
+    });
+
+    it('should call snackbar on error', () => {
+      quizCreationServiceMock.getQuiz.mockReturnValue(throwError(() => 'error'));
+      component.previewQuiz(1);
+      expect(snackbarMock.showError).toHaveBeenCalledWith('error');
+    });
+  });
+
+  describe('openPreview', () => {
+    it('should open dialog with mapped data on success', () => {
+      quizCreationServiceMock.getDropDownData.mockImplementation((type: DropDownType) => {
+        if (type === DropDownType.QuestionType) return of({ data: [{ id: 1, name: 'MCQ' }] });
+        if (type === DropDownType.QuizCategory) return of({ data: [{ id: 2, name: 'Science' }] });
+        return of({ data: [] });
+      });
+
+      const quizResponse = {
+        name: 'Quiz 1',
+        description: 'Desc',
+        categoryId: 2,
+        totalTime: 30,
+        totalQuestion: 5,
+        questions: [
+          {
+            id: 1,
+            categoryId: 2,
+            queDifficultyId: 1,
+            queText: 'Q1',
+            queTypeId: 1,
+            queOptionsAns: [],
+          },
+        ],
+      };
+
+      component.openPreview(quizResponse as unknown as QuizResponse);
+
+      expect(dialogMock.open).toHaveBeenCalledWith(QuizPreviewComponent, expect.any(Object));
+    });
+
+    it('should call snackbar on error', () => {
+      quizCreationServiceMock.getDropDownData.mockReturnValue(throwError(() => 'network error'));
+
+      component.openPreview({} as any);
+
+      expect(snackbarMock.showError).toHaveBeenCalledWith('network error');
+    });
+  });
+
+  describe('handleQuizAction VISIBILITY', () => {
+    it('should call previewQuiz with quiz id', () => {
+      const spy = jest.spyOn(component, 'previewQuiz').mockImplementation();
+      component.handleQuizAction({ action: quizActions.VISIBILITY, row: { id: 42 } as any });
+      expect(spy).toHaveBeenCalledWith(42);
     });
   });
 });
