@@ -1,1 +1,32 @@
-<p>email-template-preview-dialog works!</p>
+<div class="main-dialog-content">
+  <!-- Header -->
+  <div class="dialog-header mb-3">
+    <h2 mat-dialog-title>Email Template Preview</h2>
+    <span class="dialog-sub-header">View template details</span>
+  </div>
+  <button mat-icon-button class="close-btn" (click)="closeDialog()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <div class="preview-container">
+    <!-- Title -->
+    <h3 class="meta-line">
+      <div>
+        <span class="template-title">Title: </span> <span>{{ templateData.title }}</span>
+      </div>
+      <span
+        class="status"
+        [ngClass]="{ active: templateData.status, inactive: !templateData.status }"
+      >
+        {{ templateData.status ? 'Active' : 'Inactive' }}
+      </span>
+    </h3>
+
+    <div class="template-subject">
+      <span><strong>Subject:</strong> {{ templateData.subject }}</span>
+    </div>
+
+    <!-- Body HTML -->
+    <div class="body" [innerHTML]="safeBody()"></div>
+  </div>
+</div>

@@ -62,7 +62,7 @@
               <app-tag [tagConfig]="battle.timeTag"></app-tag>
             </div>
 
-            <span class="inline-flex gap-1 align-center justify-content h-[20px]">
+            <span class="inline-flex gap-1 align-center justify-content h-[20px] date-range">
               @if (battle.battleTime == 2) {
                 <mat-icon fontSet="material-icons-outlined" class="calender"
                   >calendar_month</mat-icon
@@ -77,12 +77,12 @@
             <app-outline-button
               class="inline-flex pe-5"
               [outlineButtonConfig]="editButtonConfig"
-              (buttonClicked)="editBattle()"
+              (buttonClicked)="editBattle(battle.id)"
             >
             </app-outline-button>
             <app-filled-button
               [filledButtonConfig]="deleteButtonConfig"
-              (buttonClicked)="deleteBattle()"
+              (buttonClicked)="deleteBattleDialog(battle.id)"
             >
             </app-filled-button>
           </div>

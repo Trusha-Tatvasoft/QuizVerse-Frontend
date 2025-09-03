@@ -13,16 +13,3 @@
 .calender {
   font-size: 20px;
 }
-
-.no-data-message {
-  text-align: center;
-  padding: 16px;
-  color: #ff4d4d;
-  font-size: 16px;
-  background-color: white;
-
-  @media (max-width: 480px) {
-    font-size: 14px;
-    padding: 12px;
-  }
-}

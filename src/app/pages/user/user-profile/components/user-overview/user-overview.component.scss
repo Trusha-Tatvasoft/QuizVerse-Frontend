@@ -1,0 +1,107 @@
+.cards-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    border: 0.5px solid #e2e8f0;
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #111;
+    }
+  }
+
+  /* Recent Activity */
+  .recent-activity {
+    .activity-list {
+      list-style: none;
+      font-size: 16px;
+      padding: 0;
+      margin: 0;
+      gap: 1rem;
+
+      li {
+        background: #f9fafc;
+        border-radius: 8px;
+        padding: 10px 14px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .activity-text {
+          color: #222;
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+
+  /* Quick Stats */
+  .quick-stats {
+    .stats-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 16px;
+        line-height: 2.5rem;
+
+        .label {
+          font-weight: 500;
+          color: #333;
+        }
+
+        .value {
+          font-weight: 600;
+          color: #0a1128;
+        }
+      }
+    }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 767px) {
+    .recent-activity {
+      .activity-list {
+        font-size: 14px;
+
+        li {
+          padding: 8px 12px;
+
+          .activity-text {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+
+    .quick-stats {
+      .stats-list {
+        li {
+          font-size: 14px;
+          line-height: 2rem;
+
+          .label,
+          .value {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+}

@@ -252,9 +252,49 @@ export const platformMessages = {
   invalidImageType: 'Only JPG, PNG, and GIF image files are supported!',
   uploadSuccess: 'Profile photo updated successfully!',
   uploadFailed: 'Profile upload failed. Please try again.',
+  loadProfileFailed: 'Failed to load user profile',
+  emailAlreadyVerified: 'Email already verified.',
+  otpLimitReached: 'OTP send limit reached for this email.',
+  otpSendSuccess: 'OTP sent successfully.',
+  otpSendFailed: 'Failed to send OTP.',
+  otpVerifySuccess: 'OTP verified successfully.',
+  otpVerifyFailed: 'OTP verification failed.',
+  profileUpdateSuccess: 'Profile updated successfully.',
+  profileUpdateFailed: 'Update failed.',
+  verifyEmailBeforeSave: 'Please verify your new email before saving.',
+  //#endregion
+
+  //#region BattleManagement Messages
+  battleSaved: 'Battle saved successfully!',
+  battleUpdated: 'Battle updated successfully!',
+  editBattleTitle: 'Edit Battle',
+  editBattleSubtitle: 'Update battle information and settings',
+  minimumNumberOfQuestionError: 'Total questions must be between 5 and 100.',
+  maximumTotalTimeError: 'Total Time must be between 2 minutes and 180 minutes.',
+  minimumTotalXPError: 'Total questions must be greater than 0.',
+  deleteBattleSuccess: 'Battle Deleted Successfully!!',
+  deleteBattleFailure: 'Failed to delete battle',
+  invalideBattleId: 'Invalid battle id',
+  totalQuestionsError: (count: number) =>
+    `You need to select exactly ${count} questions to match your battle settings.`,
+  difficultyWiseQuestionSelectionError: 'Please select the questions as per your battle settings.',
+  battleTitleNotFoundError: 'Battle name not found',
+  //#endregion
+
+  //#region EmailTemplate Messages
+  failedToFetchTemplate: 'Failed to fetch template.',
+  failedToSaveTemplate: 'Failed to save template.',
+  saveTemplateSuccess: 'Template saved successfully.',
   //#endregion
 };
 //#endregion
+
+export const emailTemplateActionMessages = {
+  activated: 'Email template activated successfully',
+  inactivated: 'Email template inactivated successfully',
+  deleted: 'Email template deleted successfully',
+  statusUpdated: 'Email template status updated',
+};
 
 //#region Constant Variables
 export const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
@@ -266,6 +306,7 @@ export const allowedImportQuestionFileTypes = [
   'application/vnd.ms-excel', // .xls
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
 ];
+export const maxOtpAttempts = 2;
 
 export const maxFileUploadSize = 10 * 1024 * 1024;
 
@@ -417,9 +458,11 @@ export const quizCRUDMessages = {
   featureNotAvailable: 'This feature is not available yet. Please select another method.',
   questionCreationMethodSelectError: 'Please select a question creation method.',
   totalQuestionsError: (count: number) =>
-    `Please select the ${count} number of questions as per your quiz settings.`,
+    `You need to select exactly ${count} questions to match your quiz settings.`,
   maxDifficultyQuestionsError: (difficultyLimit: number, difficultyName: string) =>
-    `Max ${difficultyLimit} ${difficultyName} questions allowed.`,
+    difficultyLimit === 0
+      ? `No ${difficultyName} questions allowed.`
+      : `Max ${difficultyLimit} ${difficultyName} questions allowed.`,
   difficultyWiseQuestionSelectionError: 'Please select the questions as per your quiz settings.',
   minimumNumberOfQuestionError: 'Total questions must be at least 5.',
   mcqOptionError: 'Correct answer must match one of the options.',
@@ -428,6 +471,11 @@ export const quizCRUDMessages = {
   questionAdded: 'Question Added!',
   quizTitalNotFoundError: 'Quiz name not found',
   failedToExportQuestions: 'Failed to export questions.',
+  duplicateQuestionError: 'A same question already exists in the list.',
+  notUniqueOptions: 'Options must be unique.',
+  maximumTotalTimeError: 'Total time must be between 2 and 180 minutes.',
+  fillInTheBlankFormatError:
+    'Question text must contain at least one "{{}}" placeholder for the blank.',
 };
 //#endregion
 
@@ -457,7 +505,7 @@ export const emailActions = {
   INACTIVATE: 'remove_circle_outline',
 };
 
-export const EmailTemplatePlaceholdersRequired: Record<EmailTemplateType, string[]> = {
+export const emailTemplatePlaceholdersRequired: Record<EmailTemplateType, string[]> = {
   [EmailTemplateType.AccountSuspension]: ['{{user}}', '{{email}}'],
   [EmailTemplateType.BattleRequest]: ['{{user}}', '{{opponent}}', '{{battleLink}}'],
   [EmailTemplateType.EmailVerification]: ['{{user}}', '{{email}}', '{{verificationLink}}'],
@@ -495,3 +543,12 @@ export const battleRequestMessages = {
 };
 
 //#endregion
+
+// #region Question Type
+export const questionTypes = {
+  MULTIPLE_CHOICE: 'Multiple Choice',
+  TRUE_FALSE: 'True/False',
+  FILL_IN_THE_BLANK: 'Fill in the Blank',
+  SHORT_ANSWER: 'Short Answer',
+};
+// #endregion

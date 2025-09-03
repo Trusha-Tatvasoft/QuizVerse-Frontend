@@ -23,6 +23,7 @@ import { EmailTemplateComponent } from './pages/admin/email-template/email-templ
 import { UserLeaderboardComponent } from './pages/user/user-leaderboard/user-leaderboard.component';
 import { UserProfileComponent } from './pages/user/user-profile/user-profile.component';
 import { PlatformSettingsComponent } from './pages/admin/platform-settings/platform-settings.component';
+import { BattleCreationLayoutComponent } from './pages/admin/battle-management/components/battle-creation-layout/battle-creation-layout.component';
 
 export const routes: Routes = [
   {
@@ -129,6 +130,18 @@ export const routes: Routes = [
         path: Navigations.Settings,
         component: PlatformSettingsComponent,
         title: 'Quizeverse | Platform Settings',
+      },
+      {
+        path: Navigations.BattlesAdmin,
+        title: 'Quizeverse | Battle Management',
+        children: [{ path: Navigations.BattleCreation, component: BattleCreationLayoutComponent }],
+      },
+      {
+        path: Navigations.BattlesAdmin,
+        title: 'Quizeverse | Battle Management',
+        children: [
+          { path: `${Navigations.BattleUpdation}/:id`, component: BattleCreationLayoutComponent },
+        ],
       },
     ],
   },

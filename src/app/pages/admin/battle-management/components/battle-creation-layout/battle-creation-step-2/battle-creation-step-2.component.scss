@@ -1,0 +1,30 @@
+.card-icon-large {
+  font-size: 60px !important;
+  width: 60px !important;
+  height: 60px !important;
+  line-height: 96px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.secondary-icon {
+  color: var(--global-secondary-color);
+}
+
+.primary-icon {
+  color: var(--global-primary-color);
+}
+
+.light-green-icon {
+  color: var(--green-color);
+}
+
+.selected-card {
+  border-color: var(--selected-card-color);
+  border-width: 2px;
+}
+.form-heading {
+  font-size: revert;
+  font-weight: 500;
+}
