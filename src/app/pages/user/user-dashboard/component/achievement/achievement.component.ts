@@ -30,6 +30,11 @@ export class AchievementComponent {
     this.loadUserBadges();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   loadUserBadges(): void {
     this.userProfileService
       .getUserBadges()
@@ -48,11 +53,6 @@ export class AchievementComponent {
   getBadgeClass(badge: UserBadges): string {
     const typeName = BadgeType[badge.badgeType];
     return typeName ? typeName.toLowerCase() : '';
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   viewAllAchievement(): void {

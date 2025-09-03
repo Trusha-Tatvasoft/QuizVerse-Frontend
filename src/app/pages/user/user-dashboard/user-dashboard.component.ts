@@ -43,6 +43,7 @@ export class UserDashboardComponent {
   ngOnInit(): void {
     this.loadDashboardData();
   }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
