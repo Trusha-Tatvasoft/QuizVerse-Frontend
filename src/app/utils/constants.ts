@@ -252,6 +252,16 @@ export const platformMessages = {
   invalidImageType: 'Only JPG, PNG, and GIF image files are supported!',
   uploadSuccess: 'Profile photo updated successfully!',
   uploadFailed: 'Profile upload failed. Please try again.',
+  loadProfileFailed: 'Failed to load user profile',
+  emailAlreadyVerified: 'Email already verified.',
+  otpLimitReached: 'OTP send limit reached for this email.',
+  otpSendSuccess: 'OTP sent successfully.',
+  otpSendFailed: 'Failed to send OTP.',
+  otpVerifySuccess: 'OTP verified successfully.',
+  otpVerifyFailed: 'OTP verification failed.',
+  profileUpdateSuccess: 'Profile updated successfully.',
+  profileUpdateFailed: 'Update failed.',
+  verifyEmailBeforeSave: 'Please verify your new email before saving.',
   //#endregion
 
   //#region BattleManagement Messages
@@ -296,6 +306,7 @@ export const allowedImportQuestionFileTypes = [
   'application/vnd.ms-excel', // .xls
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
 ];
+export const maxOtpAttempts = 2;
 
 export const maxFileUploadSize = 10 * 1024 * 1024;
 
