@@ -447,6 +447,11 @@ export const quizCRUDMessages = {
   questionAdded: 'Question Added!',
   quizTitalNotFoundError: 'Quiz name not found',
   failedToExportQuestions: 'Failed to export questions.',
+  duplicateQuestionError: 'A same question already exists in the list.',
+  notUniqueOptions: 'Options must be unique.',
+  maximumTotalTimeError: 'Total time must be between 2 and 180 minutes.',
+  fillInTheBlankFormatError:
+    'Question text must contain at least one "{{}}" placeholder for the blank.',
 };
 //#endregion
 
@@ -506,3 +511,12 @@ export const defaultLogoPath = 'assets/images/logo-small.png';
 // #region user dashboard
 export const valueColor: CardColor = 'black';
 //#endregion
+
+// #region Question Type
+export const questionTypes = {
+  MULTIPLE_CHOICE: 'Multiple Choice',
+  TRUE_FALSE: 'True/False',
+  FILL_IN_THE_BLANK: 'Fill in the Blank',
+  SHORT_ANSWER: 'Short Answer',
+};
+// #endregion
