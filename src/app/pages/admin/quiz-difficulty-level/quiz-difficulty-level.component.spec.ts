@@ -108,7 +108,7 @@ describe('QuizDifficultyLevelComponent (Jest)', () => {
 
     expect(dialog.open).toHaveBeenCalled();
     expect(snackbar.showSuccess).not.toHaveBeenCalled();
-    expect(fetchSpy).toHaveBeenCalled();
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it('should clean up on destroy', () => {

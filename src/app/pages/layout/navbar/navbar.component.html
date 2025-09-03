@@ -13,7 +13,8 @@
         </mat-icon>
       </button>
     }
-    <div class="flex items-center space-x-2 h-12">
+
+    <div class="flex items-center space-x-2 h-12 cursor-pointer" (click)="navigateToDashboard()">
       <img [src]="logoPath" alt="Platform Logo" class="logo-small" (error)="imageError()" />
       <div class="logo-big">{{ plateformName }}</div>
     </div>
@@ -107,17 +108,19 @@
       </div>
 
       <!-- XP Bar -->
-      <div class="xp-main">
-        @if (!isAdmin) {
-          <div class="xp-section">
-            <div class="xp-label">XP: {{ currentXp }}</div>
-            <app-progress-bar
-              class="custom-xp-bar"
-              [percentage]="(currentXp / xpLimit) * 100"
-            ></app-progress-bar>
-          </div>
-        }
-      </div>
+      @if (!isAdmin) {
+        <div class="xp-main">
+          @if (!isAdmin) {
+            <div class="xp-section">
+              <div class="xp-label">XP: {{ currentXp }}</div>
+              <app-progress-bar
+                class="custom-xp-bar"
+                [percentage]="(currentXp / xpLimit) * 100"
+              ></app-progress-bar>
+            </div>
+          }
+        </div>
+      }
 
       <!-- Profile Menu -->
       <button class="profile-button" [matMenuTriggerFor]="menu">

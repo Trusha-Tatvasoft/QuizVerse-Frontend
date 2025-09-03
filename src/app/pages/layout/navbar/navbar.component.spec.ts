@@ -286,6 +286,55 @@ describe('NavbarComponent', () => {
     expect(component.showNotifications).toBe(true);
   });
 
+  it('should navigate to login if user is not logged in', () => {
+    component.isLogin = false;
+
+    const navSpy = jest.spyOn(component['router'], 'navigate');
+
+    component.navigateToDashboard();
+
+    expect(navSpy).toHaveBeenCalledWith([Navigations.Login]);
+  });
+
+  it('should navigate to admin dashboard for admin role (case-insensitive)', () => {
+    component.isLogin = true;
+    component['authService'].currentRole$ = { value: 'ADMIN' } as any;
+
+    const navSpy = jest.spyOn(component['router'], 'navigate');
+
+    component.navigateToDashboard();
+
+    expect(navSpy).toHaveBeenCalledWith([`/${Navigations.Admin}/${Navigations.Dashboard}`]);
+  });
+
+  it('should navigate to player dashboard for player role (case-insensitive)', () => {
+    component.isLogin = true;
+    component['authService'].currentRole$ = { value: 'PlAyEr' } as any;
+
+    const navSpy = jest.spyOn(component['router'], 'navigate');
+
+    component.navigateToDashboard();
+
+    expect(navSpy).toHaveBeenCalledWith([`/${Navigations.User}/${Navigations.Dashboard}`]);
+  });
+
+  it('should navigate to fallback "/" for unknown, null, or undefined role', () => {
+    const navSpy = jest.spyOn(component['router'], 'navigate');
+
+    component.isLogin = true;
+    component['authService'].currentRole$ = { value: 'unknown' } as any;
+    component.navigateToDashboard();
+    expect(navSpy).toHaveBeenCalledWith(['/']);
+
+    component['authService'].currentRole$ = { value: null } as any;
+    component.navigateToDashboard();
+    expect(navSpy).toHaveBeenCalledWith(['/']);
+
+    component['authService'].currentRole$ = { value: undefined } as any;
+    component.navigateToDashboard();
+    expect(navSpy).toHaveBeenCalledWith(['/']);
+  });
+
   it('should set logoPath to default on imageError()', () => {
     component.logoPath = 'somePath.png';
     component.imageError();

@@ -59,7 +59,6 @@ export class TableComponent implements OnInit, OnChanges {
   @ViewChild(MatSort) sort!: MatSort;
 
   displayedColumns: string[] = [];
-  showPaginator: boolean = false;
 
   ngOnInit() {
     this.setDisplayedColumns();
@@ -71,9 +70,23 @@ export class TableComponent implements OnInit, OnChanges {
       this.setDisplayedColumns();
     }
 
-    // Determine whether to show paginator based on data size
-    if (this.dataSource && Array.isArray(this.dataSource)) {
-      this.showPaginator = this.totalItems > tablePaginationConfig.PageSize;
+    // Sync pageSize with paginator
+    if (changes['pageSize'] && this.paginator) {
+      this.paginator.pageSize = this.pageSize;
+    }
+
+    // Fix paginator when last page is deleted
+    if ((changes['totalItems'] || changes['pageSize']) && this.paginator) {
+      const lastPageIndex = Math.max(Math.ceil(this.totalItems / this.pageSize) - 1, 0);
+
+      if (this.paginator.pageIndex > lastPageIndex) {
+        this.paginator.pageIndex = lastPageIndex;
+
+        this.pageChange.emit({
+          pageIndex: this.paginator.pageIndex,
+          pageSize: this.paginator.pageSize,
+        });
+      }
     }
   }
 
@@ -88,6 +101,8 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   onPageChange(event: PageEvent) {
+    this.pageSize = event.pageSize;
+
     this.pageChange.emit({ pageIndex: event.pageIndex, pageSize: event.pageSize });
   }
 
