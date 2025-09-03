@@ -74,6 +74,9 @@ export class BattleCreationStep3LayoutComponent {
 
   ngOnInit() {
     this.getDropDownsData(); // Load dropdowns from API
+  }
+
+  ngOnViewInit() {
     this.updateSelectedQuestionsTable(); // Initialize selected questions table
     this.updateSelectedQuestionsValidity(); // Check initial validity
   }
