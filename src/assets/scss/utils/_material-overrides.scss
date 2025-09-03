@@ -573,3 +573,10 @@ html {
   --mat-sys-primary: var(--global-primary-color);
   --mat-sys-secondary: var(--global-secondary-color);
 }
+
+// Date Picker button on the date field styling
+.mat-datepicker-toggle {
+  position: relative;
+  left: 15px;
+  top: 3px;
+}

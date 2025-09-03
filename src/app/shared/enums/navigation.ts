@@ -31,4 +31,7 @@ export enum Navigations {
   Unauthorized = 'unauthorized',
 
   QuizCreation = 'quiz-creation',
+
+  BattleCreation = 'battle-creation',
+  BattleUpdation = 'edit-battle',
 }
