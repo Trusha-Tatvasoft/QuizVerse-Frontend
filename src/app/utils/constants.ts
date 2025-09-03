@@ -266,7 +266,7 @@ export const platformMessages = {
   deleteBattleFailure: 'Failed to delete battle',
   invalideBattleId: 'Invalid battle id',
   totalQuestionsError: (count: number) =>
-    `Please select the ${count} number of questions as per your battle settings.`,
+    `You need to select exactly ${count} questions to match your battle settings.`,
   difficultyWiseQuestionSelectionError: 'Please select the questions as per your battle settings.',
   battleTitleNotFoundError: 'Battle name not found',
   //#endregion
@@ -434,7 +434,7 @@ export const quizCRUDMessages = {
   featureNotAvailable: 'This feature is not available yet. Please select another method.',
   questionCreationMethodSelectError: 'Please select a question creation method.',
   totalQuestionsError: (count: number) =>
-    `Please select the ${count} number of questions as per your quiz settings.`,
+    `You need to select exactly ${count} questions to match your quiz settings.`,
   maxDifficultyQuestionsError: (difficultyLimit: number, difficultyName: string) =>
     difficultyLimit === 0
       ? `No ${difficultyName} questions allowed.`

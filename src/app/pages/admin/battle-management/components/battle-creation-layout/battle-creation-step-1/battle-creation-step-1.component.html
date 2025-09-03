@@ -43,46 +43,55 @@
               [floatLabel]="'auto'"
               [ngClass]="field.type === 'textarea' ? 'custom-form-field-text' : 'custom-form-field'"
             >
-              @if (field.type === 'select') {
-                <mat-select
-                  [id]="field.name"
-                  [formControlName]="field.name"
-                  [placeholder]="field.placeholder"
-                >
-                  @for (option of field.options ?? []; track option.value) {
-                    <mat-option [value]="option.value">{{ option.label }}</mat-option>
-                  }
-                </mat-select>
-              } @else if (field.type === 'textarea') {
-                <textarea
-                  matInput
-                  [id]="field.name"
-                  [formControlName]="field.name"
-                  [placeholder]="field.placeholder"
-                  rows="3"
-                  class="text-area-height"
-                ></textarea>
-              } @else if (field.type === 'date') {
-                <input
-                  matInput
-                  [id]="field.name"
-                  [formControlName]="field.name"
-                  [placeholder]="field.placeholder"
-                  [matDatepicker]="picker"
-                  autocomplete="off"
-                />
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-              } @else {
-                <input
-                  matInput
-                  [id]="field.name"
-                  [type]="field.type"
-                  [formControlName]="field.name"
-                  [placeholder]="field.placeholder"
-                  autocomplete="off"
-                />
+              @switch (field.type) {
+                @case ('select') {
+                  <mat-select
+                    [id]="field.name"
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder"
+                  >
+                    @for (option of field.options ?? []; track option.value) {
+                      <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                    }
+                  </mat-select>
+                }
+
+                @case ('textarea') {
+                  <textarea
+                    matInput
+                    [id]="field.name"
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder"
+                    rows="3"
+                    class="text-area-height"
+                  ></textarea>
+                }
+
+                @case ('date') {
+                  <input
+                    matInput
+                    [id]="field.name"
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder"
+                    [matDatepicker]="picker"
+                    autocomplete="off"
+                  />
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                }
+
+                @default {
+                  <input
+                    matInput
+                    [id]="field.name"
+                    [type]="field.type"
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder"
+                    autocomplete="off"
+                  />
+                }
               }
+
               <mat-error>
                 {{ getError(field.name) }}
               </mat-error>

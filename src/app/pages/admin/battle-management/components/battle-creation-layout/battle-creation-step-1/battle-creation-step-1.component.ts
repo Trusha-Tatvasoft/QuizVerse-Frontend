@@ -163,28 +163,8 @@ export class BattleCreationStep1Component {
     }
 
     // Build payload
+    const payload: BattleStep1Data = this.setBattleStep1Data(this.newBattleForm);
     const val = this.newBattleForm.value;
-    const battleCategoryId = val.battleCategory;
-    const battleCategoryField = this.newBattleFields.find((f) => f.name === 'battleCategory');
-    const battleCategoryName =
-      battleCategoryField?.options?.find((opt) => opt.value === battleCategoryId)?.label || '';
-
-    const payload: BattleStep1Data = {
-      ...val,
-      name: val.battleTitle,
-      categoryId: val.battleCategory,
-      difficultyLevelId: val.difficultyLevel,
-      difficultyLevelName:
-        this.battleDifficultyOption.find((opt) => opt.value === val.difficultyLevel)?.label || '',
-      battleType: val.battleType,
-      battleTypeName:
-        this.battleTypeOption.find((opt) => opt.value === val.battleType)?.label || '',
-      totalQuestion: this.totalQuestionsStep1,
-      totalTime: this.totalTimeStep1,
-      totalXp: this.totalXPStep1,
-      battleCategoryName,
-      questionsDifficulty: this.buildQuestionsDifficulty(),
-    };
 
     // Add start/end date only for TimeLimited type
     if (val.battleType === BattleTimeType.TimeLimited) {
@@ -232,17 +212,16 @@ export class BattleCreationStep1Component {
   }
 
   /**
-   * Emit initial form state (for parent component)
+   * Build BattleStep1Data from form values
    */
-  private emitInitialFormState(): void {
-    const val = this.newBattleForm.value;
-    const categoryId = val.battleCategory;
+  private setBattleStep1Data(formGroup: FormGroup): BattleStep1Data {
+    const val = formGroup.value;
+    const battleCategoryId = val.battleCategory;
+    const battleCategoryField = this.newBattleFields.find((f) => f.name === 'battleCategory');
+    const battleCategoryName =
+      battleCategoryField?.options?.find((opt) => opt.value === battleCategoryId)?.label || '';
 
-    const categoryField = this.newBattleFields.find((f) => f.name === 'battleCategory');
-    const categoryName =
-      categoryField?.options?.find((opt) => opt.value === categoryId)?.label || '';
-
-    const formData: BattleStep1Data = {
+    return {
       ...val,
       name: val.battleTitle,
       categoryId: val.battleCategory,
@@ -255,9 +234,18 @@ export class BattleCreationStep1Component {
       totalQuestion: this.totalQuestionsStep1,
       totalTime: this.totalTimeStep1,
       totalXp: this.totalXPStep1,
-      battleCategoryName: categoryName,
+      battleCategoryName,
       questionsDifficulty: this.buildQuestionsDifficulty(),
     };
+  }
+
+  /**
+   * Emit initial form state (for parent component)
+   */
+  private emitInitialFormState(): void {
+    const val = this.newBattleForm.value;
+
+    const formData: BattleStep1Data = this.setBattleStep1Data(this.newBattleForm);
 
     // Add dates only if TimeLimited
     if (val.battleType === BattleTimeType.TimeLimited) {
