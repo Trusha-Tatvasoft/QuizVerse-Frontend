@@ -270,8 +270,21 @@ export const platformMessages = {
   difficultyWiseQuestionSelectionError: 'Please select the questions as per your battle settings.',
   battleTitleNotFoundError: 'Battle name not found',
   //#endregion
+
+  //#region EmailTemplate Messages
+  failedToFetchTemplate: 'Failed to fetch template.',
+  failedToSaveTemplate: 'Failed to save template.',
+  saveTemplateSuccess: 'Template saved successfully.',
+  //#endregion
 };
 //#endregion
+
+export const emailTemplateActionMessages = {
+  activated: 'Email template activated successfully',
+  inactivated: 'Email template inactivated successfully',
+  deleted: 'Email template deleted successfully',
+  statusUpdated: 'Email template status updated',
+};
 
 //#region Constant Variables
 export const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
@@ -481,7 +494,7 @@ export const emailActions = {
   INACTIVATE: 'remove_circle_outline',
 };
 
-export const EmailTemplatePlaceholdersRequired: Record<EmailTemplateType, string[]> = {
+export const emailTemplatePlaceholdersRequired: Record<EmailTemplateType, string[]> = {
   [EmailTemplateType.AccountSuspension]: ['{{user}}', '{{email}}'],
   [EmailTemplateType.BattleRequest]: ['{{user}}', '{{opponent}}', '{{battleLink}}'],
   [EmailTemplateType.EmailVerification]: ['{{user}}', '{{email}}', '{{verificationLink}}'],

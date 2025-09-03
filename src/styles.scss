@@ -200,6 +200,17 @@ $custom-typography: mat.m2-define-typography-config(
   }
 }
 
+.dialog-actions {
+  @media (max-width: 400px) {
+    .custom-btn {
+      width: 100%;
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
 // action buttons of table
 app-data-table {
   .table-responsive {
