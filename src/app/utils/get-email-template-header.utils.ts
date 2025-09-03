@@ -31,3 +31,7 @@ export const getEmailTemplateHtml = (bodyContent: string): string => `
     </div>
 </div> 
 `;
+
+export const hasEmailTemplateWrapper = (bodyContent: string): boolean => {
+  return bodyContent.includes('QuizVerse') && bodyContent.includes('AI-Powered Quiz Platform');
+};

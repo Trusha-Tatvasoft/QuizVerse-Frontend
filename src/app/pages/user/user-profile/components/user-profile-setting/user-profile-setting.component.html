@@ -1,1 +1,100 @@
-<p>user-profile-setting works!</p>
+<div class="form-wrapper">
+  <div class="section-header">
+    <h2 class="title">Profile Settings</h2>
+    <p class="subtitle">Update your profile information</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="saveChanges()">
+    <div>
+      @for (field of fields; track field.name) {
+        @if (field.name !== 'otp' || otpSent()) {
+          <div [ngClass]="field.gridClass || 'col-span-1'">
+            <mat-label class="block mb-1 font-medium text-gray-700">
+              {{ field.label }}
+            </mat-label>
+
+            @if (field.type === 'textarea') {
+              <mat-form-field appearance="outline" class="custom-form-field-text full-width">
+                <mat-icon matPrefix fontSet="material-icons-outlined" class="mt-3">
+                  {{ field.icon || 'edit' }}
+                </mat-icon>
+                <textarea
+                  matInput
+                  [formControlName]="field.name"
+                  [placeholder]="field.placeholder"
+                  class="custom-input-field"
+                ></textarea>
+                @if (form.get(field.name)?.touched && form.get(field.name)?.invalid) {
+                  <mat-error>{{ getError(field.name) }}</mat-error>
+                }
+              </mat-form-field>
+            } @else {
+              <div class="form-field-wrapper">
+                <mat-form-field class="custom-form-field flex-1" appearance="outline">
+                  <mat-icon matPrefix fontSet="material-icons-outlined">
+                    {{ field.icon || 'edit' }}
+                  </mat-icon>
+                  <input
+                    matInput
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder"
+                    [type]="field.type"
+                    autocomplete="off"
+                    class="custom-input-field"
+                    (blur)="field.name === 'email' && validateEmail()"
+                  />
+                  @if (form.get(field.name)?.touched && form.get(field.name)?.invalid) {
+                    <mat-error>{{ getError(field.name) }}</mat-error>
+                  }
+                </mat-form-field>
+
+                @if (field.name === 'email') {
+                  @if (countdown() > 0) {
+                    <div class="resend-otp-timer">Resend OTP in {{ countdown() }}s</div>
+                  } @else {
+                    @if (isOtpLimitReached()) {
+                      <mat-tooltip [matTooltip]="'OTP limit reached.'">
+                        <div class="btn-container">
+                          <app-outline-button
+                            class="otp-btn"
+                            [outlineButtonConfig]="otpButtonConfig()"
+                            (click)="sendOrResendOtp()"
+                          ></app-outline-button>
+                        </div>
+                      </mat-tooltip>
+                    } @else {
+                      <div class="btn-container">
+                        <app-outline-button
+                          class="otp-btn"
+                          [outlineButtonConfig]="otpButtonConfig()"
+                          (click)="sendOrResendOtp()"
+                        ></app-outline-button>
+                      </div>
+                    }
+                  }
+                }
+                @if (field.name === 'otp' && otpSent()) {
+                  <div class="btn-container">
+                    <app-outline-button
+                      class="otp-btn"
+                      [outlineButtonConfig]="verifyOtpBtn"
+                      (click)="verifyOtp()"
+                    ></app-outline-button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+
+    <div class="dialog-actions mt-2">
+      <app-filled-button [filledButtonConfig]="submitBtn" type="submit"></app-filled-button>
+      <app-outline-button
+        [outlineButtonConfig]="cancelBtn"
+        (click)="cancelChanges()"
+      ></app-outline-button>
+    </div>
+  </form>
+</div>

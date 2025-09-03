@@ -1,1 +1,89 @@
-<p>battle-creation-step-3-option-2 works!</p>
+<div>
+  <div class="flex items-center justify-between mb-4">
+    <h4 class="form-heading">Select from Question Pool</h4>
+    <app-outline-button
+      [outlineButtonConfig]="changeMethodButton"
+      class="min-width-btn"
+      (buttonClicked)="closeOption()"
+    ></app-outline-button>
+  </div>
+
+  <div class="flex flex-col sm:flex-row gap-4 w-full mb-3">
+    <div class="w-full sm:w-1/2">
+      <app-search-input
+        [placeholder]="searchInputConfig.placeholder"
+        [control]="searchControl"
+        (search)="searchInputChangeOption2($event)"
+        class="user-management-search-bar w-full"
+      ></app-search-input>
+    </div>
+
+    <!-- Difficulty Filter -->
+    <div class="w-full sm:w-1/2">
+      <mat-form-field appearance="outline" class="filter-select w-full">
+        <mat-select
+          (selectionChange)="filterChangeOption2()"
+          placeholder="All Question Difficulties"
+          [(value)]="selectedDifficulty"
+        >
+          <mat-option [value]="''">All Question Difficulties</mat-option>
+          @for (status of questionDifficultyOption; track status.value) {
+            <mat-option [value]="status.value">{{ status.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- questions -->
+  @if (dataSource().length > 0) {
+    @for (q of dataSource(); track q) {
+      <div class="border border-gray-200 rounded-lg p-4 hover:shadow-sm my-2">
+        <div class="flex items-start gap-3">
+          <!-- Checkbox -->
+          <span
+            matTooltip="Maximum question reached in this difficulty"
+            [matTooltipDisabled]="!isQuestionDisabled(q)"
+          >
+            <mat-checkbox
+              class="scale-80 mt-1"
+              [value]="'{{q.id}}'"
+              [checked]="isQuestionSelected(q.id)"
+              [disabled]="isQuestionDisabled(q)"
+              (change)="questionSelect(q.id, $event.checked)"
+            >
+            </mat-checkbox>
+          </span>
+
+          <!-- Question Text + Tags -->
+          <div class="flex flex-col flex-1">
+            <!-- Question text -->
+            <div class="text-gray-900 font-medium leading-tight">
+              {{ q.queText }}
+            </div>
+
+            <!-- Tags -->
+            <div class="flex flex-wrap gap-2 mt-1">
+              <app-tag [tagConfig]="getTypeTagConfigWithLabelInCS(q.queTypeName)"></app-tag>
+              <app-tag [tagConfig]="getTagConfigWithDifficultyInCS(q.queDifficultyName)"></app-tag>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  } @else {
+    <div class="text-black-500 text-center my-6">No data available</div>
+  }
+
+  <!-- pagination-container -->
+  <div class="pagination-container">
+    <mat-paginator
+      class="custom-paginator"
+      [length]="totalItems()"
+      [pageSize]="pagination().pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      [showFirstLastButtons]="true"
+      (page)="pageChangeOption2($event)"
+    ></mat-paginator>
+  </div>
+</div>

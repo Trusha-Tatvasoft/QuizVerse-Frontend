@@ -252,6 +252,16 @@ export const platformMessages = {
   invalidImageType: 'Only JPG, PNG, and GIF image files are supported!',
   uploadSuccess: 'Profile photo updated successfully!',
   uploadFailed: 'Profile upload failed. Please try again.',
+  loadProfileFailed: 'Failed to load user profile',
+  emailAlreadyVerified: 'Email already verified.',
+  otpLimitReached: 'OTP send limit reached for this email.',
+  otpSendSuccess: 'OTP sent successfully.',
+  otpSendFailed: 'Failed to send OTP.',
+  otpVerifySuccess: 'OTP verified successfully.',
+  otpVerifyFailed: 'OTP verification failed.',
+  profileUpdateSuccess: 'Profile updated successfully.',
+  profileUpdateFailed: 'Update failed.',
+  verifyEmailBeforeSave: 'Please verify your new email before saving.',
   //#endregion
 
   //#region BattleManagement Messages
@@ -270,8 +280,21 @@ export const platformMessages = {
   difficultyWiseQuestionSelectionError: 'Please select the questions as per your battle settings.',
   battleTitleNotFoundError: 'Battle name not found',
   //#endregion
+
+  //#region EmailTemplate Messages
+  failedToFetchTemplate: 'Failed to fetch template.',
+  failedToSaveTemplate: 'Failed to save template.',
+  saveTemplateSuccess: 'Template saved successfully.',
+  //#endregion
 };
 //#endregion
+
+export const emailTemplateActionMessages = {
+  activated: 'Email template activated successfully',
+  inactivated: 'Email template inactivated successfully',
+  deleted: 'Email template deleted successfully',
+  statusUpdated: 'Email template status updated',
+};
 
 //#region Constant Variables
 export const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
@@ -283,6 +306,7 @@ export const allowedImportQuestionFileTypes = [
   'application/vnd.ms-excel', // .xls
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
 ];
+export const maxOtpAttempts = 2;
 
 export const maxFileUploadSize = 10 * 1024 * 1024;
 
@@ -481,7 +505,7 @@ export const emailActions = {
   INACTIVATE: 'remove_circle_outline',
 };
 
-export const EmailTemplatePlaceholdersRequired: Record<EmailTemplateType, string[]> = {
+export const emailTemplatePlaceholdersRequired: Record<EmailTemplateType, string[]> = {
   [EmailTemplateType.AccountSuspension]: ['{{user}}', '{{email}}'],
   [EmailTemplateType.BattleRequest]: ['{{user}}', '{{opponent}}', '{{battleLink}}'],
   [EmailTemplateType.EmailVerification]: ['{{user}}', '{{email}}', '{{verificationLink}}'],
@@ -511,3 +535,12 @@ export const defaultLogoPath = 'assets/images/logo-small.png';
 // #region user dashboard
 export const valueColor: CardColor = 'black';
 //#endregion
+
+// #region Question Type
+export const questionTypes = {
+  MULTIPLE_CHOICE: 'Multiple Choice',
+  TRUE_FALSE: 'True/False',
+  FILL_IN_THE_BLANK: 'Fill in the Blank',
+  SHORT_ANSWER: 'Short Answer',
+};
+// #endregion
