@@ -1,1 +1,34 @@
-<p>user-dashboard works!</p>
+<div class="dashboard-layout admin-management-page">
+  <h2 class="admin-page-heading">Dashboard</h2>
+
+  <div class="dashboard-body">
+    <div class="dashboard-main">
+      <!-- Welcome Banner Component -->
+      <app-welcome-banner [userDetails]="bannerData"> </app-welcome-banner>
+
+      <div class="stats-grid">
+        @for (config of quizStatsConfigs; track config.title) {
+          <app-card [cardConfig]="config"></app-card>
+        }
+      </div>
+
+      <div class="dashboard-grid">
+        <section class="dashboard-section">
+          <app-recent-quiz-result></app-recent-quiz-result>
+        </section>
+        <section class="dashboard-section">
+          <app-battle-request></app-battle-request>
+        </section>
+        <section class="dashboard-section featured">
+          <app-featured-quiz></app-featured-quiz>
+        </section>
+        <section class="dashboard-section">
+          <app-rank-progress-card> </app-rank-progress-card>
+        </section>
+        <section class="dashboard-section">
+          <app-achievement></app-achievement>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>

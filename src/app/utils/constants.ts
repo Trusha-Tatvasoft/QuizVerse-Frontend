@@ -1,6 +1,7 @@
 import { EmailTemplateType } from '../shared/enums/email-template.enum';
 import { Navigations } from '../shared/enums/navigation';
 import { TagInputConfig } from '../shared/interfaces/tag-component.interface';
+import { CardColor } from './types/card-component.type';
 import { TagColor, TagType } from './types/tag-component.type';
 
 //#region snackbar - constant
@@ -474,4 +475,8 @@ export const plateformSettingCRUDMessages = {
 };
 
 export const defaultLogoPath = 'assets/images/logo-small.png';
+//#endregion
+
+// #region user dashboard
+export const valueColor: CardColor = 'black';
 //#endregion

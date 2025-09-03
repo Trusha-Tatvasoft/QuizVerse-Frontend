@@ -1,1 +1,15 @@
-<p>welcome-banner works!</p>
+<div class="welcome-banner">
+  <div class="content">
+    <h2 class="title">Welcome back, {{ userDetails.userName }}! 🎉</h2>
+
+    <p class="subtitle">
+      Ready to challenge your knowledge? You're currently ranked
+      <strong>#{{ userDetails.currentRank }}</strong> globally!
+    </p>
+
+    <div class="user-dashboard-actions">
+      <app-filled-button [filledButtonConfig]="quickBattleConfig"></app-filled-button>
+      <app-filled-button [filledButtonConfig]="browseQuizzesConfig"></app-filled-button>
+    </div>
+  </div>
+</div>
