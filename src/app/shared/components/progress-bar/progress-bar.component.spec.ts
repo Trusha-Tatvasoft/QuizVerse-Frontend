@@ -37,7 +37,14 @@ describe('ProgressBarComponent', () => {
   it('should set CSS variables on ngOnInit', () => {
     component.percentage = 75;
     component.theme = 'secondary';
-    component.ngOnInit();
+    component.ngOnChanges({
+      percentage: {
+        currentValue: 80,
+        previousValue: 50,
+        firstChange: false,
+        isFirstChange: () => false,
+      },
+    });
     const style = nativeElement.style;
     expect(style.getPropertyValue('--progress-bar-percentage')).toBe('75%');
     expect(style.getPropertyValue('--progress-bar-color')).toBe('var(--global-secondary-color)');

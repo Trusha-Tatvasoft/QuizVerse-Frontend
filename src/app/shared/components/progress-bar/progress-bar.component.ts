@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, Input } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-progress-bar',
@@ -8,14 +8,16 @@ import { Component, ElementRef, inject, Input } from '@angular/core';
   templateUrl: './progress-bar.component.html',
   styleUrls: ['./progress-bar.component.scss'],
 })
-export class ProgressBarComponent {
+export class ProgressBarComponent implements OnChanges {
   @Input() percentage: number = 50;
   @Input() theme: 'primary' | 'secondary' = 'primary';
 
   private readonly elRef = inject(ElementRef);
 
-  ngOnInit() {
-    this.setCSSVariables();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['percentage'] || changes['theme']) {
+      this.setCSSVariables();
+    }
   }
 
   //set progressbar color as per input color
