@@ -19,6 +19,7 @@ import { plateformName, platformMessages } from '../../../utils/constants';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { LoaderService } from '../../../shared/service/loader/loader.service';
+import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -27,11 +28,6 @@ import { LoaderService } from '../../../shared/service/loader/loader.service';
   styleUrl: './landing-page.component.scss',
 })
 export class LandingPageComponent implements OnInit, OnDestroy {
-  private readonly router = inject(Router);
-  private readonly landingPageDataService = inject(LandingPageDataService);
-  private readonly snackbarService = inject(SnackbarService);
-  private readonly loaderService = inject(LoaderService);
-
   landingPageContent = landingPageContent;
   quizFeatures = landingPageFeaturesCardsConfig;
   startPlayButton = startPlayButton;
@@ -39,15 +35,41 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   joinPlatFormButton = joinPlatformButton;
   plateformName = plateformName;
   stats: LandingPageStats;
+  logoPath: string;
+
+  private readonly router = inject(Router);
+  private readonly landingPageDataService = inject(LandingPageDataService);
+  private readonly snackbarService = inject(SnackbarService);
+  private readonly loaderService = inject(LoaderService);
+  private readonly platformSettingsService = inject(PlatformSettingsService);
+
   private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
     this.loadLandingPageStats();
+    this.loadPlatformConfig();
+  }
+
+  browseQuizRedirect() {
+    this.router.navigate([Navigations.BrowseQuizzes]);
+  }
+
+  loginRedirect(): void {
+    this.router.navigate([Navigations.Login]);
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private loadPlatformConfig(): void {
+    this.platformSettingsService.platformConfig$.subscribe((config) => {
+      if (config) {
+        this.landingPageContent.quote = config!.quote;
+        this.logoPath = config!.logo ?? 'assets/logo-small.png';
+      }
+    });
   }
 
   private loadLandingPageStats(): void {
@@ -92,13 +114,5 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     } else {
       return `${num}`;
     }
-  }
-
-  browseQuizRedirect() {
-    this.router.navigate([Navigations.BrowseQuizzes]);
-  }
-
-  loginRedirect(): void {
-    this.router.navigate([Navigations.Login]);
   }
 }
