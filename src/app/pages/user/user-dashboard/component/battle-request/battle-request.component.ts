@@ -30,7 +30,7 @@ export class BattleRequestComponent implements OnInit {
   requests: BattleRequestWithProfile[] = [];
   acceptButton = acceptButtonConfig;
   declineButton = declineButtonConfig;
-  dashboardService = inject(UserDashboardService);
+  private readonly dashboardService = inject(UserDashboardService);
   private readonly snackBarService = inject(SnackbarService);
   private readonly destroy$ = new Subject<void>();
 

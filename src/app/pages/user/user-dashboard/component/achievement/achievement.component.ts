@@ -7,18 +7,23 @@ import { BadgeType } from '../../../../../shared/enums/user-profile.enum';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { TagComponent } from '../../../../../shared/components/tag/tag.component';
+import { TextButtonComponent } from '../../../../../shared/components/text-button/text-button.component';
+import { Navigations } from '../../../../../shared/enums/navigation';
+import { Router } from '@angular/router';
+import { viewAllAchievementButtonConfig } from '../../configs/dashboard-buttons.config';
 
 @Component({
   selector: 'app-achievement',
-  imports: [MatIconModule, CommonModule, TagComponent],
+  imports: [MatIconModule, CommonModule, TagComponent, TextButtonComponent],
   templateUrl: './achievement.component.html',
   styleUrl: './achievement.component.scss',
 })
 export class AchievementComponent {
   badges: UserBadges[] = [];
+  viewAllAchievementButton = viewAllAchievementButtonConfig;
 
   private readonly userProfileService = inject(UserProfileService);
-
+  private readonly router = inject(Router);
   private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
@@ -48,5 +53,10 @@ export class AchievementComponent {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  viewAllAchievement(): void {
+    const route = `${Navigations.User}/${Navigations.Profile}`;
+    this.router.navigate([route], { queryParams: { tab: 1 } });
   }
 }

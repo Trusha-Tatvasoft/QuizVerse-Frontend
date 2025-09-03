@@ -61,7 +61,7 @@ export class RecentQuizResultComponent implements OnInit {
   }
 
   viewAll(): void {
-    const route = `${Navigations.Profile}`;
-    this.router.navigate([route], { queryParams: { tab: 1 } });
+    const route = `${Navigations.User}/${Navigations.Profile}`;
+    this.router.navigate([route], { queryParams: { tab: 0 } });
   }
 }
