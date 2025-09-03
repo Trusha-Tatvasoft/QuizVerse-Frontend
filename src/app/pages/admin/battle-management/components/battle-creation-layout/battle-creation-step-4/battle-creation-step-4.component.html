@@ -61,26 +61,30 @@
 <div>
   <h3 class="text-lg font-semibold mb-4">Questions</h3>
   <div class="max-h-150 overflow-y-auto pr-2">
-    @for (q of selectedQuestions; track $index) {
+    @for (question of selectedQuestions; track $index) {
       <div class="border border-gray-200 rounded-lg p-4 hover:shadow-sm my-2">
         <!-- Question number and text -->
-        <div class="text-gray-900 font-semibold">{{ $index + 1 }}. {{ q.queText }}</div>
+        <div class="text-gray-900 font-semibold">{{ $index + 1 }}. {{ question.queText }}</div>
 
         <!-- Tags -->
         <div class="flex flex-wrap gap-2 mt-2">
-          <app-tag [tagConfig]="getTypeTagConfigWithLabelInCS(q.queTypeName!)"></app-tag>
-          <app-tag [tagConfig]="getTagConfigWithDifficultyInCS(q.queDifficultyName!)"></app-tag>
+          <app-tag [tagConfig]="getTypeTagConfigWithLabelInCS(question.queTypeName!)"></app-tag>
+          <app-tag
+            [tagConfig]="getTagConfigWithDifficultyInCS(question.queDifficultyName!)"
+          ></app-tag>
         </div>
 
         <!-- MCQ options -->
-        @if (q.queTypeName === 'Multiple Choice') {
+        @if (question.queTypeName === 'Multiple Choice') {
           <div class="mt-2 text-sm text-gray-700">
-            <span class="font-medium">Options:</span> {{ getMCQOptions(q) }}
+            <span class="font-medium">Options:</span> {{ getMCQOptions(question) }}
           </div>
         }
 
         <!-- Answer -->
-        <div class="mt-1 text-sm font-semibold text-green-600">Answer: {{ getAnswer(q) }}</div>
+        <div class="mt-1 text-sm font-semibold text-green-600">
+          Answer: {{ getAnswer(question) }}
+        </div>
       </div>
     }
   </div>
