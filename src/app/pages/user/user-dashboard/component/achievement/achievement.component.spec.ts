@@ -102,7 +102,7 @@ describe('AchievementComponent', () => {
     fixture.detectChanges();
 
     const badgeElements = fixture.nativeElement.querySelectorAll('.badge-item');
-    expect(badgeElements.length).toBe(4);
+    expect(badgeElements.length).toBe(3);
     expect(badgeElements[0].querySelector('h4').textContent).toContain('First Win');
   });
 

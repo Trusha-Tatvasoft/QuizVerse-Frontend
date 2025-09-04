@@ -67,10 +67,12 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 15px;
-      height: 342px;
       overflow-y: auto;
-      margin-top: 0.75rem;
-
+      margin-top: 1rem;
+      @media (max-width: 450px) {
+        max-height: 325px;
+        overflow-y: auto;
+      }
       .badge-item {
         display: flex;
         align-items: center;

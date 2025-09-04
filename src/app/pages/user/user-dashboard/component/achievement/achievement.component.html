@@ -16,7 +16,7 @@
     </div>
 
     <div class="badge-list">
-      @for (badge of badges | slice: 0 : 4; track badge.badgeId) {
+      @for (badge of badges | slice: 0 : 3; track badge.badgeId) {
         <div
           class="badge-item"
           [ngClass]="[badge.earned ? 'earned' : 'locked', getBadgeClass(badge)]"
