@@ -126,6 +126,12 @@
                     {{ getErrorQuestionForm(field.name) }}
                   </mat-error>
                 </mat-form-field>
+                @if (isFillInTheBlanksType() && field.name === 'questionText') {
+                  <p class="mb-1 text-xs text-gray-500">
+                    Use double curly braces {{ '{{}}' }} where you want the blank to appear in the
+                    question text.
+                  </p>
+                }
               }
             }
           </div>

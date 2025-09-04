@@ -284,12 +284,16 @@ export class QuizCreationStep1Component {
       return false;
     }
 
-    if (this.totalQuestionsStep1 < 5) {
+    if (this.totalQuestionsStep1 < 5 || this.totalQuestionsStep1 > 100) {
       this.snackbar.showError(quizCRUDMessages.minimumNumberOfQuestionError);
       return false;
     }
 
     const val = this.newQuizForm.value;
+    if (val.quizTiming > 180 || val.quizTiming < 2) {
+      this.snackbar.showError(quizCRUDMessages.maximumTotalTimeError);
+      return false;
+    }
     const quizCategoryId = val.quizCategory;
     const quizCategoryField = this.filteredNewQuizFields.find((f) => f.name === 'quizCategory');
     const quizCategoryName =

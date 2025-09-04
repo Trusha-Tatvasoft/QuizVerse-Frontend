@@ -1,1 +1,37 @@
-<p>user-achievement works!</p>
+<div class="badge-grid">
+  <div class="badges-card">
+    <h3>Badges & Achievements</h3>
+
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center my-3">
+      <p class="subtitle">Your earned badges and progress toward new ones</p>
+      <div class="badge-legend">
+        <div><span class="badge-dot bronze"></span> Bronze</div>
+        <div><span class="badge-dot silver"></span> Silver</div>
+        <div><span class="badge-dot gold"></span> Gold</div>
+        <div><span class="badge-dot platinum"></span> Platinum</div>
+      </div>
+    </div>
+
+    <div class="badge-list">
+      @for (badge of badges; track badge.badgeId) {
+        <div
+          class="badge-item"
+          [ngClass]="[badge.earned ? 'earned' : 'locked', getBadgeClass(badge)]"
+        >
+          <div class="flex items-center">
+            <div class="badge-icon">
+              <mat-icon fontSet="material-icons-outlined">military_tech</mat-icon>
+            </div>
+
+            <div class="badge-info">
+              <h4>{{ badge.name }}</h4>
+              <p>{{ badge.description }}</p>
+            </div>
+          </div>
+
+          <app-tag [tagConfig]="getTagConfig(badge)"></app-tag>
+        </div>
+      }
+    </div>
+  </div>
+</div>

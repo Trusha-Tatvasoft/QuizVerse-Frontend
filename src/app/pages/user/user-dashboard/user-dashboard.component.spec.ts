@@ -4,6 +4,7 @@ import { UserDashboardComponent } from './user-dashboard.component';
 import { UserDashboardService } from '../../../services/user/user-dashboard/user-dashboard.service';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { Component } from '@angular/core';
+import { UserProfileService } from '../../../services/user/user-profile/user-profile.service';
 
 // Mock Components for Standalone Components
 @Component({ selector: 'app-card', template: '' })
@@ -31,6 +32,11 @@ const mockSnackbarService = {
   showError: jest.fn(),
 };
 
+const mockUserProfileService = {
+  getUserProfile: jest.fn(),
+  updateUserProfile: jest.fn(),
+};
+
 describe('UserDashboardComponent', () => {
   let component: UserDashboardComponent;
 
@@ -45,6 +51,7 @@ describe('UserDashboardComponent', () => {
       providers: [
         { provide: UserDashboardService, useValue: mockUserDashboardService },
         { provide: SnackbarService, useValue: mockSnackbarService },
+        { provide: UserProfileService, useValue: mockUserProfileService },
       ],
     }).compileComponents();
 

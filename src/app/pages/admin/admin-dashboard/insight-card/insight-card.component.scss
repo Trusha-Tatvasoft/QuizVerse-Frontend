@@ -177,9 +177,8 @@
           max-width: 140px;
         }
 
-        @media (max-width: 360px) {
-          font-size: 0.7rem;
-          max-width: 120px;
+        @media (max-width: 375px) {
+          max-width: 290px;
         }
 
         .mat-mdc-form-field-outline {

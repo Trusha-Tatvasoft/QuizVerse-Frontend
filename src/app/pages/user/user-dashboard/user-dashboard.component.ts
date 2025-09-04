@@ -7,7 +7,6 @@ import { platformMessages, valueColor } from '../../../utils/constants';
 import { Subject, takeUntil } from 'rxjs';
 import { UserDashboardService } from '../../../services/user/user-dashboard/user-dashboard.service';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
-import { CardColor } from '../../../utils/types/card-component.type';
 import { CardInputConfig } from '../../../shared/interfaces/card-component.interface';
 import { defaultBannerData } from './configs/default-banner-data.config';
 import { userPerformanceCardConfig } from './configs/user-performace-card.config';
@@ -44,6 +43,7 @@ export class UserDashboardComponent {
   ngOnInit(): void {
     this.loadDashboardData();
   }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

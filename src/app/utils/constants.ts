@@ -210,7 +210,7 @@ export const platformMessages = {
   noDataAvailable: `No data available to export.`,
   errorExport: `Export failed.`,
   registerSuccessfully: `Register Successfully!!`,
-
+  unexpectedError: 'An unexpected error occurred. Please try again later.',
   //#region authMessages
   loginRedirectMessage: 'Redirecting to login.',
   unauthorizedTitle: 'Unauthorized',
@@ -252,6 +252,16 @@ export const platformMessages = {
   invalidImageType: 'Only JPG, PNG, and GIF image files are supported!',
   uploadSuccess: 'Profile photo updated successfully!',
   uploadFailed: 'Profile upload failed. Please try again.',
+  loadProfileFailed: 'Failed to load user profile',
+  emailAlreadyVerified: 'Email already verified.',
+  otpLimitReached: 'OTP send limit reached for this email.',
+  otpSendSuccess: 'OTP sent successfully.',
+  otpSendFailed: 'Failed to send OTP.',
+  otpVerifySuccess: 'OTP verified successfully.',
+  otpVerifyFailed: 'OTP verification failed.',
+  profileUpdateSuccess: 'Profile updated successfully.',
+  profileUpdateFailed: 'Update failed.',
+  verifyEmailBeforeSave: 'Please verify your new email before saving.',
   //#endregion
 
   //#region BattleManagement Messages
@@ -270,8 +280,21 @@ export const platformMessages = {
   difficultyWiseQuestionSelectionError: 'Please select the questions as per your battle settings.',
   battleTitleNotFoundError: 'Battle name not found',
   //#endregion
+
+  //#region EmailTemplate Messages
+  failedToFetchTemplate: 'Failed to fetch template.',
+  failedToSaveTemplate: 'Failed to save template.',
+  saveTemplateSuccess: 'Template saved successfully.',
+  //#endregion
 };
 //#endregion
+
+export const emailTemplateActionMessages = {
+  activated: 'Email template activated successfully',
+  inactivated: 'Email template inactivated successfully',
+  deleted: 'Email template deleted successfully',
+  statusUpdated: 'Email template status updated',
+};
 
 //#region Constant Variables
 export const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
@@ -283,6 +306,7 @@ export const allowedImportQuestionFileTypes = [
   'application/vnd.ms-excel', // .xls
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
 ];
+export const maxOtpAttempts = 2;
 
 export const maxFileUploadSize = 10 * 1024 * 1024;
 
@@ -447,6 +471,11 @@ export const quizCRUDMessages = {
   questionAdded: 'Question Added!',
   quizTitalNotFoundError: 'Quiz name not found',
   failedToExportQuestions: 'Failed to export questions.',
+  duplicateQuestionError: 'A same question already exists in the list.',
+  notUniqueOptions: 'Options must be unique.',
+  maximumTotalTimeError: 'Total time must be between 2 and 180 minutes.',
+  fillInTheBlankFormatError:
+    'Question text must contain at least one "{{}}" placeholder for the blank.',
 };
 //#endregion
 
@@ -476,7 +505,7 @@ export const emailActions = {
   INACTIVATE: 'remove_circle_outline',
 };
 
-export const EmailTemplatePlaceholdersRequired: Record<EmailTemplateType, string[]> = {
+export const emailTemplatePlaceholdersRequired: Record<EmailTemplateType, string[]> = {
   [EmailTemplateType.AccountSuspension]: ['{{user}}', '{{email}}'],
   [EmailTemplateType.BattleRequest]: ['{{user}}', '{{opponent}}', '{{battleLink}}'],
   [EmailTemplateType.EmailVerification]: ['{{user}}', '{{email}}', '{{verificationLink}}'],
@@ -505,4 +534,21 @@ export const defaultLogoPath = 'assets/images/logo-small.png';
 
 // #region user dashboard
 export const valueColor: CardColor = 'black';
+
+export const battleRequestMessages = {
+  accepted: (userName: string) => `You accepted battle request from ${userName}`,
+  declined: (userName: string) => `You declined battle request from ${userName}`,
+  acceptFailed: (userName: string) => `Failed to accept battle request from ${userName}`,
+  declineFailed: (userName: string) => `Failed to decline battle request from ${userName}`,
+};
+
 //#endregion
+
+// #region Question Type
+export const questionTypes = {
+  MULTIPLE_CHOICE: 'Multiple Choice',
+  TRUE_FALSE: 'True/False',
+  FILL_IN_THE_BLANK: 'Fill in the Blank',
+  SHORT_ANSWER: 'Short Answer',
+};
+// #endregion

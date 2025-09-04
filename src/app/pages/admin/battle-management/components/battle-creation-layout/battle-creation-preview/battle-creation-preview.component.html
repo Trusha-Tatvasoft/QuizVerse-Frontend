@@ -1,1 +1,95 @@
-<p>battle-creation-preview works!</p>
+<div class="p-4 w-full max-w-3xl no-icon-mat-btn flex flex-col h-[80vh]">
+  <!-- Static Header -->
+  <div class="flex-shrink-0 relative">
+    <!-- Close Button (absolute top-right) -->
+    <button
+      mat-icon-button
+      type="button"
+      class="absolute top-0 right-0 cursor-pointer"
+      (click)="close()"
+      aria-label="Close"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <!-- Title + Description -->
+    <h2 class="text-xl font-semibold pr-10">{{ data.name }}</h2>
+    <p class="text-gray-600 pr-10">{{ data.description }}</p>
+
+    <!-- Tags -->
+    <div class="flex gap-2 my-2 flex-wrap">
+      @for (tag of data.tags.length > 5 ? data.tags.slice(0, -1) : data.tags; track tag) {
+        <app-tag [tagConfig]="tag"></app-tag>
+      }
+    </div>
+
+    <!-- Date tag always on its own row -->
+    <div class="mb-3">
+      @if (data.tags.length > 5) {
+        <app-tag [tagConfig]="data.tags[data.tags.length - 1]"></app-tag>
+      }
+    </div>
+
+    <mat-divider class="my-3"></mat-divider>
+  </div>
+
+  <!-- Scrollable Questions -->
+  <div class="questions-container flex-1 overflow-y-auto pr-2">
+    @for (question of data.questions; track question.id) {
+      <div class="mt-4 mb-4 border border-gray-300 rounded-lg p-3">
+        <div class="font-medium">{{ $index + 1 }}. {{ question.queText }}</div>
+        <div class="text-xs mb-2 text-gray-500 flex justify-end">
+          ({{ getTimePerQuestion(question.queDifficultyId) }}s,
+          {{ getXpPerQuestion(question.queDifficultyId) }} XP)
+        </div>
+        <!-- Multiple Choice -->
+        @if (question.queTypeName === 'Multiple Choice') {
+          <mat-radio-group
+            [value]="getAnswer(question)"
+            class="mt-2 flex flex-col gap-1 pointer-events-none"
+          >
+            @for (opt of getOptions(question); track opt.key) {
+              <mat-radio-button [value]="opt.value">
+                {{ opt.value }}
+              </mat-radio-button>
+            }
+          </mat-radio-group>
+        }
+
+        <!-- Short Answer / Fill in the Blank -->
+        @if (
+          question.queTypeName === 'Short Answer' || question.queTypeName === 'Fill in the Blank'
+        ) {
+          <mat-form-field
+            appearance="outline"
+            class="w-full custom-form-field"
+            [floatLabel]="'auto'"
+          >
+            <input
+              matInput
+              type="text"
+              placeholder="Enter your answer"
+              autocomplete="off"
+              [value]="getAnswer(question)"
+              readonly
+            />
+          </mat-form-field>
+        }
+
+        <!-- True / False -->
+        @if (question.queTypeName === 'True/False') {
+          <mat-form-field
+            appearance="outline"
+            class="w-full custom-form-field low-opacity"
+            [floatLabel]="'auto'"
+          >
+            <mat-select [value]="getBoolAnswer(question)" disabled>
+              <mat-option value="true">True</mat-option>
+              <mat-option value="false">False</mat-option>
+            </mat-select>
+          </mat-form-field>
+        }
+      </div>
+    }
+  </div>
+</div>

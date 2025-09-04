@@ -116,9 +116,10 @@ export const quizCreationFormFields: DynamicFormField[] = [
     label: 'Quiz Timing (minutes)',
     type: 'number',
     placeholder: 'Enter quiz timing',
-    validators: [Validators.required, Validators.maxLength(255)],
+    validators: [Validators.required, Validators.min(2), Validators.max(180)],
     validationMessages: {
-      maxlength: 'Quiz Timing must not exceed 255 characters.',
+      min: 'Quiz timing must be at least 2 minutes.',
+      max: 'Quiz timing cannot exceed 180 minutes.',
     },
     gridClass: 'col-span-1 sm:col-span-1',
   },
