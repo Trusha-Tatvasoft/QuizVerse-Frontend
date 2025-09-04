@@ -24,6 +24,7 @@ import { UserLeaderboardComponent } from './pages/user/user-leaderboard/user-lea
 import { UserProfileComponent } from './pages/user/user-profile/user-profile.component';
 import { PlatformSettingsComponent } from './pages/admin/platform-settings/platform-settings.component';
 import { BattleCreationLayoutComponent } from './pages/admin/battle-management/components/battle-creation-layout/battle-creation-layout.component';
+import { UserBattlesComponent } from './pages/user/user-battles/user-battles.component';
 
 export const routes: Routes = [
   {
@@ -170,6 +171,11 @@ export const routes: Routes = [
         path: Navigations.Leaderboards,
         component: UserLeaderboardComponent,
         title: 'Quizeverse | User Leaderboards',
+      },
+      {
+        path: Navigations.Battles,
+        component: UserBattlesComponent,
+        title: 'Quizeverse | User Battles',
       },
     ],
   },
