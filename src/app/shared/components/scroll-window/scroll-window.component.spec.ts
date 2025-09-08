@@ -83,14 +83,14 @@ describe('ScrollWindowComponent', () => {
 
   it('should include logged-in user if outside slice (top)', () => {
     host.items = [
-      { id: 1, rank: 1, is_loggedin_user: true },
+      { id: 1, rank: 1, isLoggedInUser: true },
       { id: 2, rank: 2 },
       { id: 3, rank: 3 },
       { id: 4, rank: 4 },
     ];
     host.scrollWin.currentStart = 2;
     fixture.detectChanges();
-    expect(host.scrollWin.visibleWindow.some((i) => i.is_loggedin_user)).toBe(true);
+    expect(host.scrollWin.visibleWindow.some((i) => i.isLoggedInUser)).toBe(true);
   });
 
   it('should include logged-in user if outside slice (bottom)', () => {
@@ -139,7 +139,7 @@ describe('ScrollWindowComponent', () => {
 
   it('should handle logged-in user and rank 0 together', () => {
     host.items = [
-      { id: 1, rank: 1, isLoggedIn: true },
+      { id: 1, rank: 1, isLoggedInUser: true },
       { id: 2, rank: 5 },
       { id: 3, rank: 0 },
       { id: 4, rank: 6 },
@@ -148,7 +148,7 @@ describe('ScrollWindowComponent', () => {
     host.scrollWin.currentStart = 2;
     fixture.detectChanges();
 
-    expect(host.scrollWin.visibleWindow.some((i) => i.isLoggedIn)).toBe(true);
+    expect(host.scrollWin.visibleWindow.some((i) => i.isLoggedInUser)).toBe(true);
     expect(host.scrollWin.visibleWindow.some((i) => i.rank === 0)).toBe(true);
   });
 
@@ -224,10 +224,7 @@ describe('ScrollWindowComponent', () => {
   });
 
   it('isLoggedInFlag should detect all variants', () => {
-    expect((host.scrollWin as any).isLoggedInFlag({ is_loggedin_user: true })).toBe(true);
     expect((host.scrollWin as any).isLoggedInFlag({ isLoggedInUser: true })).toBe(true);
-    expect((host.scrollWin as any).isLoggedInFlag({ is_logged_in_user: true })).toBe(true);
-    expect((host.scrollWin as any).isLoggedInFlag({ isLoggedIn: true })).toBe(true);
     expect((host.scrollWin as any).isLoggedInFlag({})).toBe(false);
   });
 
@@ -285,7 +282,7 @@ describe('ScrollWindowComponent', () => {
 
   it('should insert logged-in user at top and drop last when above currentStart', () => {
     host.items = [
-      { id: 1, rank: 1, is_loggedin_user: true },
+      { id: 1, rank: 1, isLoggedInUser: true },
       { id: 2, rank: 2 },
       { id: 3, rank: 3 },
       { id: 4, rank: 4 },
@@ -296,7 +293,7 @@ describe('ScrollWindowComponent', () => {
     fixture.detectChanges();
 
     const visible = host.scrollWin.visibleWindow;
-    expect(visible[0].is_loggedin_user).toBe(true);
+    expect(visible[0].isLoggedInUser).toBe(true);
     expect(visible.length).toBe(3);
   });
 

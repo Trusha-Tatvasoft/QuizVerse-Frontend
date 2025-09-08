@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { TabComponent } from '../../../shared/components/tab/tab.component';
-import { LazyTab } from '../../../shared/interfaces/tab-component.interface';
 import { UserBattlesLeaderboardTabs } from './configs/user-battles.configs';
 
 @Component({

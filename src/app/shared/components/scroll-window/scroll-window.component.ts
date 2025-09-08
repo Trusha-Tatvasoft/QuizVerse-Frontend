@@ -25,11 +25,13 @@ export class ScrollWindowComponent<T extends { rank: number }> {
   @Input() windowSize = 5;
 
   /** Template reference from parent (how to render each item) */
-  @Input() itemTemplate!: TemplateRef<any>;
+  @Input() itemTemplate!: TemplateRef<unknown>;
 
   /** Optional trackBy function for better rendering */
-  @Input() trackByFn: (index: number, item: T) => any = (index, item) =>
-    (item as any).id ?? (item as any).userName ?? `${item.rank}-${index}`;
+  @Input() trackByFn: (index: number, item: T) => unknown = (index, item) =>
+    (item as { id?: unknown; userName?: unknown }).id ??
+    (item as { userName?: unknown }).userName ??
+    `${item.rank}-${index}`;
 
   visibleWindow: T[] = [];
   currentStart = 0;
@@ -48,7 +50,6 @@ export class ScrollWindowComponent<T extends { rank: number }> {
 
       // allow projected templates to render so getItemElements/findClosestIndex works
       setTimeout(() => {
-        // optional: scroll to top on new data load
         this.scrollToTop();
       }, 50);
     } else {
@@ -88,8 +89,6 @@ export class ScrollWindowComponent<T extends { rank: number }> {
     this.moveWindowBy(this.touchStartIndex - touchEndIndex);
   }
 
-  /** ---------------- Helpers ---------------- */
-
   // robust selector: supports multiple item class conventions
   private getItemElements(): HTMLElement[] {
     const container = this.listRef?.nativeElement as HTMLElement;
@@ -113,15 +112,8 @@ export class ScrollWindowComponent<T extends { rank: number }> {
     return closest;
   }
 
-  // helper to detect logged-in user when parent uses different property names
-  private isLoggedInFlag(item: any): boolean {
-    return Boolean(
-      item?.is_loggedin_user ??
-        item?.isLoggedInUser ??
-        item?.is_logged_in_user ??
-        item?.isLoggedIn ??
-        false,
-    );
+  private isLoggedInFlag(item: Partial<T> & Record<string, unknown>): boolean {
+    return Boolean((item as { isLoggedInUser?: boolean }).isLoggedInUser ?? false);
   }
 
   private updateVisibleWindow() {
@@ -130,19 +122,17 @@ export class ScrollWindowComponent<T extends { rank: number }> {
 
     let slice = this.items.slice(this.currentStart, this.currentStart + this.windowSize);
 
-    const loggedInUser = this.items.find((u: any) => this.isLoggedInFlag(u));
-    const rankZero = this.items.find((u: any) => u.rank === 0);
+    const loggedInUser = this.items.find((u) => this.isLoggedInFlag(u));
+    const rankZero = this.items.find((u) => u.rank === 0);
 
     if (loggedInUser) {
       const userIndex = this.items.indexOf(loggedInUser);
 
-      if (!slice.some((u: any) => this.isLoggedInFlag(u))) {
+      if (!slice.some((u) => this.isLoggedInFlag(u))) {
         if (userIndex < this.currentStart) {
           if (this.currentStart + this.windowSize >= this.items.length) {
-            // at end: preserve tail by dropping the first element of the slice
             slice = [loggedInUser, ...slice.slice(1, this.windowSize)];
           } else {
-            // normal: insert at top, drop last
             slice = [loggedInUser, ...slice.slice(0, this.windowSize - 1)];
           }
         } else if (userIndex >= this.currentStart + this.windowSize) {

@@ -1,22 +1,20 @@
 import { LazyTab } from '../../../../shared/interfaces/tab-component.interface';
-import { AvailableBattlesComponent } from '../available-battles/available-battles.component';
-import { BattlesLeaderboardComponent } from '../battles-leaderboard/battles-leaderboard.component';
-import { RecentBattlesComponent } from '../recent-battles/recent-battles.component';
+import { tabLazyComponentMap } from '../../../../utils/tab-component-lazy-map';
 
 export const UserBattlesLeaderboardTabs: LazyTab[] = [
   {
-    id: 'global',
+    id: 'available',
     label: 'Available Battle',
-    loadChildren: async () => AvailableBattlesComponent,
+    loadChildren: tabLazyComponentMap['available'],
   },
   {
-    id: 'weekly',
+    id: 'recent',
     label: 'Recent Battles',
-    loadChildren: async () => RecentBattlesComponent,
+    loadChildren: tabLazyComponentMap['recent'],
   },
   {
-    id: 'category',
+    id: 'userBattleLeaderboard',
     label: 'Battle Leaderboard',
-    loadChildren: async () => BattlesLeaderboardComponent,
+    loadChildren: tabLazyComponentMap['userBattleLeaderboard'],
   },
 ];
