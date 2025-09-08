@@ -24,7 +24,6 @@
         <span>{{ entry.rank === 0 ? '-' : entry.rank }}</span>
       </div>
 
-      <!-- 3 & 4. Username + Level/Streak -->
       <div class="user-details">
         <span class="username">
           {{ entry.isLoggedInUser ? 'You (' + entry.userName + ')' : entry.userName }}
@@ -32,7 +31,6 @@
         <span class="meta"> {{ entry.totalWins }} wins • {{ entry.winPercentage }}% win rate </span>
       </div>
 
-      <!-- XP + Rank Trend -->
       <div class="xp-points">
         <div class="xp-text">
           <span class="xp">{{ entry.totalXp | number }} XP</span>
