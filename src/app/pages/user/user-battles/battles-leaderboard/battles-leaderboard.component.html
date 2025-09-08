@@ -1,1 +1,50 @@
-<p>battles-leaderboard works!</p>
+<div class="leaderboard-container">
+  <h3 class="leaderboard-title">
+    <mat-icon class="mr-2 star-outline" fontSet="material-icons-outlined">emoji_events</mat-icon>
+    Battle Champions
+  </h3>
+
+  <p class="leaderboard-subtitle">Top 5 players in quiz battles this month</p>
+
+  <app-scroll-window
+    [items]="leaderboard"
+    [windowSize]="8"
+    [itemTemplate]="battleTemplate"
+  ></app-scroll-window>
+
+  <ng-template #battleTemplate let-entry>
+    <div class="leaderboard-item" [class.current-user]="entry.isLoggedInUser">
+      <div
+        class="rank-icon"
+        [ngClass]="{
+          'top-rank': entry.rank > 0 && entry.rank <= 3,
+          'other-rank': entry.rank > 3 || entry.rank === 0,
+        }"
+      >
+        <span>{{ entry.rank === 0 ? '-' : entry.rank }}</span>
+      </div>
+
+      <!-- 3 & 4. Username + Level/Streak -->
+      <div class="user-details">
+        <span class="username">
+          {{ entry.isLoggedInUser ? 'You (' + entry.userName + ')' : entry.userName }}
+        </span>
+        <span class="meta"> {{ entry.totalWins }} wins • {{ entry.winPercentage }}% win rate </span>
+      </div>
+
+      <!-- XP + Rank Trend -->
+      <div class="xp-points">
+        <div class="xp-text">
+          <span class="xp">{{ entry.totalXp | number }} XP</span>
+          <small>Total Points</small>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  @if (leaderboard.length === 0) {
+    <div class="no-records">
+      <p>No data available.</p>
+    </div>
+  }
+</div>

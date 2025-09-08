@@ -117,4 +117,8 @@ export enum EndPoints {
   GetPlateformSetting = 'PlatformConfiguration/get-platform-configurations',
   UpdatePlateformSetting = 'PlatformConfiguration/update-platform-configurations',
   // #endregion
+
+  // #region UserBattles
+  GetBattleLeaderboardList = 'UserBattles/get-battle-leaderboard-list',
+  //#endregion
 }

@@ -1,1 +1,12 @@
-<p>user-battles works!</p>
+<main class="user-management-page">
+  <h2 class="user-page-heading">Quiz Battles</h2>
+
+  <div class="leaderboard-tabs">
+    <app-common-tab
+      [tabs]="tabs"
+      [selectedIndex]="selectedIndex"
+      (tabChanged)="onTabChanged($event)"
+    >
+    </app-common-tab>
+  </div>
+</main>
