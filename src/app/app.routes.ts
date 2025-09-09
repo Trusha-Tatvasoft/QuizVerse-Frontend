@@ -186,6 +186,18 @@ export const routes: Routes = [
     ],
   },
   {
+    path: Navigations.User,
+    canActivate: [authGuard],
+    data: { roles: ['player'] },
+    children: [
+      {
+        path: Navigations.QuizList,
+        title: 'Quizeverse | Play Quizzes',
+        children: [{ path: `${Navigations.QuizAttempt}/:id`, component: BrowseQuizzesComponent }],
+      },
+    ],
+  },
+  {
     path: Navigations.Unauthorized,
     component: UnauthorizedComponent,
     title: 'QuizVerse | Unauthorized',
