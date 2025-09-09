@@ -26,6 +26,8 @@ import { PlatformSettingsComponent } from './pages/admin/platform-settings/platf
 import { BattleCreationLayoutComponent } from './pages/admin/battle-management/components/battle-creation-layout/battle-creation-layout.component';
 import { UserBattlesComponent } from './pages/user/user-battles/user-battles.component';
 import { BrowseQuizzesComponent } from './pages/user/browse-quizzes/browse-quizzes.component';
+import { QuizAttemptLayoutComponent } from './pages/user/quiz-attempt-layout/quiz-attempt-layout.component';
+import { QuizInstructionsComponent } from './pages/user/quiz-attempt-layout/quiz-instructions/quiz-instructions.component';
 
 export const routes: Routes = [
   {
@@ -183,6 +185,13 @@ export const routes: Routes = [
         title: 'Quizeverse | Browse Quizzes',
         children: [{ path: `${Navigations.BrowseQuizzes}`, component: BrowseQuizzesComponent }],
       },
+      {
+        path: Navigations.QuizList,
+        title: 'Quizeverse | Play Quizzes',
+        children: [
+          { path: `${Navigations.QuizInstruction}/:id`, component: QuizInstructionsComponent },
+        ],
+      },
     ],
   },
   {
@@ -193,7 +202,9 @@ export const routes: Routes = [
       {
         path: Navigations.QuizList,
         title: 'Quizeverse | Play Quizzes',
-        children: [{ path: `${Navigations.QuizAttempt}/:id`, component: BrowseQuizzesComponent }],
+        children: [
+          { path: `${Navigations.QuizAttempt}/:id`, component: QuizAttemptLayoutComponent },
+        ],
       },
     ],
   },
