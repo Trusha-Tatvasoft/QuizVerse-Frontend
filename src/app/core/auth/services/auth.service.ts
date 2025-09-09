@@ -82,11 +82,7 @@ export class AuthService {
     const refreshToken = this.getRefreshToken();
 
     if (!refreshToken) {
-      this.snackbar.showError(
-        platformMessages.sessionExpiredTitle,
-        platformMessages.noRefreshTokenMessage,
-      );
-      return EMPTY;
+      return of('');
     }
 
     return this.http
@@ -95,24 +91,14 @@ export class AuthService {
       >(`${this.API}/${EndPoints.RefreshToken}`, JSON.stringify(refreshToken), { headers: { 'Content-Type': 'application/json' } })
       .pipe(
         switchMap((response) => {
-          if (!response.result || response.statusCode !== 200 || !response.data.accessToken) {
-            this.snackbar.showError(
-              platformMessages.tokenRefreshFailedTitle,
-              response.message || platformMessages.tokenRefreshFailedMessage,
-            );
-            return EMPTY;
+          if (!response.result || response.statusCode !== 200 || !response.data?.accessToken) {
+            return of('');
           }
 
           const newAccessToken = response.data.accessToken;
           const newRefreshToken = response.data.refreshToken || refreshToken;
           this.saveTokens(newAccessToken, newRefreshToken);
           return of(newAccessToken);
-        }),
-        catchError((error) => {
-          const message =
-            error?.error?.message || error?.message || platformMessages.tokenInvalidMessage;
-          this.snackbar.showError(platformMessages.sessionExpiredTitle, message);
-          return of('');
         }),
       );
   }
@@ -145,11 +131,18 @@ export class AuthService {
       );
   }
 
-  logout() {
+  logout(isLogout: boolean = true) {
     this.cookieService.delete(accessTokenKey, '/');
     this.cookieService.delete(refreshTokenKey, '/');
     this.currentRole$.next(null);
     this.router.navigate([Navigations.Login]);
-    this.snackbar.showSuccess('Logout Successfully!');
+    if (isLogout) {
+      this.snackbar.showSuccess(platformMessages.logoutSuccess);
+    } else {
+      this.snackbar.showError(
+        platformMessages.sessionExpiredTitle,
+        platformMessages.sessionExpiredMessage,
+      );
+    }
   }
 }

@@ -14,6 +14,7 @@ import { SnackbarService } from '../shared/service/snackbar/snackbar.service';
 import { Router } from '@angular/router';
 import { platformMessages } from '../utils/constants';
 import { Navigations } from '../shared/enums/navigation';
+import { EndPoints } from '../shared/enums/end-point.enum';
 
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
@@ -26,11 +27,15 @@ export const authInterceptor: HttpInterceptorFn = (
   const snackbar = inject(SnackbarService);
   const router = inject(Router);
 
+  if (req.url.includes(EndPoints.RefreshToken)) {
+    return next(req);
+  }
+
   let authReq = req;
   const accessToken = authService.getAccessToken();
 
   if (accessToken && authService.isTokenExpired(accessToken)) {
-    return refreshAndRetry(req, next, authService, snackbar);
+    return refreshAndRetry(req, next, authService);
   }
 
   if (accessToken) {
@@ -48,7 +53,7 @@ export const authInterceptor: HttpInterceptorFn = (
           return throwError(() => error);
 
         case 401:
-          return refreshAndRetry(authReq, next, authService, snackbar);
+          return refreshAndRetry(authReq, next, authService);
 
         case 403:
           router.navigate([Navigations.Unauthorized]);
@@ -77,7 +82,6 @@ function refreshAndRetry(
   request: HttpRequest<unknown>,
   next: HttpHandlerFn,
   authService: AuthService,
-  snackbar: SnackbarService,
 ): Observable<HttpEvent<unknown>> {
   if (!isRefreshing) {
     isRefreshing = true;
@@ -88,6 +92,7 @@ function refreshAndRetry(
         isRefreshing = false;
 
         if (!newToken) {
+          authService.logout(false);
           return EMPTY;
         }
 
@@ -100,11 +105,7 @@ function refreshAndRetry(
       }),
       catchError(() => {
         isRefreshing = false;
-        authService.logout();
-        snackbar.showError(
-          platformMessages.sessionExpiredTitle,
-          platformMessages.sessionExpiredMessage,
-        );
+        authService.logout(false);
         return EMPTY;
       }),
     );

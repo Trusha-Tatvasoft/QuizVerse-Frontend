@@ -7,7 +7,7 @@ export const cancelButtonConfig: ButtonConfig = {
 };
 
 export const deleteButtonConfig: ButtonConfig = {
-  label: 'Delete Quiz',
+  label: 'Delete Battle',
   variant: 'secondary',
 };
 
