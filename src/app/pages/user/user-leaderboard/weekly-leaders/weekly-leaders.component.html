@@ -16,26 +16,36 @@
     <div class="leaderboard-item" [class.current-user]="entry.isLoggedInUser">
       <!-- 1. Rank / Medal -->
       <div class="rank-icon">
-        <ng-container [ngSwitch]="entry.rank">
-          <mat-icon *ngSwitchCase="1" class="gold">military_tech</mat-icon>
-          <mat-icon *ngSwitchCase="2" class="silver">military_tech</mat-icon>
-          <mat-icon *ngSwitchCase="3" class="bronze">military_tech</mat-icon>
-          <span *ngSwitchDefault>{{ entry.rank }}</span>
-        </ng-container>
+        @switch (entry.rank) {
+          @case (1) {
+            <mat-icon class="gold">military_tech</mat-icon>
+          }
+          @case (2) {
+            <mat-icon class="silver">military_tech</mat-icon>
+          }
+          @case (3) {
+            <mat-icon class="bronze">military_tech</mat-icon>
+          }
+          @default {
+            <span>{{ entry.rank }}</span>
+          }
+        }
       </div>
 
       <!-- 2. Profile + Initials -->
       <div class="profile-wrapper">
-        <img
-          *ngIf="entry.profilePic"
-          [src]="entry.profilePic"
-          alt="{{ entry.userName }}"
-          class="profile-pic"
-          (error)="onImageError(entry)"
-        />
-        <div *ngIf="!entry.profilePic" class="profile-fallback">
-          {{ getInitials(entry.fullName || entry.userName) }}
-        </div>
+        @if (entry.profilePic) {
+          <img
+            [src]="entry.profilePic"
+            alt="{{ entry.userName }}"
+            class="profile-pic"
+            (error)="onImageError(entry)"
+          />
+        } @else {
+          <div class="profile-fallback">
+            {{ getInitials(entry.fullName || entry.userName) }}
+          </div>
+        }
       </div>
 
       <!-- 3 & 4. Username + Battles/Quizzes -->
