@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { UserBattlesComponent } from './user-battles.component';
+import { TabComponent } from '../../../shared/components/tab/tab.component';
+import { UserBattlesLeaderboardTabs } from './configs/user-battles.configs';
 
 describe('UserBattlesComponent', () => {
   let component: UserBattlesComponent;
@@ -8,7 +9,7 @@ describe('UserBattlesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UserBattlesComponent],
+      imports: [UserBattlesComponent, TabComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserBattlesComponent);
@@ -16,7 +17,21 @@ describe('UserBattlesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have default selectedIndex = 0', () => {
+    expect(component.selectedIndex).toBe(0);
+  });
+
+  it('should set tabs from config', () => {
+    expect(component.tabs).toEqual(UserBattlesLeaderboardTabs);
+    expect(component.tabs.length).toBe(3);
+  });
+
+  it('should update selectedIndex when onTabChanged is called', () => {
+    component.onTabChanged(2);
+    expect(component.selectedIndex).toBe(2);
   });
 });

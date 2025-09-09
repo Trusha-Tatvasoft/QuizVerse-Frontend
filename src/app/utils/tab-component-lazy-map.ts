@@ -64,4 +64,20 @@ export const tabLazyComponentMap: Record<string, () => Promise<Type<unknown>>> =
     import(
       '../pages/user/user-profile/components/user-profile-setting/user-profile-setting.component'
     ).then((m) => m.UserProfileSettingComponent),
+
+  // User Battles Tabs
+  available: () =>
+    import('../pages/user/user-battles/available-battles/available-battles.component').then(
+      (m) => m.AvailableBattlesComponent,
+    ),
+
+  recent: () =>
+    import('../pages/user/user-battles/recent-battles/recent-battles.component').then(
+      (m) => m.RecentBattlesComponent,
+    ),
+
+  userBattleLeaderboard: () =>
+    import('../pages/user/user-battles/battles-leaderboard/battles-leaderboard.component').then(
+      (m) => m.BattlesLeaderboardComponent,
+    ),
 };

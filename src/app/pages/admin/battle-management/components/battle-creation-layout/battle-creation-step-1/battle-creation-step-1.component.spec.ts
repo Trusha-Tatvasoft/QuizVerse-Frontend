@@ -17,19 +17,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DropDownType } from '../../../../../../shared/enums/dropdown-types.enum';
 import { platformMessages } from '../../../../../../utils/constants';
-
-// Define the ApiResponse interface
-export interface ApiResponse<T> {
-  result: boolean;
-  statusCode: number;
-  message: string;
-  data: T;
-}
-
-interface DropDownData {
-  id: number;
-  name: string;
-}
+import { DropDownData } from '../../../../../../shared/interfaces/drop-down-data.interface';
+import { ApiResponse } from '../../../../../../shared/interfaces/api-response.interface';
 
 describe('BattleCreationStep1Component', () => {
   let component: BattleCreationStep1Component;

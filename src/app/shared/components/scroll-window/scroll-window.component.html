@@ -1,0 +1,7 @@
+<div #list class="leaderboard-list" tabindex="0" (wheel)="onWheel($event)">
+  @for (item of visibleWindow; track trackByFn; let i = $index) {
+    <div class="leaderboard-item">
+      <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-container>
+    </div>
+  }
+</div>
