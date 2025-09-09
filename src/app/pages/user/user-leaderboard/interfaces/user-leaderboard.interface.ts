@@ -1,5 +1,3 @@
-import { Type } from '@angular/core';
-
 export interface UserLeaderboardStats {
   globalRank: number;
   totalXp: number;
@@ -20,9 +18,14 @@ export interface LeaderboardEntry {
   is_loggedin_user: boolean;
 }
 
-export interface LeaderboardTab {
-  id: string;
-  label: string;
-  icon?: string;
-  loadChildren: () => Promise<Type<unknown>>;
+export interface WeeklyLeaderEntry {
+  rank: number;
+  userId: number;
+  userName: string;
+  fullName: string | null;
+  profilePic: string | null;
+  totalXp: number;
+  totalQuizzesPlayed: number;
+  totalBattlesPlayed: number;
+  isLoggedInUser: boolean;
 }
