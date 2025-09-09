@@ -80,4 +80,22 @@ export const tabLazyComponentMap: Record<string, () => Promise<Type<unknown>>> =
     import('../pages/user/user-battles/battles-leaderboard/battles-leaderboard.component').then(
       (m) => m.BattlesLeaderboardComponent,
     ),
+
+  // browse quizzes tabs
+  featured: () =>
+    import('../pages/user/browse-quizzes/components/quiz-list/quiz-list.component').then(
+      (m) => m.QuizListComponent,
+    ),
+  'all quizzes': () =>
+    import('../pages/user/browse-quizzes/components/quiz-list/quiz-list.component').then(
+      (m) => m.QuizListComponent,
+    ),
+  free: () =>
+    import('../pages/user/browse-quizzes/components/quiz-list/quiz-list.component').then(
+      (m) => m.QuizListComponent,
+    ),
+  premium: () =>
+    import('../pages/user/browse-quizzes/components/quiz-list/quiz-list.component').then(
+      (m) => m.QuizListComponent,
+    ),
 };

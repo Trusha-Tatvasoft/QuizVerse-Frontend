@@ -112,7 +112,7 @@ export const navigationItems = {
     {
       label: 'Browse Quizzes',
       icon: 'quiz',
-      route: `${Navigations.User}/${Navigations.BrowseQuizzes}`,
+      route: `${Navigations.User}/${Navigations.QuizList}/${Navigations.BrowseQuizzes}`,
     },
     {
       label: 'Battles',

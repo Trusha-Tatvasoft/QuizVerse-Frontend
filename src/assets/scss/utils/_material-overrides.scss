@@ -582,3 +582,21 @@ html {
   left: 15px;
   top: 3px;
 }
+
+// slider - browse quizzes
+.mat-mdc-slider.mdc-slider.mat-primary {
+  margin: 0px;
+  .mdc-slider__thumb.mat-mdc-slider-visual-thumb {
+    .mdc-slider__thumb-knob {
+      height: 10px;
+      width: 10px;
+      border-width: 7.5px;
+      border-color: var(--global-secondary-color);
+      background-color: var(--global-secondary-color);
+    }
+  }
+
+  .mdc-slider__track .mdc-slider__track--active_fill {
+    border-color: var(--global-secondary-color);
+  }
+}

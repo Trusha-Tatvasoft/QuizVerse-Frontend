@@ -8,6 +8,7 @@ export enum Navigations {
 
   User = 'user',
   Dashboard = 'dashboard',
+  QuizList = 'quizzes',
   BrowseQuizzes = 'browse-quizzes',
   Battles = 'battles',
   Tournaments = 'tournaments',

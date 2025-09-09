@@ -425,6 +425,28 @@ app-data-table {
   }
 }
 
+// browse quizzes page btns
+.quiz-btn-container {
+  width: 100%;
+  @media (max-width: 700px) {
+    width: 50%;
+  }
+  button {
+    width: 100%;
+    @media (max-width: 700px) {
+      width: 100%;
+    }
+  }
+}
+
+// browsr quiz play button
+.quiz-play-btn {
+  margin-top: 1rem;
+  button {
+    width: 100% !important;
+  }
+}
+
 .no-data-message {
   text-align: center;
   padding: 16px;

@@ -25,6 +25,7 @@ import { UserProfileComponent } from './pages/user/user-profile/user-profile.com
 import { PlatformSettingsComponent } from './pages/admin/platform-settings/platform-settings.component';
 import { BattleCreationLayoutComponent } from './pages/admin/battle-management/components/battle-creation-layout/battle-creation-layout.component';
 import { UserBattlesComponent } from './pages/user/user-battles/user-battles.component';
+import { BrowseQuizzesComponent } from './pages/user/browse-quizzes/browse-quizzes.component';
 
 export const routes: Routes = [
   {
@@ -176,6 +177,11 @@ export const routes: Routes = [
         path: Navigations.Battles,
         component: UserBattlesComponent,
         title: 'Quizeverse | User Battles',
+      },
+      {
+        path: Navigations.QuizList,
+        title: 'Quizeverse | Browse Quizzes',
+        children: [{ path: `${Navigations.BrowseQuizzes}`, component: BrowseQuizzesComponent }],
       },
     ],
   },
