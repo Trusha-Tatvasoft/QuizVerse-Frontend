@@ -280,6 +280,10 @@ export const platformMessages = {
   failedToSaveTemplate: 'Failed to save template.',
   saveTemplateSuccess: 'Template saved successfully.',
   //#endregion
+
+  //#region Quiz Attempt
+  invalidQuizId: 'Invalid quiz id',
+  //#endregion
 };
 //#endregion
 
