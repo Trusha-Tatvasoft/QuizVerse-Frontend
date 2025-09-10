@@ -1,5 +1,7 @@
+import { LazyTab } from '../../../../shared/interfaces/tab-component.interface';
 import { GlobalRankingsComponent } from '../global-rankings/global-rankings.component';
-import { LeaderboardTab, UserLeaderboardStats } from '../interfaces/user-leaderboard.interface';
+import { UserLeaderboardStats } from '../interfaces/user-leaderboard.interface';
+import { WeeklyLeadersComponent } from '../weekly-leaders/weekly-leaders.component';
 
 export const defaultUserLeaderboardStats: UserLeaderboardStats = {
   globalRank: 0,
@@ -7,7 +9,7 @@ export const defaultUserLeaderboardStats: UserLeaderboardStats = {
   currentLevel: 0,
 };
 
-export const defaultUserLeaderboardTabs: LeaderboardTab[] = [
+export const defaultUserLeaderboardTabs: LazyTab[] = [
   {
     id: 'global',
     label: 'Global Rankings',
@@ -18,7 +20,7 @@ export const defaultUserLeaderboardTabs: LeaderboardTab[] = [
     id: 'weekly',
     label: 'Weekly Leaders',
     icon: 'calendar_today',
-    loadChildren: async () => GlobalRankingsComponent,
+    loadChildren: async () => WeeklyLeadersComponent,
   },
   {
     id: 'category',

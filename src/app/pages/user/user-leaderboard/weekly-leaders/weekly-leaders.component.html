@@ -1,0 +1,79 @@
+<div class="leaderboard-container">
+  <h3 class="leaderboard-title">
+    <mat-icon class="mr-2 emoji-outline">emoji_events</mat-icon>
+    This Week's Rising Stars
+  </h3>
+
+  <p class="leaderboard-subtitle">Players who gained the most XP this week</p>
+
+  <app-scroll-window
+    [items]="leaderboard"
+    [windowSize]="6"
+    [itemTemplate]="weeklyLeadersTemplate"
+  ></app-scroll-window>
+
+  <ng-template #weeklyLeadersTemplate let-entry>
+    <div class="leaderboard-item" [class.current-user]="entry.isLoggedInUser">
+      <!-- 1. Rank / Medal -->
+      <div class="rank-icon">
+        @switch (entry.rank) {
+          @case (1) {
+            <mat-icon class="gold">military_tech</mat-icon>
+          }
+          @case (2) {
+            <mat-icon class="silver">military_tech</mat-icon>
+          }
+          @case (3) {
+            <mat-icon class="bronze">military_tech</mat-icon>
+          }
+          @default {
+            <span>{{ entry.rank }}</span>
+          }
+        }
+      </div>
+
+      <!-- 2. Profile + Initials -->
+      <div class="profile-wrapper">
+        @if (entry.profilePic) {
+          <img
+            [src]="entry.profilePic"
+            alt="{{ entry.userName }}"
+            class="profile-pic"
+            (error)="onImageError(entry)"
+          />
+        } @else {
+          <div class="profile-fallback">
+            {{ getInitials(entry.fullName || entry.userName) }}
+          </div>
+        }
+      </div>
+
+      <!-- 3 & 4. Username + Battles/Quizzes -->
+      <div class="user-details">
+        <span class="username">{{
+          entry.isLoggedInUser ? 'You (' + entry.userName + ')' : entry.userName
+        }}</span>
+        <span class="meta">
+          {{ entry.totalBattlesPlayed }} Battles · {{ entry.totalQuizzesPlayed }} Quizzes
+        </span>
+      </div>
+
+      <!-- 5. XP -->
+      <div class="xp-points">
+        <div class="xp-text">
+          <span class="xp">
+            <mat-icon *ngIf="entry.totalXp > 0" class="xp-icon">add</mat-icon>
+            {{ entry.totalXp | number }} XP
+          </span>
+          <small>This Week</small>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  @if (leaderboard.length === 0) {
+    <div class="no-records">
+      <p>No data available.</p>
+    </div>
+  }
+</div>
