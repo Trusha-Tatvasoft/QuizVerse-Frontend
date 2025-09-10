@@ -22,7 +22,7 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot): P
     try {
       token = await firstValueFrom(authService.refreshAccessToken());
       isValid = !!token;
-    } catch (err) {
+    } catch {
       authService.logout(false);
       isValid = false;
     }

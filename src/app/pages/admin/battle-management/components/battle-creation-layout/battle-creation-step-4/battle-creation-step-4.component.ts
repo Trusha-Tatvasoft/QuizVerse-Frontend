@@ -21,7 +21,7 @@ import {
 import { platformMessages, quizCRUDMessages } from '../../../../../../utils/constants';
 import { ExportQuizQuestionsRequestDto } from '../../../../../../shared/interfaces/quiz-creation.interface';
 import { BattleCreationPreviewComponent } from '../battle-creation-preview/battle-creation-preview.component';
-import { previewBattleuttonConfig } from '../../../configs/battle-creation.config';
+import { previewBattleButtonConfig } from '../../../configs/battle-creation.config';
 
 @Component({
   selector: 'app-battle-creation-step-4',
@@ -38,7 +38,7 @@ export class BattleCreationStep4Component {
 
   // Button configurations for UI
   exportCsvButton = exportCsvButtonConfig; // Configuration for CSV export button
-  previewQuizButton = previewBattleuttonConfig; // Configuration for preview button
+  previewBattleButton = previewBattleButtonConfig; // Configuration for preview button
 
   // Injected services
   private readonly dialog = inject(MatDialog); // Dialog service for opening modals

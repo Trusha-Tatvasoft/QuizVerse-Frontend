@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ProgressBarComponent } from '../../../../../shared/components/progress-bar/progress-bar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { RankProgress } from '../../interfaces/rank-progress.interface';

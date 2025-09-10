@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { BehaviorSubject, catchError, EMPTY, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment.dev';
 import { LoginCredentials } from '../interfaces/login.interface';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';

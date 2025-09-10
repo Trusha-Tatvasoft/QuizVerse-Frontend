@@ -123,7 +123,7 @@ export const publishBattleButtonConfig: ButtonConfig = {
   type: 'submit',
 };
 
-export const previewBattleuttonConfig: ButtonConfig = {
+export const previewBattleButtonConfig: ButtonConfig = {
   label: 'Preview Battle',
   type: 'button',
   variant: 'secondary',
