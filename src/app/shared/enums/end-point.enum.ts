@@ -91,6 +91,7 @@ export enum EndPoints {
   UserLeaderboardStats = 'Leaderboard/get-user-leaderboard-stats',
   GlobalLeaderboard = 'Leaderboard/get-leaderboard-gloabal-ranking',
   WeeklyLeaderboard = 'Leaderboard/get-weekly-leaderboard-ranking',
+  CategoryLeaderboard = 'Leaderboard/get-category-wise-leaderboard',
   //#endregion
 
   // #region UserDashboard

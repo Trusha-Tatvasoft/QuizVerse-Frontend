@@ -29,3 +29,15 @@ export interface WeeklyLeaderEntry {
   totalBattlesPlayed: number;
   isLoggedInUser: boolean;
 }
+
+export interface CategoryLeaderEntry {
+  rank: number;
+  userId: number;
+  userName: string;
+  fullName: string | null;
+  profilePic: string | null;
+  averageScore: number;
+  totalQuizzesPlayed: number;
+  totalBattlesPlayed: number;
+  isLoggedInUser: boolean;
+}

@@ -4,6 +4,7 @@ import { LeaderboardService } from './leaderboard.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import {
+  CategoryLeaderEntry,
   LeaderboardEntry,
   UserLeaderboardStats,
   WeeklyLeaderEntry,
@@ -169,6 +170,62 @@ describe('LeaderboardService', () => {
           expect(err.message).toBe('Not found');
           expect(httpClientMock.get).toHaveBeenCalledWith(
             `${environment.baseUrl}/${EndPoints.WeeklyLeaderboard}`,
+          );
+          done();
+        },
+      });
+    });
+  });
+
+  describe('getCategoryLeaderboard', () => {
+    it('should call HttpClient.get with the correct URL and return category leaderboard data', (done) => {
+      const categoryId = 10;
+      const mockResponse: ApiResponse<CategoryLeaderEntry[]> = {
+        result: true,
+        data: [
+          {
+            rank: 1,
+            userId: 301,
+            userName: 'Charlie',
+            fullName: 'Charlie Brown',
+            profilePic: 'https://example.com/charlie.png',
+            averageScore: 85.5,
+            totalQuizzesPlayed: 7,
+            totalBattlesPlayed: 2,
+            isLoggedInUser: false,
+          },
+        ],
+        message: 'Category leaderboard fetched successfully',
+        statusCode: 200,
+      };
+
+      httpClientMock.get.mockReturnValue(of(mockResponse));
+
+      service.getCategoryLeaderboard(categoryId).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+        expect(response.statusCode).toBe(200);
+        expect(response.data[0].userName).toBe('Charlie');
+        expect(response.data[0].averageScore).toBe(85.5);
+        expect(httpClientMock.get).toHaveBeenCalledWith(
+          `${environment.baseUrl}/${EndPoints.CategoryLeaderboard}?categoryId=${categoryId}`,
+        );
+        done();
+      });
+    });
+
+    it('should propagate error if HttpClient.get fails', (done) => {
+      const categoryId = 10;
+      const error = { status: 500, message: 'Internal Server Error' };
+
+      httpClientMock.get.mockReturnValue(throwError(() => error));
+
+      service.getCategoryLeaderboard(categoryId).subscribe({
+        next: () => fail('Expected an error, but got a response'),
+        error: (err) => {
+          expect(err.status).toBe(500);
+          expect(err.message).toBe('Internal Server Error');
+          expect(httpClientMock.get).toHaveBeenCalledWith(
+            `${environment.baseUrl}/${EndPoints.CategoryLeaderboard}?categoryId=${categoryId}`,
           );
           done();
         },
