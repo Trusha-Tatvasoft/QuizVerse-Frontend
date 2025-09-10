@@ -1,7 +1,7 @@
 import { LazyTab } from '../../../../shared/interfaces/tab-component.interface';
 import { tabLazyComponentMap } from '../../../../utils/tab-component-lazy-map';
 
-export const UserBattlesLeaderboardTabs: LazyTab[] = [
+export const userBattlesLeaderboardTabs: LazyTab[] = [
   {
     id: 'available',
     label: 'Available Battle',

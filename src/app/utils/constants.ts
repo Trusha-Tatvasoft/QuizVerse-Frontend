@@ -216,6 +216,7 @@ export const platformMessages = {
   unauthorizedTitle: 'Unauthorized',
   unauthorizedAccess: 'No access for this page.',
   invalidOrExpiredToken: 'Invalid token or Token Expired!!',
+  logoutSuccess: 'Logged out successfully.',
   //#endregion
 
   //#region auth Interceptor Errors
@@ -225,13 +226,6 @@ export const platformMessages = {
   unavailableMessage: 'Server Unavailable',
   sessionExpiredTitle: 'Session expired',
   sessionExpiredMessage: 'Please log in again.',
-  //#endregion
-
-  //#region authService messages
-  noRefreshTokenMessage: 'No refresh token found.',
-  tokenRefreshFailedTitle: 'Token refresh failed',
-  tokenRefreshFailedMessage: 'Unexpected response.',
-  tokenInvalidMessage: 'Token refresh failed',
   //#endregion
 
   //#region QuestionPool Messages

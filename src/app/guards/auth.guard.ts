@@ -19,8 +19,13 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot): P
   let isValid = token && !authService.isTokenExpired(token);
 
   if (!isValid && refreshToken) {
-    token = await firstValueFrom(authService.refreshAccessToken());
-    isValid = !!token;
+    try {
+      token = await firstValueFrom(authService.refreshAccessToken());
+      isValid = !!token;
+    } catch {
+      authService.logout(false);
+      isValid = false;
+    }
   }
 
   if (publicOnly && isValid) {

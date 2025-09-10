@@ -10,10 +10,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { SnackbarService } from '../../../../../../shared/service/snackbar/snackbar.service';
 import { BattleManagementService } from '../../../../../../services/admin/battle-management/battle-management.service';
-import {
-  exportCsvButtonConfig,
-  previewQuizButtonConfig,
-} from '../../../../quiz-management/configs/quiz-creation.config';
+import { exportCsvButtonConfig } from '../../../../quiz-management/configs/quiz-creation.config';
 import { Subject, takeUntil } from 'rxjs';
 import { TagInputConfig } from '../../../../../../shared/interfaces/tag-component.interface';
 import {
@@ -24,6 +21,7 @@ import {
 import { platformMessages, quizCRUDMessages } from '../../../../../../utils/constants';
 import { ExportQuizQuestionsRequestDto } from '../../../../../../shared/interfaces/quiz-creation.interface';
 import { BattleCreationPreviewComponent } from '../battle-creation-preview/battle-creation-preview.component';
+import { previewBattleButtonConfig } from '../../../configs/battle-creation.config';
 
 @Component({
   selector: 'app-battle-creation-step-4',
@@ -40,7 +38,7 @@ export class BattleCreationStep4Component {
 
   // Button configurations for UI
   exportCsvButton = exportCsvButtonConfig; // Configuration for CSV export button
-  previewQuizButton = previewQuizButtonConfig; // Configuration for preview button
+  previewBattleButton = previewBattleButtonConfig; // Configuration for preview button
 
   // Injected services
   private readonly dialog = inject(MatDialog); // Dialog service for opening modals

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserBattlesComponent } from './user-battles.component';
 import { TabComponent } from '../../../shared/components/tab/tab.component';
-import { UserBattlesLeaderboardTabs } from './configs/user-battles.configs';
+import { userBattlesLeaderboardTabs } from './configs/user-battles.configs';
 
 describe('UserBattlesComponent', () => {
   let component: UserBattlesComponent;
@@ -26,7 +26,7 @@ describe('UserBattlesComponent', () => {
   });
 
   it('should set tabs from config', () => {
-    expect(component.tabs).toEqual(UserBattlesLeaderboardTabs);
+    expect(component.tabs).toEqual(userBattlesLeaderboardTabs);
     expect(component.tabs.length).toBe(3);
   });
 

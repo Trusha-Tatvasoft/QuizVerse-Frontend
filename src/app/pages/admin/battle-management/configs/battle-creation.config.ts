@@ -122,3 +122,10 @@ export const publishBattleButtonConfig: ButtonConfig = {
   variant: 'gradient',
   type: 'submit',
 };
+
+export const previewBattleButtonConfig: ButtonConfig = {
+  label: 'Preview Battle',
+  type: 'button',
+  variant: 'secondary',
+  matIcon: 'remove_red_eye',
+};

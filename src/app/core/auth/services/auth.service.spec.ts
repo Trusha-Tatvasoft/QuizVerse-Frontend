@@ -135,11 +135,6 @@ describe('AuthService (Jest)', () => {
     service.refreshAccessToken().subscribe((result) => {
       expect(result).toBeFalsy();
     });
-
-    expect(snackbarMock.showError).toHaveBeenCalledWith(
-      platformMessages.sessionExpiredTitle,
-      platformMessages.noRefreshTokenMessage,
-    );
   });
 
   it('should handle token refresh success', () => {
@@ -163,10 +158,6 @@ describe('AuthService (Jest)', () => {
 
     service.refreshAccessToken().subscribe((res) => {
       expect(res).toBe('');
-      expect(snackbarMock.showError).toHaveBeenCalledWith(
-        platformMessages.sessionExpiredTitle,
-        expect.any(String),
-      );
     });
 
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.RefreshToken}`);
@@ -195,7 +186,7 @@ describe('AuthService (Jest)', () => {
     expect(cookieServiceMock.delete).toHaveBeenCalledWith(refreshTokenKey, '/');
     expect(service.currentRole$.value).toBeNull();
     expect(routerMock.navigate).toHaveBeenCalledWith([Navigations.Login]);
-    expect(snackbarMock.showSuccess).toHaveBeenCalledWith('Logout Successfully!');
+    expect(snackbarMock.showSuccess).toHaveBeenCalledWith(platformMessages.logoutSuccess);
   });
 
   it('should return null if token has no role', () => {
@@ -215,7 +206,6 @@ describe('AuthService (Jest)', () => {
 
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.RefreshToken}`);
     req.flush({ result: false, statusCode: 200, data: {} });
-    expect(snackbarMock.showError).toHaveBeenCalled();
   });
 
   it('should return EMPTY if refresh response has missing accessToken', () => {
@@ -226,7 +216,6 @@ describe('AuthService (Jest)', () => {
 
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.RefreshToken}`);
     req.flush({ result: true, statusCode: 200, data: { refreshToken: 'some-refresh' } });
-    expect(snackbarMock.showError).toHaveBeenCalled();
   });
 
   it('should fall back to old refresh token if new refresh token is missing', () => {
@@ -257,10 +246,6 @@ describe('AuthService (Jest)', () => {
 
     service.refreshAccessToken().subscribe((res) => {
       expect(res).toBe('');
-      expect(snackbarMock.showError).toHaveBeenCalledWith(
-        platformMessages.sessionExpiredTitle,
-        'Network error',
-      );
     });
 
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.RefreshToken}`);
@@ -275,13 +260,40 @@ describe('AuthService (Jest)', () => {
 
     service.refreshAccessToken().subscribe((res) => {
       expect(res).toBe('');
-      expect(snackbarMock.showError).toHaveBeenCalledWith(
-        platformMessages.sessionExpiredTitle,
-        platformMessages.tokenInvalidMessage,
-      );
     });
 
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.RefreshToken}`);
     req.error(new ProgressEvent('error'));
+  });
+
+  it('should logout with isLogout = true and show success message', () => {
+    service.logout(true);
+
+    expect(cookieServiceMock.delete).toHaveBeenCalledWith(accessTokenKey, '/');
+    expect(cookieServiceMock.delete).toHaveBeenCalledWith(refreshTokenKey, '/');
+    expect(service.currentRole$.value).toBeNull();
+    expect(routerMock.navigate).toHaveBeenCalledWith([Navigations.Login]);
+    expect(snackbarMock.showSuccess).toHaveBeenCalledWith(platformMessages.logoutSuccess);
+    expect(snackbarMock.showError).not.toHaveBeenCalled();
+  });
+
+  it('should logout with isLogout = false and show error message', () => {
+    service.logout(false);
+
+    expect(cookieServiceMock.delete).toHaveBeenCalledWith(accessTokenKey, '/');
+    expect(cookieServiceMock.delete).toHaveBeenCalledWith(refreshTokenKey, '/');
+    expect(service.currentRole$.value).toBeNull();
+    expect(routerMock.navigate).toHaveBeenCalledWith([Navigations.Login]);
+    expect(snackbarMock.showError).toHaveBeenCalledWith(
+      platformMessages.sessionExpiredTitle,
+      platformMessages.sessionExpiredMessage,
+    );
+    expect(snackbarMock.showSuccess).not.toHaveBeenCalled();
+  });
+
+  it('should return true if token is malformed (catch block)', () => {
+    const invalidToken = 'not.a.valid.token';
+    const result = service.isTokenExpired(invalidToken);
+    expect(result).toBe(true);
   });
 });
