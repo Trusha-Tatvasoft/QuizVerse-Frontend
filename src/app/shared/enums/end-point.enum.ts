@@ -122,6 +122,10 @@ export enum EndPoints {
   GetBattleLeaderboardList = 'UserBattles/get-battle-leaderboard-list',
   //#endregion
 
+  // #region BrowseQuizzes
+  BrowseQuizzes = 'BrowseQuizzes/browse-quizzes',
+  // #endregion
+
   // #region QuizAttempt
   StartQuiz = 'Quiz/start-quiz',
   GetNextQuestion = 'Quiz/get-quiz-question',
