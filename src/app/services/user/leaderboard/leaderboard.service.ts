@@ -7,6 +7,7 @@ import { EndPoints } from '../../../shared/enums/end-point.enum';
 import {
   LeaderboardEntry,
   UserLeaderboardStats,
+  WeeklyLeaderEntry,
 } from '../../../pages/user/user-leaderboard/interfaces/user-leaderboard.interface';
 
 @Injectable({
@@ -32,6 +33,16 @@ export class LeaderboardService {
   getGlobalLeaderboard(): Observable<ApiResponse<LeaderboardEntry[]>> {
     return this.http.get<ApiResponse<LeaderboardEntry[]>>(
       `${environment.baseUrl}/${EndPoints.GlobalLeaderboard}`,
+    );
+  }
+
+  /**
+   * Fetch weekly leaderboard data from backend.
+   * @returns Observable of weekly leader entries wrapped in ApiResponse.
+   */
+  getWeeklyLeaderboard(): Observable<ApiResponse<WeeklyLeaderEntry[]>> {
+    return this.http.get<ApiResponse<WeeklyLeaderEntry[]>>(
+      `${environment.baseUrl}/${EndPoints.WeeklyLeaderboard}`,
     );
   }
 }
