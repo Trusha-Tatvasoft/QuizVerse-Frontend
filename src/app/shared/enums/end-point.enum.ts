@@ -90,6 +90,7 @@ export enum EndPoints {
   // #region UserLeaderboards
   UserLeaderboardStats = 'Leaderboard/get-user-leaderboard-stats',
   GlobalLeaderboard = 'Leaderboard/get-leaderboard-gloabal-ranking',
+  WeeklyLeaderboard = 'Leaderboard/get-weekly-leaderboard-ranking',
   //#endregion
 
   // #region UserDashboard
@@ -121,6 +122,10 @@ export enum EndPoints {
   // #region UserBattles
   GetBattleLeaderboardList = 'UserBattles/get-battle-leaderboard-list',
   //#endregion
+
+  // #region BrowseQuizzes
+  BrowseQuizzes = 'BrowseQuizzes/browse-quizzes',
+  // #endregion
 
   // #region QuizAttempt
   StartQuiz = 'Quiz/start-quiz',

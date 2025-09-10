@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { GlobalLeaderboardCardComponent } from './global-leaderboard-card/global-leaderboard-card.component';
 import { TabComponent } from '../../../shared/components/tab/tab.component';
 import { defaultUserLeaderboardTabs } from './configs/user-leaderboard.configs';
-import { LeaderboardTab } from './interfaces/user-leaderboard.interface';
+import { LazyTab } from '../../../shared/interfaces/tab-component.interface';
 
 @Component({
   selector: 'app-user-leaderboard',
@@ -12,7 +12,7 @@ import { LeaderboardTab } from './interfaces/user-leaderboard.interface';
 })
 export class UserLeaderboardComponent {
   selectedIndex = 0;
-  tabs: LeaderboardTab[] = defaultUserLeaderboardTabs;
+  tabs: LazyTab[] = defaultUserLeaderboardTabs;
 
   /**
    * Handles tab selection changes.

@@ -6,6 +6,7 @@ import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import {
   LeaderboardEntry,
   UserLeaderboardStats,
+  WeeklyLeaderEntry,
 } from '../../../pages/user/user-leaderboard/interfaces/user-leaderboard.interface';
 import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
@@ -115,6 +116,59 @@ describe('LeaderboardService', () => {
           expect(err.message).toBe('Not found');
           expect(httpClientMock.get).toHaveBeenCalledWith(
             `${environment.baseUrl}/${EndPoints.GlobalLeaderboard}`,
+          );
+          done();
+        },
+      });
+    });
+  });
+
+  describe('getWeeklyLeaderboard', () => {
+    it('should call HttpClient.get with the correct URL and return weekly leaderboard data', (done) => {
+      const mockResponse: ApiResponse<WeeklyLeaderEntry[]> = {
+        result: true,
+        data: [
+          {
+            rank: 1,
+            userId: 201,
+            userName: 'Bob',
+            fullName: 'Bob Johnson',
+            profilePic: 'https://example.com/bob.png',
+            totalXp: 950,
+            totalQuizzesPlayed: 4,
+            totalBattlesPlayed: 3,
+            isLoggedInUser: true,
+          },
+        ],
+        message: 'Fetched successfully',
+        statusCode: 200,
+      };
+
+      httpClientMock.get.mockReturnValue(of(mockResponse));
+
+      service.getWeeklyLeaderboard().subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+        expect(response.statusCode).toBe(200);
+        expect(response.data[0].userName).toBe('Bob');
+        expect(httpClientMock.get).toHaveBeenCalledWith(
+          `${environment.baseUrl}/${EndPoints.WeeklyLeaderboard}`,
+        );
+        done();
+      });
+    });
+
+    it('should propagate error if HttpClient.get fails', (done) => {
+      const error = { status: 404, message: 'Not found' };
+
+      httpClientMock.get.mockReturnValue(throwError(() => error));
+
+      service.getWeeklyLeaderboard().subscribe({
+        next: () => fail('Expected an error, but got a response'),
+        error: (err) => {
+          expect(err.status).toBe(404);
+          expect(err.message).toBe('Not found');
+          expect(httpClientMock.get).toHaveBeenCalledWith(
+            `${environment.baseUrl}/${EndPoints.WeeklyLeaderboard}`,
           );
           done();
         },
