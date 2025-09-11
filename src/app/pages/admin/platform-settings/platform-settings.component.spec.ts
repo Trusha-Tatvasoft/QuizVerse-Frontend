@@ -100,7 +100,10 @@ describe('PlatformSettingsComponent', () => {
 
       component['loadPlatformConfigurations']();
 
-      expect(mockSnackbar.showError).toHaveBeenCalledWith('Http Error');
+      expect(mockSnackbar.showError).toHaveBeenCalledWith(
+        'Error! undefined',
+        'Something went wrong.',
+      );
     });
   });
 
@@ -215,7 +218,10 @@ describe('PlatformSettingsComponent', () => {
 
       component.savePlatformConfig();
 
-      expect(mockSnackbar.showError).toHaveBeenCalledWith('Error');
+      expect(mockSnackbar.showError).toHaveBeenCalledWith(
+        'Error! undefined',
+        'Something went wrong.',
+      );
     });
 
     it('should mark all as touched if form invalid', () => {

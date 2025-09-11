@@ -649,7 +649,10 @@ describe('QuizCreationLayoutComponent', () => {
       component.loadQuiz(1);
       tick();
       fixture.detectChanges();
-      expect(snackbarService.showError).toHaveBeenCalledWith('error');
+      expect(snackbarService.showError).toHaveBeenCalledWith(
+        'Error! undefined',
+        'Something went wrong.',
+      );
     }));
   });
 

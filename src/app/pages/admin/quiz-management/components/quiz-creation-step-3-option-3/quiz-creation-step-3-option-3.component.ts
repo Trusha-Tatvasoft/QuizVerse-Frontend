@@ -14,7 +14,7 @@ import {
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
 import { OutlineButtonComponent } from '../../../../../shared/components/outline-button/outline-button.component';
 import { MatIcon } from '@angular/material/icon';
-import { quizCRUDMessages } from '../../../../../utils/constants';
+import { platformMessages, quizCRUDMessages } from '../../../../../utils/constants';
 import { Subject, takeUntil } from 'rxjs';
 import { EndPoints } from '../../../../../shared/enums/end-point.enum';
 
@@ -110,7 +110,10 @@ export class QuizCreationStep3Option3Component {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (res) => this.handleSuccess(res.data),
-          error: (err) => this.snackbar.showError(err),
+          error: (err) => {
+            const message = err?.error?.message || platformMessages.errorMessage;
+            this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
+          },
         });
     } else if (fileName.endsWith('.xls') || fileName.endsWith('.xlsx')) {
       this.quizCreationService
@@ -118,7 +121,10 @@ export class QuizCreationStep3Option3Component {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (res) => this.handleSuccess(res.data),
-          error: (err) => this.snackbar.showError(err),
+          error: (err) => {
+            const message = err?.error?.message || platformMessages.errorMessage;
+            this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
+          },
         });
     } else {
       this.snackbar.showError(quizCRUDMessages.fileTypeError);
