@@ -28,6 +28,7 @@ import { UserBattlesComponent } from './pages/user/user-battles/user-battles.com
 import { BrowseQuizzesComponent } from './pages/user/browse-quizzes/browse-quizzes.component';
 import { QuizAttemptLayoutComponent } from './pages/user/quiz-attempt-layout/quiz-attempt-layout.component';
 import { QuizInstructionsComponent } from './pages/user/quiz-attempt-layout/quiz-instructions/quiz-instructions.component';
+import { QuestionDifficultyComponent } from './pages/admin/question-difficulty/question-difficulty.component';
 
 export const routes: Routes = [
   {
@@ -146,6 +147,11 @@ export const routes: Routes = [
         children: [
           { path: `${Navigations.BattleUpdation}/:id`, component: BattleCreationLayoutComponent },
         ],
+      },
+      {
+        path: Navigations.QuestionDifficulty,
+        component: QuestionDifficultyComponent,
+        title: 'Quizeverse | Question Difficulty',
       },
     ],
   },

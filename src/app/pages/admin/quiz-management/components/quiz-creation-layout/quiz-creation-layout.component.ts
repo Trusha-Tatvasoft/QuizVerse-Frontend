@@ -275,7 +275,8 @@ export class QuizCreationLayoutComponent {
               this.snackbar.showError(err.error.data[0].errors[0]);
             }
           } else {
-            this.snackbar.showError(err?.message || platformMessages.unexpectedError);
+            const message = err?.error?.message || platformMessages.errorMessage;
+            this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
           }
         },
       });
@@ -325,7 +326,8 @@ export class QuizCreationLayoutComponent {
               this.snackbar.showError(err.error.data[0].errors[0]);
             }
           } else {
-            this.snackbar.showError(err?.message || platformMessages.unexpectedError);
+            const message = err?.error?.message || platformMessages.errorMessage;
+            this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
           }
         },
       });
@@ -379,7 +381,8 @@ export class QuizCreationLayoutComponent {
           this.isEditMode = true;
         },
         error: (err) => {
-          this.snackbar.showError(err);
+          const message = err?.error?.message || platformMessages.errorMessage;
+          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
         },
       });
   }

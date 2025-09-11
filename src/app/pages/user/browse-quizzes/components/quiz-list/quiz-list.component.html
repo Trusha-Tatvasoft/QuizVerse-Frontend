@@ -1,1 +1,9 @@
-<p>quiz-list works!</p>
+<div class="quiz-list">
+  @for (quiz of quizzes; track quiz.title) {
+    <app-quiz-card [cardConfig]="quiz"></app-quiz-card>
+  } @empty {
+    <div class="empty-card">
+      <p>No quizzes found.</p>
+    </div>
+  }
+</div>

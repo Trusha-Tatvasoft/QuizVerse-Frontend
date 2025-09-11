@@ -1,0 +1,113 @@
+<div class="leaderboard-container">
+  <div class="leaderboard-header">
+    <!-- title + subtitle -->
+    <div class="leaderboard-text">
+      <h3 class="leaderboard-title">
+        <mat-icon class="mr-2 emoji-events">emoji_events</mat-icon>
+        {{ selectedMonthName }} {{ selectedYear }} Champion
+      </h3>
+      <p class="leaderboard-subtitle">Celebrating the top quiz master of the month</p>
+    </div>
+
+    <!-- dropdowns -->
+    <div class="leaderboard-filters">
+      <!-- Month -->
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-select [(value)]="selectedMonth" (selectionChange)="onFilterChange()">
+          @for (item of monthList; track item.id) {
+            <mat-option [value]="item.id">{{ item.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Year -->
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-select [(value)]="selectedYear" (selectionChange)="onFilterChange()">
+          @for (item of yearList; track item.id) {
+            <mat-option [value]="item.id">{{ item.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <app-scroll-window
+    [items]="leaderboard"
+    [windowSize]="6"
+    [itemTemplate]="monthlyLeadersTemplate"
+  ></app-scroll-window>
+
+  <ng-template #monthlyLeadersTemplate let-entry>
+    <div class="leaderboard-item" [class.current-user]="entry.isLoggedInUser">
+      <!-- 1. Rank / Medal -->
+      <div class="rank-icon">
+        @if (entry.totalBattlesPlayed + entry.totalQuizzesPlayed > 0) {
+          @switch (entry.rank) {
+            @case (1) {
+              <mat-icon class="gold">military_tech</mat-icon>
+            }
+            @case (2) {
+              <mat-icon class="silver">military_tech</mat-icon>
+            }
+            @case (3) {
+              <mat-icon class="bronze">military_tech</mat-icon>
+            }
+            @default {
+              <span>{{ entry.rank }}</span>
+            }
+          }
+        } @else {
+          <span>--</span>
+        }
+      </div>
+
+      <!-- 2. Profile + Initials -->
+      <div class="profile-wrapper">
+        @if (entry.profilePic) {
+          <img
+            [src]="entry.profilePic"
+            alt="{{ entry.userName }}"
+            class="profile-pic"
+            (error)="entry.profilePic = null"
+          />
+        } @else {
+          <div class="profile-fallback" [ngClass]="getInitialsColorClass(entry.fullName)">
+            {{ getInitials(entry.fullName || entry.userName) }}
+          </div>
+        }
+      </div>
+
+      <!-- 3 & 4. Username + Battles/Quizzes -->
+      <div class="user-details">
+        <span class="username">{{
+          entry.isLoggedInUser ? 'You (' + entry.userName + ')' : entry.userName
+        }}</span>
+        <span class="meta">
+          {{ entry.totalBattlesPlayed }} Battles · {{ entry.totalQuizzesPlayed }} Quizzes
+        </span>
+      </div>
+
+      <!-- 5. XP -->
+      <div class="xp-points">
+        <div class="xp-text">
+          @if (entry.totalBattlesPlayed + entry.totalQuizzesPlayed > 0) {
+            <span class="xp">
+              <mat-icon class="xp-icon">add</mat-icon>
+              {{ entry.totalXp }} XP
+            </span>
+            <small>{{ entry.averageScore | number }}% avg</small>
+          } @else {
+            <span class="xp"> N/A </span>
+            <small>N/A</small>
+          }
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  @if (leaderboard.length === 0) {
+    <div class="no-records">
+      <p>No data available.</p>
+    </div>
+  }
+</div>

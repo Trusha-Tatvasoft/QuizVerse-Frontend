@@ -180,16 +180,6 @@ export const navigationItems = {
       route: `${Navigations.Admin}/${Navigations.Settings}`,
     },
     {
-      label: 'AI Configuration',
-      icon: 'smart_toy',
-      route: `${Navigations.Admin}/${Navigations.AiConfig}`,
-    },
-    {
-      label: 'Financial Management',
-      icon: 'attach_money',
-      route: `${Navigations.Admin}/${Navigations.Finance}`,
-    },
-    {
       label: 'Notification Center',
       icon: 'notifications',
       route: `${Navigations.Admin}/${Navigations.Notifications}`,
@@ -553,5 +543,11 @@ export const questionTypes = {
   TRUE_FALSE: 'True/False',
   FILL_IN_THE_BLANK: 'Fill in the Blank',
   SHORT_ANSWER: 'Short Answer',
+};
+// #endregion
+
+// #region Question Difficulty
+export const questionDifficultyMessages = {
+  deleteQuestionDifficulty: 'Question difficulty deleted successfully.',
 };
 // #endregion
