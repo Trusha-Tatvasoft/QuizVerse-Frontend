@@ -113,33 +113,15 @@ describe('WeeklyLeadersComponent', () => {
     );
   });
 
-  it('should return first two initials', () => {
+  it('should return correct initials', () => {
     expect(component.getInitials('John Doe')).toBe('JD');
+    expect(component.getInitials('Alice')).toBe('A');
+    expect(component.getInitials('')).toBe('');
   });
 
-  it('should handle empty string', () => {
-    expect(component.getInitials('')).toBe('?');
-  });
-
-  it('should return only 2 chars even if multiple words', () => {
-    expect(component.getInitials('Anna Maria Smith')).toBe('AM');
-  });
-
-  it('should clear profilePic', () => {
-    const entry: WeeklyLeaderEntry = {
-      rank: 1,
-      userId: 101,
-      userName: 'testUser',
-      fullName: 'Test User',
-      profilePic: 'https://example.com/profile.png',
-      totalXp: 100,
-      totalQuizzesPlayed: 5,
-      totalBattlesPlayed: 2,
-      isLoggedInUser: false,
-    };
-
-    component.onImageError(entry);
-
-    expect(entry.profilePic).toBe('');
+  it('should return correct initials color class', () => {
+    const className = component.getInitialsColorClass('Alice');
+    expect(className).toMatch(/^bg-avatar-\d+$/);
+    expect(component.getInitialsColorClass('')).toBe('bg-avatar-0');
   });
 });

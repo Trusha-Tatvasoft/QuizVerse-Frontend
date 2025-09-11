@@ -1,6 +1,7 @@
 import { LazyTab } from '../../../../shared/interfaces/tab-component.interface';
 import { GlobalRankingsComponent } from '../global-rankings/global-rankings.component';
 import { UserLeaderboardStats } from '../interfaces/user-leaderboard.interface';
+import { MonthlyChampionsComponent } from '../monthly-champions/monthly-champions.component';
 import { WeeklyLeadersComponent } from '../weekly-leaders/weekly-leaders.component';
 
 export const defaultUserLeaderboardStats: UserLeaderboardStats = {
@@ -32,6 +33,6 @@ export const defaultUserLeaderboardTabs: LazyTab[] = [
     id: 'monthly',
     label: 'Monthly Champions',
     icon: 'emoji_events',
-    loadChildren: async () => GlobalRankingsComponent,
+    loadChildren: async () => MonthlyChampionsComponent,
   },
 ];

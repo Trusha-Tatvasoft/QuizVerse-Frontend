@@ -5,12 +5,14 @@ import { HttpClient } from '@angular/common/http';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import {
   LeaderboardEntry,
+  MonthlyLeaderEntry,
   UserLeaderboardStats,
   WeeklyLeaderEntry,
 } from '../../../pages/user/user-leaderboard/interfaces/user-leaderboard.interface';
 import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { of, throwError } from 'rxjs';
+import { CommonListDropDown } from '../../../shared/interfaces/common-dropdown.interface';
 
 describe('LeaderboardService', () => {
   let service: LeaderboardService;
@@ -169,6 +171,144 @@ describe('LeaderboardService', () => {
           expect(err.message).toBe('Not found');
           expect(httpClientMock.get).toHaveBeenCalledWith(
             `${environment.baseUrl}/${EndPoints.WeeklyLeaderboard}`,
+          );
+          done();
+        },
+      });
+    });
+  });
+
+  describe('getAvailableYears', () => {
+    it('getAvailableYears should call HttpClient.get with correct URL and return data', (done) => {
+      const mockResponse: ApiResponse<CommonListDropDown[]> = {
+        result: true,
+        data: [
+          { id: 2023, name: '2023' },
+          { id: 2024, name: '2024' },
+        ],
+        message: 'Available years retrieved successfully.',
+        statusCode: 200,
+      };
+
+      httpClientMock.get.mockReturnValue(of(mockResponse));
+
+      service.getAvailableYears().subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+        expect(httpClientMock.get).toHaveBeenCalledWith(
+          `${environment.baseUrl}/${EndPoints.AvailableYears}`,
+        );
+        done();
+      });
+    });
+
+    it('getAvailableYears should propagate error if HttpClient.get fails', (done) => {
+      const error = { status: 500, message: 'Server error' };
+      httpClientMock.get.mockReturnValue(throwError(() => error));
+
+      service.getAvailableYears().subscribe({
+        next: () => fail('Expected an error'),
+        error: (err) => {
+          expect(err.status).toBe(500);
+          expect(err.message).toBe('Server error');
+          done();
+        },
+      });
+    });
+  });
+
+  describe('getAvailableMonthsByYear', () => {
+    it('getAvailableMonthsByYear should call HttpClient.get with correct URL and return data', (done) => {
+      const year = 2025;
+      const mockResponse: ApiResponse<CommonListDropDown[]> = {
+        result: true,
+        data: [
+          { id: 1, name: 'January' },
+          { id: 2, name: 'February' },
+        ],
+        message: `Available months for ${year} retrieved successfully.`,
+        statusCode: 200,
+      };
+
+      httpClientMock.get.mockReturnValue(of(mockResponse));
+
+      service.getAvailableMonthsByYear(year).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+        expect(httpClientMock.get).toHaveBeenCalledWith(
+          `${environment.baseUrl}/${EndPoints.AvailableMonths}/${year}`,
+        );
+        done();
+      });
+    });
+
+    it('getAvailableMonthsByYear should propagate error if HttpClient.get fails', (done) => {
+      const year = 2025;
+      const error = { status: 404, message: 'Not found' };
+      httpClientMock.get.mockReturnValue(throwError(() => error));
+
+      service.getAvailableMonthsByYear(year).subscribe({
+        next: () => fail('Expected an error'),
+        error: (err) => {
+          expect(err.status).toBe(404);
+          expect(err.message).toBe('Not found');
+          expect(httpClientMock.get).toHaveBeenCalledWith(
+            `${environment.baseUrl}/${EndPoints.AvailableMonths}/${year}`,
+          );
+          done();
+        },
+      });
+    });
+  });
+
+  describe('getMonthlyChampions', () => {
+    it('getMonthlyChampions should call HttpClient.get with correct URL and return data', (done) => {
+      const month = 9;
+      const year = 2025;
+
+      const mockResponse: ApiResponse<MonthlyLeaderEntry[]> = {
+        result: true,
+        data: [
+          {
+            rank: 1,
+            userId: 101,
+            userName: 'Alice',
+            fullName: 'Alice Smith',
+            profilePic: 'https://example.com/alice.png',
+            totalXp: 500,
+            averageScore: 95,
+            totalQuizzesPlayed: 5,
+            totalBattlesPlayed: 3,
+            isLoggedInUser: false,
+          },
+        ],
+        message: 'Monthly champions retrieved successfully.',
+        statusCode: 200,
+      };
+
+      httpClientMock.get.mockReturnValue(of(mockResponse));
+
+      service.getMonthlyChampions(month, year).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+        expect(httpClientMock.get).toHaveBeenCalledWith(
+          `${environment.baseUrl}/${EndPoints.MonthlyChampions}?month=${month}&year=${year}`,
+        );
+        done();
+      });
+    });
+
+    it('getMonthlyChampions should propagate error if HttpClient.get fails', (done) => {
+      const month = 9;
+      const year = 2025;
+      const error = { status: 400, message: 'Bad request' };
+
+      httpClientMock.get.mockReturnValue(throwError(() => error));
+
+      service.getMonthlyChampions(month, year).subscribe({
+        next: () => fail('Expected an error'),
+        error: (err) => {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Bad request');
+          expect(httpClientMock.get).toHaveBeenCalledWith(
+            `${environment.baseUrl}/${EndPoints.MonthlyChampions}?month=${month}&year=${year}`,
           );
           done();
         },

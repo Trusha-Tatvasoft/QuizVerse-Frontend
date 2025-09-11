@@ -8,6 +8,23 @@
   }
 }
 
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+
+  @media (max-width: 576px) {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.leaderboard-text {
+  display: flex;
+  flex-direction: column;
+}
+
 .leaderboard-title {
   display: flex;
   align-items: center;
@@ -15,7 +32,7 @@
   font-size: 1.2rem;
   margin-bottom: 0.3rem;
 
-  .public-outline {
+  .emoji-events {
     font-size: 24px;
     color: #fab115;
     display: flex;
@@ -25,7 +42,7 @@
   @media (max-width: 576px) {
     font-size: 1rem;
 
-    .public-outline {
+    .emoji-events {
       font-size: 20px;
     }
   }
@@ -34,27 +51,29 @@
 .leaderboard-subtitle {
   font-size: 0.9rem;
   color: var(--gray-color);
-  margin-bottom: 1rem;
 
   @media (max-width: 576px) {
     font-size: 0.8rem;
-    margin-bottom: 0.5rem;
   }
 }
 
-.leaderboard-list {
+.leaderboard-filters {
   display: flex;
-  flex-direction: column;
   gap: 0.5rem;
-  max-height: 480px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch; // iOS smooth scrolling
-  scroll-behavior: smooth;
-  touch-action: none;
+  align-items: center;
 
-  @media (max-width: 576px) {
-    max-height: 380px;
-    gap: 0.4rem;
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-top: 0.5rem;
+    justify-content: flex-end;
+  }
+}
+
+.filter-select {
+  width: 150px;
+
+  @media (max-width: 768px) {
+    width: 140px;
   }
 }
 
@@ -142,12 +161,72 @@
       align-items: center;
       justify-content: center;
       font-weight: 600;
-      background: #e5e7eb;
-      color: #374151;
       object-fit: cover;
 
       @media (max-width: 576px) {
         font-size: 0.8rem;
+      }
+    }
+
+    .profile-fallback {
+      &.bg-avatar-0 {
+        background-color: #ffb703;
+        color: #000;
+      }
+
+      &.bg-avatar-1 {
+        background-color: #fb8500;
+        color: #fff;
+      }
+
+      &.bg-avatar-2 {
+        background-color: #219ebc;
+        color: #fff;
+      }
+
+      &.bg-avatar-3 {
+        background-color: #8ecae6;
+        color: #000;
+      }
+
+      &.bg-avatar-4 {
+        background-color: #ff006e;
+        color: #fff;
+      }
+
+      &.bg-avatar-5 {
+        background-color: #8338ec;
+        color: #fff;
+      }
+
+      &.bg-avatar-6 {
+        background-color: #3a86ff;
+        color: #fff;
+      }
+
+      &.bg-avatar-7 {
+        background-color: #06d6a0;
+        color: #000;
+      }
+
+      &.bg-avatar-8 {
+        background-color: #ef476f;
+        color: #fff;
+      }
+
+      &.bg-avatar-9 {
+        background-color: #ffd166;
+        color: #000;
+      }
+
+      &.bg-avatar-10 {
+        background-color: #118ab2;
+        color: #fff;
+      }
+
+      &.bg-avatar-11 {
+        background-color: #073b4c;
+        color: #fff;
       }
     }
 
@@ -187,39 +266,15 @@
     gap: 6px;
     min-width: 120px;
 
-    .trend-icon {
-      display: flex;
-      align-items: center;
-
-      mat-icon {
-        font-size: 18px;
-
-        @media (max-width: 576px) {
-          font-size: 16px;
-        }
-      }
-
-      .trend-up {
-        color: #16a34a;
-      }
-
-      .trend-down {
-        color: #dc2626;
-      }
-
-      .trend-neutral {
-        color: #9ca3af;
-      }
-    }
-
     .xp-text {
       text-align: right;
 
       .xp {
         font-weight: 700;
         font-size: 1rem;
-        color: var(--global-primary-color);
-        display: block;
+        color: #16a34a;
+        display: inline-flex;
+        align-items: center;
         line-height: 1.2;
 
         @media (max-width: 576px) {
@@ -227,13 +282,26 @@
         }
       }
 
-      small {
-        display: block;
-        font-size: 0.75rem;
-        color: #6b7280;
+      .xp-icon {
+        font-size: 1rem;
+        margin-right: 0px;
+        display: flex;
+        align-items: center;
+        justify-content: end;
 
         @media (max-width: 576px) {
-          font-size: 0.65rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      small {
+        font-weight: 700;
+        display: block;
+        font-size: 0.8rem;
+        color: #2563eb;
+
+        @media (max-width: 576px) {
+          font-size: 0.7rem;
         }
       }
     }
