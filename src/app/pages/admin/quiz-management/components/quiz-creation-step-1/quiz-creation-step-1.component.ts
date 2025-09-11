@@ -27,7 +27,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
 import { QuizCreationService } from '../../../../../services/admin/quiz-management/quiz-creation/quiz-creation.service';
 import { QuizStep1Data } from '../../../../../shared/interfaces/quiz-creation.interface';
-import { quizCRUDMessages } from '../../../../../utils/constants';
+import { platformMessages, quizCRUDMessages } from '../../../../../utils/constants';
 import { Subject, takeUntil } from 'rxjs';
 import { DropDownType } from '../../../../../shared/enums/dropdown-types.enum';
 
@@ -330,8 +330,9 @@ export class QuizCreationStep1Component {
             }
           }
         },
-        error: (error) => {
-          this.snackbar.showError(error);
+        error: (err) => {
+          const message = err?.error?.message || platformMessages.errorMessage;
+          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
         },
       });
   }
@@ -359,7 +360,8 @@ export class QuizCreationStep1Component {
           }
         },
         error: (err) => {
-          this.snackbar.showError(err);
+          const message = err?.error?.message || platformMessages.errorMessage;
+          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
         },
       });
   }
@@ -398,7 +400,8 @@ export class QuizCreationStep1Component {
           }
         },
         error: (err) => {
-          this.snackbar.showError(err);
+          const message = err?.error?.message || platformMessages.errorMessage;
+          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
         },
       });
   }
@@ -414,7 +417,8 @@ export class QuizCreationStep1Component {
           }
         },
         error: (err) => {
-          this.snackbar.showError(err);
+          const message = err?.error?.message || platformMessages.errorMessage;
+          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
         },
       });
   }

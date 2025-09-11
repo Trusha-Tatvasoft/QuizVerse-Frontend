@@ -148,7 +148,7 @@ describe('QuizCreationStep1Component', () => {
     quizService.getDropDownData.mockReturnValueOnce(throwError(() => new Error('API Error')));
     component.ngOnInit();
     fixture.detectChanges();
-    expect(snackbar.showError).toHaveBeenCalledWith(expect.any(Error));
+    expect(snackbar.showError).toHaveBeenCalledWith('Error! undefined', 'Something went wrong.');
   });
 
   it('should cleanup subscriptions on destroy', () => {
@@ -249,13 +249,13 @@ describe('QuizCreationStep1Component', () => {
   it('should show error if getDifficultyLevels fails', () => {
     quizService.getDropDownData.mockReturnValueOnce(throwError(() => new Error('Diff Error')));
     component.getDifficultyLevels();
-    expect(snackbar.showError).toHaveBeenCalledWith(expect.any(Error));
+    expect(snackbar.showError).toHaveBeenCalledWith('Error! undefined', 'Something went wrong.');
   });
 
   it('should show error if getQuizCategories fails', () => {
     quizService.getDropDownData.mockReturnValueOnce(throwError(() => new Error('Cat Error')));
     component.getQuizCategories();
-    expect(snackbar.showError).toHaveBeenCalledWith(expect.any(Error));
+    expect(snackbar.showError).toHaveBeenCalledWith('Error! undefined', 'Something went wrong.');
   });
 
   describe('QuizCreationStep1Component - createTag', () => {
