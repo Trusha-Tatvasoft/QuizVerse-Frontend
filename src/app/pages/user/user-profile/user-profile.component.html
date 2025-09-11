@@ -20,7 +20,7 @@
       <div class="progress-wrapper">
         <div class="progress-label">Progress to {{ user?.nextRank }} :</div>
         <div class="progress-bar-row">
-          <app-progress-bar [percentage]="60" theme="primary"></app-progress-bar>
+          <app-progress-bar [percentage]="user?.progress ?? 0" theme="primary"></app-progress-bar>
           <span class="progress-value">{{ user?.progress }}%</span>
         </div>
       </div>

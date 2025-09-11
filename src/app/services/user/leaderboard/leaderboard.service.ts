@@ -5,6 +5,7 @@ import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import {
+  CategoryLeaderEntry,
   LeaderboardEntry,
   MonthlyLeaderEntry,
   UserLeaderboardStats,
@@ -45,6 +46,17 @@ export class LeaderboardService {
   getWeeklyLeaderboard(): Observable<ApiResponse<WeeklyLeaderEntry[]>> {
     return this.http.get<ApiResponse<WeeklyLeaderEntry[]>>(
       `${environment.baseUrl}/${EndPoints.WeeklyLeaderboard}`,
+    );
+  }
+
+  /**
+   * Fetch category-wise leaderboard data from backend.
+   * @param categoryId The ID of the quiz category.
+   * @returns Observable of leaderboard entries wrapped in ApiResponse.
+   */
+  getCategoryLeaderboard(categoryId: number): Observable<ApiResponse<CategoryLeaderEntry[]>> {
+    return this.http.get<ApiResponse<CategoryLeaderEntry[]>>(
+      `${environment.baseUrl}/${EndPoints.CategoryLeaderboard}?categoryId=${categoryId}`,
     );
   }
 

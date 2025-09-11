@@ -1,0 +1,103 @@
+<div class="leaderboard-container">
+  <div class="leaderboard-header">
+    <!-- title + subtitle -->
+    <div class="leaderboard-text">
+      <h3 class="leaderboard-title">
+        <mat-icon class="mr-2 category-outline">category</mat-icon>
+        {{ selectedCategoryName }} Category Leaders
+      </h3>
+      <p class="leaderboard-subtitle">
+        Top performers in {{ selectedCategoryName.toLowerCase() }} quizzes
+      </p>
+    </div>
+
+    <!-- dropdown -->
+    <div class="leaderboard-filters">
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-select [(value)]="selectedCategory" (selectionChange)="onFilterChange()">
+          @for (item of categoryList; track item.id) {
+            <mat-option [value]="item.id">{{ item.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <app-scroll-window
+    [items]="leaderboard"
+    [windowSize]="6"
+    [itemTemplate]="categoryLeadersTemplate"
+  ></app-scroll-window>
+
+  <ng-template #categoryLeadersTemplate let-entry>
+    <div class="leaderboard-item" [class.current-user]="entry.isLoggedInUser">
+      <!-- 1. Rank / Medal -->
+      <div class="rank-icon">
+        @if (entry.totalBattlesPlayed + entry.totalQuizzesPlayed > 0) {
+          @switch (entry.rank) {
+            @case (1) {
+              <mat-icon class="gold">military_tech</mat-icon>
+            }
+            @case (2) {
+              <mat-icon class="silver">military_tech</mat-icon>
+            }
+            @case (3) {
+              <mat-icon class="bronze">military_tech</mat-icon>
+            }
+            @default {
+              <span>{{ entry.rank }}</span>
+            }
+          }
+        } @else {
+          <span>--</span>
+        }
+      </div>
+
+      <!-- 2. Profile + Initials -->
+      <div class="profile-wrapper">
+        @if (entry.profilePic) {
+          <img
+            [src]="entry.profilePic"
+            alt="{{ entry.userName }}"
+            class="profile-pic"
+            (error)="entry.profilePic = null"
+          />
+        } @else {
+          <div class="profile-fallback" [ngClass]="getInitialsColorClass(entry.fullName)">
+            {{ getInitials(entry.fullName || entry.userName) }}
+          </div>
+        }
+      </div>
+
+      <!-- 3 & 4. Username + Battles/Quizzes -->
+      <div class="user-details">
+        <span class="username">{{
+          entry.isLoggedInUser ? 'You (' + entry.userName + ')' : entry.userName
+        }}</span>
+        <span class="meta">
+          {{ entry.totalBattlesPlayed }} Battles · {{ entry.totalQuizzesPlayed }} Quizzes
+        </span>
+      </div>
+
+      <!-- 5. AVG Score -->
+      <div class="avg-scores">
+        <div class="avg-scores-text">
+          <span class="scores">
+            @if (entry.totalBattlesPlayed + entry.totalQuizzesPlayed > 0) {
+              {{ entry.averageScore | number }}%
+            } @else {
+              N/A
+            }
+          </span>
+          <small>Average Score</small>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  @if (leaderboard.length === 0) {
+    <div class="no-records">
+      <p>No data available.</p>
+    </div>
+  }
+</div>

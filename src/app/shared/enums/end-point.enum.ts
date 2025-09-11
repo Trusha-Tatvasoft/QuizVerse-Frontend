@@ -78,6 +78,11 @@ export enum EndPoints {
 
   // #region QuestionDifficulty
   QuestionDifficultyXP = 'QuestionDifficulty/get-battle-question-difficulty-data',
+  GetAllQuestionDifficulties = 'QuestionDifficulty/get-question-difficulties',
+  DeleteQuestionDifficulty = 'QuestionDifficulty/delete-question-difficulty',
+  QuestionDifficultyNameAvailable = 'QuestionDifficulty/is-question-difficulty-name-available',
+  QuestionDifficultyXPAvailable = 'QuestionDifficulty/is-question-difficulty-xp-available',
+  CreateOrUpdateQuestionDifficultyLevel = 'QuestionDifficulty/add-or-edit-question-difficulty',
   //#endregion
 
   // #region EmailTemplate
@@ -91,6 +96,7 @@ export enum EndPoints {
   UserLeaderboardStats = 'Leaderboard/get-user-leaderboard-stats',
   GlobalLeaderboard = 'Leaderboard/get-leaderboard-gloabal-ranking',
   WeeklyLeaderboard = 'Leaderboard/get-weekly-leaderboard-ranking',
+  CategoryLeaderboard = 'Leaderboard/get-category-wise-leaderboard',
   MonthlyChampions = 'Leaderboard/get-monthly-champions',
   AvailableYears = 'Leaderboard/get-available-years',
   AvailableMonths = 'Leaderboard/get-available-months',
