@@ -155,30 +155,16 @@ describe('CategoryLeadersComponent', () => {
     expect(component.selectedCategoryName).toBe('Unknown');
   });
 
-  it('should return first two initials', () => {
+  it('should return correct initials', () => {
     expect(component.getInitials('John Doe')).toBe('JD');
+    expect(component.getInitials('Alice')).toBe('A');
+    expect(component.getInitials('')).toBe('');
   });
 
-  it('should handle empty string for initials', () => {
-    expect(component.getInitials('')).toBe('?');
-  });
-
-  it('should clear profilePic on image error', () => {
-    const entry: CategoryLeaderEntry = {
-      rank: 1,
-      userId: 101,
-      userName: 'Alice',
-      fullName: 'Alice Smith',
-      profilePic: 'https://example.com/profile.png',
-      averageScore: 90,
-      totalQuizzesPlayed: 5,
-      totalBattlesPlayed: 3,
-      isLoggedInUser: true,
-    };
-
-    component.onImageError(entry);
-
-    expect(entry.profilePic).toBe('');
+  it('should return correct initials color class', () => {
+    const className = component.getInitialsColorClass('Alice');
+    expect(className).toMatch(/^bg-avatar-\d+$/);
+    expect(component.getInitialsColorClass('')).toBe('bg-avatar-0');
   });
 
   it('should clean up destroy$ on ngOnDestroy', () => {

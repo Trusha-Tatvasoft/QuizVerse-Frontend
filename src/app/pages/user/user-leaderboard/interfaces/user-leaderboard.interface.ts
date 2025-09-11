@@ -41,3 +41,16 @@ export interface CategoryLeaderEntry {
   totalBattlesPlayed: number;
   isLoggedInUser: boolean;
 }
+
+export interface MonthlyLeaderEntry {
+  rank: number;
+  userId: number;
+  userName: string;
+  fullName: string | null;
+  profilePic: string | null;
+  totalXp: number;
+  averageScore: number;
+  totalQuizzesPlayed: number;
+  totalBattlesPlayed: number;
+  isLoggedInUser: boolean;
+}

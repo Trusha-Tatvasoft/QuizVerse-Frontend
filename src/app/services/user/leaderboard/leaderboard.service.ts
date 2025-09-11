@@ -7,9 +7,11 @@ import { EndPoints } from '../../../shared/enums/end-point.enum';
 import {
   CategoryLeaderEntry,
   LeaderboardEntry,
+  MonthlyLeaderEntry,
   UserLeaderboardStats,
   WeeklyLeaderEntry,
 } from '../../../pages/user/user-leaderboard/interfaces/user-leaderboard.interface';
+import { CommonListDropDown } from '../../../shared/interfaces/common-dropdown.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -55,6 +57,39 @@ export class LeaderboardService {
   getCategoryLeaderboard(categoryId: number): Observable<ApiResponse<CategoryLeaderEntry[]>> {
     return this.http.get<ApiResponse<CategoryLeaderEntry[]>>(
       `${environment.baseUrl}/${EndPoints.CategoryLeaderboard}?categoryId=${categoryId}`,
+    );
+  }
+
+  /**
+   * Fetch list of available years from backend.
+   * @returns Observable of CommonListDropDown array wrapped in ApiResponse.
+   */
+  getAvailableYears(): Observable<ApiResponse<CommonListDropDown[]>> {
+    return this.http.get<ApiResponse<CommonListDropDown[]>>(
+      `${environment.baseUrl}/${EndPoints.AvailableYears}`,
+    );
+  }
+
+  /**
+   * Fetch list of available months for a given year from backend.
+   * @param year The year for which to fetch available months.
+   * @returns Observable of CommonListDropDown array wrapped in ApiResponse.
+   */
+  getAvailableMonthsByYear(year: number): Observable<ApiResponse<CommonListDropDown[]>> {
+    return this.http.get<ApiResponse<CommonListDropDown[]>>(
+      `${environment.baseUrl}/${EndPoints.AvailableMonths}/${year}`,
+    );
+  }
+
+  /**
+   * Fetch monthly champions for a given month and year.
+   * @param month The selected month (1-12)
+   * @param year The selected year (e.g., 2025)
+   * @returns Observable of monthly champion entries wrapped in ApiResponse.
+   */
+  getMonthlyChampions(month: number, year: number): Observable<ApiResponse<MonthlyLeaderEntry[]>> {
+    return this.http.get<ApiResponse<MonthlyLeaderEntry[]>>(
+      `${environment.baseUrl}/${EndPoints.MonthlyChampions}?month=${month}&year=${year}`,
     );
   }
 }

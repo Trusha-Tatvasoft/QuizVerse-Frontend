@@ -15,16 +15,17 @@
   font-size: 1.2rem;
   margin-bottom: 0.3rem;
 
-  .star-outline {
+  .public-outline {
     font-size: 24px;
     color: #fab115;
-    vertical-align: middle;
+    display: flex;
+    align-items: center;
   }
 
   @media (max-width: 576px) {
     font-size: 1rem;
 
-    .star-outline {
+    .public-outline {
       font-size: 20px;
     }
   }
