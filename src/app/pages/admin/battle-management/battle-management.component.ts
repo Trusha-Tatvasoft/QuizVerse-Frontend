@@ -74,8 +74,10 @@ export class BattleManagementComponent implements OnInit, OnDestroy {
           this.battleData = battles;
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.statusCode}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }
@@ -137,8 +139,8 @@ export class BattleManagementComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.snackbar.showError(
-            'Error',
-            err?.error?.message || platformMessages.unavailableMessage,
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
           );
         },
       });

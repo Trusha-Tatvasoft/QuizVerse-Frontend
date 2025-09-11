@@ -196,7 +196,7 @@ describe('RegisterComponent', () => {
 
     component.registerFormSubmit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error', 'Server error');
+    expect(errorSpy).toHaveBeenCalledWith(platformMessages.errorTitle, 'Server error');
   });
 
   it('should call createUserFormSubmit if isLogin is true', () => {
@@ -495,7 +495,7 @@ describe('RegisterComponent', () => {
       (registerService.checkUserNameExists as jest.Mock).mockReturnValue(
         throwError(() => ({
           status: 400,
-          error: { message: 'Username already exists' },
+          error: { message: platformMessages.usernameExists },
         })),
       );
 
@@ -642,7 +642,7 @@ describe('RegisterComponent', () => {
       tick();
 
       expect(snackbarService.showError).toHaveBeenCalledWith(
-        `${platformMessages.errorTitle} 500`,
+        `${platformMessages.errorTitle}`,
         'Internal error',
       );
     }));

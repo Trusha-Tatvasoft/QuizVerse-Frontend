@@ -96,8 +96,10 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
           }
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbarService.showError('Error', message);
+          this.snackbarService.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
 
           this.router.navigate([Navigations.ResetLinkInvalid]);
         },
@@ -160,8 +162,10 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
           this.router.navigate([Navigations.Login]);
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbarService.showError('Error', message);
+          this.snackbarService.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
 
           this.router.navigate([Navigations.ForgetPassword]);
         },

@@ -90,8 +90,10 @@ export class EmailTemplateComponent {
           this.totalItems.set(res.data.totalRecords);
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
           this.dataSource.set([]);
           this.totalItems.set(0);
         },
@@ -231,7 +233,10 @@ export class EmailTemplateComponent {
           }
         },
         error: (err) => {
-          this.snackbar.showError('Error', err?.error?.message || 'Server unavailable');
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }

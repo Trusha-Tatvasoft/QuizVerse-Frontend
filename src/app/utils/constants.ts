@@ -228,6 +228,11 @@ export const platformMessages = {
   sessionExpiredMessage: 'Please log in again.',
   //#endregion
 
+  //#region registerMessages
+  emailExists: 'Email already exists.',
+  usernameExists: 'Username already exists.',
+  //#endregion
+
   //#region QuestionPool Messages
   failedLoadQuesPreview: 'Failed to load question details',
   deleteQuesSuccess: 'Question Deleted Successfully!!',

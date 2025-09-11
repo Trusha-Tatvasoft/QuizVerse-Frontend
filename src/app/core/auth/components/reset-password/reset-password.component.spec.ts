@@ -161,7 +161,7 @@ describe('ResetPasswordComponent', () => {
 
     component.onSubmit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error', 'Server error');
+    expect(errorSpy).toHaveBeenCalledWith(platformMessages.errorTitle, 'Server error');
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ForgetPassword]);
   });
 
@@ -245,7 +245,7 @@ describe('ResetPasswordComponent', () => {
 
     component.ngOnInit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error', 'Invalid or expired token');
+    expect(errorSpy).toHaveBeenCalledWith(platformMessages.errorTitle, 'Invalid or expired token');
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ResetLinkInvalid]);
   });
 
@@ -313,7 +313,10 @@ describe('ResetPasswordComponent', () => {
 
     component.ngOnInit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error', platformMessages.errorMessage);
+    expect(errorSpy).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
+    );
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ResetLinkInvalid]);
   });
 
@@ -347,7 +350,10 @@ describe('ResetPasswordComponent', () => {
 
     component.ngOnInit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error', platformMessages.errorMessage);
+    expect(errorSpy).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
+    );
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ResetLinkInvalid]);
   });
 
@@ -390,7 +396,10 @@ describe('ResetPasswordComponent', () => {
 
     component.onSubmit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error', platformMessages.errorMessage);
+    expect(errorSpy).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
+    );
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ForgetPassword]);
   });
 });

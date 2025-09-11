@@ -275,48 +275,6 @@ describe('BattleCreationStep1Component', () => {
     );
   });
 
-  // it('should return false and show error if total time is out of range', async () => {
-  //   component.ngOnInit();
-  //   jest.runAllTimers();
-
-  //   component.newBattleForm.get('battleTitle')?.setValue('Test Battle');
-  //   component.newBattleForm.get('description')?.setValue('Test Description');
-  //   component.newBattleForm.get('battleCategory')?.setValue(1);
-  //   component.newBattleForm.get('difficultyLevel')?.setValue(1);
-  //   component.newBattleForm.get('battleType')?.setValue(BattleTimeType.Permanent);
-  //   component.newBattleForm.get('easyQuestions')?.setValue(10);
-  //   component.newBattleForm.get('easyTime')?.setValue(1080); // 1080 seconds * 10 = 10800 seconds = 180 minutes
-  //   component.newBattleForm.get('mediumQuestions')?.setValue(0);
-  //   component.newBattleForm.get('mediumTime')?.setValue(60);
-
-  //   component.updateTotals();
-  //   const result = component.submitStep1Form();
-
-  //   expect(result).toBe(false);
-  //   expect(snackbarService.showError).toHaveBeenCalledWith(platformMessages.maximumTotalTimeError);
-  // });
-
-  // it('should return false and show error if total XP is zero', async () => {
-  //   component.ngOnInit();
-  //   jest.runAllTimers();
-
-  //   component.newBattleForm.get('battleTitle')?.setValue('Test Battle');
-  //   component.newBattleForm.get('description')?.setValue('Test Description');
-  //   component.newBattleForm.get('battleCategory')?.setValue(1);
-  //   component.newBattleForm.get('difficultyLevel')?.setValue(1);
-  //   component.newBattleForm.get('battleType')?.setValue(BattleTimeType.Permanent);
-  //   component.newBattleForm.get('easyQuestions')?.setValue(0);
-  //   component.newBattleForm.get('easyTime')?.setValue(30);
-  //   component.newBattleForm.get('mediumQuestions')?.setValue(0);
-  //   component.newBattleForm.get('mediumTime')?.setValue(60);
-
-  //   component.updateTotals();
-  //   const result = component.submitStep1Form();
-
-  //   expect(result).toBe(false);
-  //   expect(snackbarService.showError).toHaveBeenCalledWith(platformMessages.minimumTotalXPError);
-  // });
-
   it('should return true and emit form values on valid form submission', async () => {
     const formValuesChangeSpy = jest.spyOn(component.formValuesChange, 'emit');
     component.ngOnInit();
@@ -354,12 +312,15 @@ describe('BattleCreationStep1Component', () => {
 
   it('should handle errors from getQuestionDifficultyXP and show snackbar', async () => {
     battleManagementService.getQuestionDifficultyXP.mockReturnValue(
-      throwError(() => new Error('API Error')),
+      throwError(() => ({ error: { message: undefined } })),
     );
     component.ngOnInit();
     jest.runAllTimers();
 
-    expect(snackbarService.showError).toHaveBeenCalledWith(expect.any(Error));
+    expect(snackbarService.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
+    );
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {

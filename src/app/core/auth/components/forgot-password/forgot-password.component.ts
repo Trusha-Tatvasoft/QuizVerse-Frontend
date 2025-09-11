@@ -107,8 +107,10 @@ export class ForgotPasswordComponent implements OnDestroy {
           });
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbarService.showError(`Error`, message);
+          this.snackbarService.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }

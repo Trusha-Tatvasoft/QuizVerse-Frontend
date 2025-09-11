@@ -110,7 +110,7 @@ describe('BattleManagementComponent', () => {
 
     expect(battleService.getBattles).toHaveBeenCalled();
     expect(snackbarService.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} ${mockError.statusCode}`,
+      `${platformMessages.errorTitle}`,
       mockError.error.message,
     );
   });
@@ -123,7 +123,7 @@ describe('BattleManagementComponent', () => {
 
     expect(battleService.getBattles).toHaveBeenCalled();
     expect(snackbarService.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} ${mockError.statusCode}`,
+      `${platformMessages.errorTitle}`,
       platformMessages.errorMessage,
     );
   });
@@ -213,7 +213,7 @@ describe('BattleManagementComponent', () => {
 
     expect(battleService.deleteBattle).toHaveBeenCalledWith(battleId);
     expect(snackbarService.showError).toHaveBeenCalledWith(
-      'Error',
+      platformMessages.errorTitle,
       mockError.error.message || platformMessages.deleteBattleFailure,
     );
   });
@@ -254,8 +254,8 @@ describe('BattleManagementComponent', () => {
 
     expect(battleService.deleteBattle).toHaveBeenCalledWith(battleId);
     expect(snackbarService.showError).toHaveBeenCalledWith(
-      'Error',
-      platformMessages.unavailableMessage,
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
     );
   });
 

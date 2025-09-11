@@ -221,13 +221,16 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
               }
               this.fetchQuestionPoolList();
             } else {
-              this.snackbar.showError('Error', res.message || platformMessages.deleteQuesFailure);
+              this.snackbar.showError(
+                platformMessages.errorTitle,
+                res.message || platformMessages.deleteQuesFailure,
+              );
             }
           },
           error: (err) => {
             this.snackbar.showError(
-              'Error',
-              err?.error?.message || platformMessages.unavailableMessage,
+              platformMessages.errorTitle,
+              err?.error?.message || platformMessages.errorMessage,
             );
           },
         });

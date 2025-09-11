@@ -247,8 +247,10 @@ export class RegisterComponent implements OnDestroy {
           selectedTabIndexSignal.set(0);
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbarService.showError('Error', message);
+          this.snackbarService.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }
@@ -323,13 +325,15 @@ export class RegisterComponent implements OnDestroy {
         },
         error: (err) => {
           const status = err.status;
-          const message = err?.error?.message || platformMessages.errorMessage;
 
           if (status >= 400 && status < 500) {
-            control?.setErrors({ server: message || 'Username already exists' });
+            control?.setErrors({ server: err?.error?.message || platformMessages.usernameExists });
             control?.markAsTouched();
           } else {
-            this.snackbarService.showError(`${platformMessages.errorTitle} ${status}`, message);
+            this.snackbarService.showError(
+              `${platformMessages.errorTitle}`,
+              err?.error?.message || platformMessages.errorMessage,
+            );
           }
         },
       });
@@ -355,13 +359,15 @@ export class RegisterComponent implements OnDestroy {
         },
         error: (err) => {
           const status = err.status;
-          const message = err?.error?.message || platformMessages.errorMessage;
 
           if (status >= 400 && status < 500) {
-            control?.setErrors({ server: message || 'Email already exists' });
+            control?.setErrors({ server: err?.error?.message || platformMessages.emailExists });
             control?.markAsTouched();
           } else {
-            this.snackbarService.showError(`${platformMessages.errorTitle} ${status}`, message);
+            this.snackbarService.showError(
+              `${platformMessages.errorTitle}`,
+              err?.error?.message || platformMessages.errorMessage,
+            );
           }
         },
       });
