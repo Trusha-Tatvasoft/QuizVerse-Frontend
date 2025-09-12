@@ -1,6 +1,6 @@
 .featured-quizzes {
   background: #fff;
-
+  height: 100%;
   .header {
     display: flex;
     flex-direction: column;
@@ -14,12 +14,20 @@
       .header-icon {
         color: #f59e0b;
         font-size: 1.5rem;
+
+        @media (max-width: 1024px) {
+          font-size: 1.25rem;
+        }
       }
 
       .title {
         font-size: 1.5rem;
         font-weight: 700;
         color: #111827;
+
+        @media (max-width: 1024px) {
+          font-size: 1.25rem;
+        }
       }
     }
 
@@ -72,6 +80,7 @@
 
   .no-requests {
     display: flex;
+    height: 100%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -82,6 +91,7 @@
     mat-icon {
       margin-bottom: 0.5rem;
     }
+
     p {
       text-align: center;
     }
@@ -169,6 +179,7 @@
   .footer {
     margin-top: 2rem;
     display: block;
+
     @media (max-width: 1170px) {
       margin-top: 1rem;
     }
