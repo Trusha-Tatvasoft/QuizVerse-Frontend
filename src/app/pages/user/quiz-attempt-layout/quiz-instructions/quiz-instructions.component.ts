@@ -15,7 +15,7 @@ import { TagColor } from '../../../../utils/types/tag-component.type';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { QuizAttemptService } from '../../../../services/user/quiz-attempt/quiz-attempt.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { platformMessages } from '../../../../utils/constants';
 import { Navigations } from '../../../../shared/enums/navigation';
 
@@ -67,20 +67,23 @@ export class QuizInstructionsComponent {
 
   /** Fetch quiz instructions from API */
   getQuizInstructions(quizId: number): void {
-    this.quizAttemptService.getQuizInstructions(quizId).subscribe({
-      next: (res) => {
-        if (res.statusCode === 200 && res.result && res.data) {
-          this.quizInstructions = res.data;
-        } else {
-          this.snackbar.showError(res.message);
+    this.quizAttemptService
+      .getQuizInstructions(quizId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.statusCode === 200 && res.result && res.data) {
+            this.quizInstructions = res.data;
+          } else {
+            this.snackbar.showError(res.message);
+            this.router.navigate(['/user/quizzes/browse-quizzes']);
+          }
+        },
+        error: (err) => {
+          this.snackbar.showError(err.message);
           this.router.navigate(['/user/quizzes/browse-quizzes']);
-        }
-      },
-      error: (err) => {
-        this.snackbar.showError(err.message);
-        this.router.navigate(['/user/quizzes/browse-quizzes']);
-      },
-    });
+        },
+      });
   }
 
   /** Build tag config for quiz category */
@@ -144,7 +147,7 @@ export class QuizInstructionsComponent {
   }
 
   /** Navigate to quiz attempt screen */
-  StartQuiz() {
+  startQuiz() {
     const encodedId = btoa((this.decodedId as number).toString());
     this.router.navigate([
       Navigations.User,
@@ -155,7 +158,12 @@ export class QuizInstructionsComponent {
   }
 
   /** Navigate back to browse quiz list */
-  BackToBrowseQuiz() {
+  backToBrowseQuiz() {
     this.router.navigate([Navigations.User, Navigations.QuizList, Navigations.BrowseQuizzes]);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

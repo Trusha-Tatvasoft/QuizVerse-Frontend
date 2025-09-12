@@ -247,10 +247,10 @@ describe('QuizInstructionsComponent', () => {
     });
   });
 
-  describe('StartQuiz', () => {
+  describe('startQuiz', () => {
     it('should navigate to quiz attempt page with encoded ID', () => {
       component.decodedId = 1;
-      component.StartQuiz();
+      component.startQuiz();
       expect(router.navigate).toHaveBeenCalledWith([
         Navigations.User,
         Navigations.QuizList,
@@ -260,9 +260,9 @@ describe('QuizInstructionsComponent', () => {
     });
   });
 
-  describe('BackToBrowseQuiz', () => {
+  describe('backToBrowseQuiz', () => {
     it('should navigate to browse quizzes page', () => {
-      component.BackToBrowseQuiz();
+      component.backToBrowseQuiz();
       expect(router.navigate).toHaveBeenCalledWith([
         Navigations.User,
         Navigations.QuizList,
