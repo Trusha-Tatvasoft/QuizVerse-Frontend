@@ -30,9 +30,6 @@ export function questionDifficultyToTableData(dto: QuestionDifficultyResponseDTO
 
     totalQuestions: `${dto.totalQuestions} Questions`,
 
-    actions: [
-      { icon: 'edit', tooltip: 'Edit Question Difficulty' },
-      { icon: 'delete', tooltip: 'Delete Question Difficulty' },
-    ],
+    actions: [{ icon: 'edit', tooltip: 'Edit Question Difficulty' }],
   };
 }

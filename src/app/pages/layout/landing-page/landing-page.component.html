@@ -67,7 +67,7 @@
       <div class="footer-container">
         <div class="footer-brand">
           <div class="brand-logo">
-            <img [src]="logoPath" alt="Platform Logo" class="logo-icon" />
+            <img [src]="logoPath" alt="Platform Logo" class="logo-icon" (error)="imageError()" />
             <span class="brand-name">{{ plateformName }}</span>
           </div>
           <p class="brand-description">

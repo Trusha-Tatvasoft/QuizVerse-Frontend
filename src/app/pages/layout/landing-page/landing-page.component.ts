@@ -15,7 +15,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { Navigations } from '../../../shared/enums/navigation';
 import { LandingPageDataService } from '../../../services/user/landing-page/landing-page-data.service';
 import { LandingPageStats } from '../../../shared/interfaces/landing-page-stats.interface';
-import { plateformName, platformMessages } from '../../../utils/constants';
+import { defaultLogoPath, plateformName, platformMessages } from '../../../utils/constants';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { LoaderService } from '../../../shared/service/loader/loader.service';
@@ -56,6 +56,10 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
   loginRedirect(): void {
     this.router.navigate([Navigations.Login]);
+  }
+
+  imageError() {
+    this.logoPath = defaultLogoPath;
   }
 
   ngOnDestroy(): void {

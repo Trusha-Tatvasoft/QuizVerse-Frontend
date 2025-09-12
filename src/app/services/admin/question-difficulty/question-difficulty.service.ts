@@ -28,16 +28,6 @@ export class QuestionDifficultyService {
   }
 
   /**
-   * Deletes a question difficulty by its ID
-   * Sends DELETE request with query parameter 'questionDifficultiesId'
-   */
-  deleteQuestionDifficulty(id: number): Observable<ApiResponse<null>> {
-    return this.http.delete<ApiResponse<null>>(
-      `${environment.baseUrl}/${EndPoints.DeleteQuestionDifficulty}?questionDifficultiesId=${id}`,
-    );
-  }
-
-  /**
    * Checks if a question difficulty name already exists
    * Returns true if available, false if already taken
    * SkipLoader header prevents the global loader from showing during this call

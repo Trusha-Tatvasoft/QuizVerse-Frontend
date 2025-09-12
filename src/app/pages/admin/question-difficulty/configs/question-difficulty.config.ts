@@ -1,6 +1,5 @@
 import { Validators } from '@angular/forms';
 import { ButtonConfig } from '../../../../shared/interfaces/button-config.interface';
-import { ConfirmationDialogData } from '../../../../shared/interfaces/confirmation-dialog.interface';
 import { DynamicFormField } from '../../../../shared/interfaces/dynamic-form-field.interface';
 import { ColumnDef } from '../../../../shared/interfaces/table-component.interface';
 
@@ -60,11 +59,6 @@ export const cancelButtonConfig: ButtonConfig = {
   variant: 'secondary',
 };
 
-export const deleteButtonConfig: ButtonConfig = {
-  label: 'Delete Question',
-  variant: 'secondary',
-};
-
 export const addButtonConfig: ButtonConfig = {
   label: 'Create',
   variant: 'secondary',
@@ -79,14 +73,6 @@ export const editButtonConfig: ButtonConfig = {
   type: 'submit',
 };
 
-// Dialog Configs
-export const deleteQuestionDifficultyDialog: ConfirmationDialogData = {
-  title: 'Delete Question Difficulty',
-  message:
-    'Are you sure you want to delete this question difficulty? This action cannot be undone.',
-  confirmButtonConfig: deleteButtonConfig,
-  cancelButtonConfig: cancelButtonConfig,
-};
 // Form Fields Configs
 export const questionDifficultyFormFields: DynamicFormField[] = [
   {
@@ -107,10 +93,11 @@ export const questionDifficultyFormFields: DynamicFormField[] = [
     type: 'textarea',
     placeholder: 'Tell us about difficulty level',
     icon: 'info',
-    validators: [Validators.required, Validators.maxLength(255)],
+    validators: [Validators.required, Validators.maxLength(255), Validators.pattern(/^\S.*$/)],
     validationMessages: {
       required: 'Description is required.',
       maxlength: 'Description must not exceed 255 characters.',
+      pattern: 'Description cannot start with a space.',
     },
   },
   {

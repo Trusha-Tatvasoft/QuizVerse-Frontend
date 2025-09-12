@@ -43,18 +43,6 @@ describe('QuestionDifficultyService', () => {
     req.flush({ result: true, statusCode: 200, message: '', data: mockData });
   });
 
-  it('should delete a question difficulty', () => {
-    service.deleteQuestionDifficulty(1).subscribe((res) => {
-      expect(res.result).toBe(true);
-    });
-
-    const req = httpMock.expectOne(
-      `${environment.baseUrl}/${EndPoints.DeleteQuestionDifficulty}?questionDifficultiesId=1`,
-    );
-    expect(req.request.method).toBe('DELETE');
-    req.flush({ result: true, statusCode: 200, message: '', data: null });
-  });
-
   it('should check if name exists', () => {
     const name = 'Easy';
     service.checkNameExists(name).subscribe((res) => {
@@ -114,18 +102,6 @@ describe('QuestionDifficultyService', () => {
       `${environment.baseUrl}/${EndPoints.GetAllQuestionDifficulties}`,
     );
     req.flush({}, { status: 500, statusText: 'Server Error' });
-  });
-
-  it('should handle error when deleteQuestionDifficulty fails', () => {
-    service.deleteQuestionDifficulty(1).subscribe({
-      next: () => fail('should have failed'),
-      error: (err) => expect(err.status).toBe(404),
-    });
-
-    const req = httpMock.expectOne(
-      `${environment.baseUrl}/${EndPoints.DeleteQuestionDifficulty}?questionDifficultiesId=1`,
-    );
-    req.flush({}, { status: 404, statusText: 'Not Found' });
   });
 
   it('should handle error when checkNameExists fails', () => {

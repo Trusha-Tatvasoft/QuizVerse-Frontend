@@ -21,23 +21,6 @@ describe('QuestionDifficultyComponent (Jest)', () => {
     { id: 2, name: 'Hard', description: 'Desc2', xpGained: 50, totalQuestions: 15 },
   ];
 
-  const mockDialogData: ConfirmationDialogData = {
-    title: 'Confirm',
-    message: 'Are you sure?',
-    confirmButtonConfig: {
-      label: 'Yes',
-      type: 'button',
-      variant: 'primary',
-      matIcon: 'check',
-    },
-    cancelButtonConfig: {
-      label: 'No',
-      type: 'button',
-      variant: 'secondary',
-      matIcon: 'close',
-    },
-  };
-
   beforeEach(async () => {
     mockService = {
       getAllQuestionDifficulties: jest
@@ -94,80 +77,12 @@ describe('QuestionDifficultyComponent (Jest)', () => {
     expect(mockDialog.open).toHaveBeenCalled();
   });
 
-  it('handles delete action', () => {
-    const confirmSpy = jest
-      .spyOn<any, any>(component, 'openConfirmationDialog')
-      .mockImplementation((_: any, cb: any) => cb());
-    const deleteSpy = jest.spyOn<any, any>(component, 'deleteQuestionDifficulty');
-    component['questionDifficulties'] = mockDifficulties;
-
-    component.handleAction({ action: 'delete', row: { id: 1 } as any });
-    expect(confirmSpy).toHaveBeenCalled();
-    expect(deleteSpy).toHaveBeenCalledWith(1);
-  });
-
   it('handles edit action', () => {
     const dialogSpy = jest.spyOn(component, 'openAddEditDifficultyDialog');
     component['questionDifficulties'] = mockDifficulties;
 
     component.handleAction({ action: 'edit', row: { id: 2 } as any });
     expect(dialogSpy).toHaveBeenCalledWith(mockDifficulties[1]);
-  });
-
-  it('opens confirmation dialog and confirms', () => {
-    (mockDialog.open as jest.Mock).mockReturnValue({ afterClosed: () => of(true) } as any);
-    const cb = jest.fn();
-
-    component['openConfirmationDialog'](mockDialogData, cb);
-    expect(cb).toHaveBeenCalled();
-  });
-
-  it('opens confirmation dialog and cancels', () => {
-    (mockDialog.open as jest.Mock).mockReturnValue({ afterClosed: () => of(false) } as any);
-    const cb = jest.fn();
-
-    component['openConfirmationDialog'](mockDialogData, cb);
-    expect(cb).not.toHaveBeenCalled();
-  });
-
-  it('deletes question difficulty successfully', () => {
-    mockService.deleteQuestionDifficulty.mockReturnValue(
-      of({
-        result: true,
-        statusCode: 200,
-        message: 'Deleted successfully',
-        data: null,
-      }),
-    );
-
-    const loadSpy = jest.spyOn<any, any>(component, 'loadQuestionDifficulties');
-
-    (component as any).deleteQuestionDifficulty(1);
-    expect(mockSnackbar.showSuccess).toHaveBeenCalled();
-    expect(loadSpy).toHaveBeenCalled();
-  });
-
-  it('handles failure response when deleting', () => {
-    mockService.deleteQuestionDifficulty.mockReturnValue(
-      of({
-        result: false,
-        statusCode: 400,
-        message: 'fail',
-        data: null,
-      }),
-    );
-
-    (component as any).deleteQuestionDifficulty(1);
-    expect(mockSnackbar.showError).toHaveBeenCalled();
-  });
-
-  it('handles error when deleting', () => {
-    mockService.deleteQuestionDifficulty.mockReturnValue(
-      throwError(() => ({ status: 500, error: { message: 'boom' } })),
-    );
-
-    (component as any).deleteQuestionDifficulty(1);
-    expect(mockSnackbar.showError).toHaveBeenCalled();
   });
 
   it('loads question difficulties successfully', () => {
@@ -268,28 +183,6 @@ describe('QuestionDifficultyComponent (Jest)', () => {
 
     expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error! 500`, 'server failed');
     expect((component as any).questionDifficulties).toEqual([]);
-  });
-
-  it('should show default error message when delete response fails without message', () => {
-    mockService.deleteQuestionDifficulty.mockReturnValue(
-      of({ result: false, statusCode: 400, message: '', data: null }),
-    );
-
-    (component as any).deleteQuestionDifficulty(1);
-
-    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error! 400`, 'Something went wrong.');
-    expect(mockSnackbar.showSuccess).not.toHaveBeenCalled();
-  });
-
-  it('should show default error message when delete API throws error without message', () => {
-    mockService.deleteQuestionDifficulty.mockReturnValue(
-      throwError(() => ({ status: 500, error: {} })),
-    );
-
-    (component as any).deleteQuestionDifficulty(1);
-
-    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error! 500`, 'Something went wrong.');
-    expect(mockSnackbar.showSuccess).not.toHaveBeenCalled();
   });
 
   it('should call loadQuestionDifficulties on init', () => {
