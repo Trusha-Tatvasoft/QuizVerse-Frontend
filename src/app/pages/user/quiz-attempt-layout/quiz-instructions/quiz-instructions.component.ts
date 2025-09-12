@@ -88,7 +88,8 @@ export class QuizInstructionsComponent {
 
   /** Build tag config for quiz category */
   getQuizCategoryTagConfig(): TagInputConfig {
-    const label = `${this.quizInstructions.quizCategoryName}`;
+    let label = 'category';
+    if (this.quizInstructions !== undefined) label = `${this.quizInstructions.quizCategoryName}`;
     return {
       id: label.toLowerCase(),
       label,
@@ -102,15 +103,18 @@ export class QuizInstructionsComponent {
 
   /** Build tag config for difficulty */
   getDifficultyTagConfig(): TagInputConfig {
-    return getTagConfigWithDifficulty(this.quizInstructions.quizDifficultyName);
+    let label = 'difficulty';
+    if (this.quizInstructions !== undefined) label = this.quizInstructions.quizDifficultyName;
+    return getTagConfigWithDifficulty(label);
   }
 
   /** Build tag config for Paid/Free */
   getTagConfigForIsPaid(): TagInputConfig {
     let backgroundColor: TagColor;
     let textColor: TagColor;
-
-    switch (this.quizInstructions.isPaid) {
+    let labelFlag = false;
+    if (this.quizInstructions !== undefined) labelFlag = this.quizInstructions.isPaid;
+    switch (labelFlag) {
       case true:
         backgroundColor = 'lightRed';
         textColor = 'red';
@@ -122,8 +126,8 @@ export class QuizInstructionsComponent {
     }
 
     return {
-      id: this.quizInstructions.isPaid ? 'paid' : 'free',
-      label: this.quizInstructions.isPaid ? 'Paid' : 'Free',
+      id: labelFlag ? 'paid' : 'free',
+      label: labelFlag ? 'Paid' : 'Free',
       type: 'static',
       isSelected: false,
       hasBorder: false,
@@ -134,7 +138,8 @@ export class QuizInstructionsComponent {
 
   /** Build tag config for quiz price */
   getpriceTagConfig(): TagInputConfig {
-    const label = `₹ ${this.quizInstructions.quizPrice}`;
+    let label = `₹ 0`;
+    if (this.quizInstructions !== undefined) label = `₹ ${this.quizInstructions.quizPrice}`;
     return {
       id: label.toLowerCase(),
       label,

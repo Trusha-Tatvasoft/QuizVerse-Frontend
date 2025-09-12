@@ -21,6 +21,28 @@ export const previousButtonConfig: ButtonConfig = {
   iconFontSet: 'material-icons',
 };
 
+export const disabledSaveAndNextButtonConfig: ButtonConfig = {
+  label: 'Save & Next',
+  fontWeight: 500,
+  variant: 'primary',
+  type: 'submit',
+  imagePosition: 'right',
+  matIcon: 'keyboard_arrow_right',
+  iconFontSet: 'material-icons',
+  isDisabled: true,
+};
+
+export const disabledPreviousButtonConfig: ButtonConfig = {
+  label: 'Previous',
+  fontWeight: 500,
+  variant: 'primary',
+  type: 'button',
+  imagePosition: 'left',
+  matIcon: 'keyboard_arrow_left',
+  isDisabled: true,
+  iconFontSet: 'material-icons',
+};
+
 export const submitButtonConfig: ButtonConfig = {
   label: 'Submit',
   fontWeight: 500,
