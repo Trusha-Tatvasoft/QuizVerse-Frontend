@@ -33,13 +33,13 @@ export class QuizQuestionComponent {
   @Output() answerChanged = new EventEmitter<string>();
 
   /** Emits answer back to parent */
-  onAnswerChange(event: any): void {
+  onAnswerChange(event: { value?: string } | Event | null | undefined): void {
     let value: string = '';
 
-    if (event?.value !== undefined) {
-      value = event.value;
-    } else if (event?.target) {
-      value = (event.target as HTMLInputElement).value;
+    if (event && 'value' in event) {
+      value = event.value ?? '';
+    } else if (event instanceof Event && event.target instanceof HTMLInputElement) {
+      value = event.target.value;
     }
 
     this.answerChanged.emit(value);

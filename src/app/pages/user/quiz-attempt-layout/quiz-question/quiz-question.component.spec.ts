@@ -183,7 +183,7 @@ describe('QuizQuestionComponent', () => {
       fixture.detectChanges();
 
       // Simulate input event
-      const mockEvent = { target: { value: 'Jupiter' } };
+      const mockEvent = { value: 'Jupiter' };
       component.onAnswerChange(mockEvent);
 
       expect(component.answerChanged.emit).toHaveBeenCalledWith('Jupiter');
@@ -276,7 +276,7 @@ describe('QuizQuestionComponent', () => {
     it('should extract value from event target', () => {
       jest.spyOn(component.answerChanged, 'emit');
 
-      const mockEvent = { target: { value: 'target-value' } };
+      const mockEvent = { value: 'target-value' };
       component.onAnswerChange(mockEvent);
 
       expect(component.answerChanged.emit).toHaveBeenCalledWith('target-value');
