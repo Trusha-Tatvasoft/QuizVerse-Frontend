@@ -183,7 +183,7 @@ describe('QuizQuestionComponent', () => {
       fixture.detectChanges();
 
       // Simulate input event
-      const mockEvent = { target: { value: 'Jupiter' } };
+      const mockEvent = { value: 'Jupiter' };
       component.onAnswerChange(mockEvent);
 
       expect(component.answerChanged.emit).toHaveBeenCalledWith('Jupiter');
@@ -276,7 +276,7 @@ describe('QuizQuestionComponent', () => {
     it('should extract value from event target', () => {
       jest.spyOn(component.answerChanged, 'emit');
 
-      const mockEvent = { target: { value: 'target-value' } };
+      const mockEvent = { value: 'target-value' };
       component.onAnswerChange(mockEvent);
 
       expect(component.answerChanged.emit).toHaveBeenCalledWith('target-value');
@@ -294,6 +294,53 @@ describe('QuizQuestionComponent', () => {
       jest.spyOn(component.answerChanged, 'emit');
 
       component.onAnswerChange(null);
+
+      expect(component.answerChanged.emit).toHaveBeenCalledWith('');
+    });
+
+    it('should extract value when event has a value property', () => {
+      jest.spyOn(component.answerChanged, 'emit');
+
+      const mockEvent = { value: 'Paris' };
+      component.onAnswerChange(mockEvent);
+
+      expect(component.answerChanged.emit).toHaveBeenCalledWith('Paris');
+    });
+
+    it('should return empty string when event.value is undefined', () => {
+      jest.spyOn(component.answerChanged, 'emit');
+
+      const mockEvent = { value: undefined };
+      component.onAnswerChange(mockEvent);
+
+      expect(component.answerChanged.emit).toHaveBeenCalledWith('');
+    });
+
+    it('should extract value from native input event', () => {
+      jest.spyOn(component.answerChanged, 'emit');
+
+      const input = document.createElement('input');
+      input.value = 'Jupiter';
+      const mockEvent = new Event('input');
+      Object.defineProperty(mockEvent, 'target', { value: input });
+
+      component.onAnswerChange(mockEvent);
+
+      expect(component.answerChanged.emit).toHaveBeenCalledWith('Jupiter');
+    });
+
+    it('should emit empty string when event is null', () => {
+      jest.spyOn(component.answerChanged, 'emit');
+
+      component.onAnswerChange(null);
+
+      expect(component.answerChanged.emit).toHaveBeenCalledWith('');
+    });
+
+    it('should emit empty string when event has no usable value', () => {
+      jest.spyOn(component.answerChanged, 'emit');
+
+      component.onAnswerChange({} as any);
 
       expect(component.answerChanged.emit).toHaveBeenCalledWith('');
     });
