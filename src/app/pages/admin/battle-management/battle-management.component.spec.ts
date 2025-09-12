@@ -180,7 +180,7 @@ describe('BattleManagementComponent', () => {
     expect(mockDialogRef.afterClosed).toHaveBeenCalled();
     expect(battleService.deleteBattle).toHaveBeenCalledWith(battleId);
     expect(snackbarService.showSuccess).toHaveBeenCalledWith(
-      'Success',
+      'Success!',
       platformMessages.deleteBattleSuccess,
     );
     expect(loadBattlesSpy).toHaveBeenCalled();
@@ -237,7 +237,7 @@ describe('BattleManagementComponent', () => {
     component.deleteBattleDialog(battleId);
 
     expect(battleService.deleteBattle).toHaveBeenCalledWith(battleId);
-    expect(snackbarService.showError).toHaveBeenCalledWith('Error', mockResponse.message);
+    expect(snackbarService.showError).toHaveBeenCalledWith('Error!', mockResponse.message);
     expect(loadBattlesSpy).not.toHaveBeenCalled();
   });
 

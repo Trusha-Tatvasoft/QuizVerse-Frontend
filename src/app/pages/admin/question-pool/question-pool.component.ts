@@ -210,7 +210,10 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (res) => {
             if (res.statusCode === 200) {
-              this.snackbar.showSuccess('Success', platformMessages.deleteQuesSuccess);
+              this.snackbar.showSuccess(
+                platformMessages.successTitle,
+                platformMessages.deleteQuesSuccess,
+              );
 
               // if at last page and only one item goes to previous page
               const currentData = this.dataSource();

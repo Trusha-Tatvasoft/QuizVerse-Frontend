@@ -131,10 +131,16 @@ export class BattleManagementComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res) => {
           if (res.statusCode === 200) {
-            this.snackbar.showSuccess('Success', platformMessages.deleteBattleSuccess);
+            this.snackbar.showSuccess(
+              platformMessages.successTitle,
+              platformMessages.deleteBattleSuccess,
+            );
             this.loadBattles();
           } else {
-            this.snackbar.showError('Error', res.message || platformMessages.deleteBattleFailure);
+            this.snackbar.showError(
+              platformMessages.errorTitle,
+              res.message || platformMessages.deleteBattleFailure,
+            );
           }
         },
         error: (err) => {

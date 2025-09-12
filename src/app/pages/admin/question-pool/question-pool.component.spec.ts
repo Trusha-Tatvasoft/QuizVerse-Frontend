@@ -310,7 +310,7 @@ describe('QuestionPoolComponent (Jest)', () => {
       expect(openSpy).toHaveBeenCalledWith(ConfirmationDialogComponent, expect.any(Object));
       expect(questionPoolServiceMock.deleteQuestion).toHaveBeenCalledWith(101);
       expect(snackbarMock.showSuccess).toHaveBeenCalledWith(
-        'Success',
+        'Success!',
         platformMessages.deleteQuesSuccess,
       );
       expect(component.pagination().pageNumber).toBe(1);

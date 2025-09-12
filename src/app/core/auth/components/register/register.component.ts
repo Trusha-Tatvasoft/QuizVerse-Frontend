@@ -239,7 +239,7 @@ export class RegisterComponent implements OnDestroy {
           }
 
           this.snackbarService.showSuccess(
-            'Success',
+            platformMessages.successTitle,
             res.message || platformMessages.registerSuccessfully,
           );
 

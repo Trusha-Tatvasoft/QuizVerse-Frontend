@@ -149,7 +149,7 @@ describe('RegisterComponent', () => {
     component.registerFormSubmit();
 
     expect(registerService.registerUser).toHaveBeenCalled();
-    expect(successSpy).toHaveBeenCalledWith('Success', 'Registered');
+    expect(successSpy).toHaveBeenCalledWith('Success!', 'Registered');
   });
 
   it('should handle registration error response', () => {
@@ -279,7 +279,7 @@ describe('RegisterComponent', () => {
 
     component.registerFormSubmit();
 
-    expect(successSpy).toHaveBeenCalledWith('Success', platformMessages.registerSuccessfully);
+    expect(successSpy).toHaveBeenCalledWith('Success!', platformMessages.registerSuccessfully);
   });
 
   it('should emit FormData with all fields when creating user and form is valid', () => {

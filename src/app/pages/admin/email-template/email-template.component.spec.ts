@@ -114,7 +114,7 @@ describe('EmailTemplateComponent (Jest)', () => {
 
     component.loadEmailTemplates();
 
-    expect(snackbar.showError).toHaveBeenCalledWith('Error! 400', 'Bad Request');
+    expect(snackbar.showError).toHaveBeenCalledWith('Error!', 'Bad Request');
     expect(component.dataSource()).toEqual([]);
     expect(component.totalItems()).toBe(0);
   });

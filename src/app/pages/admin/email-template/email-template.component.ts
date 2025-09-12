@@ -78,7 +78,7 @@ export class EmailTemplateComponent {
         next: (res) => {
           if (!res.result || res.statusCode !== 200) {
             this.snackbar.showError(
-              `${platformMessages.errorTitle} ${res.statusCode}`,
+              `${platformMessages.errorTitle}`,
               res.message || platformMessages.errorMessage,
             );
             this.dataSource.set([]);
@@ -229,7 +229,10 @@ export class EmailTemplateComponent {
               data: res.data,
             });
           } else {
-            this.snackbar.showError('Error', res.message || 'Failed to fetch template');
+            this.snackbar.showError(
+              platformMessages.errorTitle,
+              res.message || 'Failed to fetch template',
+            );
           }
         },
         error: (err) => {

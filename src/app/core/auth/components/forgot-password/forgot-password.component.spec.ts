@@ -86,7 +86,7 @@ describe('ForgotPasswordComponent', () => {
     component.onSubmit();
 
     expect(sendResetLinkSpy).toHaveBeenCalledWith(credentials);
-    expect(showSuccessSpy).toHaveBeenCalledWith('Success', 'Success');
+    expect(showSuccessSpy).toHaveBeenCalledWith('Success!', 'Success');
     expect(navigateSpy).toHaveBeenCalledWith(['reset-password-link-success'], {
       state: { email: credentials.email },
     });
@@ -197,7 +197,7 @@ describe('ForgotPasswordComponent', () => {
     component.onSubmit();
 
     expect(showSuccessSpy).toHaveBeenCalledWith(
-      'Success',
+      platformMessages.successTitle,
       platformMessages.resetLinkSendSuccessfully,
     );
   });

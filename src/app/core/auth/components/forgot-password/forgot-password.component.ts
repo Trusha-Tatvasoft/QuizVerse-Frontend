@@ -98,7 +98,7 @@ export class ForgotPasswordComponent implements OnDestroy {
           }
 
           this.snackbarService.showSuccess(
-            'Success',
+            platformMessages.successTitle,
             res.message || `${platformMessages.resetLinkSendSuccessfully}`,
           );
 

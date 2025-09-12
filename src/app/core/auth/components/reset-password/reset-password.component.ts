@@ -88,7 +88,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         next: (res) => {
           if (!res.result || res.statusCode !== 200 || res.data === false) {
             this.snackbarService.showError(
-              `${platformMessages.errorTitle} ${res.statusCode}`,
+              `${platformMessages.errorTitle}`,
               res.message || platformMessages.errorMessage,
             );
 
@@ -146,7 +146,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         next: (res) => {
           if (!res.result || res.statusCode !== 200) {
             this.snackbarService.showError(
-              `${platformMessages.errorTitle} ${res.statusCode}`,
+              `${platformMessages.errorTitle}`,
               res.message || platformMessages.errorMessage,
             );
 
@@ -155,7 +155,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
           }
 
           this.snackbarService.showSuccess(
-            'Success',
+            platformMessages.successTitle,
             res.message || platformMessages.passwordResetSuccess,
           );
 
