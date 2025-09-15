@@ -189,12 +189,8 @@ export const routes: Routes = [
       {
         path: Navigations.QuizList,
         title: 'Quizeverse | Browse Quizzes',
-        children: [{ path: `${Navigations.BrowseQuizzes}`, component: BrowseQuizzesComponent }],
-      },
-      {
-        path: Navigations.QuizList,
-        title: 'Quizeverse | Play Quizzes',
         children: [
+          { path: `${Navigations.BrowseQuizzes}`, component: BrowseQuizzesComponent },
           {
             path: `${Navigations.BrowseQuizzes}/${Navigations.QuizInstruction}/:id`,
             component: QuizInstructionsComponent,

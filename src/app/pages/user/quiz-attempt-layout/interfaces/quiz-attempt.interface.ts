@@ -4,26 +4,35 @@ export interface QuizInstructionsResponse {
   quizId: number;
   quizName: string;
   totalTime: number;
-  totalQuestions: number;
+  totalQuestion: number;
   quizDifficultyName: string;
   quizCategoryName: string;
   isPaid: boolean;
-  price?: number;
+  quizPrice?: number;
   description: string;
 }
 
 export interface QuizStartResponse {
   quizId: number;
   totalTime: number;
-  totalQuestions: number;
+  totalQuestion: number;
   quizName: string;
   categoryName: string;
-  questions: QuizQuestions[];
+  quizQuestionId: number;
+  questionType: string;
+  questionName: string;
+  options?: QuestionOptions[];
 }
 
 export interface QuizQuestions {
   questionId: number;
   questionTypeName: string;
+  questionName: string;
+  options?: QuestionOptions[];
+}
+export interface QuizQuestionResponse {
+  quizQuestionId: number;
+  questionType: string;
   questionName: string;
   options?: QuestionOptions[];
 }
@@ -59,4 +68,14 @@ export interface SubmitQuizRequest {
     questionId: number;
     givenAnswer?: string;
   };
+}
+
+export interface SavedQuizState {
+  quizId: number;
+  currentQuestionIndex: number;
+  remainingSeconds: number;
+  visitedQuestions: VisitedQuestions[];
+  quizStartData: QuizStartResponse;
+  currentQuestionData: QuizQuestions;
+  timestamp: number;
 }
