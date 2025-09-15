@@ -6,7 +6,6 @@ import { ValidationErrorService } from '../../../../../shared/service/validation
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import { defaultIcon, platformMessages } from '../../../../../utils/constants';
-import { QuizCategoryList } from '../../interface/quiz-category-list-data.interface';
 
 describe('AddEditQuizCategoryComponent', () => {
   let component: AddEditQuizCategoryComponent;

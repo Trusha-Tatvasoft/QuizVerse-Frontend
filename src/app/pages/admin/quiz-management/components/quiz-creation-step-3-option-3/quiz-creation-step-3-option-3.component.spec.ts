@@ -225,7 +225,7 @@ describe('QuizCreationStep3Option3Component', () => {
       quizService.getQuestionsFromCsv.mockReturnValue(throwError(() => error));
       component.handleFiles(createFileList([csvFile]));
       expect(quizService.getQuestionsFromCsv).toHaveBeenCalledWith(csvFile);
-      expect(snackbar.showError).toHaveBeenCalledWith('Error! undefined', 'Something went wrong.');
+      expect(snackbar.showError).toHaveBeenCalledWith('Error!', 'Something went wrong.');
     });
 
     it('should handle Excel with non-empty data', () => {
@@ -341,7 +341,7 @@ describe('QuizCreationStep3Option3Component', () => {
       quizService.getQuestionsFromExcel.mockReturnValue(throwError(() => error));
       component.handleFiles(createFileList([xlsFile]));
       expect(quizService.getQuestionsFromExcel).toHaveBeenCalledWith(xlsFile);
-      expect(snackbar.showError).toHaveBeenCalledWith('Error! undefined', 'Something went wrong.');
+      expect(snackbar.showError).toHaveBeenCalledWith('Error!', 'Something went wrong.');
     });
 
     it('should show error for invalid file type', () => {
@@ -593,7 +593,7 @@ describe('QuizCreationStep3Option3Component', () => {
       expect(quizService.getQuestionsFromCsv).toHaveBeenCalledWith(csvFile);
       expect(component.selectedQuestions).toEqual([]); // fallback
       expect(emitSpy).not.toHaveBeenCalled();
-      expect(snackbar.showError).toHaveBeenCalledWith('Error! undefined', 'Something went wrong.');
+      expect(snackbar.showError).toHaveBeenCalledWith('Error!', 'Something went wrong.');
     });
 
     it('should handle error when Excel parsing fails', () => {
@@ -611,7 +611,7 @@ describe('QuizCreationStep3Option3Component', () => {
       expect(quizService.getQuestionsFromExcel).toHaveBeenCalledWith(xlsFile);
       expect(component.selectedQuestions).toEqual([]); // fallback
       expect(emitSpy).not.toHaveBeenCalled();
-      expect(snackbar.showError).toHaveBeenCalledWith('Error! undefined', 'Something went wrong.');
+      expect(snackbar.showError).toHaveBeenCalledWith('Error!', 'Something went wrong.');
     });
   });
 });

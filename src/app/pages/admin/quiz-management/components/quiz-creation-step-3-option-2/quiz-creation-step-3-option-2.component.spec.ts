@@ -130,14 +130,14 @@ describe('QuizCreationStep3Option2Component', () => {
       const error = { error: { message: 'err' }, status: 500 };
       quizService.getQuestions.mockReturnValue(throwError(() => error));
       component.fetchQuestions();
-      expect(snackbar.showError).toHaveBeenCalledWith('Error! 500', 'err');
+      expect(snackbar.showError).toHaveBeenCalledWith('Error!', 'err');
     });
 
     it('should handle thrown error with unknown format', () => {
       const error = 'oops';
       quizService.getQuestions.mockReturnValue(throwError(() => error));
       component.fetchQuestions();
-      expect(snackbar.showError).toHaveBeenCalledWith('Error! undefined', 'Something went wrong.');
+      expect(snackbar.showError).toHaveBeenCalledWith('Error!', 'Something went wrong.');
     });
   });
 

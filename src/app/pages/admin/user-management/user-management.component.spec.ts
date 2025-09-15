@@ -15,7 +15,7 @@ import { UserListingComponent } from './components/user-table/user-listing.compo
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { PaginatedDataResponse } from '../../../shared/interfaces/paginated-data-response.interface';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
-import { debounceTimeValue } from '../../../utils/constants';
+import { debounceTimeValue, platformMessages } from '../../../utils/constants';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { UserFormData } from './interfaces/user-form-data.interface';
@@ -724,7 +724,10 @@ describe('UserManagementComponent', () => {
     component.loadUserForEdit(userId);
 
     expect(spyGetUser).toHaveBeenCalledWith(userId);
-    expect(snackbarService.showError).toHaveBeenCalledWith('User not found', 'Error 404');
+    expect(snackbarService.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      'User not found',
+    );
     expect(spyOpenDialog).not.toHaveBeenCalled(); // dialog should not open
   });
 
@@ -748,7 +751,7 @@ describe('UserManagementComponent', () => {
     component.loadUserForEdit(userId);
 
     expect(spyGetUser).toHaveBeenCalledWith(userId);
-    expect(spySnackbar).toHaveBeenCalledWith(errorMessage, 'Error');
+    expect(spySnackbar).toHaveBeenCalledWith(platformMessages.errorTitle, errorMessage);
     expect(spyOpenDialog).not.toHaveBeenCalled();
   });
 
@@ -835,7 +838,10 @@ describe('UserManagementComponent', () => {
       action,
       newStatus: undefined,
     });
-    expect(snackbarService.showSuccess).toHaveBeenCalledWith(expectedSuccessMessage, 'Success');
+    expect(snackbarService.showSuccess).toHaveBeenCalledWith(
+      platformMessages.successTitle,
+      expectedSuccessMessage,
+    );
     expect(fetchSpy).toHaveBeenCalled();
   });
 
@@ -864,7 +870,10 @@ describe('UserManagementComponent', () => {
       newStatus,
     });
 
-    expect(snackbarService.showError).toHaveBeenCalledWith(errorMessage, 'Error 400');
+    expect(snackbarService.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      errorMessage,
+    );
   });
 
   it('should show error if update fails due to server error', () => {
@@ -889,7 +898,10 @@ describe('UserManagementComponent', () => {
       newStatus,
     });
 
-    expect(snackbarService.showError).toHaveBeenCalledWith(serverErrorMessage, 'Error');
+    expect(snackbarService.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      serverErrorMessage,
+    );
   });
 
   it('should return delete message when action is Delete', () => {

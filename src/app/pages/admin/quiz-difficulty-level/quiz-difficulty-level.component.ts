@@ -47,7 +47,7 @@ export class QuizDifficultyLevelComponent {
         next: (res) => {
           if (!res.result || res.statusCode !== 200) {
             this.snackbar.showError(
-              `${platformMessages.errorTitle} ${res.statusCode}`,
+              `${platformMessages.errorTitle}`,
               res.message || platformMessages.errorMessage,
             );
             this.dataSource.set([]);
@@ -56,8 +56,10 @@ export class QuizDifficultyLevelComponent {
           this.dataSource.set(res.data);
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.statusCode}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
           this.dataSource.set([]);
         },
       });
@@ -73,7 +75,7 @@ export class QuizDifficultyLevelComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.snackbar.showSuccess('Success', result);
+        this.snackbar.showSuccess(platformMessages.successTitle, result);
         this.fetchDifficultyLevels();
       }
     });

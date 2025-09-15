@@ -494,7 +494,10 @@ describe('QuizCreationLayoutComponent', () => {
       tick();
       fixture.detectChanges();
       expect(quizCreationService.createOrUpdateQuiz).toHaveBeenCalled();
-      expect(snackbarService.showSuccess).toHaveBeenCalledWith(quizCRUDMessages.quizSaved);
+      expect(snackbarService.showSuccess).toHaveBeenCalledWith(
+        platformMessages.successTitle,
+        quizCRUDMessages.quizSaved,
+      );
       expect(router.navigate).toHaveBeenCalledWith([Navigations.Admin, Navigations.Quizzes]);
     }));
 
@@ -515,11 +518,7 @@ describe('QuizCreationLayoutComponent', () => {
       component.quizStep1Data = mockQuizStep1Data;
       component.selectedQuestions = mockQuestionsList;
 
-      const mockError = {
-        error: {
-          data: [{ errors: ['error'] }],
-        },
-      };
+      const mockError = { error: { message: 'error' } };
 
       quizCreationService.createOrUpdateQuiz.mockReturnValue(throwError(() => mockError));
 
@@ -527,7 +526,7 @@ describe('QuizCreationLayoutComponent', () => {
       tick();
       fixture.detectChanges();
 
-      expect(snackbarService.showError).toHaveBeenCalledWith('error');
+      expect(snackbarService.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'error');
     }));
   });
 
@@ -595,7 +594,10 @@ describe('QuizCreationLayoutComponent', () => {
       expect(quizCreationService.createOrUpdateQuiz).toHaveBeenCalledWith(
         expect.objectContaining({ status: QuizStatus.Draft }),
       );
-      expect(snackbarService.showSuccess).toHaveBeenCalledWith(quizCRUDMessages.quizDrafSaved);
+      expect(snackbarService.showSuccess).toHaveBeenCalledWith(
+        platformMessages.successTitle,
+        quizCRUDMessages.quizDrafSaved,
+      );
       expect(router.navigate).toHaveBeenCalledWith([Navigations.Admin, Navigations.Quizzes]);
     }));
 
@@ -649,10 +651,7 @@ describe('QuizCreationLayoutComponent', () => {
       component.loadQuiz(1);
       tick();
       fixture.detectChanges();
-      expect(snackbarService.showError).toHaveBeenCalledWith(
-        'Error! undefined',
-        'Something went wrong.',
-      );
+      expect(snackbarService.showError).toHaveBeenCalledWith('Error!', 'Something went wrong.');
     }));
   });
 

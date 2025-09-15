@@ -30,6 +30,7 @@ import {
 } from './create-edit-question-form.hepler';
 import { uniqueOptionsGroupValidator } from './create-edit-question-form.validator';
 import { ValidationErrorService } from '../../../../../../../shared/service/validation-error/validation-error.service';
+import { platformMessages } from '../../../../../../../utils/constants';
 
 @Component({
   selector: 'app-create-edit-question-form',
@@ -182,13 +183,18 @@ export class CreateEditQuestionFormComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (res) => {
             if (res.result) {
-              this.snackbar.showSuccess('Success:', res.message);
+              this.snackbar.showSuccess(platformMessages.successTitle, res.message);
               this.dialogRef.close(true);
             } else {
-              this.snackbar.showError('Failed', res.message);
+              this.snackbar.showError(platformMessages.errorTitle, res.message);
             }
           },
-          error: (err) => this.snackbar.showError('Error', err),
+          error: (err) => {
+            this.snackbar.showError(
+              platformMessages.errorTitle,
+              err?.error?.message || platformMessages.errorMessage,
+            );
+          },
         });
     } else {
       this.form.markAllAsTouched();

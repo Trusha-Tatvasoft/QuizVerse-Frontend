@@ -188,7 +188,7 @@ export class QuizCategoriesManagementComponent implements OnInit, OnDestroy {
         error: (err) => {
           this.snackbar.showError(
             platformMessages.errorTitle,
-            err?.error?.message || platformMessages.serverErrorTitle,
+            err?.error?.message || platformMessages.errorMessage,
           );
         },
       });
@@ -224,15 +224,15 @@ export class QuizCategoriesManagementComponent implements OnInit, OnDestroy {
             this.openPreviewDialog(res.data);
           } else {
             this.snackbar.showError(
+              platformMessages.errorTitle,
               res.message || platformMessages.notFoundTitle,
-              `Error ${res.statusCode}`,
             );
           }
         },
         error: (err) => {
           this.snackbar.showError(
-            err?.error?.message || platformMessages.serverErrorTitle,
-            'Error',
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
           );
         },
       });
@@ -302,7 +302,7 @@ export class QuizCategoriesManagementComponent implements OnInit, OnDestroy {
         error: (err) => {
           this.snackbar.showError(
             platformMessages.errorTitle,
-            err?.error?.message || platformMessages.serverErrorTitle,
+            err?.error?.message || platformMessages.errorMessage,
           );
         },
       });
