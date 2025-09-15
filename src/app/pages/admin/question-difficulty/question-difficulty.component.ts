@@ -61,7 +61,7 @@ export class QuestionDifficultyComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((result) => {
         if (result) {
-          this.snackbar.showSuccess('Success', result);
+          this.snackbar.showSuccess(platformMessages.successTitle, result);
           this.loadQuestionDifficulties();
         }
       });
@@ -109,17 +109,22 @@ export class QuestionDifficultyComponent implements OnInit, OnDestroy {
         next: (res) => {
           if (!res.result || res.statusCode !== 200) {
             this.snackbar.showError(
-              `${platformMessages.errorTitle} ${res.statusCode}`,
+              `${platformMessages.errorTitle}`,
               res.message || platformMessages.errorMessage,
             );
             return;
           }
-          this.snackbar.showSuccess(questionDifficultyMessages.deleteQuestionDifficulty);
+          this.snackbar.showSuccess(
+            platformMessages.successTitle,
+            questionDifficultyMessages.deleteQuestionDifficulty,
+          );
           this.loadQuestionDifficulties();
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }
@@ -133,7 +138,7 @@ export class QuestionDifficultyComponent implements OnInit, OnDestroy {
         next: (res) => {
           if (!res.result || res.statusCode !== 200) {
             this.snackbar.showError(
-              `${platformMessages.errorTitle} ${res.statusCode}`,
+              `${platformMessages.errorTitle}`,
               res.message || platformMessages.errorMessage,
             );
             this.tableDataSource.set([]);
@@ -145,8 +150,10 @@ export class QuestionDifficultyComponent implements OnInit, OnDestroy {
           this.tableDataSource.set(res.data.map(questionDifficultyToTableData));
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
           this.tableDataSource.set([]);
           this.questionDifficulties = [];
         },

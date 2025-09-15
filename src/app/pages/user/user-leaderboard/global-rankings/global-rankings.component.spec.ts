@@ -137,10 +137,7 @@ describe('GlobalRankingsComponent', () => {
 
       expect(component.loading).toBe(false);
       expect(component.leaderboard).toEqual([]);
-      expect(snackbar.showError).toHaveBeenCalledWith(
-        `${platformMessages.errorTitle} 500`,
-        'Failed',
-      );
+      expect(snackbar.showError).toHaveBeenCalledWith(`${platformMessages.errorTitle}`, 'Failed');
     });
 
     it('should not throw if listRef.nativeElement is null', () => {

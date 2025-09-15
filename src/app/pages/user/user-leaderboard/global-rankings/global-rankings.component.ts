@@ -152,8 +152,10 @@ export class GlobalRankingsComponent {
           this.loading = false;
           this.leaderboard = [];
 
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.statusCode}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }

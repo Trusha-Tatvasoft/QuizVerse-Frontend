@@ -104,13 +104,13 @@ describe('CategoryLeadersComponent', () => {
   });
 
   it('should call snackbar on fetch leaderboard error', () => {
-    const errorResponse = { statusCode: 500, error: { message: 'Server error' } };
+    const errorResponse = { error: { message: 'Server error' }, status: 500 };
     leaderboardService.getCategoryLeaderboard.mockReturnValue(throwError(() => errorResponse));
 
     component.fetchCategoryLeaderboard(1);
 
     expect(snackbar.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} 500`,
+      `${platformMessages.errorTitle}`,
       'Server error',
     );
   });
@@ -122,7 +122,7 @@ describe('CategoryLeadersComponent', () => {
     component.fetchCategoryLeaderboard(1);
 
     expect(snackbar.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} 404`,
+      `${platformMessages.errorTitle}`,
       platformMessages.errorMessage,
     );
   });
