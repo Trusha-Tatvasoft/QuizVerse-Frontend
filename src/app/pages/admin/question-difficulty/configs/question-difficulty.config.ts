@@ -61,7 +61,7 @@ export const cancelButtonConfig: ButtonConfig = {
 };
 
 export const deleteButtonConfig: ButtonConfig = {
-  label: 'Delete Question',
+  label: 'Delete',
   variant: 'secondary',
 };
 

@@ -153,6 +153,10 @@ export class QuizInstructionsComponent {
 
   /** Navigate to quiz attempt screen */
   startQuiz() {
+    if (this.isDevToolsOpen()) {
+      this.snackbar.showError('Cannot start the quiz while developer tools are open.');
+      return;
+    }
     const encodedId = btoa((this.decodedId as number).toString());
     this.router.navigate([
       Navigations.User,
@@ -170,5 +174,12 @@ export class QuizInstructionsComponent {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private isDevToolsOpen(): boolean {
+    const threshold = 160; // pixels, typical devtools width/height
+    const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+    const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+    return widthThreshold || heightThreshold;
   }
 }
