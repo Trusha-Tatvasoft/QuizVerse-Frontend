@@ -88,7 +88,7 @@ describe('ImportQuestionPreviewComponent', () => {
     component.addQuestions();
 
     expect(snackbarMock.showError).toHaveBeenCalledWith(
-      'Error',
+      platformMessages.errorTitle,
       platformMessages.noQuestionsToSave,
     );
     expect(dialogRefMock.close).toHaveBeenCalled();
@@ -101,7 +101,7 @@ describe('ImportQuestionPreviewComponent', () => {
 
     expect(questionPoolServiceMock.saveQuestions).toHaveBeenCalledWith(mockQuestions);
     expect(snackbarMock.showSuccess).toHaveBeenCalledWith(
-      'Success',
+      platformMessages.successTitle,
       platformMessages.saveQuestionsSuccess,
     );
     expect(dialogRefMock.close).toHaveBeenCalledWith(true);
@@ -117,7 +117,7 @@ describe('ImportQuestionPreviewComponent', () => {
 
     component.addQuestions();
 
-    expect(snackbarMock.showError).toHaveBeenCalledWith('Error', 'Save failed');
+    expect(snackbarMock.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'Save failed');
     expect(dialogRefMock.close).not.toHaveBeenCalledWith(true);
   });
 
@@ -132,7 +132,7 @@ describe('ImportQuestionPreviewComponent', () => {
     component.addQuestions();
 
     expect(snackbarMock.showError).toHaveBeenCalledWith(
-      'Error',
+      platformMessages.errorTitle,
       platformMessages.saveQuestionsFailure,
     );
     expect(dialogRefMock.close).not.toHaveBeenCalledWith(true);

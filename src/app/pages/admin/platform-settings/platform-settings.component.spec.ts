@@ -5,7 +5,7 @@ import { SnackbarService } from '../../../shared/service/snackbar/snackbar.servi
 import { ValidationErrorService } from '../../../shared/service/validation-error/validation-error.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
-import { plateformSettingCRUDMessages } from '../../../utils/constants';
+import { plateformSettingCRUDMessages, platformMessages } from '../../../utils/constants';
 
 describe('PlatformSettingsComponent', () => {
   let component: PlatformSettingsComponent;
@@ -90,7 +90,7 @@ describe('PlatformSettingsComponent', () => {
 
       component['loadPlatformConfigurations']();
 
-      expect(mockSnackbar.showError).toHaveBeenCalledWith('Error');
+      expect(mockSnackbar.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'Error');
     });
 
     it('should show error on exception', () => {
@@ -100,7 +100,7 @@ describe('PlatformSettingsComponent', () => {
 
       component['loadPlatformConfigurations']();
 
-      expect(mockSnackbar.showError).toHaveBeenCalledWith('Http Error');
+      expect(mockSnackbar.showError).toHaveBeenCalledWith('Error!', 'Something went wrong.');
     });
   });
 
@@ -175,6 +175,7 @@ describe('PlatformSettingsComponent', () => {
       component.savePlatformConfig();
 
       expect(mockSnackbar.showSuccess).toHaveBeenCalledWith(
+        platformMessages.successTitle,
         plateformSettingCRUDMessages.plateformSettingUpdated,
       );
     });
@@ -198,7 +199,10 @@ describe('PlatformSettingsComponent', () => {
 
       component.savePlatformConfig();
 
-      expect(mockSnackbar.showError).toHaveBeenCalledWith('Invalid request');
+      expect(mockSnackbar.showError).toHaveBeenCalledWith(
+        platformMessages.errorTitle,
+        'Invalid request',
+      );
     });
 
     it('should show error if API throws error', () => {
@@ -215,7 +219,7 @@ describe('PlatformSettingsComponent', () => {
 
       component.savePlatformConfig();
 
-      expect(mockSnackbar.showError).toHaveBeenCalledWith('Error');
+      expect(mockSnackbar.showError).toHaveBeenCalledWith('Error!', 'Something went wrong.');
     });
 
     it('should mark all as touched if form invalid', () => {

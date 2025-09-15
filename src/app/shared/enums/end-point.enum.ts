@@ -97,6 +97,9 @@ export enum EndPoints {
   GlobalLeaderboard = 'Leaderboard/get-leaderboard-gloabal-ranking',
   WeeklyLeaderboard = 'Leaderboard/get-weekly-leaderboard-ranking',
   CategoryLeaderboard = 'Leaderboard/get-category-wise-leaderboard',
+  MonthlyChampions = 'Leaderboard/get-monthly-champions',
+  AvailableYears = 'Leaderboard/get-available-years',
+  AvailableMonths = 'Leaderboard/get-available-months',
   //#endregion
 
   // #region UserDashboard
@@ -134,10 +137,13 @@ export enum EndPoints {
   // #endregion
 
   // #region QuizAttempt
+  getQuizInstructions = 'Quiz/get-quiz-overview',
   StartQuiz = 'Quiz/start-quiz',
   GetNextQuestion = 'Quiz/get-quiz-question',
   QuizCompletedSummary = 'Quiz/quiz-summary',
   QuizQuestionReview = 'Quiz/quiz-question-review',
   GetAnswerExplaination = 'Quiz/get-answer-explanation',
+  saveAndGetNextQuestion = 'Quiz/save-and-next-question',
+  submitQuiz = 'Quiz/submit-quiz',
   // #endregion
 }

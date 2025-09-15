@@ -9,7 +9,11 @@ import {
   changeQuestionMethodButtonConfig,
   searchInputConfig,
 } from '../../configs/quiz-creation.config';
-import { quizCRUDMessages, tablePaginationConfig } from '../../../../../utils/constants';
+import {
+  platformMessages,
+  quizCRUDMessages,
+  tablePaginationConfig,
+} from '../../../../../utils/constants';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { PaginationRequest } from '../../../../../shared/interfaces/pagination-request.interface';
 import { QuizCreationService } from '../../../../../services/admin/quiz-management/quiz-creation/quiz-creation.service';
@@ -132,10 +136,9 @@ export class QuizCreationStep3Option2Component {
           this.dataSource.set(res.data.records);
           this.totalItems.set(res.data.totalRecords);
         },
-        error: (error) => {
-          const message = error?.error?.message || error?.message || 'Unexpected error occurred';
-          const status = error?.status || 'Unknown';
-          this.snackbar.showError(message, `Error ${status}`);
+        error: (err) => {
+          const message = err?.error?.message || platformMessages.errorMessage;
+          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
         },
       });
   }

@@ -24,10 +24,10 @@ export class WeeklyLeadersComponent {
   private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-    this.fetchUsersBattleLeaderboard();
+    this.fetchWeeklyLeaderboard();
   }
 
-  fetchUsersBattleLeaderboard(): void {
+  fetchWeeklyLeaderboard(): void {
     this.leaderboardService
       .getWeeklyLeaderboard()
       .pipe(takeUntil(this.destroy$))
@@ -42,21 +42,29 @@ export class WeeklyLeadersComponent {
       });
   }
 
+  getInitials(name: string): string {
+    if (!name) return '';
+    const words = name.trim().split(' ');
+    if (words.length === 1) {
+      return words[0].charAt(0).toUpperCase();
+    } else {
+      return words[0].charAt(0).toUpperCase() + words[1].charAt(0).toUpperCase();
+    }
+  }
+
+  getInitialsColorClass(name: string): string {
+    if (!name) return 'bg-avatar-0';
+    const colorsCount = 12;
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash) % colorsCount;
+    return `bg-avatar-${index}`;
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  getInitials(name: string): string {
-    if (!name) return '?';
-    return name
-      .split(' ')
-      .map((n) => n.charAt(0).toUpperCase())
-      .join('')
-      .slice(0, 2);
-  }
-
-  onImageError(entry: WeeklyLeaderEntry) {
-    entry.profilePic = '';
   }
 }

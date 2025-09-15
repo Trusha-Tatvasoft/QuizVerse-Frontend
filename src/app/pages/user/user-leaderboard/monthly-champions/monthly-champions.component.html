@@ -3,19 +3,27 @@
     <!-- title + subtitle -->
     <div class="leaderboard-text">
       <h3 class="leaderboard-title">
-        <mat-icon class="mr-2 category-outline">category</mat-icon>
-        {{ selectedCategoryName }} Category Leaders
+        <mat-icon class="mr-2 emoji-events">emoji_events</mat-icon>
+        {{ selectedMonthName }} {{ selectedYear }} Champion
       </h3>
-      <p class="leaderboard-subtitle">
-        Top performers in {{ selectedCategoryName.toLowerCase() }} quizzes
-      </p>
+      <p class="leaderboard-subtitle">Celebrating the top quiz master of the month</p>
     </div>
 
-    <!-- dropdown -->
+    <!-- dropdowns -->
     <div class="leaderboard-filters">
+      <!-- Month -->
       <mat-form-field appearance="outline" class="filter-select">
-        <mat-select [(value)]="selectedCategory" (selectionChange)="onFilterChange()">
-          @for (item of categoryList; track item.id) {
+        <mat-select [(value)]="selectedMonth" (selectionChange)="onFilterChange()">
+          @for (item of monthList; track item.id) {
+            <mat-option [value]="item.id">{{ item.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Year -->
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-select [(value)]="selectedYear" (selectionChange)="onFilterChange()">
+          @for (item of yearList; track item.id) {
             <mat-option [value]="item.id">{{ item.name }}</mat-option>
           }
         </mat-select>
@@ -26,10 +34,10 @@
   <app-scroll-window
     [items]="leaderboard"
     [windowSize]="6"
-    [itemTemplate]="categoryLeadersTemplate"
+    [itemTemplate]="monthlyLeadersTemplate"
   ></app-scroll-window>
 
-  <ng-template #categoryLeadersTemplate let-entry>
+  <ng-template #monthlyLeadersTemplate let-entry>
     <div class="leaderboard-item" [class.current-user]="entry.isLoggedInUser">
       <!-- 1. Rank / Medal -->
       <div class="rank-icon">
@@ -79,17 +87,19 @@
         </span>
       </div>
 
-      <!-- 5. AVG Score -->
-      <div class="avg-scores">
-        <div class="avg-scores-text">
-          <span class="scores">
-            @if (entry.totalBattlesPlayed + entry.totalQuizzesPlayed > 0) {
-              {{ entry.averageScore | number }}%
-            } @else {
-              N/A
-            }
-          </span>
-          <small>Average Score</small>
+      <!-- 5. XP -->
+      <div class="xp-points">
+        <div class="xp-text">
+          @if (entry.totalBattlesPlayed + entry.totalQuizzesPlayed > 0) {
+            <span class="xp">
+              <mat-icon class="xp-icon">add</mat-icon>
+              {{ entry.totalXp }} XP
+            </span>
+            <small>{{ entry.averageScore | number }}% avg</small>
+          } @else {
+            <span class="xp"> N/A </span>
+            <small>N/A</small>
+          }
         </div>
       </div>
     </div>

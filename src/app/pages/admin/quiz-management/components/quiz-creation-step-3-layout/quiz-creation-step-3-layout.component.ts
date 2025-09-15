@@ -1,6 +1,10 @@
 import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { TableData } from '../../../../../shared/interfaces/table-component.interface';
-import { quizCRUDMessages, tablePaginationConfig } from '../../../../../utils/constants';
+import {
+  platformMessages,
+  quizCRUDMessages,
+  tablePaginationConfig,
+} from '../../../../../utils/constants';
 import {
   addQuestionButtonConfig,
   changeQuestionMethodButtonConfig,
@@ -372,7 +376,8 @@ export class QuizCreationStep3LayoutComponent {
             });
         },
         error: (err) => {
-          this.snackbar.showError(err);
+          const message = err?.error?.message || platformMessages.errorMessage;
+          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
         },
       });
 
@@ -401,7 +406,8 @@ export class QuizCreationStep3LayoutComponent {
           this.fillMissingLabelsForSelectedQuestions();
         },
         error: (err) => {
-          this.snackbar.showError(err);
+          const message = err?.error?.message || platformMessages.errorMessage;
+          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
         },
       });
   }

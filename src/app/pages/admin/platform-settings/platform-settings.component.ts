@@ -18,7 +18,7 @@ import { SnackbarService } from '../../../shared/service/snackbar/snackbar.servi
 import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
 import { PlatformConfigurationResponseDTO } from './interfaces/platform-settings.interface';
 import { environment } from '../../../../environments/environment.dev';
-import { plateformSettingCRUDMessages } from '../../../utils/constants';
+import { plateformSettingCRUDMessages, platformMessages } from '../../../utils/constants';
 import { FilenameTruncatePipe } from '../../../shared/pipes/filename-truncate/filename-truncate.pipe';
 import { Subject, take, takeUntil } from 'rxjs';
 
@@ -112,13 +112,17 @@ export class PlatformSettingsComponent implements OnInit {
         .subscribe({
           next: (res) => {
             if (res.result) {
-              this.snackbar.showSuccess(plateformSettingCRUDMessages.plateformSettingUpdated);
+              this.snackbar.showSuccess(
+                platformMessages.successTitle,
+                plateformSettingCRUDMessages.plateformSettingUpdated,
+              );
             } else {
-              this.snackbar.showError(res.message);
+              this.snackbar.showError(platformMessages.errorTitle, res.message);
             }
           },
           error: (err) => {
-            this.snackbar.showError(err);
+            const message = err?.error?.message || platformMessages.errorMessage;
+            this.snackbar.showError(`${platformMessages.errorTitle}`, message);
           },
         });
     } else {
@@ -213,11 +217,12 @@ export class PlatformSettingsComponent implements OnInit {
             this.patchFormValues(res.data);
             this.previewUrl = `${environment.imageBaseUrl}/${res.data.logo}`;
           } else {
-            this.snackbar.showError(res.message);
+            this.snackbar.showError(platformMessages.errorTitle, res.message);
           }
         },
         error: (err) => {
-          this.snackbar.showError(err);
+          const message = err?.error?.message || platformMessages.errorMessage;
+          this.snackbar.showError(`${platformMessages.errorTitle}`, message);
         },
       });
   }

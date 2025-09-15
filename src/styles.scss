@@ -538,6 +538,38 @@ app-data-table {
   }
 }
 
+.quiz-instruction-buttons app-filled-button,
+.quiz-instruction-buttons app-outline-button,
+.question-navigation-buttons app-outline-button,
+.question-navigation-buttons app-filled-button {
+  button {
+    width: 100% !important;
+  }
+}
+
+.marked-for-review-button {
+  button {
+    background: #fef9c2 !important;
+    border: 1px solid #f0b100 !important;
+    color: #000000 !important;
+  }
+}
+
+.marked-for-review-icon-button {
+  button {
+    background: #fef9c2 !important;
+    border: 1px solid #f0b100 !important;
+    color: #000000 !important;
+    padding: 8px !important;
+  }
+}
+
+.mark-for-review-icon-button {
+  button {
+    padding: 8px !important;
+  }
+}
+
 .quiz-rating-action {
   .outline-button {
     width: 100%;

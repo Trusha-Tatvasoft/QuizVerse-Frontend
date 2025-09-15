@@ -78,7 +78,7 @@ export class EmailTemplateComponent {
         next: (res) => {
           if (!res.result || res.statusCode !== 200) {
             this.snackbar.showError(
-              `${platformMessages.errorTitle} ${res.statusCode}`,
+              `${platformMessages.errorTitle}`,
               res.message || platformMessages.errorMessage,
             );
             this.dataSource.set([]);
@@ -90,8 +90,10 @@ export class EmailTemplateComponent {
           this.totalItems.set(res.data.totalRecords);
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
           this.dataSource.set([]);
           this.totalItems.set(0);
         },
@@ -227,11 +229,17 @@ export class EmailTemplateComponent {
               data: res.data,
             });
           } else {
-            this.snackbar.showError('Error', res.message || 'Failed to fetch template');
+            this.snackbar.showError(
+              platformMessages.errorTitle,
+              res.message || 'Failed to fetch template',
+            );
           }
         },
         error: (err) => {
-          this.snackbar.showError('Error', err?.error?.message || 'Server unavailable');
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }

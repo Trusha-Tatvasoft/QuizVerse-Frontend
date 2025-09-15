@@ -1,6 +1,6 @@
 <div class="leaderboard-container">
   <h3 class="leaderboard-title">
-    <mat-icon class="mr-2 emoji-outline">emoji_events</mat-icon>
+    <mat-icon class="mr-2 calendar-today">calendar_today</mat-icon>
     This Week's Rising Stars
   </h3>
 
@@ -16,19 +16,23 @@
     <div class="leaderboard-item" [class.current-user]="entry.isLoggedInUser">
       <!-- 1. Rank / Medal -->
       <div class="rank-icon">
-        @switch (entry.rank) {
-          @case (1) {
-            <mat-icon class="gold">military_tech</mat-icon>
+        @if (entry.totalBattlesPlayed + entry.totalQuizzesPlayed > 0) {
+          @switch (entry.rank) {
+            @case (1) {
+              <mat-icon class="gold">military_tech</mat-icon>
+            }
+            @case (2) {
+              <mat-icon class="silver">military_tech</mat-icon>
+            }
+            @case (3) {
+              <mat-icon class="bronze">military_tech</mat-icon>
+            }
+            @default {
+              <span>{{ entry.rank }}</span>
+            }
           }
-          @case (2) {
-            <mat-icon class="silver">military_tech</mat-icon>
-          }
-          @case (3) {
-            <mat-icon class="bronze">military_tech</mat-icon>
-          }
-          @default {
-            <span>{{ entry.rank }}</span>
-          }
+        } @else {
+          <span>--</span>
         }
       </div>
 
@@ -39,10 +43,10 @@
             [src]="entry.profilePic"
             alt="{{ entry.userName }}"
             class="profile-pic"
-            (error)="onImageError(entry)"
+            (error)="entry.profilePic = null"
           />
         } @else {
-          <div class="profile-fallback">
+          <div class="profile-fallback" [ngClass]="getInitialsColorClass(entry.fullName)">
             {{ getInitials(entry.fullName || entry.userName) }}
           </div>
         }
