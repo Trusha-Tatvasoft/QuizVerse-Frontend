@@ -1,0 +1,46 @@
+<p>quiz-result-header works!</p>
+<div class="result-summary card">
+  <!-- Icon -->
+  <div class="icon">
+    <mat-icon>emoji_events</mat-icon>
+  </div>
+
+  <!-- Header -->
+  <h2>Quiz Completed!</h2>
+  <p class="subtitle">{{ quizSummary.quizName }}</p>
+
+  <!-- Score Section -->
+  <div class="score">
+    <span class="big"> {{ quizSummary.correctAnswers }}/{{ quizSummary.totalQuestions }} </span>
+    <span class="percent"> {{ quizSummary.scorePercentage }}% Score </span>
+    <span class="tag">{{ quizSummary.grade }}</span>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress">
+    <app-progress-bar
+      [percentage]="quizSummary.scorePercentage"
+      theme="secondary"
+    ></app-progress-bar>
+  </div>
+
+  <!-- Summary Stats -->
+  <div class="summary">
+    <div>
+      <span class="green">{{ quizSummary.correctAnswers }}</span>
+      <small>Correct</small>
+    </div>
+    <div>
+      <span class="red">{{ quizSummary.wrongAnswers }}</span>
+      <small>Wrong</small>
+    </div>
+    <div>
+      <span class="blue">{{ quizSummary.timeSpent }}</span>
+      <small>Time Spent</small>
+    </div>
+    <div>
+      <span class="purple">{{ quizSummary.xpEarned }}</span>
+      <small>XP Earned</small>
+    </div>
+  </div>
+</div>

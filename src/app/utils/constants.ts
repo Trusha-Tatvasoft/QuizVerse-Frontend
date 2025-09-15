@@ -278,6 +278,9 @@ export const platformMessages = {
 
   //#region Quiz Attempt
   invalidQuizId: 'Invalid quiz id',
+  failedLoadQuizResultSummary: 'Failed to fetch loading quiz summary',
+  failedLoadQuizExplaination: 'Failed to load quiz explaination',
+  failedToFatchQuestions: 'Failed to fetch questions',
   startQuizMessage: 'Quiz Satrted. All the best!!!',
   restoreQuizData: 'Restored your previous quiz progress',
   areYouSureYouWantToLeaveMessage:
