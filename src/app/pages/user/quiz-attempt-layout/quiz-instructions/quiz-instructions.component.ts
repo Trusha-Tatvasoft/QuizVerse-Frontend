@@ -154,7 +154,7 @@ export class QuizInstructionsComponent {
   /** Navigate to quiz attempt screen */
   startQuiz() {
     if (this.isDevToolsOpen()) {
-      this.snackbar.showError('Cannot start the quiz while developer tools are open.');
+      this.snackbar.showError(platformMessages.inspectOpen);
       return;
     }
     const encodedId = btoa((this.decodedId as number).toString());

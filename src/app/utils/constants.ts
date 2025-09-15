@@ -291,6 +291,7 @@ export const platformMessages = {
   quizSubmitSuccess: 'Quiz submitted successfully!',
   lastQuestion: 'This is the last question cannot navigate further.',
   completedQuiz: 'You have already completed this quiz and cannot play again.',
+  inspectOpen: 'Cannot start the quiz while developer tools are open.',
   //#endregion
 };
 //#endregion
