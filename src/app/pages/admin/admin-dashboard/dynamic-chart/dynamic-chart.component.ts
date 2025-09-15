@@ -42,6 +42,7 @@ export class DynamicChartComponent implements OnChanges {
       this.applyThemeIfNeeded();
     }
   }
+
   private applyThemeIfNeeded(): void {
     if (!this._chartData?.datasets?.length) return;
 
