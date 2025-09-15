@@ -32,18 +32,17 @@
         </div>
       }
     </div>
-    @if (quizzesWithTags.length > 0) {
-      <div class="footer user-dashboard-text-button">
-        <app-text-button
-          [textButtonConfig]="viewAllButtonConfig"
-          (buttonClicked)="viewAll()"
-        ></app-text-button>
-      </div>
-    }
   } @else {
     <div class="no-requests">
       <mat-icon>hourglass_empty</mat-icon>
       <p>No recent quiz results found.</p>
     </div>
   }
+
+  <div class="footer user-dashboard-text-button">
+    <app-text-button
+      [textButtonConfig]="viewAllButtonConfig"
+      (buttonClicked)="viewAll()"
+    ></app-text-button>
+  </div>
 </div>
