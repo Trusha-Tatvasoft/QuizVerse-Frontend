@@ -14,7 +14,6 @@ import { platformMessages, debounceTimeValue } from '../../../utils/constants';
 import { MatDialog } from '@angular/material/dialog';
 import { QuizCategoryAction, QuizCategoryStatus } from '../../../shared/enums/quiz-category.enum';
 import { quizCategoryAction } from './configs/quiz-category-management.config';
-import { Input } from '@angular/core';
 import { TagComponent } from '../../../shared/components/tag/tag.component';
 
 const mockResponse = {

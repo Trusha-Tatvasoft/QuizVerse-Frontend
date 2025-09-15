@@ -361,19 +361,6 @@ export const userSaveMessages = {
   errorMessage: (action: string) => `Failed to ${action} user`,
 };
 
-export const userLoadMessages = {
-  fetchError: 'Failed to fetch user',
-  serverError: 'Server error while fetching user',
-  error: 'Error',
-};
-
-export const userStatusMessages = {
-  actionFailed: 'Action failed',
-  serverError: 'Server error during user action',
-  success: 'Success',
-  error: 'Error',
-};
-
 export const userActionMessages = {
   deleted: 'User deleted successfully',
   activated: 'User activated successfully',

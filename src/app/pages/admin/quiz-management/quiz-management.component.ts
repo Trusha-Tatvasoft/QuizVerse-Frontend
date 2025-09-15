@@ -313,7 +313,10 @@ export class QuizManagementComponent implements OnInit {
       .subscribe({
         next: (res) => {
           if (res.statusCode === 200) {
-            this.snackbar.showSuccess('Success', platformMessages.deleteQuizSuccess);
+            this.snackbar.showSuccess(
+              platformMessages.successTitle,
+              platformMessages.deleteQuizSuccess,
+            );
 
             // Handle pagination if last item on the last page
             const currentData = this.dataSource();
@@ -328,13 +331,16 @@ export class QuizManagementComponent implements OnInit {
 
             this.fetchQuizzes();
           } else {
-            this.snackbar.showError('Error', res.message || platformMessages.deleteQuizFailure);
+            this.snackbar.showError(
+              platformMessages.errorTitle,
+              res.message || platformMessages.deleteQuizFailure,
+            );
           }
         },
         error: (err) => {
           this.snackbar.showError(
-            'Error',
-            err?.error?.message || platformMessages.unavailableMessage,
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorTitle,
           );
         },
       });
@@ -349,7 +355,10 @@ export class QuizManagementComponent implements OnInit {
           this.openPreview(res.data);
         },
         error: (err) => {
-          this.snackbar.showError(err);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }
@@ -379,7 +388,12 @@ export class QuizManagementComponent implements OnInit {
             },
           });
         },
-        error: (err) => this.snackbar.showError(err),
+        error: (err) => {
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
+        },
       });
   }
 }

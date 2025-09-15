@@ -170,8 +170,10 @@ export class AddEditQuizCategoryComponent implements OnInit, OnDestroy {
           this.close.emit({ refresh: true });
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(platformMessages.errorTitle, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }

@@ -111,8 +111,10 @@ export class QuizCreationStep3Option3Component {
         .subscribe({
           next: (res) => this.handleSuccess(res.data),
           error: (err) => {
-            const message = err?.error?.message || platformMessages.errorMessage;
-            this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
+            this.snackbar.showError(
+              platformMessages.errorTitle,
+              err?.error?.message || platformMessages.errorMessage,
+            );
           },
         });
     } else if (fileName.endsWith('.xls') || fileName.endsWith('.xlsx')) {
@@ -122,8 +124,10 @@ export class QuizCreationStep3Option3Component {
         .subscribe({
           next: (res) => this.handleSuccess(res.data),
           error: (err) => {
-            const message = err?.error?.message || platformMessages.errorMessage;
-            this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
+            this.snackbar.showError(
+              platformMessages.errorTitle,
+              err?.error?.message || platformMessages.errorMessage,
+            );
           },
         });
     } else {

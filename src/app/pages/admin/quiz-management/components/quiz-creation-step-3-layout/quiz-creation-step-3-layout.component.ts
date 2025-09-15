@@ -376,8 +376,10 @@ export class QuizCreationStep3LayoutComponent {
             });
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
 
@@ -406,8 +408,10 @@ export class QuizCreationStep3LayoutComponent {
           this.fillMissingLabelsForSelectedQuestions();
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }

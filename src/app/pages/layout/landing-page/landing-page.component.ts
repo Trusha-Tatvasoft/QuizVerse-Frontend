@@ -97,8 +97,8 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.snackbarService.showError(
-            platformMessages.errorMessage,
-            err.error?.message || platformMessages.errorTitle,
+            platformMessages.errorTitle,
+            err.error?.message || platformMessages.errorMessage,
           );
         },
       });

@@ -378,7 +378,7 @@ describe('QuizManagementComponent', () => {
       component.deleteQuiz(quizId);
 
       expect(snackbarMock.showSuccess).toHaveBeenCalledWith(
-        'Success',
+        platformMessages.successTitle,
         platformMessages.deleteQuizSuccess,
       );
       expect(fetchSpy).toHaveBeenCalled();
@@ -407,7 +407,7 @@ describe('QuizManagementComponent', () => {
 
       component.deleteQuiz(quizId);
 
-      expect(snackbarMock.showError).toHaveBeenCalledWith('Error', 'fail');
+      expect(snackbarMock.showError).toHaveBeenCalledWith('Error!', 'fail');
     });
 
     it('should show error snackbar on API error', () => {
@@ -417,7 +417,7 @@ describe('QuizManagementComponent', () => {
 
       component.deleteQuiz(quizId);
 
-      expect(snackbarMock.showError).toHaveBeenCalledWith('Error', 'network error');
+      expect(snackbarMock.showError).toHaveBeenCalledWith('Error!', 'network error');
     });
   });
 
@@ -467,9 +467,11 @@ describe('QuizManagementComponent', () => {
     });
 
     it('should call snackbar on error', () => {
-      quizCreationServiceMock.getQuiz.mockReturnValue(throwError(() => 'error'));
+      quizCreationServiceMock.getQuiz.mockReturnValue(
+        throwError(() => ({ error: { message: 'error' } })),
+      );
       component.previewQuiz(1);
-      expect(snackbarMock.showError).toHaveBeenCalledWith('error');
+      expect(snackbarMock.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'error');
     });
   });
 
@@ -505,11 +507,16 @@ describe('QuizManagementComponent', () => {
     });
 
     it('should call snackbar on error', () => {
-      quizCreationServiceMock.getDropDownData.mockReturnValue(throwError(() => 'network error'));
+      quizCreationServiceMock.getDropDownData.mockReturnValue(
+        throwError(() => ({ error: { message: 'network error' } })),
+      );
 
       component.openPreview({} as any);
 
-      expect(snackbarMock.showError).toHaveBeenCalledWith('network error');
+      expect(snackbarMock.showError).toHaveBeenCalledWith(
+        platformMessages.errorTitle,
+        'network error',
+      );
     });
   });
 

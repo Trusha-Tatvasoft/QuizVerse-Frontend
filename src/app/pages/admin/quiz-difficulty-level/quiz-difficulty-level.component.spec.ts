@@ -67,7 +67,7 @@ describe('QuizDifficultyLevelComponent (Jest)', () => {
 
     component.fetchDifficultyLevels();
 
-    expect(snackbar.showError).toHaveBeenCalledWith('Error! 400', 'Error');
+    expect(snackbar.showError).toHaveBeenCalledWith('Error!', 'Error');
     expect(component.dataSource()).toEqual([]);
   });
 
@@ -81,7 +81,7 @@ describe('QuizDifficultyLevelComponent (Jest)', () => {
 
     component.fetchDifficultyLevels();
 
-    expect(snackbar.showError).toHaveBeenCalledWith('Error! 500', 'Server error');
+    expect(snackbar.showError).toHaveBeenCalledWith('Error!', 'Server error');
     expect(component.dataSource()).toEqual([]);
   });
 
@@ -94,7 +94,7 @@ describe('QuizDifficultyLevelComponent (Jest)', () => {
     component.openAddDifficultyDialgue();
 
     expect(dialog.open).toHaveBeenCalledWith(AddDifficultyLevelComponent, expect.any(Object));
-    expect(snackbar.showSuccess).toHaveBeenCalledWith('Success', 'Level Added');
+    expect(snackbar.showSuccess).toHaveBeenCalledWith(platformMessages.successTitle, 'Level Added');
     expect(fetchSpy).toHaveBeenCalled();
   });
 
@@ -155,7 +155,7 @@ describe('QuizDifficultyLevelComponent (Jest)', () => {
 
     component.fetchDifficultyLevels();
 
-    expect(snackbar.showError).toHaveBeenCalledWith('Error! 404', platformMessages.errorMessage);
+    expect(snackbar.showError).toHaveBeenCalledWith('Error!', platformMessages.errorMessage);
     expect(component.dataSource()).toEqual([]);
   });
 
@@ -169,7 +169,7 @@ describe('QuizDifficultyLevelComponent (Jest)', () => {
 
     component.fetchDifficultyLevels();
 
-    expect(snackbar.showError).toHaveBeenCalledWith('Error! 500', platformMessages.errorMessage);
+    expect(snackbar.showError).toHaveBeenCalledWith('Error!', platformMessages.errorMessage);
     expect(component.dataSource()).toEqual([]);
   });
 });
