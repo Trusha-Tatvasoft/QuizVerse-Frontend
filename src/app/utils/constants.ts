@@ -218,6 +218,11 @@ export const platformMessages = {
   sessionExpiredMessage: 'Please log in again.',
   //#endregion
 
+  //#region registerMessages
+  emailExists: 'Email already exists.',
+  usernameExists: 'Username already exists.',
+  //#endregion
+
   //#region QuestionPool Messages
   failedLoadQuesPreview: 'Failed to load question details',
   deleteQuesSuccess: 'Question Deleted Successfully!!',
@@ -273,6 +278,17 @@ export const platformMessages = {
 
   //#region Quiz Attempt
   invalidQuizId: 'Invalid quiz id',
+  startQuizMessage: 'Quiz Satrted. All the best!!!',
+  restoreQuizData: 'Restored your previous quiz progress',
+  areYouSureYouWantToLeaveMessage:
+    'Your quiz progress will be saved. Are you sure you want to leave?',
+  unKnownErrorMessage: 'Unknown error occurred',
+  openedDeveloperTools: 'Developer tools opened',
+  windowsLostFocus: 'Window lost focus',
+  switchTab: 'Switched tab or minimized window',
+  fullScreenExit: 'You exited fullscreen! Quiz will be submitted.',
+  timeUp: 'Time is up!',
+  quizSubmitSuccess: 'Quiz submitted successfully!',
   //#endregion
 };
 //#endregion
@@ -562,4 +578,10 @@ export const adminDashboardChartColors = {
   },
 };
 
+// #region Quiz Play
+export const quizPlayStateKey = 'quizAttemptState';
+
+export function autoSubmitMessage(reason: string): string {
+  return `Quiz will be auto-submitted due to: ${reason}`;
+}
 // #endregion

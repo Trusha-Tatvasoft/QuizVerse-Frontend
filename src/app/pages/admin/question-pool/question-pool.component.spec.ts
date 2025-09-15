@@ -310,7 +310,7 @@ describe('QuestionPoolComponent (Jest)', () => {
       expect(openSpy).toHaveBeenCalledWith(ConfirmationDialogComponent, expect.any(Object));
       expect(questionPoolServiceMock.deleteQuestion).toHaveBeenCalledWith(101);
       expect(snackbarMock.showSuccess).toHaveBeenCalledWith(
-        'Success',
+        'Success!',
         platformMessages.deleteQuesSuccess,
       );
       expect(component.pagination().pageNumber).toBe(1);
@@ -331,7 +331,10 @@ describe('QuestionPoolComponent (Jest)', () => {
 
       expect(openSpy).toHaveBeenCalled();
       expect(questionPoolServiceMock.deleteQuestion).toHaveBeenCalled();
-      expect(snackbarMock.showError).toHaveBeenCalledWith('Error', 'Delete failed');
+      expect(snackbarMock.showError).toHaveBeenCalledWith(
+        platformMessages.errorTitle,
+        'Delete failed',
+      );
     }));
 
     it('should show error snackbar on delete error', fakeAsync(() => {
@@ -349,7 +352,10 @@ describe('QuestionPoolComponent (Jest)', () => {
 
       expect(openSpy).toHaveBeenCalled();
       expect(questionPoolServiceMock.deleteQuestion).toHaveBeenCalled();
-      expect(snackbarMock.showError).toHaveBeenCalledWith('Error', 'Network error');
+      expect(snackbarMock.showError).toHaveBeenCalledWith(
+        platformMessages.errorTitle,
+        'Network error',
+      );
     }));
 
     it('should not call delete if dialog is cancelled', fakeAsync(() => {

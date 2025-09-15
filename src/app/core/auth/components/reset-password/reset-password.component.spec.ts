@@ -119,7 +119,7 @@ describe('ResetPasswordComponent', () => {
       password: credentials.password,
       resetPasswordToken: 'test-reset-token',
     });
-    expect(successSpy).toHaveBeenCalledWith('Success', 'Password reset successfully');
+    expect(successSpy).toHaveBeenCalledWith('Success!', 'Password reset successfully');
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.Login]);
   });
 
@@ -141,7 +141,7 @@ describe('ResetPasswordComponent', () => {
 
     component.onSubmit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error! 400', 'Invalid token');
+    expect(errorSpy).toHaveBeenCalledWith('Error!', 'Invalid token');
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ForgetPassword]);
   });
 
@@ -161,7 +161,7 @@ describe('ResetPasswordComponent', () => {
 
     component.onSubmit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error', 'Server error');
+    expect(errorSpy).toHaveBeenCalledWith(platformMessages.errorTitle, 'Server error');
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ForgetPassword]);
   });
 
@@ -231,7 +231,7 @@ describe('ResetPasswordComponent', () => {
 
     component.ngOnInit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error! 200', 'Token invalid');
+    expect(errorSpy).toHaveBeenCalledWith('Error!', 'Token invalid');
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ResetLinkInvalid]);
   });
 
@@ -245,7 +245,7 @@ describe('ResetPasswordComponent', () => {
 
     component.ngOnInit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error', 'Invalid or expired token');
+    expect(errorSpy).toHaveBeenCalledWith(platformMessages.errorTitle, 'Invalid or expired token');
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ResetLinkInvalid]);
   });
 
@@ -267,7 +267,7 @@ describe('ResetPasswordComponent', () => {
 
     component.onSubmit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error! 500', 'Server responded with error');
+    expect(errorSpy).toHaveBeenCalledWith('Error!', 'Server responded with error');
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ForgetPassword]);
   });
 
@@ -289,7 +289,7 @@ describe('ResetPasswordComponent', () => {
 
     component.onSubmit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error! 200', 'Unexpected failure');
+    expect(errorSpy).toHaveBeenCalledWith('Error!', 'Unexpected failure');
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ForgetPassword]);
   });
   it('should navigate to ResetLinkInvalid if no resetToken is present', () => {
@@ -313,7 +313,10 @@ describe('ResetPasswordComponent', () => {
 
     component.ngOnInit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error', platformMessages.errorMessage);
+    expect(errorSpy).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
+    );
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ResetLinkInvalid]);
   });
 
@@ -333,7 +336,7 @@ describe('ResetPasswordComponent', () => {
 
     component.onSubmit();
 
-    expect(successSpy).toHaveBeenCalledWith('Success', platformMessages.passwordResetSuccess);
+    expect(successSpy).toHaveBeenCalledWith('Success!', platformMessages.passwordResetSuccess);
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.Login]);
   });
 
@@ -347,7 +350,10 @@ describe('ResetPasswordComponent', () => {
 
     component.ngOnInit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error', platformMessages.errorMessage);
+    expect(errorSpy).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
+    );
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ResetLinkInvalid]);
   });
 
@@ -368,7 +374,7 @@ describe('ResetPasswordComponent', () => {
     component.onSubmit();
 
     expect(errorSpy).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} 400`,
+      `${platformMessages.errorTitle}`,
       platformMessages.errorMessage,
     );
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ForgetPassword]);
@@ -390,7 +396,10 @@ describe('ResetPasswordComponent', () => {
 
     component.onSubmit();
 
-    expect(errorSpy).toHaveBeenCalledWith('Error', platformMessages.errorMessage);
+    expect(errorSpy).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
+    );
     expect(navigateSpy).toHaveBeenCalledWith([Navigations.ForgetPassword]);
   });
 });

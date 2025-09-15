@@ -41,19 +41,22 @@ export class ImportQuestionPreviewComponent {
   }
   addQuestions() {
     if (this.questions.length === 0) {
-      this.snackbar.showError('Error', platformMessages.noQuestionsToSave);
+      this.snackbar.showError(platformMessages.errorTitle, platformMessages.noQuestionsToSave);
       this.dialogRef.close();
       return;
     }
 
     this.questionPoolService.saveQuestions(this.questions).subscribe({
       next: () => {
-        this.snackbar.showSuccess('Success', platformMessages.saveQuestionsSuccess);
+        this.snackbar.showSuccess(
+          platformMessages.successTitle,
+          platformMessages.saveQuestionsSuccess,
+        );
         this.dialogRef.close(true);
       },
       error: (err) => {
         const message = err?.error?.message || platformMessages.saveQuestionsFailure;
-        this.snackbar.showError('Error', message);
+        this.snackbar.showError(platformMessages.errorTitle, message);
       },
     });
   }

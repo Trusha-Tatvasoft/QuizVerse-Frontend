@@ -9,7 +9,7 @@ import { OutlineButtonComponent } from '../../../../../../../shared/components/o
 import { By } from '@angular/platform-browser';
 import { of, throwError } from 'rxjs';
 import { QuestionResponseDto } from '../../../../interfaces/battle-creation.interface';
-import { quizCRUDMessages } from '../../../../../../../utils/constants';
+import { platformMessages, quizCRUDMessages } from '../../../../../../../utils/constants';
 import { EndPoints } from '../../../../../../../shared/enums/end-point.enum';
 
 jest.mock('../../../../../../../services/admin/battle-management/battle-management.service');
@@ -241,26 +241,35 @@ describe('BattleCreationStep3Option3Component', () => {
   });
 
   it('should show error on CSV file processing failure', () => {
-    const error = { message: 'Invalid CSV format', status: 400 };
+    const error = { error: { message: 'Invalid CSV format' }, status: 400 };
     battleManagementService.getQuestionsFromCsv.mockReturnValueOnce(throwError(() => error));
     const file = new File([''], 'questions.csv', { type: 'text/csv' });
     const event = { target: { files: [file], value: '' } } as any;
     component.onFileSelected(event);
+
     expect(battleManagementService.getQuestionsFromCsv).toHaveBeenCalledWith(file);
-    expect(snackbarService.showError).toHaveBeenCalledWith(error);
+    expect(snackbarService.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      'Invalid CSV format',
+    );
     expect(component.selectedQuestions.length).toBe(0);
   });
 
   it('should show error on Excel file processing failure', () => {
-    const error = { message: 'Invalid Excel format', status: 400 };
+    const error = { error: { message: 'Invalid Excel format' }, status: 400 };
     battleManagementService.getQuestionsFromExcel.mockReturnValueOnce(throwError(() => error));
     const file = new File([''], 'questions.xlsx', {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
     const event = { target: { files: [file], value: '' } } as any;
+
     component.onFileSelected(event);
+
     expect(battleManagementService.getQuestionsFromExcel).toHaveBeenCalledWith(file);
-    expect(snackbarService.showError).toHaveBeenCalledWith(error);
+    expect(snackbarService.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      'Invalid Excel format',
+    );
     expect(component.selectedQuestions.length).toBe(0);
   });
 

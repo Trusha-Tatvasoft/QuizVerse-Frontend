@@ -8,6 +8,7 @@ import { QuestionPoolService } from '../../../../../../../services/admin/questio
 import { SnackbarService } from '../../../../../../../shared/service/snackbar/snackbar.service';
 import { ImportQuestionPreviewComponent } from '../import-question-preview/import-question-preview.component';
 import { ValidationErrorService } from '../../../../../../../shared/service/validation-error/validation-error.service';
+import { platformMessages } from '../../../../../../../utils/constants';
 
 describe('ImportQuestionFormComponent', () => {
   let component: ImportQuestionFormComponent;
@@ -169,7 +170,10 @@ describe('ImportQuestionFormComponent', () => {
 
     component.fileSelected(event);
 
-    expect(snackbarMock.showError).toHaveBeenCalledWith('Error', 'Preview failed');
+    expect(snackbarMock.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      'Preview failed',
+    );
   });
 
   it('should return correct displayFileName', () => {

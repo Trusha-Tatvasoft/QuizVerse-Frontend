@@ -334,7 +334,10 @@ export class BattleCreationLayoutComponent {
           this.isEditMode = true;
         },
         error: (err) => {
-          this.snackbar.showError(err);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }
@@ -363,11 +366,10 @@ export class BattleCreationLayoutComponent {
           this.router.navigate([Navigations.Admin, Navigations.BattlesAdmin]);
         },
         error: (err) => {
-          if (err?.error?.data?.length && err.error.data[0]?.errors?.length) {
-            this.snackbar.showError(err.error.data[0].errors[0]);
-          } else {
-            this.snackbar.showError(err.message || 'An error occurred');
-          }
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }
