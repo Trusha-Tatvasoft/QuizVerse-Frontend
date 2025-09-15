@@ -204,6 +204,7 @@ $custom-typography: mat.m2-define-typography-config(
   @media (max-width: 400px) {
     .custom-btn {
       width: 100%;
+
       button {
         width: 100%;
       }
@@ -360,6 +361,7 @@ app-data-table {
     @media (max-width: 500px) {
       .btn-container {
         width: 100% !important;
+
         .otp-btn {
           button {
             width: 100% !important;
@@ -383,11 +385,14 @@ app-data-table {
 // browse quizzes page btns
 .quiz-btn-container {
   width: 100%;
+
   @media (max-width: 700px) {
     width: 50%;
   }
+
   button {
     width: 100%;
+
     @media (max-width: 700px) {
       width: 100%;
     }
@@ -397,6 +402,7 @@ app-data-table {
 // browsr quiz play button
 .quiz-play-btn {
   margin-top: 1rem;
+
   button {
     width: 100% !important;
   }
@@ -518,6 +524,7 @@ app-data-table {
     }
   }
 }
+
 .profile-card {
   .mat-mdc-card.mdc-card {
     min-height: 100px !important;
@@ -560,5 +567,15 @@ app-data-table {
 .mark-for-review-icon-button {
   button {
     padding: 8px !important;
+  }
+}
+
+.quiz-rating-action {
+  .outline-button {
+    width: 100%;
+  }
+
+  .filled-button {
+    width: 100%;
   }
 }

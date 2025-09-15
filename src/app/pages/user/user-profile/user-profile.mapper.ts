@@ -49,7 +49,7 @@ export function mapRecentActivities(overview: UserOverview): { text: string; xp:
 /** Map stats for user overview */
 export function mapStats(overview: UserOverview): { label: string; value: string | number }[] {
   return [
-    { label: 'Global Rank', value: overview.globalRank },
+    { label: 'Global Rank', value: overview.globalRank === 0 ? '-' : overview.globalRank },
     { label: 'Best Category', value: overview.bestCategory },
     { label: 'Longest Streak', value: `${overview.longestStreak} days` },
   ];

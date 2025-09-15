@@ -6,64 +6,97 @@
 
   <p class="leaderboard-subtitle">All-time leaderboard based on total XP earned</p>
 
-  <div #list class="leaderboard-list" tabindex="0" (wheel)="onWheel($event)">
-    <ng-container *ngIf="!loading && leaderboard.length > 0; else noData">
-      <ng-container *ngFor="let entry of visibleWindow; trackBy: trackByRank">
-        <div class="leaderboard-item" [class.current-user]="entry.is_loggedin_user">
-          <!-- 1. Rank / Medal -->
-          <div class="rank-icon">
-            <ng-container [ngSwitch]="entry.rank">
-              <mat-icon *ngSwitchCase="1" class="gold">military_tech</mat-icon>
-              <mat-icon *ngSwitchCase="2" class="silver">military_tech</mat-icon>
-              <mat-icon *ngSwitchCase="3" class="bronze">military_tech</mat-icon>
-              <span *ngSwitchDefault>{{ entry.rank }}</span>
-            </ng-container>
-          </div>
+  <app-scroll-window
+    [items]="leaderboard"
+    [windowSize]="6"
+    [itemTemplate]="globalLeadersTemplate"
+  ></app-scroll-window>
 
-          <!-- 2. Profile + Initials -->
-          <div class="profile-wrapper">
-            <img
-              *ngIf="entry.profilePic"
-              [src]="entry.profilePic"
-              alt="{{ entry.userName }}"
-              class="profile-pic"
-              (error)="onImageError(entry)"
-            />
-            <div *ngIf="!entry.profilePic" class="profile-fallback">
-              {{ getInitials(entry.fullName || entry.userName) }}
-            </div>
-          </div>
+  <ng-template #globalLeadersTemplate let-entry>
+    <div class="leaderboard-item" [class.current-user]="entry.isLoggedInUser">
+      <!-- 1. Rank / Medal -->
+      <div class="rank-icon">
+        @if (entry.rank > 0) {
+          @switch (entry.rank) {
+            @case (1) {
+              <mat-icon class="gold">military_tech</mat-icon>
+            }
+            @case (2) {
+              <mat-icon class="silver">military_tech</mat-icon>
+            }
+            @case (3) {
+              <mat-icon class="bronze">military_tech</mat-icon>
+            }
+            @default {
+              <span>{{ entry.rank }}</span>
+            }
+          }
+        } @else {
+          <span>--</span>
+        }
+      </div>
 
-          <!-- 3 & 4. Username + Level/Streak -->
-          <div class="user-details">
-            <span class="username">{{
-              entry.is_loggedin_user ? 'You (' + entry.userName + ')' : entry.userName
-            }}</span>
-            <span class="meta">
-              Level {{ entry.currentLevel }} • {{ entry.currentStreak }} day streak
-            </span>
+      <!-- 2. Profile + Initials -->
+      <div class="profile-wrapper">
+        @if (entry.profilePic) {
+          <img
+            [src]="entry.profilePic"
+            alt="{{ entry.userName }}"
+            class="profile-pic"
+            (error)="entry.profilePic = null"
+          />
+        } @else {
+          <div class="profile-fallback" [ngClass]="getInitialsColorClass(entry.fullName)">
+            {{ getInitials(entry.fullName || entry.userName) }}
           </div>
+        }
+      </div>
 
-          <!-- XP + Rank Trend -->
-          <div class="xp-points">
-            <div class="trend-icon">
-              <mat-icon *ngIf="entry.trend === 1" class="trend-neutral">circle</mat-icon>
-              <mat-icon *ngIf="entry.trend === 2" class="trend-up">trending_up</mat-icon>
-              <mat-icon *ngIf="entry.trend === 3" class="trend-down">trending_down</mat-icon>
-            </div>
-            <div class="xp-text">
-              <span class="xp">{{ entry.totalXp | number }} XP</span>
-              <small>Total Points</small>
-            </div>
+      <!-- 3 & 4. Username + Level/Streak -->
+      <div class="user-details">
+        <span class="username">{{
+          entry.isLoggedInUser ? 'You (' + entry.userName + ')' : entry.userName
+        }}</span>
+        <span class="meta">
+          Level {{ entry.currentLevel }} • {{ entry.currentStreak }} day streak
+        </span>
+      </div>
+
+      <!-- 5. XP -->
+      <div class="xp-points">
+        @if (entry.rank > 0) {
+          <div class="trend-icon">
+            @switch (entry.trend) {
+              @case (1) {
+                <mat-icon class="trend-neutral">circle</mat-icon>
+              }
+              @case (2) {
+                <mat-icon class="trend-up">trending_up</mat-icon>
+              }
+              @case (3) {
+                <mat-icon class="trend-down">trending_down</mat-icon>
+              }
+              @default {
+                <span>--</span>
+              }
+            }
           </div>
+        }
+        <div class="xp-text">
+          @if (entry.totalXp > 0) {
+            <span class="xp">{{ entry.totalXp | number }} XP</span>
+            <small>Total Points</small>
+          } @else {
+            <span class="xp">N/A</span>
+          }
         </div>
-      </ng-container>
-    </ng-container>
-  </div>
+      </div>
+    </div>
+  </ng-template>
 
-  <ng-template #noData>
+  @if (leaderboard.length === 0) {
     <div class="no-records">
       <p>No data available.</p>
     </div>
-  </ng-template>
+  }
 </div>

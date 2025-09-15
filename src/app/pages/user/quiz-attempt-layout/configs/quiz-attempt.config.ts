@@ -1,5 +1,6 @@
 import { ButtonConfig } from '../../../../shared/interfaces/button-config.interface';
 import { ConfirmationDialogData } from '../../../../shared/interfaces/confirmation-dialog.interface';
+import { TagInputConfig } from '../../../../shared/interfaces/tag-component.interface';
 
 export const saveAndNextButtonConfig: ButtonConfig = {
   label: 'Save & Next',
@@ -120,9 +121,34 @@ export const submitDialogButtonConfig: ButtonConfig = {
   variant: 'secondary',
 };
 
+export const resumeDialogButtonConfig: ButtonConfig = {
+  label: 'Resume Quiz',
+  variant: 'secondary',
+};
+
 export const submitQuizDialog: ConfirmationDialogData = {
   title: 'Submit Quiz',
   message: 'Are you sure you want to submit this quiz?',
   confirmButtonConfig: submitDialogButtonConfig,
   cancelButtonConfig: cancelButtonConfig,
 };
+
+export const resumeQuizDialog: ConfirmationDialogData = {
+  title: 'Resume Quiz',
+  message:
+    'To continue your quiz, please return to fullscreen mode. Cancelling it will submit the quiz.',
+  confirmButtonConfig: resumeDialogButtonConfig,
+  cancelButtonConfig: cancelButtonConfig,
+};
+
+export function getquestionNoConfigWithLabel(label: string): TagInputConfig {
+  return {
+    id: label.toLowerCase(),
+    label,
+    type: 'static',
+    isSelected: false,
+    hasBorder: true,
+    backgroundColor: 'white',
+    textColor: 'black',
+  };
+}
