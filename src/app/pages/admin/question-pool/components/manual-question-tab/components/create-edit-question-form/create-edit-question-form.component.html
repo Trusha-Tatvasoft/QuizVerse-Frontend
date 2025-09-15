@@ -47,7 +47,7 @@
               [placeholder]="field.placeholder"
               (selectionChange)="field.name === 'type' && updateFieldsByType($event.value)"
             >
-              <mat-option value="">-- {{ field.placeholder }} --</mat-option>
+              <mat-option value=""> {{ field.placeholder }} </mat-option>
               @for (opt of field.options; track opt.value) {
                 <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
               }
@@ -64,7 +64,7 @@
         <!-- Textarea -->
         @if (field.type === 'textarea') {
           <mat-form-field appearance="outline" class="custom-form-field-text full-width">
-            <mat-icon fontSet="material-icons-outlined" class="mt-4" matPrefix>
+            <mat-icon fontSet="material-icons-outlined" matPrefix>
               {{ field.icon || 'edit' }}
             </mat-icon>
             <textarea
@@ -72,7 +72,7 @@
               [id]="field.name"
               [formControlName]="field.name"
               [placeholder]="field.placeholder"
-              class="custom-input-field"
+              class="custom-input-field min-h-[50px]"
             ></textarea>
             @if (form.get(field.name)?.touched && form.get(field.name)?.invalid) {
               <mat-error>{{ getError(field.name) }}</mat-error>

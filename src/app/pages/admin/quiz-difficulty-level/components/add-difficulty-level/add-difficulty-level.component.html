@@ -5,6 +5,10 @@
     <span class="dialog-sub-header">Create a new difficulty level for quizzes</span>
   </div>
 
+  <button mat-icon-button class="close-btn-dialog-all" (click)="onCancel()">
+    <mat-icon>close</mat-icon>
+  </button>
+
   <!-- Form -->
   <form [formGroup]="difficultyForm" class="p-5" (ngSubmit)="onSubmit()">
     <div class="grid gap-3 pb-3">

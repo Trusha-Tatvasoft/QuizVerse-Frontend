@@ -83,7 +83,7 @@ describe('CategoryPreviewComponent', () => {
 
   it('should emit close event when close button is clicked', () => {
     const emitSpy = jest.spyOn(component.close, 'emit'); // use jest.spyOn instead of spyOn
-    const button = fixture.debugElement.query(By.css('.close-button'));
+    const button = fixture.debugElement.query(By.css('.close-btn-dialog-all'));
     button.triggerEventHandler('click', null);
     expect(emitSpy).toHaveBeenCalled();
   });
