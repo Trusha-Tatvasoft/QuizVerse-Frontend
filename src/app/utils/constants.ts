@@ -273,6 +273,9 @@ export const platformMessages = {
 
   //#region Quiz Attempt
   invalidQuizId: 'Invalid quiz id',
+  failedLoadQuizResultSummary: 'Failed to fetch loading quiz summary',
+  failedLoadQuizExplaination: 'Failed to load quiz explaination',
+  failedToFatchQuestions: 'Failed to fetch questions',
   //#endregion
 };
 //#endregion

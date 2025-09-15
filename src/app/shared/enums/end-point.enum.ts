@@ -136,5 +136,8 @@ export enum EndPoints {
   // #region QuizAttempt
   StartQuiz = 'Quiz/start-quiz',
   GetNextQuestion = 'Quiz/get-quiz-question',
+  QuizCompletedSummary = 'Quiz/quiz-summary',
+  QuizQuestionReview = 'Quiz/quiz-question-review',
+  GetAnswerExplaination = 'Quiz/get-answer-explanation',
   // #endregion
 }
