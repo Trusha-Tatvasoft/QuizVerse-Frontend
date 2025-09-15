@@ -16,6 +16,7 @@ import { of, throwError } from 'rxjs';
 import { BattleStep1Data, QuestionsList } from '../../../interfaces/battle-creation.interface';
 import { ConfirmationDialogComponent } from '../../../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { DropDownType } from '../../../../../../shared/enums/dropdown-types.enum';
+import { platformMessages } from '../../../../../../utils/constants';
 
 jest.mock('../../../../../../services/admin/battle-management/battle-management.service');
 jest.mock('../../../../../../shared/service/snackbar/snackbar.service');
@@ -229,10 +230,26 @@ describe('BattleCreationStep3LayoutComponent', () => {
   });
 
   it('should handle error when fetching dropdown data', () => {
-    const error = { message: 'Failed to fetch dropdowns', status: 500 };
+    const error = { error: { message: 'Failed to fetch dropdowns' }, status: 500 };
     battleManagementService.getDropDownData.mockReturnValueOnce(throwError(() => error));
+
     component.getDropDownsData();
-    expect(snackbarService.showError).toHaveBeenCalledWith(error);
+
+    expect(snackbarService.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      'Failed to fetch dropdowns',
+    );
+  });
+
+  it('should show generic error when fetching dropdown fails without message', () => {
+    battleManagementService.getDropDownData.mockReturnValueOnce(throwError(() => ({})));
+
+    component.getDropDownsData();
+
+    expect(snackbarService.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
+    );
   });
 
   it('should update selectedQuestions and table on selectedQuestionsChangeFromInnerStep3OptionsParent', () => {

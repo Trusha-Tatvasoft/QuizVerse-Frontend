@@ -86,7 +86,7 @@ describe('ForgotPasswordComponent', () => {
     component.onSubmit();
 
     expect(sendResetLinkSpy).toHaveBeenCalledWith(credentials);
-    expect(showSuccessSpy).toHaveBeenCalledWith('Success', 'Success');
+    expect(showSuccessSpy).toHaveBeenCalledWith('Success!', 'Success');
     expect(navigateSpy).toHaveBeenCalledWith(['reset-password-link-success'], {
       state: { email: credentials.email },
     });
@@ -115,7 +115,7 @@ describe('ForgotPasswordComponent', () => {
     const credentials = { email: 'test@example.com' };
     jest.spyOn(forgotResetPasswordService, 'sendResetLink').mockReturnValue(
       throwError(() => ({
-        error: { message: 'Server error' },
+        error: { message: platformMessages.errorMessage },
       })),
     );
 
@@ -124,7 +124,10 @@ describe('ForgotPasswordComponent', () => {
     component.forgotPasswordForm.setValue(credentials);
     component.onSubmit();
 
-    expect(showErrorSpy).toHaveBeenCalledWith('Error', 'Server error');
+    expect(showErrorSpy).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
+    );
   });
 
   it('should return error message if control is invalid and touched', () => {
@@ -194,7 +197,7 @@ describe('ForgotPasswordComponent', () => {
     component.onSubmit();
 
     expect(showSuccessSpy).toHaveBeenCalledWith(
-      'Success',
+      platformMessages.successTitle,
       platformMessages.resetLinkSendSuccessfully,
     );
   });
@@ -208,6 +211,9 @@ describe('ForgotPasswordComponent', () => {
     component.forgotPasswordForm.setValue(credentials);
     component.onSubmit();
 
-    expect(showErrorSpy).toHaveBeenCalledWith('Error', platformMessages.errorMessage);
+    expect(showErrorSpy).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
+    );
   });
 });

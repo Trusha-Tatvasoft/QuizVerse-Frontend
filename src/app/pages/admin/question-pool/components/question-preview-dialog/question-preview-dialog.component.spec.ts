@@ -68,8 +68,8 @@ describe('QuestionPreviewDialogComponent', () => {
     component.ngOnInit();
 
     expect(snackbarMock.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
       platformMessages.failedLoadQuesPreview,
-      'Error',
     );
     expect(dialogRefMock.close).toHaveBeenCalled();
   });

@@ -114,7 +114,7 @@ describe('EmailTemplateComponent (Jest)', () => {
 
     component.loadEmailTemplates();
 
-    expect(snackbar.showError).toHaveBeenCalledWith('Error! 400', 'Bad Request');
+    expect(snackbar.showError).toHaveBeenCalledWith('Error!', 'Bad Request');
     expect(component.dataSource()).toEqual([]);
     expect(component.totalItems()).toBe(0);
   });
@@ -126,7 +126,7 @@ describe('EmailTemplateComponent (Jest)', () => {
 
     component.loadEmailTemplates();
 
-    expect(snackbar.showError).toHaveBeenCalledWith('Error! 500', 'Server error');
+    expect(snackbar.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'Server error');
     expect(component.dataSource()).toEqual([]);
     expect(component.totalItems()).toBe(0);
   });
@@ -208,11 +208,11 @@ describe('EmailTemplateComponent (Jest)', () => {
 
   it('should show error if preview API fails', () => {
     emailService.getEmailTemplateById.mockReturnValue(
-      of({ result: false, statusCode: 500, message: 'Fail' } as any),
+      throwError(() => ({ error: { message: 'Fail' } })),
     );
     component.openPreviewDialog(1);
 
-    expect(snackbar.showError).toHaveBeenCalledWith('Error', 'Fail');
+    expect(snackbar.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'Fail');
   });
 
   it('should handle error in preview dialog', () => {
@@ -221,7 +221,10 @@ describe('EmailTemplateComponent (Jest)', () => {
     );
     component.openPreviewDialog(1);
 
-    expect(snackbar.showError).toHaveBeenCalledWith('Error', 'Server unavailable');
+    expect(snackbar.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      'Server unavailable',
+    );
   });
 
   it('should handle all email actions', () => {
