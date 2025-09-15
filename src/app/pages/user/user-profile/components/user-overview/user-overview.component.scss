@@ -45,6 +45,17 @@
         }
       }
     }
+
+    .no-activity-message {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 150px;
+      font-style: italic;
+      color: #6b7280;
+      font-size: 16px;
+      text-align: center;
+    }
   }
 
   /* Quick Stats */

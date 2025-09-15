@@ -8,6 +8,8 @@
           <span class="activity-text">{{ activity.text }}</span>
           <app-tag [tagConfig]="getXpTag(activity.xp)" class="xp-tag"></app-tag>
         </li>
+      } @empty {
+        <div class="no-activity-message">No recent activity available</div>
       }
     </ul>
   </div>

@@ -57,10 +57,15 @@ export const battleCreationFormFields: DynamicFormField[] = [
     label: 'Description',
     type: 'textarea',
     placeholder: 'Enter battle description',
-    validators: [Validators.required, Validators.maxLength(500)],
+    validators: [
+      Validators.required,
+      Validators.maxLength(500),
+      Validators.pattern(/^(?!\s)[A-Za-z0-9 ]+$/),
+    ],
     validationMessages: {
       required: 'Description is required.',
       maxlength: 'Description must not exceed 500 characters.',
+      pattern: 'Battle Description cannot start with a space.',
     },
     gridClass: 'col-span-1 sm:col-span-2',
   },

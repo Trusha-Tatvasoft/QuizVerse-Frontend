@@ -104,10 +104,15 @@ export const quizCreationFormFields: DynamicFormField[] = [
     label: 'Description',
     type: 'textarea',
     placeholder: 'Enter quiz description',
-    validators: [Validators.required, Validators.maxLength(500)],
+    validators: [
+      Validators.required,
+      Validators.maxLength(500),
+      Validators.pattern(/^(?!\s)[A-Za-z0-9 ]+$/),
+    ],
     validationMessages: {
       required: 'Description is required.',
       maxlength: 'Description must not exceed 500 characters.',
+      pattern: 'Quiz Description cannot start with a space.',
     },
     gridClass: 'col-span-1 sm:col-span-2',
   },
