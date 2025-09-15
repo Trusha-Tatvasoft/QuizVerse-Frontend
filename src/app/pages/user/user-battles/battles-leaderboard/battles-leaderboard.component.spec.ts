@@ -71,7 +71,7 @@ describe('BattlesLeaderboardComponent', () => {
     fixture.detectChanges(); // triggers ngOnInit
 
     expect(snackbar.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} 500`,
+      `${platformMessages.errorTitle}`,
       'Server error',
     );
   });
@@ -97,7 +97,7 @@ describe('BattlesLeaderboardComponent', () => {
     fixture.detectChanges();
 
     expect(snackbar.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} 404`,
+      `${platformMessages.errorTitle}`,
       platformMessages.errorMessage,
     );
   });

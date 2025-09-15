@@ -82,7 +82,7 @@ describe('QuestionDifficultyComponent (Jest)', () => {
       AddEditQuestionDifficultyComponent,
       expect.any(Object),
     );
-    expect(mockSnackbar.showSuccess).toHaveBeenCalledWith('Success', 'Added successfully');
+    expect(mockSnackbar.showSuccess).toHaveBeenCalledWith('Success!', 'Added successfully');
     expect(loadSpy).toHaveBeenCalled();
   });
 
@@ -233,7 +233,7 @@ describe('QuestionDifficultyComponent (Jest)', () => {
 
     (component as any).loadQuestionDifficulties();
 
-    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error! 400`, 'Something went wrong.');
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error!`, 'Something went wrong.');
     expect((component as any).questionDifficulties).toEqual([]);
   });
 
@@ -244,7 +244,7 @@ describe('QuestionDifficultyComponent (Jest)', () => {
 
     (component as any).loadQuestionDifficulties();
 
-    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error! 400`, 'failed');
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error!`, 'failed');
     expect((component as any).questionDifficulties).toEqual([]);
   });
 
@@ -255,7 +255,7 @@ describe('QuestionDifficultyComponent (Jest)', () => {
 
     (component as any).loadQuestionDifficulties();
 
-    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error! 500`, 'Something went wrong.');
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error!`, 'Something went wrong.');
     expect((component as any).questionDifficulties).toEqual([]);
   });
 
@@ -266,7 +266,7 @@ describe('QuestionDifficultyComponent (Jest)', () => {
 
     (component as any).loadQuestionDifficulties();
 
-    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error! 500`, 'server failed');
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error!`, 'server failed');
     expect((component as any).questionDifficulties).toEqual([]);
   });
 
@@ -277,7 +277,7 @@ describe('QuestionDifficultyComponent (Jest)', () => {
 
     (component as any).deleteQuestionDifficulty(1);
 
-    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error! 400`, 'Something went wrong.');
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error!`, 'Something went wrong.');
     expect(mockSnackbar.showSuccess).not.toHaveBeenCalled();
   });
 
@@ -288,7 +288,7 @@ describe('QuestionDifficultyComponent (Jest)', () => {
 
     (component as any).deleteQuestionDifficulty(1);
 
-    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error! 500`, 'Something went wrong.');
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error!`, 'Something went wrong.');
     expect(mockSnackbar.showSuccess).not.toHaveBeenCalled();
   });
 

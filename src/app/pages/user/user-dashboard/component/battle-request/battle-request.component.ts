@@ -63,7 +63,7 @@ export class BattleRequestComponent implements OnInit {
         error: (err) => {
           this.snackBarService.showError(
             platformMessages.errorTitle,
-            err.message || platformMessages.errorMessage,
+            err?.error?.message || platformMessages.errorMessage,
           );
         },
       });

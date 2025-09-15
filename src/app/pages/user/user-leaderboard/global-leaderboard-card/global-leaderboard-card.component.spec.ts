@@ -62,7 +62,6 @@ describe('GlobalLeaderboardCardComponent', () => {
 
     it('should reset stats and call snackbar on error', () => {
       const error = {
-        statusCode: 500,
         error: { message: 'Internal server error' },
       };
 
@@ -72,7 +71,7 @@ describe('GlobalLeaderboardCardComponent', () => {
 
       expect(component.userLeaderboardStats).toEqual(defaultUserLeaderboardStats);
       expect(snackbarMock.showError).toHaveBeenCalledWith(
-        `${platformMessages.errorTitle} 500`,
+        `${platformMessages.errorTitle}`,
         'Internal server error',
       );
     });
@@ -86,7 +85,7 @@ describe('GlobalLeaderboardCardComponent', () => {
 
       expect(component.userLeaderboardStats).toEqual(defaultUserLeaderboardStats);
       expect(snackbarMock.showError).toHaveBeenCalledWith(
-        `${platformMessages.errorTitle} 400`,
+        `${platformMessages.errorTitle}`,
         platformMessages.errorMessage,
       );
     });

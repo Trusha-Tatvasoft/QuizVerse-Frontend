@@ -82,7 +82,7 @@ describe('WeeklyLeadersComponent', () => {
     fixture.detectChanges();
 
     expect(snackbar.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} 500`,
+      `${platformMessages.errorTitle}`,
       'Server error',
     );
   });
@@ -108,7 +108,7 @@ describe('WeeklyLeadersComponent', () => {
     fixture.detectChanges();
 
     expect(snackbar.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} 404`,
+      `${platformMessages.errorTitle}`,
       platformMessages.errorMessage,
     );
   });

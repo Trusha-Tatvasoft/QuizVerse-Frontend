@@ -14,6 +14,7 @@ import { UserDashboardService } from '../../../../../services/user/user-dashboar
 import { FeaturedQuizList, FeaturedQuizWithTag } from '../../interfaces/featured-quiz.interface';
 import { Subject, takeUntil } from 'rxjs';
 import { createDifficultyTag } from '../../../../../utils/types/difficulty-tag.type';
+import { platformMessages } from '../../../../../utils/constants';
 
 @Component({
   selector: 'app-featured-quiz',
@@ -72,7 +73,7 @@ export class FeaturedQuizComponent implements OnInit {
           this.loading = false;
         },
         error: (err) => {
-          this.errorMessage = err.message || 'An error occurred while loading quizzes.';
+          this.errorMessage = err?.error?.message || platformMessages.errorMessage;
           this.loading = false;
         },
       });

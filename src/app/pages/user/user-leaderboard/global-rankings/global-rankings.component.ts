@@ -42,8 +42,10 @@ export class GlobalRankingsComponent {
         error: (err) => {
           this.leaderboard = [];
 
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.statusCode}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }

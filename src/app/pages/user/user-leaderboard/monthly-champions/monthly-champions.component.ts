@@ -9,6 +9,7 @@ import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.se
 import { LeaderboardService } from '../../../../services/user/leaderboard/leaderboard.service';
 import { of, Subject, switchMap, takeUntil } from 'rxjs';
 import { ApiResponse } from '../../../../shared/interfaces/api-response.interface';
+import { platformMessages } from '../../../../utils/constants';
 
 @Component({
   selector: 'app-monthly-champions',
@@ -70,8 +71,10 @@ export class MonthlyChampionsComponent {
           this.leaderboard = res.data ?? [];
         },
         error: (err) => {
-          const message = err?.error?.message || 'Failed to fetch monthly champions';
-          this.snackbar.showError(`Error ${err.status}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }

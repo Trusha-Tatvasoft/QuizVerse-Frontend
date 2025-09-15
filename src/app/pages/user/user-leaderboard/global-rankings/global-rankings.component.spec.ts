@@ -114,7 +114,7 @@ describe('GlobalRankingsComponent', () => {
     fixture.detectChanges();
 
     expect(snackbar.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} 500`,
+      `${platformMessages.errorTitle}`,
       'Server error',
     );
     expect(component.leaderboard).toEqual([]);
@@ -131,7 +131,7 @@ describe('GlobalRankingsComponent', () => {
     fixture.detectChanges();
 
     expect(snackbar.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} 404`,
+      `${platformMessages.errorTitle}`,
       platformMessages.errorMessage,
     );
     expect(component.leaderboard).toEqual([]);
