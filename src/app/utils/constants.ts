@@ -289,6 +289,9 @@ export const platformMessages = {
   fullScreenExit: 'You exited fullscreen! Quiz will be submitted.',
   timeUp: 'Time is up!',
   quizSubmitSuccess: 'Quiz submitted successfully!',
+  lastQuestion: 'This is the last question cannot navigate further.',
+  completedQuiz: 'You have already completed this quiz and cannot play again.',
+  inspectOpen: 'Cannot start the quiz while developer tools are open.',
   //#endregion
 };
 //#endregion
@@ -499,7 +502,7 @@ export const emailActions = {
 export const emailTemplatePlaceholdersRequired: Record<EmailTemplateType, string[]> = {
   [EmailTemplateType.AccountSuspension]: ['{{user}}', '{{email}}'],
   [EmailTemplateType.BattleRequest]: ['{{user}}', '{{opponent}}', '{{battleLink}}'],
-  [EmailTemplateType.EmailVerification]: ['{{user}}', '{{email}}', '{{verificationLink}}'],
+  [EmailTemplateType.EmailVerification]: ['{{user}}', '{{email}}', '{{otp}}'],
   [EmailTemplateType.QuizInvitation]: ['{{user}}', '{{quizName}}', '{{quizLink}}'],
   [EmailTemplateType.ResetPassword]: ['{{user}}', '{{email}}', '{{resetLink}}'],
   [EmailTemplateType.WelcomeEmail]: [
