@@ -98,4 +98,25 @@ export const tabLazyComponentMap: Record<string, () => Promise<Type<unknown>>> =
     import('../pages/user/browse-quizzes/components/quiz-list/quiz-list.component').then(
       (m) => m.QuizListComponent,
     ),
+
+  // user leaderboards tabs
+  global: () =>
+    import('../pages/user/user-leaderboard/global-rankings/global-rankings.component').then(
+      (m) => m.GlobalRankingsComponent,
+    ),
+
+  weekly: () =>
+    import('../pages/user/user-leaderboard/weekly-leaders/weekly-leaders.component').then(
+      (m) => m.WeeklyLeadersComponent,
+    ),
+
+  category: () =>
+    import('../pages/user/user-leaderboard/category-leaders/category-leaders.component').then(
+      (m) => m.CategoryLeadersComponent,
+    ),
+
+  monthly: () =>
+    import('../pages/user/user-leaderboard/monthly-champions/monthly-champions.component').then(
+      (m) => m.MonthlyChampionsComponent,
+    ),
 };

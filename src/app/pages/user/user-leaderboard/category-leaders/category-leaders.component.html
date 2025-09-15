@@ -82,14 +82,12 @@
       <!-- 5. AVG Score -->
       <div class="avg-scores">
         <div class="avg-scores-text">
-          <span class="scores">
-            @if (entry.totalBattlesPlayed + entry.totalQuizzesPlayed > 0) {
-              {{ entry.averageScore | number }}%
-            } @else {
-              N/A
-            }
-          </span>
-          <small>Average Score</small>
+          @if (entry.totalBattlesPlayed + entry.totalQuizzesPlayed > 0) {
+            <span class="scores">{{ entry.averageScore | number }}%</span>
+            <small>Average Score</small>
+          } @else {
+            <span class="scores">N/A</span>
+          }
         </div>
       </div>
     </div>
