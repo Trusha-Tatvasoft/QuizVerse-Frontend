@@ -112,14 +112,17 @@ export class PlatformSettingsComponent implements OnInit {
         .subscribe({
           next: (res) => {
             if (res.result) {
-              this.snackbar.showSuccess(plateformSettingCRUDMessages.plateformSettingUpdated);
+              this.snackbar.showSuccess(
+                platformMessages.successTitle,
+                plateformSettingCRUDMessages.plateformSettingUpdated,
+              );
             } else {
-              this.snackbar.showError(res.message);
+              this.snackbar.showError(platformMessages.errorTitle, res.message);
             }
           },
           error: (err) => {
             const message = err?.error?.message || platformMessages.errorMessage;
-            this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
+            this.snackbar.showError(`${platformMessages.errorTitle}`, message);
           },
         });
     } else {
@@ -214,12 +217,12 @@ export class PlatformSettingsComponent implements OnInit {
             this.patchFormValues(res.data);
             this.previewUrl = `${environment.imageBaseUrl}/${res.data.logo}`;
           } else {
-            this.snackbar.showError(res.message);
+            this.snackbar.showError(platformMessages.errorTitle, res.message);
           }
         },
         error: (err) => {
           const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
+          this.snackbar.showError(`${platformMessages.errorTitle}`, message);
         },
       });
   }

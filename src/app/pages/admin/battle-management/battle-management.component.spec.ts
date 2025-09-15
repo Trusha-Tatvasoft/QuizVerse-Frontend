@@ -110,7 +110,7 @@ describe('BattleManagementComponent', () => {
 
     expect(battleService.getBattles).toHaveBeenCalled();
     expect(snackbarService.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} ${mockError.statusCode}`,
+      `${platformMessages.errorTitle}`,
       mockError.error.message,
     );
   });
@@ -123,7 +123,7 @@ describe('BattleManagementComponent', () => {
 
     expect(battleService.getBattles).toHaveBeenCalled();
     expect(snackbarService.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} ${mockError.statusCode}`,
+      `${platformMessages.errorTitle}`,
       platformMessages.errorMessage,
     );
   });
@@ -180,7 +180,7 @@ describe('BattleManagementComponent', () => {
     expect(mockDialogRef.afterClosed).toHaveBeenCalled();
     expect(battleService.deleteBattle).toHaveBeenCalledWith(battleId);
     expect(snackbarService.showSuccess).toHaveBeenCalledWith(
-      'Success',
+      'Success!',
       platformMessages.deleteBattleSuccess,
     );
     expect(loadBattlesSpy).toHaveBeenCalled();
@@ -213,7 +213,7 @@ describe('BattleManagementComponent', () => {
 
     expect(battleService.deleteBattle).toHaveBeenCalledWith(battleId);
     expect(snackbarService.showError).toHaveBeenCalledWith(
-      'Error',
+      platformMessages.errorTitle,
       mockError.error.message || platformMessages.deleteBattleFailure,
     );
   });
@@ -237,7 +237,7 @@ describe('BattleManagementComponent', () => {
     component.deleteBattleDialog(battleId);
 
     expect(battleService.deleteBattle).toHaveBeenCalledWith(battleId);
-    expect(snackbarService.showError).toHaveBeenCalledWith('Error', mockResponse.message);
+    expect(snackbarService.showError).toHaveBeenCalledWith('Error!', mockResponse.message);
     expect(loadBattlesSpy).not.toHaveBeenCalled();
   });
 
@@ -254,8 +254,8 @@ describe('BattleManagementComponent', () => {
 
     expect(battleService.deleteBattle).toHaveBeenCalledWith(battleId);
     expect(snackbarService.showError).toHaveBeenCalledWith(
-      'Error',
-      platformMessages.unavailableMessage,
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
     );
   });
 

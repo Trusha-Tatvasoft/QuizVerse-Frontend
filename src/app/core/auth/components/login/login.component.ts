@@ -15,6 +15,7 @@ import { Navigations } from '../../../../shared/enums/navigation';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { Subject, takeUntil } from 'rxjs';
 import { LoginCredentials } from '../../interfaces/login.interface';
+import { platformMessages } from '../../../../utils/constants';
 
 @Component({
   selector: 'app-login',
@@ -96,8 +97,10 @@ export class LoginComponent implements OnDestroy {
           this.snackbar.showSuccess('Welcome back!', 'You have been successfully logged in!');
         },
         error: (err) => {
-          const message = err.error?.message || 'Unexpected error occurred';
-          this.snackbar.showError('Login Failed', message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }

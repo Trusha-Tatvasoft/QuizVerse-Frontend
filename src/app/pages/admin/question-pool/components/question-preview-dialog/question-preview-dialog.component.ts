@@ -65,8 +65,8 @@ export class QuestionPreviewDialogComponent implements OnInit {
         },
         error: (err) => {
           this.snackbar.showError(
+            platformMessages.errorTitle,
             err?.error?.message || platformMessages.failedLoadQuesPreview,
-            'Error',
           );
           this.dialogRef.close();
         },

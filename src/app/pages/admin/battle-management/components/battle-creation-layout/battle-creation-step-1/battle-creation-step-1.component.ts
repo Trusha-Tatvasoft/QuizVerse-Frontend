@@ -118,7 +118,10 @@ export class BattleCreationStep1Component {
         this.categoryChange();
       },
       error: (err) => {
-        this.snackbar.showError(err);
+        this.snackbar.showError(
+          platformMessages.errorTitle,
+          err?.error?.message || platformMessages.errorMessage,
+        );
       },
     });
   }
@@ -493,7 +496,10 @@ export class BattleCreationStep1Component {
           }
         },
         error: (err) => {
-          this.snackbar.showError(err);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }
@@ -590,7 +596,10 @@ export class BattleCreationStep1Component {
           });
         },
         error: (err) => {
-          this.snackbar.showError(err);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       }),
     );

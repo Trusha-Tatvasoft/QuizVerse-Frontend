@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { of, throwError } from 'rxjs';
 import { Navigations } from '../../../../shared/enums/navigation';
+import { platformMessages } from '../../../../utils/constants';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -207,7 +208,10 @@ describe('LoginComponent', () => {
     authSpy.login.mockReturnValue(throwError(() => errorResponse));
     component.onSubmit();
 
-    expect(snackbarSpy.showError).toHaveBeenCalledWith('Login Failed', 'Invalid credentials');
+    expect(snackbarSpy.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      'Invalid credentials',
+    );
   });
 
   it('should navigate to user when token is null', () => {
@@ -235,6 +239,9 @@ describe('LoginComponent', () => {
     component.loginForm.setValue({ email: 'a@b.com', password: 'pass', rememberMe: false });
     component.onSubmit();
 
-    expect(snackbarSpy.showError).toHaveBeenCalledWith('Login Failed', 'Unexpected error occurred');
+    expect(snackbarSpy.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
+    );
   });
 });
