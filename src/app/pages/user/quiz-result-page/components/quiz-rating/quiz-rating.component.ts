@@ -89,19 +89,6 @@ export class QuizRatingComponent implements OnInit, OnDestroy {
       });
   }
 
-  private initForm() {
-    const group: { [key: string]: any } = {};
-
-    this.formFields.forEach((field) => {
-      group[field.name] = [
-        field.type === 'star-rating' ? 0 : '', // default value
-        field.validators || [],
-      ];
-    });
-
-    this.ratingForm = this.fb.group(group);
-  }
-
   setRating(value: number): void {
     if (this.ratingSubmitted) return; // lock stars after submit
 
@@ -151,5 +138,18 @@ export class QuizRatingComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private initForm() {
+    const group: { [key: string]: any } = {};
+
+    this.formFields.forEach((field) => {
+      group[field.name] = [
+        field.type === 'star-rating' ? 0 : '', // default value
+        field.validators || [],
+      ];
+    });
+
+    this.ratingForm = this.fb.group(group);
   }
 }

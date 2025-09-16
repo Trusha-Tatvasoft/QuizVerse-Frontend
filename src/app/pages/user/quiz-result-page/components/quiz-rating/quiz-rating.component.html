@@ -11,15 +11,16 @@
         <div class="form-field">
           <label class="form-label">{{ field.label }}</label>
           <div class="stars">
-            <mat-icon
-              *ngFor="let star of stars"
-              fontSet="material-icons"
-              (click)="!ratingSubmitted && setRating(star)"
-              [class.active]="star <= currentRating"
-              [class.readonly]="ratingSubmitted"
-            >
-              star
-            </mat-icon>
+            @for (star of stars; track $index) {
+              <mat-icon
+                fontSet="material-icons"
+                (click)="!ratingSubmitted && setRating(star)"
+                [class.active]="star <= currentRating"
+                [class.readonly]="ratingSubmitted"
+              >
+                star
+              </mat-icon>
+            }
           </div>
           @if (ratingForm.get(field.name)?.invalid && ratingForm.get(field.name)?.touched) {
             <mat-error>

@@ -28,11 +28,16 @@
 
         <!-- User Answer -->
         <div class="answer user-answer" [ngClass]="{ correct: q.isCorrect, wrong: !q.isCorrect }">
-          Your Answer: {{ q.userAnswer }}
+          Your Answer:
+          <span [ngClass]="{ correct: q.isCorrect, wrong: !q.isCorrect }">
+            {{ q.userAnswer }}
+          </span>
         </div>
-        @if (!q.isCorrect) {
+        @if (!q.isCorrect || q.isCorrect == null) {
           <!-- Correct Answer (if wrong) -->
-          <div class="answer correct-answer">Correct Answer: {{ q.isCorrect }}</div>
+          <div class="answer correct-answer">
+            Correct Answer: <span> {{ q.correctAnswer }} </span>
+          </div>
         }
         <!-- Toggle Explanation Button -->
         <div class="toggle-explanation" (click)="fetchExplanation(q)">

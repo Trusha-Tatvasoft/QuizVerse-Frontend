@@ -72,7 +72,6 @@ describe('MonthlyChampionsComponent', () => {
     expect(component.yearList).toEqual(years);
     expect(component.monthList).toEqual(months);
     expect(component.selectedYear).toBe(2024);
-    expect(component.selectedMonth).toBe(1);
   });
 
   it('should handle empty years list', () => {

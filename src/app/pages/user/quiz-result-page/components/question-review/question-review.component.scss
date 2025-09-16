@@ -71,7 +71,7 @@
     justify-content: space-between;
     align-items: center;
 
-    @media (max-width: 425px) {
+    @media (max-width: 500px) {
       flex-direction: column;
       align-items: flex-start;
       gap: 0.5rem;
@@ -85,6 +85,7 @@
 
   /* Question text */
   .question-text {
+    width: 70%;
     font-weight: 600;
     font-size: 1rem; // 16px
     color: #111827;
@@ -95,6 +96,10 @@
 
     @media (max-width: 576px) {
       font-size: 0.9rem; // 14px
+    }
+
+    @media (max-width: 500px) {
+      width: 100%;
     }
   }
 
@@ -111,20 +116,12 @@
       font-size: 0.85rem; // 13px
     }
 
-    &.user-answer {
-      color: #2563eb;
-
-      &.correct {
-        color: #16a34a;
-      }
-
-      &.wrong {
-        color: #dc2626;
-      }
+    span.correct {
+      color: #16a34a; // green
     }
 
-    &.correct-answer {
-      color: #16a34a;
+    span.wrong {
+      color: #dc2626; // red
     }
   }
 

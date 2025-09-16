@@ -5,7 +5,6 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-
 import { QuizRatingComponent } from './quiz-rating.component';
 import { QuizResultService } from '../../../../../services/user/quiz-result.service';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
