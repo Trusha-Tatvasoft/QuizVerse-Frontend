@@ -24,6 +24,13 @@ export class QuizResultPageComponent implements OnInit, OnDestroy {
   }
 
   decodeRouteId(): void {
+    const doc = document as Document & {
+      webkitExitFullscreen?: () => Promise<void>;
+      msExitFullscreen?: () => void;
+    };
+    if (typeof doc.exitFullscreen === 'function') doc.exitFullscreen();
+    else if (doc.webkitExitFullscreen) doc.webkitExitFullscreen();
+    else if (doc.msExitFullscreen) doc.msExitFullscreen();
     const encodedId = this.route.snapshot.paramMap.get('id');
     if (!encodedId) return;
 

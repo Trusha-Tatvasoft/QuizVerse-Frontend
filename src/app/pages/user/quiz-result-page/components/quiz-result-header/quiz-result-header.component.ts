@@ -10,12 +10,8 @@ import { defaultQuizCompletedSummary } from '../../configs/default-quiz-complete
 import { QuizResultService } from '../../../../../services/user/quiz-result.service';
 import { Subject, takeUntil } from 'rxjs';
 import { TagInputConfig } from '../../../../../shared/interfaces/tag-component.interface';
-import {
-  getTagConfigWithCustomization,
-  getTypeTagConfigWithLabel,
-} from '../../../../../utils/quiz-crud-common-functions.utils';
+import { getTagConfigWithCustomization } from '../../../../../utils/quiz-crud-common-functions.utils';
 import { TagComponent } from '../../../../../shared/components/tag/tag.component';
-import { defaultTagConfig } from '../../../browse-quizzes/configs/browse-quizzes.config';
 import { notAttemptedTagConfig } from '../../configs/quiz-result-tag.configs';
 
 @Component({

@@ -37,8 +37,8 @@ export class QuizResultService {
     );
   }
 
-  reportQuestionIssue(request: QuestionIssueReportRequest): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(
+  reportQuestionIssue(request: QuestionIssueReportRequest): Observable<ApiResponse<null>> {
+    return this.http.post<ApiResponse<null>>(
       `${environment.baseUrl}/${EndPoints.ReportQuestionIssue}`,
       request,
     );

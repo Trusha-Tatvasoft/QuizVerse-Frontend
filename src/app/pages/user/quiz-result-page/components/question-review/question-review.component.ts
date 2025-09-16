@@ -7,7 +7,6 @@ import { TagComponent } from '../../../../../shared/components/tag/tag.component
 import { ApiResponse } from '../../../../../shared/interfaces/api-response.interface';
 import {
   QuestionIssueReportRequest,
-  QuizQuestionReview,
   QuizQuestionReviewExtended,
 } from '../../interfaces/quiz-question-review.interface';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
@@ -73,7 +72,7 @@ export class QuestionReviewComponent implements OnInit, OnDestroy {
         question.showExplanation = true;
         question.loadingExplanation = false;
       },
-      error: (err) => {
+      error: () => {
         question.explanation = 'Failed to load explanation.';
         question.loadingExplanation = false;
 

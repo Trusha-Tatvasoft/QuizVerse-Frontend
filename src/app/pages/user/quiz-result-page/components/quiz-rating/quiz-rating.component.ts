@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -141,7 +141,7 @@ export class QuizRatingComponent implements OnInit, OnDestroy {
   }
 
   private initForm() {
-    const group: { [key: string]: any } = {};
+    const group: Record<string, unknown[]> = {};
 
     this.formFields.forEach((field) => {
       group[field.name] = [

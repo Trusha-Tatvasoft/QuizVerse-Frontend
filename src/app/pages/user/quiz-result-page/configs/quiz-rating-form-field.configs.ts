@@ -1,4 +1,3 @@
-import { Validators } from '@angular/forms';
 import { DynamicFormField } from '../../../../shared/interfaces/dynamic-form-field.interface';
 
 export const quizRatingFormField: DynamicFormField[] = [
