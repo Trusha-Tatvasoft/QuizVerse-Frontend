@@ -38,11 +38,6 @@ export class QuizResultHeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   loadQuizSummary(quizId: number) {
     this.quizService
       .getQuizSummary(quizId)
@@ -60,5 +55,10 @@ export class QuizResultHeaderComponent implements OnInit, OnDestroy {
           this.quizSummary = defaultQuizCompletedSummary;
         },
       });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

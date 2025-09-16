@@ -32,7 +32,7 @@
         </div>
         @if (!q.isCorrect) {
           <!-- Correct Answer (if wrong) -->
-          <div *ngIf="" class="answer correct-answer">Correct Answer: {{ q.isCorrect }}</div>
+          <div class="answer correct-answer">Correct Answer: {{ q.isCorrect }}</div>
         }
         <!-- Toggle Explanation Button -->
         <div class="toggle-explanation" (click)="fetchExplanation(q)">

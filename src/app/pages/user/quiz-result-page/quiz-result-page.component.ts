@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { platformMessages } from '../../../utils/constants';
 import { QuizResultHeaderComponent } from './components/quiz-result-header/quiz-result-header.component';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
-import { QuizPreviewComponent } from '../../admin/quiz-management/components/quiz-preview/quiz-preview.component';
 import { QuestionReviewComponent } from './components/question-review/question-review.component';
 import { Subject } from 'rxjs';
 
@@ -21,11 +20,6 @@ export class QuizResultPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.decodeRouteId();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   decodeRouteId(): void {
@@ -47,5 +41,10 @@ export class QuizResultPageComponent implements OnInit, OnDestroy {
       this.snackbarService.showError(platformMessages.errorMessage, platformMessages.invalidQuizId);
       this.decodedQuizId = 0;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

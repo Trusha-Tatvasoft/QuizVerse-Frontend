@@ -53,37 +53,6 @@ export class QuestionReviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  private loadQuestions(quizId: number): void {
-    this.quizService
-      .getQuizQuestionReview(quizId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (res: ApiResponse<QuizQuestionReviewExtended[]>) => {
-          if (res.result && res.data) {
-            this.questions = res.data.map((q) => ({
-              ...q,
-              userAnswer: q.userAnswer,
-              isCorrect: q.isCorrect,
-              loadingExplanation: false,
-              showExplanation: false,
-              explanation: undefined,
-            }));
-          }
-        },
-        error: () => {
-          this.snackBarService.showError(
-            platformMessages.errorTitle,
-            platformMessages.failedLoadQuesPreview,
-          );
-        },
-      });
-  }
-
   fetchExplanation(question: QuizQuestionReviewExtended): void {
     if (question.explanation) {
       question.showExplanation = !question.showExplanation;
@@ -152,5 +121,36 @@ export class QuestionReviewComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private loadQuestions(quizId: number): void {
+    this.quizService
+      .getQuizQuestionReview(quizId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res: ApiResponse<QuizQuestionReviewExtended[]>) => {
+          if (res.result && res.data) {
+            this.questions = res.data.map((q) => ({
+              ...q,
+              userAnswer: q.userAnswer,
+              isCorrect: q.isCorrect,
+              loadingExplanation: false,
+              showExplanation: false,
+              explanation: undefined,
+            }));
+          }
+        },
+        error: () => {
+          this.snackBarService.showError(
+            platformMessages.errorTitle,
+            platformMessages.failedLoadQuesPreview,
+          );
+        },
+      });
   }
 }
