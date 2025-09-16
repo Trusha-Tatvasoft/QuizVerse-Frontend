@@ -579,3 +579,39 @@ app-data-table {
     width: 100%;
   }
 }
+
+.close-btn-dialog-all {
+  position: absolute !important;
+  right: 1rem !important;
+  top: 1rem !important;
+  cursor: pointer !important;
+  padding: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: opacity 0.2s !important;
+
+  &:hover {
+    opacity: 1 !important;
+    background-color: #cecece52 !important;
+    border-radius: 50% !important;
+    transition: opacity 0.5s !important;
+
+    mat-icon {
+      color: #000 !important;
+    }
+  }
+
+  .mat-mdc-button-persistent-ripple,
+  .mat-ripple {
+    display: none !important;
+  }
+
+  mat-icon {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    font-size: 1.25rem !important;
+    line-height: 1.25rem !important;
+    color: #848484 !important;
+  }
+}

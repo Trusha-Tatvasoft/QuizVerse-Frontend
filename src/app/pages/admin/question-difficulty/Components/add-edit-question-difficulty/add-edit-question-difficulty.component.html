@@ -1,16 +1,22 @@
 <div class="main-dialog-content">
   <!-- Header -->
-  @if (data == null) {
-    <div class="dialog-header px-5 py-3">
-      <h2 mat-dialog-title>Add New Difficulty Level</h2>
-      <span class="dialog-sub-header">Create a new difficulty level for question</span>
-    </div>
-  } @else {
-    <div class="dialog-header px-5 py-3">
-      <h2 mat-dialog-title>Edit Difficulty Level</h2>
-      <span class="dialog-sub-header">Update a difficulty level for question</span>
-    </div>
-  }
+  <div class="flex justify-between px-5 py-3">
+    @if (data == null) {
+      <div class="dialog-header">
+        <h2 mat-dialog-title>Add New Difficulty Level</h2>
+        <span class="dialog-sub-header">Create a new difficulty level for question</span>
+      </div>
+    } @else {
+      <div class="dialog-header">
+        <h2 mat-dialog-title>Edit Difficulty Level</h2>
+        <span class="dialog-sub-header">Update a difficulty level for question</span>
+      </div>
+    }
+
+    <button mat-icon-button class="close-btn-dialog-all" (click)="cancelButtonClicked()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 
   <!-- Form -->
   <form [formGroup]="questionDifficultyForm" class="p-5" (ngSubmit)="formSubmit()">

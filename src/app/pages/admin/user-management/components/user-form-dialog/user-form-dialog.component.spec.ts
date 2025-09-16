@@ -59,7 +59,7 @@ describe('UserFormDialogComponent', () => {
     it('should emit closeDialog when close button is clicked', () => {
       const closeSpy = jest.spyOn(component.closeDialog, 'emit');
 
-      const closeButton = fixture.debugElement.query(By.css('.close-button'));
+      const closeButton = fixture.debugElement.query(By.css('.close-btn-dialog-all'));
       closeButton.triggerEventHandler('click');
 
       expect(closeSpy).toHaveBeenCalled();

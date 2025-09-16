@@ -11,13 +11,14 @@
     <!-- Close Button -->
     <button
       type="button"
-      class="close-button"
+      class="close-btn-dialog-all"
       (click)="onCancel()"
       (keydown.enter)="onCancel()"
       (keydown.space)="onCancel()"
       aria-label="Close dialog"
       tabindex="0"
       disableRipple
+      mat-icon-button
     >
       <mat-icon class="close-icon">close</mat-icon>
     </button>
