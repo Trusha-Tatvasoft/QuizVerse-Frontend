@@ -29,3 +29,13 @@ export const notAttemptedTagConfig: TagInputConfig = {
   backgroundColor: 'lightOrange', // light gray background
   textColor: 'orange', // gray text
 };
+
+export const defaultTagConfig: TagInputConfig = {
+  id: 'default',
+  label: 'default',
+  type: 'static',
+  isSelected: false,
+  hasBorder: false,
+  backgroundColor: 'white', // light gray background
+  textColor: 'black', // gray text
+};

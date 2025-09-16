@@ -15,6 +15,8 @@ import {
   getTypeTagConfigWithLabel,
 } from '../../../../../utils/quiz-crud-common-functions.utils';
 import { TagComponent } from '../../../../../shared/components/tag/tag.component';
+import { defaultTagConfig } from '../../../browse-quizzes/configs/browse-quizzes.config';
+import { notAttemptedTagConfig } from '../../configs/quiz-result-tag.configs';
 
 @Component({
   selector: 'app-quiz-result-header',
@@ -26,7 +28,7 @@ export class QuizResultHeaderComponent implements OnInit, OnDestroy {
   @Input() quizId!: number; // Receive quizId from parent
 
   quizSummary: QuizCompletedSummary = defaultQuizCompletedSummary;
-  gradeTagConfig!: TagInputConfig;
+  gradeTagConfig: TagInputConfig = notAttemptedTagConfig;
 
   private readonly snackbar = inject(SnackbarService);
   private readonly quizService = inject(QuizResultService);

@@ -278,9 +278,6 @@ export const platformMessages = {
 
   //#region Quiz Attempt
   invalidQuizId: 'Invalid quiz id',
-  failedLoadQuizResultSummary: 'Failed to fetch loading quiz summary',
-  failedLoadQuizExplaination: 'Failed to load quiz explaination',
-  failedToFatchQuestions: 'Failed to fetch questions',
   startQuizMessage: 'Quiz Satrted. All the best!!!',
   restoreQuizData: 'Restored your previous quiz progress',
   areYouSureYouWantToLeaveMessage:
@@ -296,6 +293,12 @@ export const platformMessages = {
   completedQuiz: 'You have already completed this quiz and cannot play again.',
   inspectOpen: 'Cannot start the quiz while developer tools are open.',
   //#endregion
+
+  // #region
+  failedLoadQuizResultSummary: 'Failed to fetch loading quiz summary',
+  failedLoadQuizExplaination: 'Failed to load quiz explaination',
+  failedToFatchQuestions: 'Failed to fetch questions',
+  // #endregion
 };
 //#endregion
 
@@ -391,6 +394,8 @@ export const filterOptions = [
   { label: 'Last Year', value: dateFilterType.lastYear },
   { label: 'All Time', value: dateFilterType.allTime },
 ];
+
+export const quizRating = [1, 2, 3, 4, 5];
 
 export const months = [
   'Jan',
