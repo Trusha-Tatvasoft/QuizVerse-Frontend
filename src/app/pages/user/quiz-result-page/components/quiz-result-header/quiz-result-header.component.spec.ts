@@ -5,7 +5,7 @@ import { QuizResultService } from '../../../../../services/user/quiz-result.serv
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
 import { ApiResponse } from '../../../../../shared/interfaces/api-response.interface';
 import { QuizCompletedSummary } from '../../interfaces/quiz-completed-summary.interface';
-import { defaultQuizCompletedSummary } from '../../configs/default-quiz-completed-summary.interface';
+import { defaultQuizCompletedSummary } from '../../configs/default-quiz-completed-summary.configs';
 import { platformMessages } from '../../../../../utils/constants';
 
 describe('QuizResultHeaderComponent', () => {

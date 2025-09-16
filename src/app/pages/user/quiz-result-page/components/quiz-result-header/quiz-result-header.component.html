@@ -1,4 +1,3 @@
-<p>quiz-result-header works!</p>
 <div class="result-summary card">
   <!-- Icon -->
   <div class="icon">
@@ -13,7 +12,7 @@
   <div class="score">
     <span class="big"> {{ quizSummary.correctAnswers }}/{{ quizSummary.totalQuestions }} </span>
     <span class="percent"> {{ quizSummary.scorePercentage }}% Score </span>
-    <span class="tag">{{ quizSummary.grade }}</span>
+    <app-tag [tagConfig]="gradeTagConfig"></app-tag>
   </div>
 
   <!-- Progress Bar -->
