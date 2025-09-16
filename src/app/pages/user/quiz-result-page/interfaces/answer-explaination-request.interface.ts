@@ -1,5 +1,5 @@
 export interface AnswerExplanationRequest {
-  QuestionText: string;
-  CorrectAnswer: string;
-  UserAnswer?: string;
+  questionText: string;
+  correctAnswer: string;
+  userAnswer?: string;
 }

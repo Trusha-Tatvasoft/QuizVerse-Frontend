@@ -11,3 +11,9 @@ export interface QuizQuestionReviewExtended extends QuizQuestionReview {
   showExplanation?: boolean;
   explanation?: string;
 }
+
+export interface QuestionIssueReportRequest {
+  quizId: number;
+  questionId: number;
+  description: string;
+}

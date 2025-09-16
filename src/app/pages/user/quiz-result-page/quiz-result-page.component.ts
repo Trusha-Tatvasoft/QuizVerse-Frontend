@@ -1,22 +1,31 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { platformMessages } from '../../../utils/constants';
 import { QuizResultHeaderComponent } from './components/quiz-result-header/quiz-result-header.component';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
+import { QuizPreviewComponent } from '../../admin/quiz-management/components/quiz-preview/quiz-preview.component';
+import { QuestionReviewComponent } from './components/question-review/question-review.component';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-quiz-result-page',
-  imports: [QuizResultHeaderComponent],
+  imports: [QuizResultHeaderComponent, QuestionReviewComponent],
   templateUrl: './quiz-result-page.component.html',
   styleUrl: './quiz-result-page.component.scss',
 })
-export class QuizResultPageComponent implements OnInit {
+export class QuizResultPageComponent implements OnInit, OnDestroy {
   decodedQuizId: number;
   private readonly snackbarService = inject(SnackbarService);
   private readonly route = inject(ActivatedRoute);
+  private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
     this.decodeRouteId();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   decodeRouteId(): void {

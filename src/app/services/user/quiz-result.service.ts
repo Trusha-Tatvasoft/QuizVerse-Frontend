@@ -5,7 +5,10 @@ import { ApiResponse } from '../../shared/interfaces/api-response.interface';
 import { QuizCompletedSummary } from '../../pages/user/quiz-result-page/interfaces/quiz-completed-summary.interface';
 import { environment } from '../../../environments/environment.dev';
 import { EndPoints } from '../../shared/enums/end-point.enum';
-import { QuizQuestionReview } from '../../pages/user/quiz-result-page/interfaces/quiz-question-review.interface';
+import {
+  QuestionIssueReportRequest,
+  QuizQuestionReview,
+} from '../../pages/user/quiz-result-page/interfaces/quiz-question-review.interface';
 import { AnswerExplanationRequest } from '../../pages/user/quiz-result-page/interfaces/answer-explaination-request.interface';
 
 @Injectable({
@@ -27,6 +30,16 @@ export class QuizResultService {
   }
 
   getAnswerExplanation(request: AnswerExplanationRequest): Observable<ApiResponse<string>> {
-    return this.http.post<ApiResponse<string>>(`${environment.baseUrl}/`, request);
+    return this.http.post<ApiResponse<string>>(
+      `${environment.baseUrl}/${EndPoints.GetAnswerExplaination}`,
+      request,
+    );
+  }
+
+  reportQuestionIssue(request: QuestionIssueReportRequest): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
+      `${environment.baseUrl}/${EndPoints.ReportQuestionIssue}`,
+      request,
+    );
   }
 }
