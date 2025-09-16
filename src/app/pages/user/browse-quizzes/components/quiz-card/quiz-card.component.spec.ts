@@ -150,8 +150,13 @@ describe('QuizCardComponent', () => {
     };
 
     component.quizBtnClick();
-
-    expect(navigateSpy).toHaveBeenCalledWith([Navigations.QuizList, Navigations.Quizzes]);
+    expect(navigateSpy).toHaveBeenCalledWith([
+      Navigations.User,
+      Navigations.QuizList,
+      Navigations.BrowseQuizzes,
+      Navigations.QuizResult,
+      'MTA=',
+    ]);
   });
 
   it('should navigate to quiz instruction if quiz is not attempted', () => {

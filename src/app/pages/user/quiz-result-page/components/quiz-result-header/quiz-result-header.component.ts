@@ -10,11 +10,9 @@ import { defaultQuizCompletedSummary } from '../../configs/default-quiz-complete
 import { QuizResultService } from '../../../../../services/user/quiz-result.service';
 import { Subject, takeUntil } from 'rxjs';
 import { TagInputConfig } from '../../../../../shared/interfaces/tag-component.interface';
-import {
-  getTagConfigWithCustomization,
-  getTypeTagConfigWithLabel,
-} from '../../../../../utils/quiz-crud-common-functions.utils';
+import { getTagConfigWithCustomization } from '../../../../../utils/quiz-crud-common-functions.utils';
 import { TagComponent } from '../../../../../shared/components/tag/tag.component';
+import { notAttemptedTagConfig } from '../../configs/quiz-result-tag.configs';
 
 @Component({
   selector: 'app-quiz-result-header',
@@ -26,7 +24,7 @@ export class QuizResultHeaderComponent implements OnInit, OnDestroy {
   @Input() quizId!: number; // Receive quizId from parent
 
   quizSummary: QuizCompletedSummary = defaultQuizCompletedSummary;
-  gradeTagConfig!: TagInputConfig;
+  gradeTagConfig: TagInputConfig = notAttemptedTagConfig;
 
   private readonly snackbar = inject(SnackbarService);
   private readonly quizService = inject(QuizResultService);

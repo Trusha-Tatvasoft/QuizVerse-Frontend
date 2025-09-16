@@ -5,10 +5,11 @@ import { QuizResultHeaderComponent } from './components/quiz-result-header/quiz-
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { QuestionReviewComponent } from './components/question-review/question-review.component';
 import { Subject } from 'rxjs';
+import { QuizRatingComponent } from './components/quiz-rating/quiz-rating.component';
 
 @Component({
   selector: 'app-quiz-result-page',
-  imports: [QuizResultHeaderComponent, QuestionReviewComponent],
+  imports: [QuizResultHeaderComponent, QuestionReviewComponent, QuizRatingComponent],
   templateUrl: './quiz-result-page.component.html',
   styleUrl: './quiz-result-page.component.scss',
 })
@@ -23,6 +24,13 @@ export class QuizResultPageComponent implements OnInit, OnDestroy {
   }
 
   decodeRouteId(): void {
+    const doc = document as Document & {
+      webkitExitFullscreen?: () => Promise<void>;
+      msExitFullscreen?: () => void;
+    };
+    if (typeof doc.exitFullscreen === 'function') doc.exitFullscreen();
+    else if (doc.webkitExitFullscreen) doc.webkitExitFullscreen();
+    else if (doc.msExitFullscreen) doc.msExitFullscreen();
     const encodedId = this.route.snapshot.paramMap.get('id');
     if (!encodedId) return;
 

@@ -11,7 +11,6 @@ import { FilledButtonComponent } from '../../../../../shared/components/filled-b
 import { DynamicFormField } from '../../../../../shared/interfaces/dynamic-form-field.interface';
 import { cancelButton, submitButton } from '../../configs/quiz-result-buttons.configs';
 import { reportQuestionFormField } from '../../configs/report-question-form-field.config';
-import { TagComponent } from '../../../../../shared/components/tag/tag.component';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -51,7 +50,7 @@ export class ReportQuestionDialogComponent implements OnInit, OnDestroy {
           acc[field.name] = ['', field.validators ?? []];
           return acc;
         },
-        {} as Record<string, any>,
+        {} as Record<string, unknown>,
       ),
     );
   }
