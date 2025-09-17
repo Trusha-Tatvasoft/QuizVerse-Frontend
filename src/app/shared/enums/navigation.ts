@@ -12,6 +12,7 @@ export enum Navigations {
   BrowseQuizzes = 'browse-quizzes',
   QuizAttempt = 'quiz-attempt',
   QuizInstruction = 'quiz-instruction',
+  QuizResult = 'quiz-result',
   Battles = 'battles',
   Tournaments = 'tournaments',
   Leaderboards = 'leaderboards',

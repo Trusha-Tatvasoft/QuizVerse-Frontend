@@ -49,7 +49,13 @@ export class QuizCardComponent {
 
     if (this.cardConfig.isAttempted) {
       // redirect to quiz result
-      this.router.navigate([Navigations.QuizList, Navigations.Quizzes]);
+      this.router.navigate([
+        Navigations.User,
+        Navigations.QuizList,
+        Navigations.BrowseQuizzes,
+        Navigations.QuizResult,
+        encodedId,
+      ]);
     } else {
       // redirect to quiz play
       this.router.navigate([

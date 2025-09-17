@@ -218,6 +218,11 @@ export const platformMessages = {
   sessionExpiredMessage: 'Please log in again.',
   //#endregion
 
+  //#region registerMessages
+  emailExists: 'Email already exists.',
+  usernameExists: 'Username already exists.',
+  //#endregion
+
   //#region QuestionPool Messages
   failedLoadQuesPreview: 'Failed to load question details',
   deleteQuesSuccess: 'Question Deleted Successfully!!',
@@ -273,7 +278,27 @@ export const platformMessages = {
 
   //#region Quiz Attempt
   invalidQuizId: 'Invalid quiz id',
+  startQuizMessage: 'Quiz Satrted. All the best!!!',
+  restoreQuizData: 'Restored your previous quiz progress',
+  areYouSureYouWantToLeaveMessage:
+    'Your quiz progress will be saved. Are you sure you want to leave?',
+  unKnownErrorMessage: 'Unknown error occurred',
+  openedDeveloperTools: 'Developer tools opened',
+  windowsLostFocus: 'Window lost focus',
+  switchTab: 'Switched tab or minimized window',
+  fullScreenExit: 'You exited fullscreen! Quiz will be submitted.',
+  timeUp: 'Time is up!',
+  quizSubmitSuccess: 'Quiz submitted successfully!',
+  lastQuestion: 'This is the last question cannot navigate further.',
+  completedQuiz: 'You have already completed this quiz and cannot play again.',
+  inspectOpen: 'Cannot start the quiz while developer tools are open.',
   //#endregion
+
+  // #region
+  failedLoadQuizResultSummary: 'Failed to fetch loading quiz summary',
+  failedLoadQuizExplaination: 'Failed to load quiz explaination',
+  failedToFatchQuestions: 'Failed to fetch questions',
+  // #endregion
 };
 //#endregion
 
@@ -345,19 +370,6 @@ export const userSaveMessages = {
   errorMessage: (action: string) => `Failed to ${action} user`,
 };
 
-export const userLoadMessages = {
-  fetchError: 'Failed to fetch user',
-  serverError: 'Server error while fetching user',
-  error: 'Error',
-};
-
-export const userStatusMessages = {
-  actionFailed: 'Action failed',
-  serverError: 'Server error during user action',
-  success: 'Success',
-  error: 'Error',
-};
-
 export const userActionMessages = {
   deleted: 'User deleted successfully',
   activated: 'User activated successfully',
@@ -382,6 +394,8 @@ export const filterOptions = [
   { label: 'Last Year', value: dateFilterType.lastYear },
   { label: 'All Time', value: dateFilterType.allTime },
 ];
+
+export const quizRating = [1, 2, 3, 4, 5];
 
 export const months = [
   'Jan',
@@ -496,7 +510,7 @@ export const emailActions = {
 export const emailTemplatePlaceholdersRequired: Record<EmailTemplateType, string[]> = {
   [EmailTemplateType.AccountSuspension]: ['{{user}}', '{{email}}'],
   [EmailTemplateType.BattleRequest]: ['{{user}}', '{{opponent}}', '{{battleLink}}'],
-  [EmailTemplateType.EmailVerification]: ['{{user}}', '{{email}}', '{{verificationLink}}'],
+  [EmailTemplateType.EmailVerification]: ['{{user}}', '{{email}}', '{{otp}}'],
   [EmailTemplateType.QuizInvitation]: ['{{user}}', '{{quizName}}', '{{quizLink}}'],
   [EmailTemplateType.ResetPassword]: ['{{user}}', '{{email}}', '{{resetLink}}'],
   [EmailTemplateType.WelcomeEmail]: [
@@ -545,4 +559,27 @@ export const questionTypes = {
 export const questionDifficultyMessages = {
   deleteQuestionDifficulty: 'Question difficulty deleted successfully.',
 };
+// #endregion
+
+// #region admin dashboard graph colors
+export const adminDashboardChartColors = {
+  // Bar chart
+  bar: {
+    border: '#4caf50',
+    fill: '#a6f1a6',
+  },
+
+  // Doughnut chart
+  doughnut: {
+    border: '#7c3aed',
+    fill: ['#ede9fe', '#ddd6fe', '#e0e7ff', '#f5f3ff'],
+  },
+};
+
+// #region Quiz Play
+export const quizPlayStateKey = 'quizAttemptState';
+
+export function autoSubmitMessage(reason: string): string {
+  return `Quiz will be auto-submitted due to: ${reason}`;
+}
 // #endregion

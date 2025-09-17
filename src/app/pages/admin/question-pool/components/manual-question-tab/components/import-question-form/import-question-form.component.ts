@@ -19,7 +19,10 @@ import { Observable } from 'rxjs';
 import { SnackbarService } from '../../../../../../../shared/service/snackbar/snackbar.service';
 import { MatInputModule } from '@angular/material/input';
 import { EndPoints } from '../../../../../../../shared/enums/end-point.enum';
-import { allowedImportQuestionFileTypes } from '../../../../../../../utils/constants';
+import {
+  allowedImportQuestionFileTypes,
+  platformMessages,
+} from '../../../../../../../utils/constants';
 import { DynamicFormField } from '../../../../../../../shared/interfaces/dynamic-form-field.interface';
 import { ValidationErrorService } from '../../../../../../../shared/service/validation-error/validation-error.service';
 
@@ -134,7 +137,12 @@ export class ImportQuestionFormComponent {
         next: (questions) => {
           this.openPreviewDialog(questions);
         },
-        error: (err) => this.snackbar.showError('Error', err.error.message),
+        error: (err) => {
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
+        },
       });
     }
   }

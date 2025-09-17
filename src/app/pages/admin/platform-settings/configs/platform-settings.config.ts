@@ -17,10 +17,15 @@ export const platformSettingsFormFields: DynamicFormField[] = [
     label: 'Landing Page Quote',
     type: 'textarea',
     placeholder: 'Enter landing page quote',
-    validators: [Validators.required, Validators.maxLength(500)],
+    validators: [
+      Validators.required,
+      Validators.maxLength(500),
+      Validators.pattern(/^$|^\S[\s\S]*$/),
+    ],
     validationMessages: {
       required: 'Landing Page Quote is required.',
       maxlength: 'Quote must not exceed 500 characters.',
+      pattern: 'Question should not start with a space.',
     },
     gridClass: 'col-span-1 sm:col-span-2',
   },

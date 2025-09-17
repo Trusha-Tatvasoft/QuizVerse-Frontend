@@ -661,11 +661,18 @@ describe('BattleCreationLayoutComponent', () => {
     }));
 
     it('should show error on load failure', fakeAsync(() => {
-      battleManagementService.getBattle.mockReturnValue(throwError(() => 'error'));
+      battleManagementService.getBattle.mockReturnValue(
+        throwError(() => ({ error: { message: undefined } })),
+      );
+
       component.loadBattle(1);
       tick();
       fixture.detectChanges();
-      expect(snackbarService.showError).toHaveBeenCalledWith('error');
+
+      expect(snackbarService.showError).toHaveBeenCalledWith(
+        platformMessages.errorTitle,
+        platformMessages.errorMessage,
+      );
     }));
   });
 
@@ -716,26 +723,32 @@ describe('BattleCreationLayoutComponent', () => {
       component.battleStep1Data = mockBattleStep1Data;
       component.selectedQuestions = mockQuestionsList;
       battleManagementService.createOrUpdateBattle.mockReturnValue(
-        throwError(() => ({
-          error: { data: [{ errors: ['Specific error'] }] },
-        })),
+        throwError(() => ({ error: { message: 'Specific error' } })),
       );
+
       component.saveBattle();
       tick();
       fixture.detectChanges();
-      expect(snackbarService.showError).toHaveBeenCalledWith('Specific error');
+      expect(snackbarService.showError).toHaveBeenCalledWith(
+        platformMessages.errorTitle,
+        'Specific error',
+      );
     }));
 
     it('should show generic error if no specific error data', fakeAsync(() => {
       component.battleStep1Data = mockBattleStep1Data;
       component.selectedQuestions = mockQuestionsList;
       battleManagementService.createOrUpdateBattle.mockReturnValue(
-        throwError(() => new Error('Generic error')),
+        throwError(() => ({ error: { message: 'Generic error' } })),
       );
+
       component.saveBattle();
       tick();
       fixture.detectChanges();
-      expect(snackbarService.showError).toHaveBeenCalledWith('Generic error');
+      expect(snackbarService.showError).toHaveBeenCalledWith(
+        platformMessages.errorTitle,
+        'Generic error',
+      );
     }));
   });
 });

@@ -56,8 +56,10 @@ export class GlobalLeaderboardCardComponent implements OnInit {
         },
         error: (err) => {
           this.userLeaderboardStats = defaultUserLeaderboardStats;
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.statusCode}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }

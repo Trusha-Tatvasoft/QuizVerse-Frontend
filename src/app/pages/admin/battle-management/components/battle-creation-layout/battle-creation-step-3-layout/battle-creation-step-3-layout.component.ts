@@ -14,7 +14,7 @@ import {
   deleteQuestionDialog,
 } from '../../../../quiz-management/configs/quiz-creation.config';
 import { TableData } from '../../../../../../shared/interfaces/table-component.interface';
-import { tablePaginationConfig } from '../../../../../../utils/constants';
+import { platformMessages, tablePaginationConfig } from '../../../../../../utils/constants';
 import { Subject, takeUntil } from 'rxjs';
 import { TagInputConfig } from '../../../../../../shared/interfaces/tag-component.interface';
 import {
@@ -156,7 +156,10 @@ export class BattleCreationStep3LayoutComponent {
           }
         },
         error: (err) => {
-          this.snackbar.showError(err);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
 
@@ -175,7 +178,10 @@ export class BattleCreationStep3LayoutComponent {
           this.fillMissingLabelsForSelectedQuestions();
         },
         error: (err) => {
-          this.snackbar.showError(err);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }

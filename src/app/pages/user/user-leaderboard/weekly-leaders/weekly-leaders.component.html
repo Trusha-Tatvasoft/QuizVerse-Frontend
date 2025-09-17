@@ -65,11 +65,15 @@
       <!-- 5. XP -->
       <div class="xp-points">
         <div class="xp-text">
-          <span class="xp">
-            <mat-icon *ngIf="entry.totalXp > 0" class="xp-icon">add</mat-icon>
-            {{ entry.totalXp | number }} XP
-          </span>
-          <small>This Week</small>
+          @if (entry.totalXp > 0) {
+            <span class="xp">
+              <mat-icon class="xp-icon">add</mat-icon>
+              {{ entry.totalXp | number }} XP
+            </span>
+            <small>This Week</small>
+          } @else {
+            <span class="xp">N/A</span>
+          }
         </div>
       </div>
     </div>

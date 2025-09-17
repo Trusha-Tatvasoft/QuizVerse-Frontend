@@ -31,7 +31,7 @@ import { MatIcon } from '@angular/material/icon';
     `
       .icon-btn {
         font-size: 35px !important;
-        width: 40px !important;
+        min-width: 40px !important;
         height: auto !important;
       }
     `,

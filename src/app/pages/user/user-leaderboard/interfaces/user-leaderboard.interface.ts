@@ -15,7 +15,7 @@ export interface LeaderboardEntry {
   currentStreak: number;
   newGlobalRank: number;
   trend: number;
-  is_loggedin_user: boolean;
+  isLoggedInUser: boolean;
 }
 
 export interface WeeklyLeaderEntry {

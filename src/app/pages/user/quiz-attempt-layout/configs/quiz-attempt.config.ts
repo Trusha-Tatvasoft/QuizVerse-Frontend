@@ -1,4 +1,6 @@
 import { ButtonConfig } from '../../../../shared/interfaces/button-config.interface';
+import { ConfirmationDialogData } from '../../../../shared/interfaces/confirmation-dialog.interface';
+import { TagInputConfig } from '../../../../shared/interfaces/tag-component.interface';
 
 export const saveAndNextButtonConfig: ButtonConfig = {
   label: 'Save & Next',
@@ -17,6 +19,28 @@ export const previousButtonConfig: ButtonConfig = {
   type: 'button',
   imagePosition: 'left',
   matIcon: 'keyboard_arrow_left',
+  iconFontSet: 'material-icons',
+};
+
+export const disabledSaveAndNextButtonConfig: ButtonConfig = {
+  label: 'Save & Next',
+  fontWeight: 500,
+  variant: 'primary',
+  type: 'submit',
+  imagePosition: 'right',
+  matIcon: 'keyboard_arrow_right',
+  iconFontSet: 'material-icons',
+  isDisabled: true,
+};
+
+export const disabledPreviousButtonConfig: ButtonConfig = {
+  label: 'Previous',
+  fontWeight: 500,
+  variant: 'primary',
+  type: 'button',
+  imagePosition: 'left',
+  matIcon: 'keyboard_arrow_left',
+  isDisabled: true,
   iconFontSet: 'material-icons',
 };
 
@@ -47,6 +71,26 @@ export const markedForReviewButtonConfig: ButtonConfig = {
   iconFontSet: 'material-icons',
 };
 
+export const markFlagButtonConfig: ButtonConfig = {
+  label: '',
+  fontWeight: 500,
+  variant: 'primary',
+  type: 'button',
+  imagePosition: 'left',
+  matIcon: 'outlined_flag',
+  iconFontSet: 'material-icons',
+};
+
+export const markedFlagButtonConfig: ButtonConfig = {
+  label: '',
+  fontWeight: 500,
+  variant: 'secondary',
+  type: 'button',
+  imagePosition: 'left',
+  matIcon: 'outlined_flag',
+  iconFontSet: 'material-icons',
+};
+
 export const startQuizButtonConfig: ButtonConfig = {
   label: 'Start Quiz',
   fontWeight: 500,
@@ -66,3 +110,45 @@ export const backToBrowseQuizButtonConfig: ButtonConfig = {
   matIcon: 'arrow_back',
   iconFontSet: 'material-icons',
 };
+
+export const cancelButtonConfig: ButtonConfig = {
+  label: 'Cancel',
+  variant: 'secondary',
+};
+
+export const submitDialogButtonConfig: ButtonConfig = {
+  label: 'Submit Quiz',
+  variant: 'secondary',
+};
+
+export const resumeDialogButtonConfig: ButtonConfig = {
+  label: 'Resume Quiz',
+  variant: 'secondary',
+};
+
+export const submitQuizDialog: ConfirmationDialogData = {
+  title: 'Submit Quiz',
+  message: 'Are you sure you want to submit this quiz?',
+  confirmButtonConfig: submitDialogButtonConfig,
+  cancelButtonConfig: cancelButtonConfig,
+};
+
+export const resumeQuizDialog: ConfirmationDialogData = {
+  title: 'Resume Quiz',
+  message:
+    'To continue your quiz, please return to fullscreen mode. Cancelling it will submit the quiz.',
+  confirmButtonConfig: resumeDialogButtonConfig,
+  cancelButtonConfig: cancelButtonConfig,
+};
+
+export function getquestionNoConfigWithLabel(label: string): TagInputConfig {
+  return {
+    id: label.toLowerCase(),
+    label,
+    type: 'static',
+    isSelected: false,
+    hasBorder: true,
+    backgroundColor: 'white',
+    textColor: 'black',
+  };
+}

@@ -106,7 +106,7 @@ export class AddDifficultyLevelComponent {
             this.serverErrors['name'] = message;
             control?.setErrors({ server: true });
           } else {
-            this.snackbar.showError(`${platformMessages.errorTitle} ${status}`, message);
+            this.snackbar.showError(`${platformMessages.errorTitle}`, message);
           }
         },
       });
@@ -131,7 +131,7 @@ export class AddDifficultyLevelComponent {
         next: (res) => {
           if (!res.result || res.statusCode !== 200) {
             this.snackbar.showError(
-              `${platformMessages.errorTitle} ${res.statusCode}`,
+              `${platformMessages.errorTitle}`,
               res.message || platformMessages.errorMessage,
             );
             return;
@@ -140,8 +140,10 @@ export class AddDifficultyLevelComponent {
           this.dialogRef.close(res.message);
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.statusCode}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }

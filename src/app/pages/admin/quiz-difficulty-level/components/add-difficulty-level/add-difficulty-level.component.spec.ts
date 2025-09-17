@@ -148,7 +148,7 @@ describe('AddDifficultyLevelComponent (Jest)', () => {
     );
     component.onSubmit();
     tick();
-    expect(mockSnackbarService.showError).toHaveBeenCalledWith('Error! 400', 'Failed');
+    expect(mockSnackbarService.showError).toHaveBeenCalledWith('Error!', 'Failed');
   }));
 
   it('should show error on API error response', fakeAsync(() => {
@@ -157,7 +157,7 @@ describe('AddDifficultyLevelComponent (Jest)', () => {
     mockDifficultyService.createDifficultyLevel.mockReturnValueOnce(throwError(() => err));
     component.onSubmit();
     tick();
-    expect(mockSnackbarService.showError).toHaveBeenCalledWith('Error! 500', 'Internal Error');
+    expect(mockSnackbarService.showError).toHaveBeenCalledWith('Error!', 'Internal Error');
   }));
 
   it('should close dialog on cancel', () => {
@@ -249,7 +249,7 @@ describe('AddDifficultyLevelComponent (Jest)', () => {
     component.onSubmit();
     tick();
     expect(mockSnackbarService.showError).toHaveBeenCalledWith(
-      `Error! 400`,
+      `Error!`,
       platformMessages.errorMessage,
     );
   }));
@@ -261,7 +261,7 @@ describe('AddDifficultyLevelComponent (Jest)', () => {
     component.onSubmit();
     tick();
     expect(mockSnackbarService.showError).toHaveBeenCalledWith(
-      `Error! 500`,
+      `Error!`,
       platformMessages.errorMessage,
     );
   }));
@@ -275,7 +275,7 @@ describe('AddDifficultyLevelComponent (Jest)', () => {
     tick();
 
     expect(mockSnackbarService.showError).toHaveBeenCalledWith(
-      'Error! 500',
+      'Error!',
       platformMessages.errorMessage,
     );
   }));
@@ -290,7 +290,7 @@ describe('AddDifficultyLevelComponent (Jest)', () => {
     tick();
 
     expect(mockSnackbarService.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} 500`,
+      `${platformMessages.errorTitle}`,
       'Internal Server Error',
     );
   }));
@@ -305,7 +305,7 @@ describe('AddDifficultyLevelComponent (Jest)', () => {
     tick();
 
     expect(mockSnackbarService.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} 500`,
+      `${platformMessages.errorTitle}`,
       platformMessages.errorMessage,
     );
   }));

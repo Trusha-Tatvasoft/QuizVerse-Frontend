@@ -43,8 +43,10 @@ export class CategoryLeadersComponent {
           this.leaderboard = res.data;
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.statusCode}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }

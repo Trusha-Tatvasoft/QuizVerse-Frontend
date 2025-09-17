@@ -7,6 +7,7 @@ import { CommonListDropDown } from '../../../../shared/interfaces/common-dropdow
 import { of, throwError } from 'rxjs';
 import { ApiResponse } from '../../../../shared/interfaces/api-response.interface';
 import { MonthlyLeaderEntry } from '../interfaces/user-leaderboard.interface';
+import { platformMessages } from '../../../../utils/constants';
 
 describe('MonthlyChampionsComponent', () => {
   let component: MonthlyChampionsComponent;
@@ -71,7 +72,6 @@ describe('MonthlyChampionsComponent', () => {
     expect(component.yearList).toEqual(years);
     expect(component.monthList).toEqual(months);
     expect(component.selectedYear).toBe(2024);
-    expect(component.selectedMonth).toBe(1);
   });
 
   it('should handle empty years list', () => {
@@ -123,7 +123,7 @@ describe('MonthlyChampionsComponent', () => {
 
     component.fetchMonthlyChampions(1, 2025);
 
-    expect(snackbar.showError).toHaveBeenCalledWith('Error 500', 'Server error');
+    expect(snackbar.showError).toHaveBeenCalledWith('Error!', 'Server error');
   });
 
   it('should use default error message if err.error.message is missing', () => {
@@ -132,10 +132,7 @@ describe('MonthlyChampionsComponent', () => {
 
     component.fetchMonthlyChampions(1, 2025);
 
-    expect(snackbar.showError).toHaveBeenCalledWith(
-      'Error 404',
-      'Failed to fetch monthly champions',
-    );
+    expect(snackbar.showError).toHaveBeenCalledWith('Error!', platformMessages.errorMessage);
   });
 
   it('should update selectedMonthName on filter change and fetch champions', () => {

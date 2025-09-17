@@ -25,22 +25,6 @@
     }
   }
 
-  .close-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    cursor: pointer;
-    z-index: 2;
-
-    &:hover {
-      transform: scale(1.1);
-    }
-
-    mat-icon {
-      font-size: 22px;
-    }
-  }
-
   .preview-container {
     .template-title {
       font-size: 1rem;
@@ -54,6 +38,7 @@
 
     .template-subject {
       margin-bottom: 0.5rem;
+
       @media (max-width: 600px) {
         font-size: 0.9rem;
       }

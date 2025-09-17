@@ -59,6 +59,11 @@ export const cancelButtonConfig: ButtonConfig = {
   variant: 'secondary',
 };
 
+export const deleteButtonConfig: ButtonConfig = {
+  label: 'Delete',
+  variant: 'secondary',
+};
+
 export const addButtonConfig: ButtonConfig = {
   label: 'Create',
   variant: 'secondary',
@@ -81,10 +86,10 @@ export const questionDifficultyFormFields: DynamicFormField[] = [
     type: 'text',
     placeholder: 'Name',
     icon: 'account_circle',
-    validators: [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)],
+    validators: [Validators.required, Validators.pattern(/^[A-Za-z][A-Za-z0-9 ]*$/)],
     validationMessages: {
       required: 'Difficulty Name is required.',
-      pattern: 'Difficulty Name must contain only alphabets.',
+      pattern: 'Difficulty Name must contain only letters and single spaces between words.',
     },
   },
   {
@@ -93,11 +98,15 @@ export const questionDifficultyFormFields: DynamicFormField[] = [
     type: 'textarea',
     placeholder: 'Tell us about difficulty level',
     icon: 'info',
-    validators: [Validators.required, Validators.maxLength(255), Validators.pattern(/^\S.*$/)],
+    validators: [
+      Validators.required,
+      Validators.maxLength(255),
+      Validators.pattern(/^$|^\S[\s\S]*$/),
+    ],
     validationMessages: {
       required: 'Description is required.',
       maxlength: 'Description must not exceed 255 characters.',
-      pattern: 'Description cannot start with a space.',
+      pattern: 'Description should not start with a space.',
     },
   },
   {

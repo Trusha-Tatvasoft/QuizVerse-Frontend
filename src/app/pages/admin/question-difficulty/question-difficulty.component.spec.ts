@@ -65,7 +65,7 @@ describe('QuestionDifficultyComponent (Jest)', () => {
       AddEditQuestionDifficultyComponent,
       expect.any(Object),
     );
-    expect(mockSnackbar.showSuccess).toHaveBeenCalledWith('Success', 'Added successfully');
+    expect(mockSnackbar.showSuccess).toHaveBeenCalledWith('Success!', 'Added successfully');
     expect(loadSpy).toHaveBeenCalled();
   });
 
@@ -148,7 +148,7 @@ describe('QuestionDifficultyComponent (Jest)', () => {
 
     (component as any).loadQuestionDifficulties();
 
-    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error! 400`, 'Something went wrong.');
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error!`, 'Something went wrong.');
     expect((component as any).questionDifficulties).toEqual([]);
   });
 
@@ -159,7 +159,7 @@ describe('QuestionDifficultyComponent (Jest)', () => {
 
     (component as any).loadQuestionDifficulties();
 
-    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error! 400`, 'failed');
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error!`, 'failed');
     expect((component as any).questionDifficulties).toEqual([]);
   });
 
@@ -170,7 +170,7 @@ describe('QuestionDifficultyComponent (Jest)', () => {
 
     (component as any).loadQuestionDifficulties();
 
-    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error! 500`, 'Something went wrong.');
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error!`, 'Something went wrong.');
     expect((component as any).questionDifficulties).toEqual([]);
   });
 
@@ -181,8 +181,30 @@ describe('QuestionDifficultyComponent (Jest)', () => {
 
     (component as any).loadQuestionDifficulties();
 
-    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error! 500`, 'server failed');
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error!`, 'server failed');
     expect((component as any).questionDifficulties).toEqual([]);
+  });
+
+  it('should show default error message when delete response fails without message', () => {
+    mockService.deleteQuestionDifficulty.mockReturnValue(
+      of({ result: false, statusCode: 400, message: '', data: null }),
+    );
+
+    (component as any).deleteQuestionDifficulty(1);
+
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error!`, 'Something went wrong.');
+    expect(mockSnackbar.showSuccess).not.toHaveBeenCalled();
+  });
+
+  it('should show default error message when delete API throws error without message', () => {
+    mockService.deleteQuestionDifficulty.mockReturnValue(
+      throwError(() => ({ status: 500, error: {} })),
+    );
+
+    (component as any).deleteQuestionDifficulty(1);
+
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(`Error!`, 'Something went wrong.');
+    expect(mockSnackbar.showSuccess).not.toHaveBeenCalled();
   });
 
   it('should call loadQuestionDifficulties on init', () => {

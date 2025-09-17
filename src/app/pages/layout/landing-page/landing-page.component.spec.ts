@@ -17,6 +17,7 @@ import { SnackbarService } from '../../../shared/service/snackbar/snackbar.servi
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
+import { platformMessages } from '../../../utils/constants';
 
 describe('LandingPageComponent (Jest)', () => {
   let component: LandingPageComponent;
@@ -172,7 +173,7 @@ describe('LandingPageComponent (Jest)', () => {
     fixture = TestBed.createComponent(LandingPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    expect(snackbarSpy).toHaveBeenCalledWith('Something went wrong.', 'Server error');
+    expect(snackbarSpy).toHaveBeenCalledWith(platformMessages.errorTitle, 'Server error');
   });
 
   it('should update landingPageContent.quote and logoPath when config has quote and logo', () => {

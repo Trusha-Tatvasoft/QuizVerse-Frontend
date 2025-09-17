@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -14,6 +14,7 @@ import { SnackbarService } from '../../../../../../../shared/service/snackbar/sn
 import { buildBaseFields } from '../../../../configs/question-pool-dialog.config';
 import { uniqueOptionsGroupValidator } from './create-edit-question-form.validator';
 import { ValidationErrorService } from '../../../../../../../shared/service/validation-error/validation-error.service';
+import { platformMessages } from '../../../../../../../utils/constants';
 
 // Mock helper functions
 jest.mock('./create-edit-question-form.hepler', () => ({
@@ -219,18 +220,29 @@ describe('CreateEditQuestionFormComponent', () => {
     component.buildForm();
     component.form.get('type')?.setValue(1);
     component.createOrUpdateQuestion();
-    expect(mockSnackbar.showError).toHaveBeenCalledWith('Failed', 'fail');
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'fail');
   });
 
-  it('createOrUpdateQuestion should show error on service error', () => {
-    mockQuestionService.createOrUpdateQuestion.mockReturnValueOnce(throwError(() => 'err'));
+  it('createOrUpdateQuestion should show error on service error', fakeAsync(() => {
+    mockQuestionService.createOrUpdateQuestion.mockReturnValueOnce(
+      throwError(() => ({ error: { message: 'err' } })),
+    );
+
     component.baseFields = buildBaseFields();
     component.fields = [...component.baseFields];
     component.buildForm();
     component.form.get('type')?.setValue(1);
+
+    // set other required controls
+    component.form.get('title')?.setValue('Test question');
+    component.form.get('description')?.setValue('Something');
+
     component.createOrUpdateQuestion();
-    expect(mockSnackbar.showError).toHaveBeenCalledWith('Error', 'err');
-  });
+
+    tick();
+
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'err');
+  }));
 
   it('should mark all as touched if form invalid', () => {
     component.ngOnInit();

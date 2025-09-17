@@ -58,7 +58,7 @@ export class QuestionDifficultyComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((result) => {
         if (result) {
-          this.snackbar.showSuccess('Success', result);
+          this.snackbar.showSuccess(platformMessages.successTitle, result);
           this.loadQuestionDifficulties();
         }
       });
@@ -78,6 +78,49 @@ export class QuestionDifficultyComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  // Opens a confirmation dialog and executes the onConfirm callback if confirmed.
+  private openConfirmationDialog(dialogData: ConfirmationDialogData, onConfirm: () => void): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '600px',
+      disableClose: true,
+      data: dialogData,
+      panelClass: 'custom-dialog-radius',
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) onConfirm();
+    });
+  }
+
+  // Deletes a question difficulty by its ID and refreshes the list on success.
+  private deleteQuestionDifficulty(id: number): void {
+    this.questionDifficultyService
+      .deleteQuestionDifficulty(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (!res.result || res.statusCode !== 200) {
+            this.snackbar.showError(
+              `${platformMessages.errorTitle}`,
+              res.message || platformMessages.errorMessage,
+            );
+            return;
+          }
+          this.snackbar.showSuccess(
+            platformMessages.successTitle,
+            questionDifficultyMessages.deleteQuestionDifficulty,
+          );
+          this.loadQuestionDifficulties();
+        },
+        error: (err) => {
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
+        },
+      });
+  }
+
   // Loads all question difficulties from the backend and updates the table data source.
   private loadQuestionDifficulties(): void {
     this.questionDifficultyService
@@ -87,7 +130,7 @@ export class QuestionDifficultyComponent implements OnInit, OnDestroy {
         next: (res) => {
           if (!res.result || res.statusCode !== 200) {
             this.snackbar.showError(
-              `${platformMessages.errorTitle} ${res.statusCode}`,
+              `${platformMessages.errorTitle}`,
               res.message || platformMessages.errorMessage,
             );
             this.tableDataSource.set([]);
@@ -99,8 +142,10 @@ export class QuestionDifficultyComponent implements OnInit, OnDestroy {
           this.tableDataSource.set(res.data.map(questionDifficultyToTableData));
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
           this.tableDataSource.set([]);
           this.questionDifficulties = [];
         },

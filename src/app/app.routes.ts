@@ -29,6 +29,7 @@ import { BrowseQuizzesComponent } from './pages/user/browse-quizzes/browse-quizz
 import { QuizAttemptLayoutComponent } from './pages/user/quiz-attempt-layout/quiz-attempt-layout.component';
 import { QuizInstructionsComponent } from './pages/user/quiz-attempt-layout/quiz-instructions/quiz-instructions.component';
 import { QuestionDifficultyComponent } from './pages/admin/question-difficulty/question-difficulty.component';
+import { QuizResultPageComponent } from './pages/user/quiz-result-page/quiz-result-page.component';
 
 export const routes: Routes = [
   {
@@ -189,15 +190,15 @@ export const routes: Routes = [
       {
         path: Navigations.QuizList,
         title: 'Quizeverse | Browse Quizzes',
-        children: [{ path: `${Navigations.BrowseQuizzes}`, component: BrowseQuizzesComponent }],
-      },
-      {
-        path: Navigations.QuizList,
-        title: 'Quizeverse | Play Quizzes',
         children: [
+          { path: `${Navigations.BrowseQuizzes}`, component: BrowseQuizzesComponent },
           {
             path: `${Navigations.BrowseQuizzes}/${Navigations.QuizInstruction}/:id`,
             component: QuizInstructionsComponent,
+          },
+          {
+            path: `${Navigations.BrowseQuizzes}/${Navigations.QuizResult}/:id`,
+            component: QuizResultPageComponent,
           },
         ],
       },

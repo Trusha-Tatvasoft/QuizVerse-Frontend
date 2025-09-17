@@ -46,13 +46,13 @@ export const registerFormFields: DynamicFormField[] = [
       Validators.required,
       Validators.minLength(1),
       Validators.maxLength(255),
-      Validators.pattern(/^(?!\s)[A-Za-z ]+$/),
+      Validators.pattern(/^[A-Za-z0-9][A-Za-z0-9 .'-]*$/),
     ],
     validationMessages: {
       required: 'Full Name is required.',
       minlength: 'Full Name must be at least 1 characters.',
       maxlength: 'Full Name must not exceed 255 characters.',
-      pattern: 'Full Name must only contain letters and cannot start with a space.',
+      pattern: "Full Name must start with a letter/number and may only include . - '",
     },
   },
   {
@@ -63,7 +63,7 @@ export const registerFormFields: DynamicFormField[] = [
     icon: 'person',
     validators: [
       Validators.required,
-      Validators.pattern(/^[a-zA-Z][a-zA-Z0-9._]*$/),
+      Validators.pattern(/^[A-Za-z][A-Za-z0-9 .|\-_@]*$/),
       Validators.minLength(3),
       Validators.maxLength(255),
     ],
@@ -71,7 +71,8 @@ export const registerFormFields: DynamicFormField[] = [
       required: 'Username is required.',
       minlength: 'Username must be at least 3 characters.',
       maxlength: 'Username must not exceed 255 characters.',
-      pattern: 'Username must start with a letter.',
+      pattern:
+        'Username must start with a letter and may contain letters, numbers, or special characters(allows .|\-_@)',
     },
   },
   {
@@ -147,13 +148,13 @@ export const userFormFields: DynamicFormField[] = [
       Validators.required,
       Validators.minLength(1),
       Validators.maxLength(255),
-      Validators.pattern(/^(?!\s)[A-Za-z ]+$/),
+      Validators.pattern(/^[A-Za-z0-9][A-Za-z0-9 .'-]*$/),
     ],
     validationMessages: {
       required: 'Full Name is required.',
       minlength: 'Full Name must be at least 1 characters.',
       maxlength: 'Full Name must not exceed 255 characters.',
-      pattern: 'Full Name must only contain letters and cannot start with a space.',
+      pattern: "Full Name must start with a letter/number and may only include . - '",
     },
   },
   {
@@ -164,7 +165,7 @@ export const userFormFields: DynamicFormField[] = [
     icon: 'person',
     validators: [
       Validators.required,
-      Validators.pattern(/^[a-zA-Z][a-zA-Z0-9._]*$/),
+      Validators.pattern(/^[A-Za-z][A-Za-z0-9 .|\-_@]*$/),
       Validators.minLength(3),
       Validators.maxLength(255),
     ],
@@ -172,7 +173,8 @@ export const userFormFields: DynamicFormField[] = [
       required: 'Username is required.',
       minlength: 'Username must be at least 3 characters.',
       maxlength: 'Username must not exceed 255 characters.',
-      pattern: 'Username must start with a letter.',
+      pattern:
+        'Username must start with a letter and may contain letters, numbers, or special characters(allows .|\-_@)',
     },
   },
   {

@@ -1,1 +1,201 @@
-<p>quiz-attempt works!</p>
+<main class="quiz-attempt-main">
+  <div class="w-full flex items-center justify-center md:p-6 px-3 py-6">
+    <div class="w-full max-w-7xl h-full flex flex-col md:p-6 p-0 md:pb-0 md:mt-[50px]">
+      <!-- Header -->
+      <div class="mb-6 border p-6 rounded-lg bg-[#dbeafe80] border-blue-400">
+        <div
+          class="flex sm:flex-row flex-col justify-between items-center mb-3 quiz-play-header w-full"
+        >
+          <div class="w-full">
+            <h2 class="text-xl font-semibold">{{ quizStartData.quizName }}</h2>
+            <p class="text-sm text-gray-500">{{ quizStartData.categoryName }}</p>
+          </div>
+
+          <div class="flex items-center justify-end sm:mt-0 mt-2 space-x-6 w-full">
+            <!-- Timer -->
+            <div class="flex items-center text-red-600 font-medium">
+              <mat-icon class="mr-1">timer</mat-icon>
+              <span>{{ formattedTime }}</span>
+            </div>
+
+            <!-- Progress -->
+            <app-tag [tagConfig]="getquestionNoConfigWithLabel()"></app-tag>
+          </div>
+        </div>
+        <app-progress-bar
+          [percentage]="progressBarPercentage"
+          [theme]="'secondary'"
+        ></app-progress-bar>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex flex-col lg:flex-row flex-1 lg:gap-6">
+        <!-- Left: Question -->
+        <div class="relative flex-1 lg:order-1 order-2 h-100">
+          <div class="bg-white rounded-lg border p-6 shadow-sm mb-6">
+            <div class="flex justify-between relative">
+              <app-quiz-question
+                [currentQuestionIndex]="currentQuestionIndex"
+                [currentQuestionData]="currentQuestionData"
+                [currentAnswer]="getQuestionNosGivenAnswer(currentQuestionIndex + 1)"
+                (answerChanged)="markVisited(currentQuestionData, $event, currentQuestionIndex + 1)"
+                class="w-full"
+              >
+              </app-quiz-question>
+              @if (!isSmallScreen()) {
+                @if (
+                  getQuestionStatus(currentQuestionIndex, visitedQuestionStatus.marked_for_review)
+                ) {
+                  <app-filled-button
+                    [filledButtonConfig]="markedForReviewButtonConfig"
+                    class="marked-for-review-button absolute right-0"
+                    (buttonClicked)="markForReviewQuestion(currentQuestionIndex + 1)"
+                  ></app-filled-button>
+                } @else {
+                  <app-outline-button
+                    [outlineButtonConfig]="markForReviewButtonConfig"
+                    class="absolute right-0"
+                    (buttonClicked)="markForReviewQuestion(currentQuestionIndex + 1)"
+                  ></app-outline-button>
+                }
+              } @else {
+                @if (
+                  getQuestionStatus(currentQuestionIndex, visitedQuestionStatus.marked_for_review)
+                ) {
+                  <app-filled-button
+                    [filledButtonConfig]="markedFlagButtonConfig"
+                    class="marked-for-review-icon-button absolute right-0"
+                    (buttonClicked)="markForReviewQuestion(currentQuestionIndex + 1)"
+                  ></app-filled-button>
+                } @else {
+                  <app-outline-button
+                    [outlineButtonConfig]="markFlagButtonConfig"
+                    class="mark-for-review-icon-button absolute right-0"
+                    (buttonClicked)="markForReviewQuestion(currentQuestionIndex + 1)"
+                  ></app-outline-button>
+                }
+              }
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-between gap-3 mt-8 question-navigation-buttons">
+              @if (currentQuestionIndex === 0) {
+                <app-outline-button
+                  [outlineButtonConfig]="disabledPreviousButtonConfig"
+                ></app-outline-button>
+              } @else {
+                <app-outline-button
+                  [outlineButtonConfig]="previousButtonConfig"
+                  (buttonClicked)="goToPreviousQuestion()"
+                ></app-outline-button>
+              }
+
+              <div class="space-x-3">
+                @if (currentQuestionIndex === totalQuestions - 1) {
+                  <app-filled-button
+                    [filledButtonConfig]="disabledNextButtonConfig"
+                  ></app-filled-button>
+                } @else {
+                  <app-filled-button
+                    [filledButtonConfig]="nextButtonConfig"
+                    (buttonClicked)="getNextQuestion()"
+                  ></app-filled-button>
+                }
+              </div>
+            </div>
+          </div>
+
+          <app-filled-button
+            class="absolute right-0"
+            [filledButtonConfig]="submitButtonConfig"
+            (buttonClicked)="openSubmitDialog()"
+          >
+            Submit Quiz
+          </app-filled-button>
+        </div>
+
+        <!-- right side -->
+        <div
+          class="w-full lg:w-[270px] max-h-[550px] flex lg:flex-col flex-row lg:justify-start justify-between space-y-6 lg:order-2 order-1 right-side"
+        >
+          <!-- Questions Grid -->
+          <div
+            class="bg-white rounded-lg border p-4 shadow-sm flex lg:flex-col flex-row space-y-4 lg:space-y-6 space-x-4 lg:space-x-0 question-grid"
+          >
+            <div class="mb-0 question-button-grid">
+              <h4 class="text-sm font-semibold mb-3">Questions</h4>
+              <div
+                class="grid lg:grid-cols-5 md:grid-cols-7 grid-cols-3 gap-2 lg:min-w-[240px] md:min-w-[304px] min-w-[144px] lg:max-h-[240px] max-h-[96px] overflow-y-auto question-buttons"
+              >
+                @for (q of [].constructor(totalQuestions); let idx = $index; track idx) {
+                  <button
+                    class="w-10 h-10 rounded-lg text-sm font-medium flex items-center justify-center border transition-all"
+                    [ngClass]="{
+                      'bg-blue-400 border-blue-600': currentQuestionIndex === idx,
+                      'bg-green-100 border-green-500': getQuestionStatus(
+                        idx,
+                        visitedQuestionStatus.answered
+                      ),
+                      'bg-yellow-100 border-yellow-500': getQuestionStatus(
+                        idx,
+                        visitedQuestionStatus.marked_for_review
+                      ),
+                      'bg-blue-100 border-blue-500': getQuestionStatus(
+                        idx,
+                        visitedQuestionStatus.visited
+                      ),
+                      'bg-gray-100 border-gray-300': !getQuestionStatus(idx),
+                      'cursor-not-allowed': !getQuestionStatus(idx),
+                    }"
+                    (click)="gotoQuestion(idx + 1)"
+                    [disabled]="!getQuestionStatus(idx)"
+                  >
+                    {{ idx + 1 }}
+                  </button>
+                }
+              </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="lg:mt-4 mt-6 text-xs text-gray-600 question-legend">
+              <div class="legend-first-half mb-1 space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="w-4 h-4 bg-green-100 border border-green-500 rounded"></span>
+                  Answered ({{ getQuestionsCountByStatus(visitedQuestionStatus.answered) }})
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-4 h-4 bg-yellow-100 border border-yellow-500 rounded"></span>
+                  Marked ({{ getQuestionsCountByStatus(visitedQuestionStatus.marked_for_review) }})
+                </div>
+              </div>
+              <div class="legend-second-half space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="w-4 h-4 bg-blue-100 border border-blue-500 rounded"></span>
+                  Not Answered ({{ getQuestionsCountByStatus(visitedQuestionStatus.visited) }})
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-4 h-4 bg-gray-100 border border-gray-300 rounded"></span>
+                  Not Visited ({{ totalQuestions - visitedQuestions.length }})
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary -->
+          <div
+            class="bg-white rounded-lg mb-6 border p-6 shadow-sm text-center flex flex-col justify-center question-summary"
+          >
+            <div class="flex flex-row items-center justify-center">
+              <mat-icon class="text-blue-600 text-4xl mr-4">menu_book</mat-icon>
+              <span class="text-lg font-semibold">{{
+                getQuestionsCountByStatus(visitedQuestionStatus.answered)
+              }}</span>
+              <span class="text-lg font-semibold">/ {{ totalQuestions }}</span>
+            </div>
+            <p class="text-sm text-gray-500">Questions Answered</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

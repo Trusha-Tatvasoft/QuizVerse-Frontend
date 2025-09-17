@@ -34,36 +34,6 @@
   }
 }
 
-.close-button {
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
-  border-radius: 0.125rem;
-  opacity: 0.7;
-  cursor: pointer;
-  padding: 0.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.2s;
-
-  &:hover {
-    opacity: 1;
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--global-secondary-color);
-  }
-
-  mat-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-    font-size: 1.25rem;
-    line-height: 1.25rem;
-  }
-}
-
 .dialog-header {
   display: flex;
   flex-direction: column;

@@ -23,22 +23,6 @@
     }
   }
 
-  .close-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    cursor: pointer;
-    z-index: 2;
-
-    &:hover {
-      transform: scale(1.1);
-    }
-
-    mat-icon {
-      font-size: 22px;
-    }
-  }
-
   .dialog-body {
     color: #424955;
 

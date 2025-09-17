@@ -25,9 +25,7 @@ import {
   userActionMessages,
   userActions,
   userExportFilePrefix,
-  userLoadMessages,
   userSaveMessages,
-  userStatusMessages,
 } from '../../../utils/constants';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { generateExportFileName } from '../../../utils/generate-export-file-name.util';
@@ -328,15 +326,15 @@ export class UserManagementComponent implements OnInit, OnDestroy {
             this.openUserDialog(res.data);
           } else {
             this.snackbar.showError(
-              res.message || userLoadMessages.fetchError,
-              `${userLoadMessages.error} ${res.statusCode}`,
+              platformMessages.errorTitle,
+              res.message || platformMessages.errorMessage,
             );
           }
         },
         error: (err) =>
           this.snackbar.showError(
-            err?.error?.message || userLoadMessages.serverError,
-            userLoadMessages.error,
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
           ),
       });
   }
@@ -379,21 +377,21 @@ export class UserManagementComponent implements OnInit, OnDestroy {
             }
 
             this.snackbar.showSuccess(
+              platformMessages.successTitle,
               this.getActionMessage(action, newStatus),
-              userStatusMessages.success,
             );
             this.fetchUsers();
           } else {
             this.snackbar.showError(
-              res.message || userStatusMessages.actionFailed,
-              `${userStatusMessages.error} ${res.statusCode}`,
+              platformMessages.errorTitle,
+              res.message || platformMessages.errorMessage,
             );
           }
         },
         error: (err) =>
           this.snackbar.showError(
-            err?.error?.message || userStatusMessages.serverError,
-            userStatusMessages.error,
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
           ),
       });
   }

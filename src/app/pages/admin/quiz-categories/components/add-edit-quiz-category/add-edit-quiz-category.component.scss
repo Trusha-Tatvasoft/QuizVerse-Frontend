@@ -21,28 +21,6 @@
         color: #6b7280;
       }
     }
-
-    .close-button {
-      box-sizing: border-box;
-      border: 2px solid transparent; // Reserve space for active border
-      padding: 0.25rem; // Adjust if needed after border
-      border-radius: 0.375rem !important;
-      color: #6b7280 !important;
-      cursor: pointer;
-      min-width: auto !important;
-      line-height: 1 !important;
-
-      .mat-button-wrapper {
-        padding: 0 !important;
-        min-height: auto !important;
-        line-height: 1 !important;
-      }
-
-      &:active,
-      &.mat-button-active {
-        border-color: var(--global-secondary-color); // Change color instead of adding border
-      }
-    }
   }
 
   .dialog-form {

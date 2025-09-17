@@ -266,18 +266,14 @@ export class QuizCreationLayoutComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          this.snackbar.showSuccess(quizCRUDMessages.quizSaved);
+          this.snackbar.showSuccess(platformMessages.successTitle, quizCRUDMessages.quizSaved);
           this.router.navigate([Navigations.Admin, Navigations.Quizzes]);
         },
         error: (err) => {
-          if (err?.error?.data?.length) {
-            if (err.error.data[0]?.errors?.length) {
-              this.snackbar.showError(err.error.data[0].errors[0]);
-            }
-          } else {
-            const message = err?.error?.message || platformMessages.errorMessage;
-            this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
-          }
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }
@@ -317,18 +313,14 @@ export class QuizCreationLayoutComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          this.snackbar.showSuccess(quizCRUDMessages.quizDrafSaved);
+          this.snackbar.showSuccess(platformMessages.successTitle, quizCRUDMessages.quizDrafSaved);
           this.router.navigate([Navigations.Admin, Navigations.Quizzes]);
         },
         error: (err) => {
-          if (err?.error?.data?.length) {
-            if (err.error.data[0]?.errors?.length) {
-              this.snackbar.showError(err.error.data[0].errors[0]);
-            }
-          } else {
-            const message = err?.error?.message || platformMessages.errorMessage;
-            this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
-          }
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }
@@ -381,8 +373,10 @@ export class QuizCreationLayoutComponent {
           this.isEditMode = true;
         },
         error: (err) => {
-          const message = err?.error?.message || platformMessages.errorMessage;
-          this.snackbar.showError(`${platformMessages.errorTitle} ${err.status}`, message);
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
         },
       });
   }

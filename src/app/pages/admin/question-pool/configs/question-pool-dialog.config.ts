@@ -63,8 +63,11 @@ export function buildBaseFields(): DynamicFormField[] {
       type: 'textarea',
       placeholder: 'Enter your question...',
       icon: 'help_outline',
-      validators: [Validators.required],
-      validationMessages: { required: 'Question text is required.' },
+      validators: [Validators.required, Validators.pattern(/^$|^\S[\s\S]*$/)],
+      validationMessages: {
+        required: 'Question text is required.',
+        pattern: 'Question should not start with a space.',
+      },
       gridClass: 'col-span-2',
     },
   ];

@@ -112,7 +112,7 @@ describe('AddEditQuestionDifficultyComponent (Jest)', () => {
     component.questionDifficultyForm.get('name')?.setValue('err');
     component.validateName();
     expect(mockSnackbar.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} 500`,
+      `${platformMessages.errorTitle}`,
       platformMessages.errorMessage,
     );
   });
@@ -147,7 +147,7 @@ describe('AddEditQuestionDifficultyComponent (Jest)', () => {
     });
     component.formSubmit();
     expect(mockSnackbar.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} 400`,
+      `${platformMessages.errorTitle}`,
       platformMessages.errorMessage,
     );
   });
@@ -163,7 +163,7 @@ describe('AddEditQuestionDifficultyComponent (Jest)', () => {
     });
     component.formSubmit();
     expect(mockSnackbar.showError).toHaveBeenCalledWith(
-      `${platformMessages.errorTitle} 500`,
+      `${platformMessages.errorTitle}`,
       platformMessages.errorMessage,
     );
   });
@@ -185,7 +185,7 @@ describe('AddEditQuestionDifficultyComponent (Jest)', () => {
     component.validateXP();
 
     flushMicrotasks();
-    expect(mockSnackbar.showError).toHaveBeenCalledWith('Error! 500', 'server error');
+    expect(mockSnackbar.showError).toHaveBeenCalledWith('Error!', 'server error');
   }));
 
   describe('AddEditQuestionDifficultyComponent validateXP tests', () => {
@@ -236,7 +236,7 @@ describe('AddEditQuestionDifficultyComponent (Jest)', () => {
       flushMicrotasks();
 
       expect(mockSnackbar.showError).toHaveBeenCalledWith(
-        `${platformMessages.errorTitle} 500`,
+        `${platformMessages.errorTitle}`,
         'server error',
       );
     }));

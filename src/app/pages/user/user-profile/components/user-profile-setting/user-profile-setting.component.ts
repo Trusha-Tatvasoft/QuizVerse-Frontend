@@ -193,7 +193,7 @@ export class UserProfileSettingComponent implements OnInit, OnDestroy {
             this.serverErrors['email'] = message;
             control?.setErrors({ server: true });
           } else {
-            this.snackbar.showError(`${platformMessages.errorTitle} ${status}`, message);
+            this.snackbar.showError(`${platformMessages.errorTitle}`, message);
           }
         },
       });

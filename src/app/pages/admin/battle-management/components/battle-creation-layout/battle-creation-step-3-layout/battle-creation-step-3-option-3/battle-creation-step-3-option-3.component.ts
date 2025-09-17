@@ -15,7 +15,7 @@ import {
   downloadExelButtonConfig,
 } from '../../../../../quiz-management/configs/quiz-creation.config';
 import { Subject, takeUntil } from 'rxjs';
-import { quizCRUDMessages } from '../../../../../../../utils/constants';
+import { platformMessages, quizCRUDMessages } from '../../../../../../../utils/constants';
 import { EndPoints } from '../../../../../../../shared/enums/end-point.enum';
 
 @Component({
@@ -82,7 +82,12 @@ export class BattleCreationStep3Option3Component {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (res) => this.handleSuccess(res.data),
-          error: (err) => this.snackbar.showError(err),
+          error: (err) => {
+            this.snackbar.showError(
+              platformMessages.errorTitle,
+              err?.error?.message || platformMessages.errorMessage,
+            );
+          },
         });
     } else if (fileName.endsWith('.xls') || fileName.endsWith('.xlsx')) {
       this.battleManagementService
@@ -90,7 +95,12 @@ export class BattleCreationStep3Option3Component {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (res) => this.handleSuccess(res.data),
-          error: (err) => this.snackbar.showError(err),
+          error: (err) => {
+            this.snackbar.showError(
+              platformMessages.errorTitle,
+              err?.error?.message || platformMessages.errorMessage,
+            );
+          },
         });
     } else {
       // Show error if unsupported file type
