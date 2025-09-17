@@ -54,6 +54,25 @@
     }
   }
 
+  .logo {
+    text-align: center;
+
+    span,
+    mat-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 35px;
+      height: 35px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      background: var(--gradient);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    }
+  }
+
   // Center Section (Search Input)
   &__center {
     display: flex;

@@ -546,6 +546,41 @@ section {
             align-items: start;
           }
 
+          .logo-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            height: 100%;
+          }
+
+          .logo-small {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.75rem;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+          }
+
+          .logo {
+            text-align: center;
+
+            span,
+            mat-icon {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              width: 35px;
+              height: 35px;
+              font-size: 1.1rem;
+              font-weight: 700;
+              color: white;
+              background: var(--gradient);
+              border-radius: 12px;
+              box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+            }
+          }
+
           .logo-icon {
             width: 32px;
             height: 32px;

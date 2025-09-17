@@ -14,7 +14,6 @@
           disableRipple
           class="sidebar-item"
           [class.active]="isActive(item.route || '')"
-          [class.admin-active]="isActive(item.route || '') && role === 'admin'"
           (click)="navigateTo(item.route || '')"
         >
           <mat-icon matListItemIcon class="sidebar-icon">{{ item.icon }}</mat-icon>

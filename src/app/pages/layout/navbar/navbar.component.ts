@@ -32,9 +32,9 @@ import { Notifications } from '../interfaces/navbar.component.interface';
 import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
 import { plateformName, roles } from '../../../utils/constants';
-import { defaultLogoPath } from '../../../utils/constants';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -80,11 +80,13 @@ export class NavbarComponent {
   plateformName = plateformName;
   showNotifications = false;
   menuOpen = false;
-  logoPath: string;
+  logoPath: string | null;
 
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
   private readonly platformSettingsService = inject(PlatformSettingsService);
+
+  private readonly destroy$ = new Subject<void>();
 
   private previousWidth = window.innerWidth;
 
@@ -186,7 +188,12 @@ export class NavbarComponent {
   }
 
   imageError() {
-    this.logoPath = defaultLogoPath;
+    this.logoPath = null;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private checkWindowSize(currentWidth: number) {
@@ -197,10 +204,12 @@ export class NavbarComponent {
   }
 
   private loadPlatformConfig(): void {
-    this.platformSettingsService.platformConfig$.subscribe((config) => {
-      if (config) {
-        this.logoPath = config!.logo ?? defaultLogoPath;
-      }
-    });
+    this.platformSettingsService.platformConfig$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((config) => {
+        if (config) {
+          this.logoPath = config.logo ?? null;
+        }
+      });
   }
 }

@@ -95,10 +95,15 @@ export const questionDifficultyFormFields: DynamicFormField[] = [
     type: 'text',
     placeholder: 'Name',
     icon: 'account_circle',
-    validators: [Validators.required, Validators.pattern(/^[A-Za-z][A-Za-z0-9 ]*$/)],
+    validators: [
+      Validators.required,
+      Validators.pattern(/^[A-Za-z][A-Za-z0-9 ]*$/),
+      Validators.maxLength(255),
+    ],
     validationMessages: {
       required: 'Difficulty Name is required.',
       pattern: 'Difficulty Name must contain only letters and single spaces between words.',
+      maxlength: 'Difficulty Name must not exceed 255 characters.',
     },
   },
   {
@@ -109,12 +114,12 @@ export const questionDifficultyFormFields: DynamicFormField[] = [
     icon: 'info',
     validators: [
       Validators.required,
-      Validators.maxLength(255),
+      Validators.maxLength(500),
       Validators.pattern(/^$|^\S[\s\S]*$/),
     ],
     validationMessages: {
       required: 'Description is required.',
-      maxlength: 'Description must not exceed 255 characters.',
+      maxlength: 'Description must not exceed 500 characters.',
       pattern: 'Description should not start with a space.',
     },
   },

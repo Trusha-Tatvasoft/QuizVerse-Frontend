@@ -38,7 +38,7 @@ export class PlatformSettingsService {
       .pipe(
         tap((res) => {
           if (res.data) {
-            res.data.logo = `${environment.imageBaseUrl}/${res.data.logo}`;
+            if (res.data.logo) res.data.logo = `${environment.imageBaseUrl}/${res.data.logo}`;
             this.platformConfigSubject.next(res.data);
             document.documentElement.style.setProperty(
               '--global-primary-color',
