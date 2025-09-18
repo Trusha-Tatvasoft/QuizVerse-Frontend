@@ -5,6 +5,7 @@ import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { UserBattleLeaderboardData } from '../../../pages/user/user-battles/interface/user-battles.interface';
+import { AvailableBattle } from '../../../pages/user/user-battles/interface/quiz-battles.interface';
 
 describe('UserBattlesService (Jest)', () => {
   let service: UserBattlesService;
@@ -45,5 +46,65 @@ describe('UserBattlesService (Jest)', () => {
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetBattleLeaderboardList}`);
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
+  });
+
+  it('should call getUserAvailableBattles and return data', () => {
+    const mockResponse: ApiResponse<AvailableBattle[]> = {
+      result: true,
+      message: 'Fetched battles successfully',
+      data: [
+        {
+          battleId: 1,
+          battleName: 'Math Quiz Battle',
+          category: 'Math',
+          difficulty: 'Medium',
+          description: 'A fun math challenge!',
+          maxXP: 100,
+          totalQuestions: 10,
+          duration: '15m',
+          participants: 25,
+        },
+        {
+          battleId: 2,
+          battleName: 'Science Trivia',
+          category: 'Science',
+          difficulty: 'Hard',
+          description: 'Test your science knowledge!',
+          maxXP: 150,
+          totalQuestions: 15,
+          duration: '20m',
+          participants: 12,
+        },
+      ] as AvailableBattle[],
+      statusCode: 200,
+    };
+
+    service.getUserAvailableBattles().subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+      expect(res.result).toBe(true);
+      expect(res.data.length).toBe(2);
+    });
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.getUserAvailableBattles}`);
+
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('should handle error response', () => {
+    const errorMessage = 'Failed to fetch battles';
+
+    service.getUserAvailableBattles().subscribe({
+      next: () => fail('expected an error, not data'),
+      error: (error) => {
+        expect(error.status).toBe(500);
+        expect(error.statusText).toBe('Internal Server Error');
+      },
+    });
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.getUserAvailableBattles}`);
+
+    expect(req.request.method).toBe('GET');
+    req.flush(errorMessage, { status: 500, statusText: 'Internal Server Error' });
   });
 });
