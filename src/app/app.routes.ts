@@ -184,8 +184,8 @@ export const routes: Routes = [
       },
       {
         path: Navigations.Battles,
-        component: UserBattlesComponent,
         title: 'Quizeverse | User Battles',
+        children: [{ path: `${Navigations.BattleList}`, component: UserBattlesComponent }],
       },
       {
         path: Navigations.QuizList,

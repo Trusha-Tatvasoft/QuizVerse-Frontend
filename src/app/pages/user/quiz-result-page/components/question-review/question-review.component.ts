@@ -111,11 +111,10 @@ export class QuestionReviewComponent implements OnInit, OnDestroy {
           next: (response) => {
             this.snackBarService.showSuccess(platformMessages.successTitle, response.message);
           },
-          error: () => {
-            this.snackBarService.showError(
-              platformMessages.errorTitle,
-              platformMessages.errorMessage,
-            );
+          error: (err) => {
+            const errorMessage =
+              err?.error?.message || err?.message || platformMessages.errorMessage;
+            this.snackBarService.showError(platformMessages.errorTitle, errorMessage);
           },
         });
       }

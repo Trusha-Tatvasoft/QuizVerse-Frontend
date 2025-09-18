@@ -38,4 +38,6 @@ export enum Navigations {
 
   BattleCreation = 'battle-creation',
   BattleUpdation = 'edit-battle',
+
+  BattleList = 'battle-list',
 }
