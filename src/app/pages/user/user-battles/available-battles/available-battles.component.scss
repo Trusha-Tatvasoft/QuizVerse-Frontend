@@ -62,6 +62,7 @@
 .badge {
   border-radius: 8px;
   font-size: 0.75rem;
+  padding: 0.25rem 0rem;
   font-weight: 600;
   letter-spacing: 0.025em;
 }
@@ -206,7 +207,7 @@
   }
 
   .badge {
-    padding: 0.25rem 0.5rem;
+    padding: 0.25rem 0rem;
     font-size: 0.6875rem;
   }
 }
