@@ -8,4 +8,5 @@ export interface AvailableBattle {
   totalQuestions: number;
   duration: string;
   participants: number;
+  isBattleRunning: number;
 }

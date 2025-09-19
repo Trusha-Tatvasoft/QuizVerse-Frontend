@@ -40,14 +40,24 @@
             </div>
 
             <div class="quiz-battle-actions">
-              <app-filled-button
-                [filledButtonConfig]="quickBattle"
-                (buttonClicked)="navigateToBattle(battle.battleId)"
-              ></app-filled-button>
-              <app-outline-button
-                [outlineButtonConfig]="challengeFriend"
-                (buttonClicked)="navigateToChallengeFriend(battle.battleId)"
-              ></app-outline-button>
+              @if (battle.isBattleRunning) {
+                <div class="waiting-flag">
+                  <mat-icon>hourglass_empty</mat-icon>
+                  Waiting for Result…
+                </div>
+              }
+              <!-- Case 2: Normal state -->
+              @else {
+                <app-filled-button
+                  [filledButtonConfig]="quickBattle"
+                  (buttonClicked)="navigateToBattle(battle.battleId)"
+                ></app-filled-button>
+
+                <app-outline-button
+                  [outlineButtonConfig]="challengeFriend"
+                  (buttonClicked)="navigateToChallengeFriend(battle.battleId)"
+                ></app-outline-button>
+              }
             </div>
           </div>
         </div>
