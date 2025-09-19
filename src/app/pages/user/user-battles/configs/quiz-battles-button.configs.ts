@@ -13,3 +13,10 @@ export const challengeFriendButtonConfig: ButtonConfig = {
   matIcon: 'sports_kabaddi',
   imagePosition: 'left',
 };
+
+export const waitingResultButtonConfig: ButtonConfig = {
+  label: 'Waiting for Result…',
+  variant: 'secondary',
+  matIcon: 'hourglass_empty',
+  imagePosition: 'left',
+};

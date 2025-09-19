@@ -7,6 +7,7 @@ import { ButtonConfig } from '../../../../shared/interfaces/button-config.interf
 import {
   challengeFriendButtonConfig,
   quickBattleButtonConfig,
+  waitingResultButtonConfig,
 } from '../configs/quiz-battles-button.configs';
 import { UserBattlesService } from '../../../../services/user/user-battles/user-battles.service';
 import { AvailableBattle } from '../interface/quiz-battles.interface';
@@ -35,6 +36,7 @@ import { platformMessages } from '../../../../utils/constants';
 export class AvailableBattlesComponent implements OnInit, OnDestroy {
   quickBattle: ButtonConfig = quickBattleButtonConfig;
   challengeFriend: ButtonConfig = challengeFriendButtonConfig;
+  waitingResultButtonConfig: ButtonConfig = waitingResultButtonConfig;
   battles: (AvailableBattle & { difficultyTag: TagInputConfig })[] = [];
   loading = true;
   error: string | null = null;
@@ -46,6 +48,18 @@ export class AvailableBattlesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.availableBattles();
+  }
+
+  navigateToResult(battleId: number): void {
+    const encodedId = btoa(battleId.toString());
+
+    this.router.navigate([
+      Navigations.User,
+      Navigations.Battles,
+      Navigations.BattleList,
+      Navigations.QuizResult, //change this as per component name
+      encodedId,
+    ]);
   }
 
   navigateToBattle(battleId: number): void {
