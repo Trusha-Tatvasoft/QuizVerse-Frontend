@@ -14,6 +14,7 @@ export enum Navigations {
   QuizInstruction = 'quiz-instruction',
   QuizResult = 'quiz-result',
   Battles = 'battles',
+  SearchOpponent = 'search-opponent',
   Tournaments = 'tournaments',
   Leaderboards = 'leaderboards',
   Profile = 'profile',

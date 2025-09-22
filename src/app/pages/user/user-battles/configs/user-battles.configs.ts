@@ -9,7 +9,7 @@ export const userBattlesLeaderboardTabs: LazyTab[] = [
   },
   {
     id: 'recent',
-    label: 'Recent Battles',
+    label: 'Battles Results',
     loadChildren: tabLazyComponentMap['recent'],
   },
   {
