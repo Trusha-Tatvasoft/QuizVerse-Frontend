@@ -4,6 +4,8 @@ import { UserBattlesService } from '../../../../services/user/user-battles/user-
 import { Router } from '@angular/router';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { of, throwError } from 'rxjs';
+import { AvailableBattle } from '../interface/quiz-battles.interface';
+import { TagInputConfig } from '../../../../shared/interfaces/tag-component.interface';
 describe('AvailableBattlesComponent', () => {
   let component: AvailableBattlesComponent;
   let fixture: ComponentFixture<AvailableBattlesComponent>;
@@ -101,31 +103,81 @@ describe('AvailableBattlesComponent', () => {
   });
 
   it('should navigate to battle', () => {
-    const battleId = 123;
-    component.navigateToBattle(battleId);
+    const battle: AvailableBattle & { difficultyTag: TagInputConfig } = {
+      battleId: 123,
+      battleName: 'Math Challenge',
+      category: 'Math',
+      difficulty: 'Hard',
+      description: 'Test battle',
+      maxXP: 100,
+      totalQuestions: 10,
+      duration: '10m',
+      participants: 2,
+      isBattleRunning: 0,
+      difficultyTag: {
+        id: 'hard',
+        label: 'Hard',
+        type: 'static',
+        isSelected: false,
+        hasBorder: true,
+        backgroundColor: 'red',
+        textColor: 'white',
+      },
+    };
 
-    const encodedId = btoa(battleId.toString());
-    expect(mockRouter.navigate).toHaveBeenCalledWith([
-      'user',
-      'battles',
-      'battle-list',
-      'quiz-result',
-      encodedId,
-    ]);
+    component.navigateToBattle(battle);
+
+    const encodedId = btoa(battle.battleId.toString());
+    const battleData = {
+      battleName: battle.battleName,
+      battleCategory: battle.category,
+      battleXp: battle.maxXP,
+      battleDifficulty: battle.difficulty,
+    };
+
+    expect(mockRouter.navigate).toHaveBeenCalledWith(
+      ['user', 'battles', 'battle-list', 'quiz-result', encodedId],
+      { state: { battleData } },
+    );
   });
 
   it('should navigate to challenge friend', () => {
-    const battleId = 456;
-    component.navigateToChallengeFriend(battleId);
+    const battle: AvailableBattle & { difficultyTag: TagInputConfig } = {
+      battleId: 123,
+      battleName: 'Math Challenge',
+      category: 'Math',
+      difficulty: 'Hard',
+      description: 'Test battle',
+      maxXP: 100,
+      totalQuestions: 10,
+      duration: '10m',
+      participants: 2,
+      isBattleRunning: 0,
+      difficultyTag: {
+        id: 'hard',
+        label: 'Hard',
+        type: 'static',
+        isSelected: false,
+        hasBorder: true,
+        backgroundColor: 'red',
+        textColor: 'white',
+      },
+    };
 
-    const encodedId = btoa(battleId.toString());
-    expect(mockRouter.navigate).toHaveBeenCalledWith([
-      'user',
-      'battles',
-      'battle-list',
-      'quiz-result',
-      encodedId,
-    ]);
+    component.navigateToChallengeFriend(battle);
+
+    const encodedId = btoa(battle.battleId.toString());
+    const battleData = {
+      battleName: battle.battleName,
+      battleCategory: battle.category,
+      battleXp: battle.maxXP,
+      battleDifficulty: battle.difficulty,
+    };
+
+    expect(mockRouter.navigate).toHaveBeenCalledWith(
+      ['user', 'battles', 'battle-list', 'quiz-result', encodedId],
+      { state: { battleData } },
+    );
   });
 
   it('should call ngOnDestroy and complete destroy$', () => {

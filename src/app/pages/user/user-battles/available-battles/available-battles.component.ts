@@ -19,6 +19,7 @@ import { Navigations } from '../../../../shared/enums/navigation';
 import { Subject, takeUntil } from 'rxjs';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { platformMessages } from '../../../../utils/constants';
+import { BattleData } from '../interface/battle-data.interface';
 
 @Component({
   selector: 'app-available-battles',
@@ -57,33 +58,53 @@ export class AvailableBattlesComponent implements OnInit, OnDestroy {
       Navigations.User,
       Navigations.Battles,
       Navigations.BattleList,
-      Navigations.QuizResult, //change this as per component name
+      Navigations.QuizResult, // replace with correct target component
       encodedId,
     ]);
   }
 
-  navigateToBattle(battleId: number): void {
-    const encodedId = btoa(battleId.toString());
-
-    this.router.navigate([
-      Navigations.User,
-      Navigations.Battles,
-      Navigations.BattleList,
-      Navigations.QuizResult, //change this as per component name
-      encodedId,
-    ]);
+  navigateToBattle(battle: AvailableBattle & { difficultyTag: TagInputConfig }): void {
+    const encodedId = btoa(battle.battleId.toString());
+    const battleData: BattleData = {
+      battleName: battle.battleName,
+      battleCategory: battle.category,
+      battleXp: battle.maxXP,
+      battleDifficulty: battle.difficulty,
+    };
+    this.router.navigate(
+      [
+        Navigations.User,
+        Navigations.Battles,
+        Navigations.BattleList,
+        Navigations.QuizResult, // replace with correct target component
+        encodedId,
+      ],
+      {
+        state: { battleData }, // pass battle object
+      },
+    );
   }
 
-  navigateToChallengeFriend(battleId: number): void {
-    const encodedId = btoa(battleId.toString());
-
-    this.router.navigate([
-      Navigations.User,
-      Navigations.Battles,
-      Navigations.BattleList,
-      Navigations.QuizResult, //change this as per component name
-      encodedId,
-    ]);
+  navigateToChallengeFriend(battle: AvailableBattle & { difficultyTag: TagInputConfig }): void {
+    const encodedId = btoa(battle.battleId.toString());
+    const battleData: BattleData = {
+      battleName: battle.battleName,
+      battleCategory: battle.category,
+      battleXp: battle.maxXP,
+      battleDifficulty: battle.difficulty,
+    };
+    this.router.navigate(
+      [
+        Navigations.User,
+        Navigations.Battles,
+        Navigations.BattleList,
+        Navigations.QuizResult, // replace with correct target component
+        encodedId,
+      ],
+      {
+        state: { battleData }, // pass battle object
+      },
+    );
   }
 
   ngOnDestroy(): void {

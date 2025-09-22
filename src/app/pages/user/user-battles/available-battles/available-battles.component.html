@@ -50,12 +50,12 @@
               @else {
                 <app-filled-button
                   [filledButtonConfig]="quickBattle"
-                  (buttonClicked)="navigateToBattle(battle.battleId)"
+                  (buttonClicked)="navigateToBattle(battle)"
                 ></app-filled-button>
 
                 <app-outline-button
                   [outlineButtonConfig]="challengeFriend"
-                  (buttonClicked)="navigateToChallengeFriend(battle.battleId)"
+                  (buttonClicked)="navigateToChallengeFriend(battle)"
                 ></app-outline-button>
               }
             </div>
