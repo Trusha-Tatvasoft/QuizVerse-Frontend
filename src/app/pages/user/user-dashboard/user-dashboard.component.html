@@ -1,8 +1,15 @@
-<div class="dashboard-layout admin-management-page">
-  <h2 class="admin-page-heading">Dashboard</h2>
-
+<div class="dashboard-layout player-management-page">
   <div class="dashboard-body">
     <div class="dashboard-main">
+      <div class="player-page-heading">
+        <app-page-header
+          [icon]="userDashboardConfig.icon"
+          [title]="userDashboardConfig.title"
+          [theme]="userDashboardConfig.theme"
+          [subtitle]="userDashboardConfig.subtitle"
+          class="page-header"
+        ></app-page-header>
+      </div>
       <!-- Welcome Banner Component -->
       <app-welcome-banner [userDetails]="bannerData"> </app-welcome-banner>
 
