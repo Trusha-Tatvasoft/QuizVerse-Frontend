@@ -1,5 +1,12 @@
 <div class="profile-page player-management-page">
-  <h2 class="player-page-heading">Browse Quizzes</h2>
+  <div class="player-page-heading">
+    <app-page-header
+      [icon]="browseQuizHeaderConfig.icon"
+      [title]="browseQuizHeaderConfig.title"
+      [subtitle]="browseQuizHeaderConfig.subtitle"
+      [theme]="browseQuizHeaderConfig.theme"
+    ></app-page-header>
+  </div>
 
   <form [formGroup]="filtersForm">
     <!-- Toolbar -->

@@ -11,6 +11,7 @@ import { OutlineButtonComponent } from '../../../shared/components/outline-butto
 import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
 import { TagComponent } from '../../../shared/components/tag/tag.component';
 import {
+  browseQuizHeaderConfig,
   clearFilterButtonConfig,
   loadMoreButtonConfig,
   searchInputConfig,
@@ -32,6 +33,7 @@ import { DropDownType } from '../../../shared/enums/dropdown-types.enum';
 import { DropdownService } from '../../../shared/service/dropdown/dropdown.service';
 import { debounceTimeValue, platformMessages } from '../../../utils/constants';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-browse-quizzes',
@@ -47,6 +49,7 @@ import { SnackbarService } from '../../../shared/service/snackbar/snackbar.servi
     MatSelectModule,
     MatSliderModule,
     TagComponent,
+    PageHeaderComponent,
   ],
   templateUrl: './browse-quizzes.component.html',
   styleUrl: './browse-quizzes.component.scss',
@@ -58,6 +61,7 @@ export class BrowseQuizzesComponent implements OnInit {
   clearFilterBtn = clearFilterButtonConfig;
   loadMoreBtnConfig = loadMoreButtonConfig;
   tabToTypeMap = tabToTypeMap;
+  browseQuizHeaderConfig = browseQuizHeaderConfig;
 
   selectedTab = signal(0);
   currentTabId = signal<string>('featured');
