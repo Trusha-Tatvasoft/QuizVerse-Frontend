@@ -1,0 +1,137 @@
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 113px);
+}
+
+.card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 16px;
+  text-align: center;
+  width: 350px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  p {
+    color: #666;
+  }
+
+  // ✅ Custom Loader Styles
+  .custom-loader {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 4px solid transparent;
+      border-top-color: var(--global-secondary-color);
+      border-right-color: var(--global-secondary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      border-style: solid;
+      border-width: 4px;
+      box-sizing: border-box;
+      mask-image: radial-gradient(circle, #000 98%, transparent 100%);
+      -webkit-mask-image: radial-gradient(circle, #000 98%, transparent 100%);
+    }
+
+    mat-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 28px;
+      color: var(--global-secondary-color);
+      height: 50px;
+      width: 50px;
+      font-size: 50px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 0.7;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 380px) {
+    padding-inline: 1rem;
+  }
+}
+
+.quiz-info {
+  margin: 1.5rem 0;
+  h3 {
+    margin: 0;
+    font-weight: 600;
+  }
+}
+
+.opponent-info {
+  margin: 1.5rem 0;
+  padding: 10px 25px;
+  text-align: left;
+  background: var(--global-bg-gradient);
+  border-radius: 5px;
+  strong {
+    font-size: 1.2rem;
+    display: block;
+  }
+}
+
+.timer {
+  margin-block: 1rem;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.cancel-search-opponent {
+  display: flex;
+  justify-content: center;
+}
+
+.icon-found {
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  margin-inline: auto;
+
+  img {
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+  }
+
+  mat-icon.icon-success {
+    height: 70px;
+    width: 70px;
+    font-size: 60px;
+    font-weight: 100;
+    border-radius: 50%;
+    color: var(--global-secondary-color);
+    border: 5px solid var(--global-secondary-color);
+  }
+}
