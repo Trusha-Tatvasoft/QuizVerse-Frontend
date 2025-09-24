@@ -1,5 +1,12 @@
 <main class="player-management-page">
-  <h2 class="player-page-heading">Leaderboards</h2>
+  <div class="player-page-heading">
+    <app-page-header
+      [icon]="leaderboardHeaderConfig.icon"
+      [title]="leaderboardHeaderConfig.title"
+      [subtitle]="leaderboardHeaderConfig.subtitle"
+      [theme]="leaderboardHeaderConfig.theme"
+    ></app-page-header>
+  </div>
 
   <div class="player-page-header">
     <app-global-leaderboard-card></app-global-leaderboard-card>

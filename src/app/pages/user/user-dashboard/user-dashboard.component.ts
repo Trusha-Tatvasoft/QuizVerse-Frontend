@@ -8,7 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { UserDashboardService } from '../../../services/user/user-dashboard/user-dashboard.service';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { CardInputConfig } from '../../../shared/interfaces/card-component.interface';
-import { defaultBannerData } from './configs/default-banner-data.config';
+import { defaultBannerData, userDashboardHeaderConfig } from './configs/default-banner-data.config';
 import { userPerformanceCardConfig } from './configs/user-performace-card.config';
 import { WelcomeBannerComponent } from './component/welcome-banner/welcome-banner.component';
 import { CardComponent } from '../../../shared/components/card/card.component';
@@ -17,6 +17,7 @@ import { BattleRequestComponent } from './component/battle-request/battle-reques
 import { RecentQuizResultComponent } from './component/recent-quiz-result/recent-quiz-result.component';
 import { AchievementComponent } from './component/achievement/achievement.component';
 import { FeaturedQuizComponent } from './component/featured-quiz/featured-quiz.component';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -28,6 +29,7 @@ import { FeaturedQuizComponent } from './component/featured-quiz/featured-quiz.c
     RecentQuizResultComponent,
     AchievementComponent,
     BattleRequestComponent,
+    PageHeaderComponent,
   ],
   templateUrl: './user-dashboard.component.html',
   styleUrl: './user-dashboard.component.scss',
@@ -35,6 +37,8 @@ import { FeaturedQuizComponent } from './component/featured-quiz/featured-quiz.c
 export class UserDashboardComponent {
   quizStatsConfigs: CardInputConfig[] = [];
   bannerData = defaultBannerData;
+
+  userDashboardConfig = userDashboardHeaderConfig;
 
   private readonly userDashboardService = inject(UserDashboardService);
   private readonly snackBarService = inject(SnackbarService);

@@ -1,5 +1,12 @@
 <main class="player-management-page">
-  <h2 class="player-page-heading">Quiz Battles</h2>
+  <div class="player-page-heading">
+    <app-page-header
+      [icon]="battleHeaderConfig.icon"
+      [title]="battleHeaderConfig.title"
+      [subtitle]="battleHeaderConfig.subtitle"
+      [theme]="battleHeaderConfig.theme"
+    ></app-page-header>
+  </div>
 
   <div class="leaderboard-tabs">
     <app-common-tab

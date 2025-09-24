@@ -54,7 +54,8 @@ export class MonthlyChampionsComponent {
       .subscribe((months) => {
         this.monthList = months.data ?? [];
 
-        this.selectedMonth = this.monthList.length > 0 ? this.monthList[0].id : null;
+        this.selectedMonth =
+          this.monthList.length > 0 ? this.monthList[this.monthList.length - 1].id : null;
 
         if (this.selectedYear && this.selectedMonth) {
           this.onFilterChange();

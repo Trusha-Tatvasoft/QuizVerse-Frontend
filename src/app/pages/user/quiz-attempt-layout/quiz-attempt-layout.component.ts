@@ -295,7 +295,6 @@ export class QuizAttemptLayoutComponent {
   }
 
   submitQuiz(): void {
-    if (this.isFullScreen) this.closeFullscreen();
     const payload: SubmitQuizRequest = {
       quizId: this.decodedId,
       quizName: this.quizStartData.quizName,
