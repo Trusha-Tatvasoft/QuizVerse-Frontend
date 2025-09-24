@@ -30,6 +30,7 @@ import { QuizAttemptLayoutComponent } from './pages/user/quiz-attempt-layout/qui
 import { QuizInstructionsComponent } from './pages/user/quiz-attempt-layout/quiz-instructions/quiz-instructions.component';
 import { QuestionDifficultyComponent } from './pages/admin/question-difficulty/question-difficulty.component';
 import { QuizResultPageComponent } from './pages/user/quiz-result-page/quiz-result-page.component';
+import { SearchOpponentComponent } from './pages/user/user-battles/search-opponent/search-opponent.component';
 
 export const routes: Routes = [
   {
@@ -184,8 +185,14 @@ export const routes: Routes = [
       },
       {
         path: Navigations.Battles,
-        component: UserBattlesComponent,
         title: 'Quizeverse | User Battles',
+        children: [
+          { path: ``, component: UserBattlesComponent },
+          {
+            path: `${Navigations.SearchOpponent}/:id`,
+            component: SearchOpponentComponent,
+          },
+        ],
       },
       {
         path: Navigations.QuizList,
@@ -195,10 +202,12 @@ export const routes: Routes = [
           {
             path: `${Navigations.BrowseQuizzes}/${Navigations.QuizInstruction}/:id`,
             component: QuizInstructionsComponent,
+            title: 'Quizeverse | Quiz Play Instructions',
           },
           {
             path: `${Navigations.BrowseQuizzes}/${Navigations.QuizResult}/:id`,
             component: QuizResultPageComponent,
+            title: 'Quizeverse | Quiz Result',
           },
         ],
       },
