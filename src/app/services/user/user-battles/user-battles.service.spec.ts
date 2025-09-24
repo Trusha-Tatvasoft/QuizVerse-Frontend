@@ -85,7 +85,7 @@ describe('UserBattlesService (Jest)', () => {
       expect(res.data.length).toBe(2);
     });
 
-    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.getUserAvailableBattles}`);
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetUserAvailableBattles}`);
 
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
@@ -102,7 +102,7 @@ describe('UserBattlesService (Jest)', () => {
       },
     });
 
-    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.getUserAvailableBattles}`);
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetUserAvailableBattles}`);
 
     expect(req.request.method).toBe('GET');
     req.flush(errorMessage, { status: 500, statusText: 'Internal Server Error' });
