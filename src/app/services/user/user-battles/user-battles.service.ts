@@ -21,7 +21,7 @@ export class UserBattlesService {
 
   getUserAvailableBattles(): Observable<ApiResponse<AvailableBattle[]>> {
     return this.http.get<ApiResponse<AvailableBattle[]>>(
-      `${environment.baseUrl}/${EndPoints.getUserAvailableBattles}`,
+      `${environment.baseUrl}/${EndPoints.GetUserAvailableBattles}`,
     );
   }
 }
