@@ -296,7 +296,7 @@ export class RecentBattlesComponent {
       .slice(this.currentStart, this.currentStart + this.windowSize)
       .map((battle, idx) => ({
         ...battle,
-        globalIndex: this.currentStart + idx, // 👈 add index of item in the full list
+        globalIndex: this.currentStart + idx,
       }));
   }
 
