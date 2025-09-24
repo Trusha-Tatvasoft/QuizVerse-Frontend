@@ -12,5 +12,5 @@ export interface PlatformConfigurationRequestDTO {
 export interface PlatformConfigurationResponseDTO {
   quote: string;
   defaultsColors: DefaultsColors;
-  logo?: string;
+  logo?: string | null;
 }

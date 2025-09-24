@@ -51,7 +51,7 @@ export const browseQuizzesButton: ButtonConfig = {
 };
 
 export const joinPlatformButton: ButtonConfig = {
-  label: 'Join QuizzVerse Today',
+  label: 'Join QuizVerse Today',
   matIcon: 'arrow_forward',
   iconFontSet: 'material-icons',
   fontWeight: 500,
