@@ -299,6 +299,25 @@ export const platformMessages = {
   failedLoadQuizExplaination: 'Failed to load quiz explaination',
   failedToFatchQuestions: 'Failed to fetch questions',
   // #endregion
+
+  // #region User Battles
+  cancelSearch: 'Search cancelled',
+  matchMakingFailed: 'Failed to connect to matchmaking service',
+  searchTimeOut: 'Search timed out. No opponents found.',
+  battleHubSearching: 'Searching',
+  battleHubMatchFound: 'MatchFound',
+  battleHubStartMatching: 'StartMatchmaking',
+  battleHubCancelMatching: 'CancelMatchmaking',
+  connectionFailed: 'Connection failed:',
+  matchedWith: 'Matched with',
+  connectionLost: 'Connection lost. Reconnecting...',
+  connectionRestore: 'Connection restored',
+  connectionClosedError: 'Connection closed unexpectedly',
+  serverNotConnected: 'Not connected to server',
+  failedtoStartMatching: 'Failed to start matchmaking',
+  failedtoCancelMatching: 'Failed to cancel matchmaking',
+  errorInConnection: `Error stopping connection`,
+  // #endregion
 };
 //#endregion
 
