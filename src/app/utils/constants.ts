@@ -602,3 +602,14 @@ export function autoSubmitMessage(reason: string): string {
   return `Quiz will be auto-submitted due to: ${reason}`;
 }
 // #endregion
+
+// #registrer component pattern
+export const regexPatterns = {
+  NAME: /^[A-Za-z0-9][A-Za-z0-9 .'-]*$/,
+  USERNAME: /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:,.<>\/?\\|~]+$/,
+  EMAIL: /^[^\s][a-zA-Z0-9._%+-]*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
+  PASSWORD: /^(?=\S*$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/,
+  DESCRIPTION: /^$|^\S[\s\S]*$/,
+  QUIZ_DIFFICULTY_NAME: /^[A-Za-z][A-Za-z0-9 ]*$/,
+};
+// #endregion

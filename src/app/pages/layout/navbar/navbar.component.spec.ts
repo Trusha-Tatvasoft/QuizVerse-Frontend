@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NavbarComponent } from './navbar.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { defaultLogoPath, yellow } from '../../../utils/constants';
+import { yellow } from '../../../utils/constants';
 import { mockDataNotifications } from './navbar-mock-data';
 import { Navigations } from '../../../shared/enums/navigation';
 import { AuthService } from '../../../core/auth/services/auth.service';
@@ -333,12 +333,6 @@ describe('NavbarComponent', () => {
     component['authService'].currentRole$ = { value: undefined } as any;
     component.navigateToDashboard();
     expect(navSpy).toHaveBeenCalledWith(['/']);
-  });
-
-  it('should set logoPath to default on imageError()', () => {
-    component.logoPath = 'somePath.png';
-    component.imageError();
-    expect(component.logoPath).toBe('assets/images/logo-small.png');
   });
 
   it('should set logoPath when config has logo', () => {

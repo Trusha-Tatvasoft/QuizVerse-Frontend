@@ -35,7 +35,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   joinPlatFormButton = joinPlatformButton;
   plateformName = plateformName;
   stats: LandingPageStats;
-  logoPath: string;
+  logoPath: string | null;
 
   private readonly router = inject(Router);
   private readonly landingPageDataService = inject(LandingPageDataService);
@@ -64,12 +64,18 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   }
 
   private loadPlatformConfig(): void {
-    this.platformSettingsService.platformConfig$.subscribe((config) => {
-      if (config) {
-        this.landingPageContent.quote = config!.quote;
-        this.logoPath = config!.logo ?? 'assets/logo-small.png';
-      }
-    });
+    this.platformSettingsService.platformConfig$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((config) => {
+        if (config) {
+          this.landingPageContent.quote = config!.quote;
+          this.logoPath = config.logo ?? null;
+        }
+      });
+  }
+
+  imageError() {
+    this.logoPath = null;
   }
 
   private loadLandingPageStats(): void {
