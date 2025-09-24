@@ -14,7 +14,6 @@ export enum Navigations {
   QuizInstruction = 'quiz-instruction',
   QuizResult = 'quiz-result',
   Battles = 'battles',
-  BattleList = 'battle-list',
   BattleInstruction = 'battle-instruction',
   BattleAttempt = 'battle-attempt',
   BattleResult = 'battle-result',
@@ -46,4 +45,5 @@ export enum Navigations {
 
   BattleCreation = 'battle-creation',
   BattleUpdation = 'edit-battle',
+  BattleList = 'battle-list',
 }

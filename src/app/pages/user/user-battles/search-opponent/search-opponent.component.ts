@@ -8,11 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { platformMessages } from '../../../../utils/constants';
 import { BattleHubService } from '../../../../services/user/user-battles/battle-hub.service';
-import {
-  BattleData,
-  MatchmakingResultDTO,
-  PlayerProfileDTO,
-} from '../interface/search-opponent.interface';
+import { BattleData, PlayerProfileDTO } from '../interface/search-opponent.interface';
 import { environment } from '../../../../../environments/environment.dev';
 import { Navigations } from '../../../../shared/enums/navigation';
 

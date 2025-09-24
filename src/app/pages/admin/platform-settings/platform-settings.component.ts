@@ -215,7 +215,7 @@ export class PlatformSettingsComponent implements OnInit {
           if (res.result) {
             this.platformConfig = res.data;
             this.patchFormValues(res.data);
-            this.previewUrl = `${environment.imageBaseUrl}/${res.data.logo}`;
+            if (res.data.logo) this.previewUrl = `${environment.imageBaseUrl}/${res.data.logo}`;
           } else {
             this.snackbar.showError(platformMessages.errorTitle, res.message);
           }

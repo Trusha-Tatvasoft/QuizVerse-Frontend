@@ -67,7 +67,20 @@
       <div class="footer-container">
         <div class="footer-brand">
           <div class="brand-logo">
-            <img [src]="logoPath" alt="Platform Logo" class="logo-icon" />
+            @if (logoPath) {
+              <div class="logo-wrapper">
+                <img
+                  [src]="logoPath"
+                  alt="Platform Logo"
+                  class="logo-small"
+                  (error)="imageError()"
+                />
+              </div>
+            } @else {
+              <div class="logo">
+                <span>{{ plateformName?.charAt(0) | uppercase }}</span>
+              </div>
+            }
             <span class="brand-name">{{ plateformName }}</span>
           </div>
           <p class="brand-description">

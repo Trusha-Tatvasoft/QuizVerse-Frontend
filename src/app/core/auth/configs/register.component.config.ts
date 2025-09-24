@@ -1,6 +1,7 @@
 import { Validators } from '@angular/forms';
 import { ButtonConfig } from '../../../shared/interfaces/button-config.interface';
 import { DynamicFormField } from '../../../shared/interfaces/dynamic-form-field.interface';
+import { regexPatterns } from '../../../utils/constants';
 
 /**
  * Register button configuration
@@ -46,7 +47,7 @@ export const registerFormFields: DynamicFormField[] = [
       Validators.required,
       Validators.minLength(1),
       Validators.maxLength(255),
-      Validators.pattern(/^[A-Za-z0-9][A-Za-z0-9 .'-]*$/),
+      Validators.pattern(regexPatterns.NAME),
     ],
     validationMessages: {
       required: 'Full Name is required.',
@@ -63,7 +64,7 @@ export const registerFormFields: DynamicFormField[] = [
     icon: 'person',
     validators: [
       Validators.required,
-      Validators.pattern(/^[A-Za-z][A-Za-z0-9 .|\-_@]*$/),
+      Validators.pattern(regexPatterns.USERNAME),
       Validators.minLength(3),
       Validators.maxLength(255),
     ],
@@ -72,7 +73,7 @@ export const registerFormFields: DynamicFormField[] = [
       minlength: 'Username must be at least 3 characters.',
       maxlength: 'Username must not exceed 255 characters.',
       pattern:
-        'Username must start with a letter and may contain letters, numbers, or special characters(allows .|\-_@)',
+        'Username can only contain letters, numbers, and special characters (!@#$%^&*()_+-=[]{};:,.<>/?\\|~)',
     },
   },
   {
@@ -83,7 +84,7 @@ export const registerFormFields: DynamicFormField[] = [
     icon: 'mail',
     validators: [
       Validators.required,
-      Validators.pattern(/^[^\s][a-zA-Z0-9._%+-]*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/),
+      Validators.pattern(regexPatterns.EMAIL),
       Validators.maxLength(255),
     ],
     validationMessages: {
@@ -113,7 +114,7 @@ export const registerFormFields: DynamicFormField[] = [
     icon: 'lock',
     validators: [
       Validators.required,
-      Validators.pattern(/^(?=\S*$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/),
+      Validators.pattern(regexPatterns.PASSWORD),
       Validators.minLength(8),
       Validators.maxLength(30),
     ],
@@ -148,7 +149,7 @@ export const userFormFields: DynamicFormField[] = [
       Validators.required,
       Validators.minLength(1),
       Validators.maxLength(255),
-      Validators.pattern(/^[A-Za-z0-9][A-Za-z0-9 .'-]*$/),
+      Validators.pattern(regexPatterns.NAME),
     ],
     validationMessages: {
       required: 'Full Name is required.',
@@ -165,7 +166,7 @@ export const userFormFields: DynamicFormField[] = [
     icon: 'person',
     validators: [
       Validators.required,
-      Validators.pattern(/^[A-Za-z][A-Za-z0-9 .|\-_@]*$/),
+      Validators.pattern(regexPatterns.USERNAME),
       Validators.minLength(3),
       Validators.maxLength(255),
     ],
@@ -174,7 +175,7 @@ export const userFormFields: DynamicFormField[] = [
       minlength: 'Username must be at least 3 characters.',
       maxlength: 'Username must not exceed 255 characters.',
       pattern:
-        'Username must start with a letter and may contain letters, numbers, or special characters(allows .|\-_@)',
+        'Username can only contain letters, numbers, and special characters (!@#$%^&*()_+-=[]{};:,.<>/?\\|~)',
     },
   },
   {
@@ -185,7 +186,7 @@ export const userFormFields: DynamicFormField[] = [
     icon: 'mail',
     validators: [
       Validators.required,
-      Validators.pattern(/^[^\s][a-zA-Z0-9._%+-]*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/),
+      Validators.pattern(regexPatterns.EMAIL),
       Validators.maxLength(255),
     ],
     validationMessages: {
@@ -202,7 +203,7 @@ export const userFormFields: DynamicFormField[] = [
     icon: 'lock',
     validators: [
       Validators.required,
-      Validators.pattern(/^(?=\S*$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/),
+      Validators.pattern(regexPatterns.PASSWORD),
       Validators.minLength(8),
       Validators.maxLength(30),
     ],

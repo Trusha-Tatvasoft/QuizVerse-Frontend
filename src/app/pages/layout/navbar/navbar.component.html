@@ -15,7 +15,13 @@
     }
 
     <div class="flex items-center space-x-2 h-12 cursor-pointer" (click)="navigateToDashboard()">
-      <img [src]="logoPath" alt="Platform Logo" class="logo-small" (error)="imageError()" />
+      @if (logoPath) {
+        <img [src]="logoPath" alt="Platform Logo" class="logo-small" (error)="imageError()" />
+      } @else {
+        <div class="logo">
+          <span>{{ plateformName?.charAt(0) | uppercase }}</span>
+        </div>
+      }
       <div class="logo-big">{{ plateformName }}</div>
     </div>
   </div>

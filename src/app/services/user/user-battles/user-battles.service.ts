@@ -5,6 +5,7 @@ import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { environment } from '../../../../environments/environment.dev';
 import { UserBattleLeaderboardData } from '../../../pages/user/user-battles/interface/user-battles.interface';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
+import { AvailableBattle } from '../../../pages/user/user-battles/interface/quiz-battles.interface';
 import { UserRecentBattles } from '../../../pages/user/user-battles/interface/recent-battles.interface';
 
 @Injectable({
@@ -24,6 +25,11 @@ export class UserBattlesService {
     );
   }
 
+  getUserAvailableBattles(): Observable<ApiResponse<AvailableBattle[]>> {
+    return this.http.get<ApiResponse<AvailableBattle[]>>(
+      `${environment.baseUrl}/${EndPoints.GetUserAvailableBattles}`,
+    );
+  }
   /**
    * Fetch the list of recent battles for the currently logged-in user.
    * @returns Observable that emits an ApiResponse containing

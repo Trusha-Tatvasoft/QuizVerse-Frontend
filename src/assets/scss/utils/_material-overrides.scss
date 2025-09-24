@@ -600,3 +600,11 @@ html {
     border-color: var(--global-secondary-color);
   }
 }
+
+.status-wrapper {
+  app-tag {
+    .tag-container {
+      display: flex;
+    }
+  }
+}

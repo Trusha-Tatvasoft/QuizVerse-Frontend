@@ -616,6 +616,20 @@ app-data-table {
   }
 }
 
+.quiz-battle-actions {
+  app-filled-button {
+    .filled-button {
+      width: 100%;
+    }
+  }
+
+  app-outline-button {
+    .outline-button {
+      width: 100%;
+    }
+  }
+}
+
 // notification-center
 @media (max-width: 372px) {
   .notification-center-view {

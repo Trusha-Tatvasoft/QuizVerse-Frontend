@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoaderComponent } from './shared/components/loader/loader.component';
+import { PlatformSettingsService } from './services/admin/platform-settings/platform-settings.service';
 
 @Component({
   selector: 'app-root',
@@ -10,4 +11,7 @@ import { LoaderComponent } from './shared/components/loader/loader.component';
 })
 export class AppComponent {
   title = 'QuizVerse-Frontend';
+
+  // Inject PlatformSettingsService to initialize theme
+  private readonly platformSettingsService = inject(PlatformSettingsService);
 }
