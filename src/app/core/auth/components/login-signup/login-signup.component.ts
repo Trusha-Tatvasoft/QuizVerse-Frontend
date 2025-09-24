@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { OutlineButtonComponent } from '../../../../shared/components/outline-button/outline-button.component';
 import {
   facebookButtonConfig,

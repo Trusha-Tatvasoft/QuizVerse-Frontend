@@ -3,6 +3,7 @@ import { ButtonConfig } from '../../../../shared/interfaces/button-config.interf
 import { ConfirmationDialogData } from '../../../../shared/interfaces/confirmation-dialog.interface';
 import { DynamicFormField } from '../../../../shared/interfaces/dynamic-form-field.interface';
 import { ColumnDef } from '../../../../shared/interfaces/table-component.interface';
+import { QuestionDifficultyRegexPatterns } from '../../../../utils/constants';
 
 // Header section config
 export const questionDifficultyManagementHeaderConfig = {
@@ -97,7 +98,7 @@ export const questionDifficultyFormFields: DynamicFormField[] = [
     icon: 'account_circle',
     validators: [
       Validators.required,
-      Validators.pattern(/^[A-Za-z][A-Za-z0-9 ]*$/),
+      Validators.pattern(QuestionDifficultyRegexPatterns.NAME),
       Validators.maxLength(255),
     ],
     validationMessages: {
@@ -115,7 +116,7 @@ export const questionDifficultyFormFields: DynamicFormField[] = [
     validators: [
       Validators.required,
       Validators.maxLength(500),
-      Validators.pattern(/^$|^\S[\s\S]*$/),
+      Validators.pattern(QuestionDifficultyRegexPatterns.Description),
     ],
     validationMessages: {
       required: 'Description is required.',
