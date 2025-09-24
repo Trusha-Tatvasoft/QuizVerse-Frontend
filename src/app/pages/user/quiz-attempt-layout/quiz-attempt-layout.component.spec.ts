@@ -971,8 +971,8 @@ describe('QuizAttemptLayoutComponent', () => {
           },
         ];
 
-        component.totalQuestions = component.visitedQuestions.length; // ✅ important!
-        component.currentQuestionIndex = 1; // start at Q2
+        component.totalQuestions = component.visitedQuestions.length;
+        component.currentQuestionIndex = 1;
         component.currentQuestionData = {
           questionId: 2,
           questionName: 'Question 2',
@@ -984,7 +984,7 @@ describe('QuizAttemptLayoutComponent', () => {
       });
 
       it('should go to specific question when it exists in visitedQuestions', () => {
-        component.goToQuestion(1); // Go back to Q1
+        component.goToQuestion(1);
 
         expect(component.currentQuestionIndex).toBe(0);
         expect(component.currentQuestionData.questionId).toBe(1);
@@ -1004,7 +1004,7 @@ describe('QuizAttemptLayoutComponent', () => {
 
       it('should do nothing when question does not exist in visitedQuestions', () => {
         component.visitedQuestions = []; // clear all
-        component.totalQuestions = 0; // ✅ update totalQuestions
+        component.totalQuestions = 0; // update totalQuestions
 
         component.goToQuestion(1);
 

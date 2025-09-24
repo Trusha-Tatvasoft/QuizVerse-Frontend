@@ -2,8 +2,8 @@
   padding: 1rem;
   background-color: white;
   border-radius: 0.5rem;
-  position: relative; // Add this
-  height: 100%; // Ensure container takes full height
+  position: relative;
+  height: 100%;
 
   @media (max-width: 576px) {
     padding: 0.5rem;
@@ -14,10 +14,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
   margin-bottom: 1rem;
 
-  @media (max-width: 576px) {
+  @media (max-width: 638px) {
+    flex-direction: column;
     margin-bottom: 0.5rem;
   }
 }
@@ -25,6 +25,10 @@
 .recent-battles-text {
   display: flex;
   flex-direction: column;
+  align-self: flex-start;
+  @media (max-width: 638px) {
+    margin-bottom: 1rem;
+  }
 }
 
 .recent-battles-title {
@@ -34,7 +38,7 @@
   font-size: 1.2rem;
   margin-bottom: 0.3rem;
 
-  @media (max-width: 576px) {
+  @media (max-width: 638px) {
     font-size: 1rem;
   }
 }
@@ -43,7 +47,7 @@
   font-size: 0.9rem;
   color: var(--gray-color);
 
-  @media (max-width: 576px) {
+  @media (max-width: 638px) {
     font-size: 0.8rem;
   }
 }
@@ -194,6 +198,8 @@
 
       @media (max-width: 576px) {
         font-size: 0.7rem;
+        display: flex;
+        flex-direction: column;
       }
     }
   }
@@ -207,10 +213,22 @@
 
     .battle-result-text {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       text-align: right;
       gap: 16px;
+      .battle-result-data {
+        display: flex;
+        gap: 16px;
+      }
+      @media (max-width: 476px) {
+        gap: 8px;
+        flex-direction: column;
+
+        .battle-result-data {
+          gap: 16px;
+        }
+      }
     }
 
     @media (max-width: 576px) {
