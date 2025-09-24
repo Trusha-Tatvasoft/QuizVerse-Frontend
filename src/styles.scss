@@ -615,3 +615,15 @@ app-data-table {
     color: #848484 !important;
   }
 }
+
+// notification-center
+@media (max-width: 372px) {
+  .notification-center-view {
+    .outline-button {
+      width: 100%;
+    }
+  }
+  .text-button {
+    width: 100% !important;
+  }
+}
