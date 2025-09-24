@@ -1,3 +1,4 @@
+import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
 import { ButtonConfig } from '../../../../shared/interfaces/button-config.interface';
 import { TagInputConfig } from '../../../../shared/interfaces/tag-component.interface';
 
@@ -34,4 +35,11 @@ export const defaultTagConfig: Omit<TagInputConfig, 'id' | 'label'> = {
   hasBorder: true,
   backgroundColor: 'white',
   textColor: 'black',
+};
+
+export const browseQuizHeaderConfig: PageHeaderComponent = {
+  icon: 'search',
+  title: 'Browse Quizzes',
+  subtitle: 'Discover and attempt quizzes across categories and difficulty levels',
+  theme: 'quiz',
 };

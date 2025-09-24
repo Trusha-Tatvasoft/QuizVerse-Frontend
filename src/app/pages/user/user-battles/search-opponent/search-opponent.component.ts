@@ -28,7 +28,7 @@ export class SearchOpponentComponent implements OnInit, OnDestroy {
   cancelSearchButtonConfig = cancelSearchButtonConfig;
   searchSeconds = 0;
   battleId: number | null = null;
-  opponent: MatchmakingResultDTO['opponentProfile'] | null = null;
+  opponent: PlayerProfileDTO | null = null;
   isImageError: boolean = false;
   battleData: BattleData = {
     battleName: 'Math Champions',
