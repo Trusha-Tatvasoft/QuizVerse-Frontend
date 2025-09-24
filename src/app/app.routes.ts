@@ -187,11 +187,12 @@ export const routes: Routes = [
         path: Navigations.Battles,
         title: 'Quizeverse | User Battles',
         children: [
-          { path: ``, component: UserBattlesComponent },
+          { path: `${Navigations.BattleList}`, component: UserBattlesComponent },
           {
-            path: `${Navigations.SearchOpponent}/:id`,
+            path: `${Navigations.BattleList}/${Navigations.SearchOpponent}/:id`,
             component: SearchOpponentComponent,
           },
+          { path: `${Navigations.BattleList}`, component: UserBattlesComponent },
         ],
       },
       {

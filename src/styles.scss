@@ -615,3 +615,17 @@ app-data-table {
     color: #848484 !important;
   }
 }
+
+.quiz-battle-actions {
+  app-filled-button {
+    .filled-button {
+      width: 100%;
+    }
+  }
+
+  app-outline-button {
+    .outline-button {
+      width: 100%;
+    }
+  }
+}

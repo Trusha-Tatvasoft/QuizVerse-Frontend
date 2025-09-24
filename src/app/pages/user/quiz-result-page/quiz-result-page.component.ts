@@ -32,7 +32,9 @@ export class QuizResultPageComponent implements OnInit, OnDestroy {
     // Exit fullscreen only if currently active
     if (doc.fullscreenElement) {
       if (typeof doc.exitFullscreen === 'function') {
-        doc.exitFullscreen().catch(() => {}); // avoid unhandled promise rejection
+        doc.exitFullscreen().catch((err) => {
+          this.snackbarService.showError('Failed to exit fullscreen', err);
+        });
       } else if (doc.webkitExitFullscreen) {
         doc.webkitExitFullscreen();
       } else if (doc.msExitFullscreen) {

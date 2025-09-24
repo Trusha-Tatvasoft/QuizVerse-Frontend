@@ -117,7 +117,7 @@ export const navigationItems = {
     {
       label: 'Battles',
       icon: 'sports_kabaddi',
-      route: `${Navigations.User}/${Navigations.Battles}`,
+      route: `${Navigations.User}/${Navigations.Battles}/${Navigations.BattleList}`,
     },
     {
       label: 'Tournaments',
