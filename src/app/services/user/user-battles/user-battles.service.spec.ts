@@ -6,7 +6,10 @@ import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { UserBattleLeaderboardData } from '../../../pages/user/user-battles/interface/user-battles.interface';
 import { AvailableBattle } from '../../../pages/user/user-battles/interface/quiz-battles.interface';
-import { UserRecentBattles } from '../../../pages/user/user-battles/interface/recent-battles.interface';
+import {
+  UserRecentBattlesRequestDto,
+  UserRecentBattlesResponseDto,
+} from '../../../pages/user/user-battles/interface/recent-battles.interface';
 
 describe('UserBattlesService (Jest)', () => {
   let service: UserBattlesService;
@@ -110,31 +113,72 @@ describe('UserBattlesService (Jest)', () => {
   });
 
   it('should fetch user recent battles (success)', () => {
-    const mockResponse: ApiResponse<UserRecentBattles[]> = {
+    const request: UserRecentBattlesRequestDto = { batchNumber: 1 };
+
+    const mockResponse: ApiResponse<UserRecentBattlesResponseDto> = {
       result: true,
       message: 'success',
-      data: [
-        {
-          opponent: 'Opponent1',
-          category: 'Science',
-          result: 'Won',
-          yourScore: 8,
-          opponentScore: 6,
-          xpGained: 20,
-          battleName: 'Battle XYZ',
-        },
-      ],
+      data: {
+        battles: [
+          {
+            opponent: 'Opponent1',
+            opponentFullName: 'Opponent One',
+            category: 'Science',
+            result: 'Won',
+            yourScore: 8,
+            opponentScore: 6,
+            xpGained: 20,
+            battleName: 'Battle XYZ',
+            battleDate: new Date(),
+          },
+        ],
+        hasMore: false,
+      },
       statusCode: 200,
     };
 
-    service.getUserRecentBattles().subscribe((res) => {
+    service.getUserRecentBattles(request).subscribe((res) => {
       expect(res).toEqual(mockResponse);
-      expect(res.data[0].opponent).toBe('Opponent1');
-      expect(res.data[0].result).toBe('Won');
+      expect(res.data.battles[0].opponent).toBe('Opponent1');
+      expect(res.data.battles[0].result).toBe('Won');
+      expect(res.data.hasMore).toBe(false);
     });
 
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetUserRecentBattles}`);
-    expect(req.request.method).toBe('GET');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(request);
     req.flush(mockResponse);
+  });
+
+  it('should handle error when fetching leaderboard list', () => {
+    const errorMessage = 'Internal server error';
+
+    service.getBattleLeaderboardList().subscribe({
+      next: () => fail('Expected error, but got success response'),
+      error: (err) => {
+        expect(err.status).toBe(500);
+        expect(err.statusText).toBe('Server Error');
+      },
+    });
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetBattleLeaderboardList}`);
+    req.flush(errorMessage, { status: 500, statusText: 'Server Error' });
+  });
+
+  it('should handle error when fetching recent battles', () => {
+    const errorMessage = 'Service unavailable';
+    const request: UserRecentBattlesRequestDto = { batchNumber: 1 };
+
+    service.getUserRecentBattles(request).subscribe({
+      next: () => fail('Expected error, but got success response'),
+      error: (err) => {
+        expect(err.status).toBe(503);
+        expect(err.statusText).toBe('Service Unavailable');
+      },
+    });
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetUserRecentBattles}`);
+    expect(req.request.method).toBe('POST');
+    req.flush(errorMessage, { status: 503, statusText: 'Service Unavailable' });
   });
 });

@@ -5,7 +5,11 @@ import { SnackbarService } from '../../../shared/service/snackbar/snackbar.servi
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { of, throwError } from 'rxjs';
-import { QuizStartResponse, VisitedQuestions } from './interfaces/quiz-attempt.interface';
+import {
+  QuizQuestions,
+  QuizStartResponse,
+  VisitedQuestions,
+} from './interfaces/quiz-attempt.interface';
 import { VisitedQuestionStatus } from '../../../shared/enums/quiz-attempt.enum';
 import { autoSubmitMessage, platformMessages } from '../../../utils/constants';
 import { QuizQuestionComponent } from './quiz-question/quiz-question.component';
@@ -23,7 +27,6 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { By } from '@angular/platform-browser';
 import { Navigations } from '../../../shared/enums/navigation';
 import {
   cancelButtonConfig,
@@ -913,17 +916,14 @@ describe('QuizAttemptLayoutComponent', () => {
         expect(markVisitedSpy).toHaveBeenCalled();
       }));
 
-      it('should show error when trying to go beyond last question', () => {
+      it('should save last question when trying to save last question', () => {
         component.totalQuestions = 3;
         component.currentQuestionIndex = 2; // Already at last question index
 
-        const snackbarSpy = jest.spyOn(mockSnackbarService, 'showError');
-
         component.getNextQuestion();
 
-        expect(component.currentQuestionIndex).toBe(3); // Should not increment
-        expect(snackbarSpy).toHaveBeenCalledWith(platformMessages.lastQuestion);
-        expect(mockQuizAttemptService.saveAndGetNextQuestion).not.toHaveBeenCalled();
+        expect(component.currentQuestionIndex).toBe(2);
+        expect(mockQuizAttemptService.saveAndGetNextQuestion).toHaveBeenCalled();
       });
 
       it('should handle error when loading next question fails', fakeAsync(() => {
@@ -944,189 +944,94 @@ describe('QuizAttemptLayoutComponent', () => {
         expect(snackbarSpy).toHaveBeenCalledWith('Failed to load next question');
       }));
     });
-    describe('goToPreviousQuestion', () => {
-      it('should go to previous question when previous question exists in visitedQuestions', () => {
-        component.currentQuestionIndex = 1;
+
+    describe('goToQuestion', () => {
+      let saveQuizStateSpy: jest.SpyInstance;
+
+      beforeEach(() => {
+        // Default mock visitedQuestions for navigation
         component.visitedQuestions = [
           {
-            questionNo: 1,
             questionId: 1,
-            questionTypeName: 'multiple_choice',
-            questionName: 'Question 1',
-            options: [],
             givenAnswer: 'A',
+            questionName: 'Question 1',
+            questionNo: 1,
+            questionTypeName: 'Multiple Choice',
             reviewStatus: VisitedQuestionStatus.answered,
+            options: [],
           },
           {
-            questionNo: 2,
             questionId: 2,
-            questionTypeName: 'multiple_choice',
-            questionName: 'Question 2',
-            options: [],
             givenAnswer: 'B',
+            questionNo: 2,
+            questionTypeName: 'Fill in the blanks',
+            questionName: 'Question 2',
             reviewStatus: VisitedQuestionStatus.answered,
+            options: [],
           },
-        ] as VisitedQuestions[];
+        ];
 
-        const markVisitedSpy = jest.spyOn(component, 'markVisited');
-        const saveQuizStateSpy = jest.spyOn(component as any, 'saveQuizState');
+        component.totalQuestions = component.visitedQuestions.length; // ✅ important!
+        component.currentQuestionIndex = 1; // start at Q2
+        component.currentQuestionData = {
+          questionId: 2,
+          questionName: 'Question 2',
+          questionTypeName: 'Fill in the blanks',
+          options: [],
+        } as QuizQuestions;
 
-        component.goToPreviousQuestion();
+        saveQuizStateSpy = jest.spyOn(component as any, 'saveQuizState');
+      });
+
+      it('should go to specific question when it exists in visitedQuestions', () => {
+        component.goToQuestion(1); // Go back to Q1
 
         expect(component.currentQuestionIndex).toBe(0);
-        expect(markVisitedSpy).toHaveBeenCalled();
+        expect(component.currentQuestionData.questionId).toBe(1);
         expect(saveQuizStateSpy).toHaveBeenCalled();
       });
 
-      it('should handle previous question with empty givenAnswer', () => {
-        component.currentQuestionIndex = 1;
-        component.visitedQuestions = [
-          {
-            questionNo: 1,
-            questionId: 1,
-            questionTypeName: 'multiple_choice',
-            questionName: 'Question 1',
-            options: [],
-            givenAnswer: '', // Empty givenAnswer
-            reviewStatus: VisitedQuestionStatus.visited,
-          },
-          {
-            questionNo: 2,
-            questionId: 2,
-            questionTypeName: 'multiple_choice',
-            questionName: 'Question 2',
-            options: [],
-            givenAnswer: 'B',
-            reviewStatus: VisitedQuestionStatus.answered,
-          },
-        ] as VisitedQuestions[];
+      it('should handle empty givenAnswer gracefully', () => {
+        // Override to make Q1 empty
+        component.visitedQuestions[0].givenAnswer = '';
 
-        const markVisitedSpy = jest.spyOn(component, 'markVisited');
-        const saveQuizStateSpy = jest.spyOn(component as any, 'saveQuizState');
-
-        component.goToPreviousQuestion();
+        component.goToQuestion(1); // Go back to Q1
 
         expect(component.currentQuestionIndex).toBe(0);
-        expect(markVisitedSpy).toHaveBeenCalledWith(expect.any(Object), '', 1);
+        expect(component.currentQuestionData.questionId).toBe(1);
         expect(saveQuizStateSpy).toHaveBeenCalled();
       });
 
-      it('should handle previous question with null givenAnswer', () => {
-        component.currentQuestionIndex = 1;
-        component.visitedQuestions = [
-          {
-            questionNo: 1,
-            questionId: 1,
-            questionTypeName: 'multiple_choice',
-            questionName: 'Question 1',
-            options: [],
-            givenAnswer: null as any, // Null givenAnswer
-            reviewStatus: VisitedQuestionStatus.visited,
-          },
-          {
-            questionNo: 2,
-            questionId: 2,
-            questionTypeName: 'multiple_choice',
-            questionName: 'Question 2',
-            options: [],
-            givenAnswer: 'B',
-            reviewStatus: VisitedQuestionStatus.answered,
-          },
-        ] as VisitedQuestions[];
+      it('should do nothing when question does not exist in visitedQuestions', () => {
+        component.visitedQuestions = []; // clear all
+        component.totalQuestions = 0; // ✅ update totalQuestions
 
-        const markVisitedSpy = jest.spyOn(component, 'markVisited');
-        const saveQuizStateSpy = jest.spyOn(component as any, 'saveQuizState');
+        component.goToQuestion(1);
 
-        component.goToPreviousQuestion();
-
-        expect(component.currentQuestionIndex).toBe(0);
-        expect(markVisitedSpy).toHaveBeenCalledWith(expect.any(Object), '', 1);
-        expect(saveQuizStateSpy).toHaveBeenCalled();
-      });
-
-      it('should handle previous question with undefined givenAnswer', () => {
-        component.currentQuestionIndex = 1;
-        component.visitedQuestions = [
-          {
-            questionNo: 1,
-            questionId: 1,
-            questionTypeName: 'multiple_choice',
-            questionName: 'Question 1',
-            options: [],
-            givenAnswer: undefined as any, // Undefined givenAnswer
-            reviewStatus: VisitedQuestionStatus.visited,
-          },
-          {
-            questionNo: 2,
-            questionId: 2,
-            questionTypeName: 'multiple_choice',
-            questionName: 'Question 2',
-            options: [],
-            givenAnswer: 'B',
-            reviewStatus: VisitedQuestionStatus.answered,
-          },
-        ] as VisitedQuestions[];
-
-        const markVisitedSpy = jest.spyOn(component, 'markVisited');
-        const saveQuizStateSpy = jest.spyOn(component as any, 'saveQuizState');
-
-        component.goToPreviousQuestion();
-
-        expect(component.currentQuestionIndex).toBe(0);
-        expect(markVisitedSpy).toHaveBeenCalledWith(expect.any(Object), '', 1);
-        expect(saveQuizStateSpy).toHaveBeenCalled();
-      });
-
-      it('should not go to previous question when already at first question', () => {
-        component.currentQuestionIndex = 0; // Already at first question
-        component.visitedQuestions = [
-          {
-            questionNo: 1,
-            questionId: 1,
-            questionTypeName: 'multiple_choice',
-            questionName: 'Question 1',
-            options: [],
-            givenAnswer: 'A',
-            reviewStatus: VisitedQuestionStatus.answered,
-          },
-        ] as VisitedQuestions[];
-
-        const markVisitedSpy = jest.spyOn(component, 'markVisited');
-        const saveQuizStateSpy = jest.spyOn(component as any, 'saveQuizState');
-
-        component.goToPreviousQuestion();
-
-        expect(component.currentQuestionIndex).toBe(0); // Should remain at 0
-        expect(markVisitedSpy).not.toHaveBeenCalled(); // Should not call markVisited
-        expect(saveQuizStateSpy).not.toHaveBeenCalled(); // Should not call saveQuizState
+        expect(component.currentQuestionIndex).toBe(1); // stays at Q2 (no change)
+        expect(saveQuizStateSpy).not.toHaveBeenCalled();
       });
     });
 
-    it('should go to specific question', fakeAsync(() => {
-      const mockResponse = {
-        statusCode: 200,
-        result: true,
-        data: {
-          quizQuestionId: 3,
-          questionType: 'multiple_choice',
-          questionName: 'Question 3',
-          options: [
-            { optionId: 1, key: 'option', value: 'A' },
-            { optionId: 2, key: 'option', value: 'B' },
-          ],
-        },
-      };
+    describe('goToPreviousQuestion', () => {
+      it('should delegate to goToQuestion with previous index', () => {
+        const goToQuestionSpy = jest.spyOn(component, 'goToQuestion');
+        component.currentQuestionIndex = 2;
 
-      mockQuizAttemptService.saveAndGetNextQuestion.mockReturnValue(of(mockResponse));
-      const markVisitedSpy = jest.spyOn(component, 'markVisited');
+        component.goToPreviousQuestion();
 
-      component.gotoQuestion(3);
-      tick();
+        expect(goToQuestionSpy).toHaveBeenCalledWith(2); // 1-based questionNo = 2
+      });
 
-      expect(component.currentQuestionIndex).toBe(2);
-      expect(mockQuizAttemptService.saveAndGetNextQuestion).toHaveBeenCalled();
-      expect(markVisitedSpy).toHaveBeenCalled();
-    }));
+      it('should still call goToQuestion with 0 when already at first question', () => {
+        const goToQuestionSpy = jest.spyOn(component, 'goToQuestion');
+        component.currentQuestionIndex = 0;
+
+        component.goToPreviousQuestion();
+
+        expect(goToQuestionSpy).toHaveBeenCalledWith(0); // since implementation calls regardless
+      });
+    });
   });
 
   describe('markForReviewQuestion', () => {

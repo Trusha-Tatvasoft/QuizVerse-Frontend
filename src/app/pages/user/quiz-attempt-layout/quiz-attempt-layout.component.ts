@@ -10,7 +10,6 @@ import {
 } from './interfaces/quiz-attempt.interface';
 import {
   disabledPreviousButtonConfig,
-  disabledSaveAndNextButtonConfig,
   getquestionNoConfigWithLabel,
   markedFlagButtonConfig,
   markedForReviewButtonConfig,
@@ -19,6 +18,7 @@ import {
   previousButtonConfig,
   resumeQuizDialog,
   saveAndNextButtonConfig,
+  saveButtonConfig,
   submitButtonConfig,
   submitQuizDialog,
 } from './configs/quiz-attempt.config';
@@ -53,11 +53,13 @@ import {
   markForReviewQuestion,
   markVisited,
 } from '../../../utils/quiz-play-helper-functions.utils';
+import { DisableQuizShortcutsDirective } from '../../../shared/Directives/disable-quiz-shortcuts.directive';
 
 @Component({
   selector: 'app-quiz-attempt-layout',
   standalone: true,
   imports: [
+    DisableQuizShortcutsDirective,
     ProgressBarComponent,
     FilledButtonComponent,
     OutlineButtonComponent,
@@ -88,7 +90,7 @@ export class QuizAttemptLayoutComponent {
 
   nextButtonConfig = saveAndNextButtonConfig;
   previousButtonConfig = previousButtonConfig;
-  disabledNextButtonConfig = disabledSaveAndNextButtonConfig;
+  saveButtonConfig = saveButtonConfig;
   disabledPreviousButtonConfig = disabledPreviousButtonConfig;
   markForReviewButtonConfig = markForReviewButtonConfig;
   markedForReviewButtonConfig = markedForReviewButtonConfig;
@@ -204,47 +206,33 @@ export class QuizAttemptLayoutComponent {
 
   getNextQuestion(): void {
     this.currentQuestionIndex++;
-    if (this.currentQuestionIndex + 1 <= this.totalQuestions)
-      this.loadQuestion(this.currentQuestionIndex + 1, this.currentQuestionIndex);
-    else return this.snackbar.showError(platformMessages.lastQuestion);
+    const isLast = this.currentQuestionIndex + 1 > this.totalQuestions;
+    this.handleQuestionNavigation(this.currentQuestionIndex + 1, this.currentQuestionIndex, isLast);
   }
 
-  /**  Navigate to previous question */
-  goToPreviousQuestion(): void {
-    const prevIndex = this.currentQuestionIndex - 1;
+  /** Navigate to a specific question */
+  goToQuestion(questionNo: number): void {
+    const targetIndex = questionNo - 1;
 
-    if (prevIndex >= 0) {
-      const previousQuestion = this.visitedQuestions.find(
-        (vq) => vq.questionNo === prevIndex + 1, // questionNo is usually 1-based
-      );
+    if (targetIndex >= 0 && targetIndex < this.totalQuestions) {
+      const targetQuestion = this.visitedQuestions.find((vq) => vq.questionNo === questionNo);
 
-      if (previousQuestion) {
-        if (this.currentQuestionIndex === this.totalQuestions - 1) {
-          this.gotoQuestion(prevIndex + 1);
-        } else {
-          this.currentQuestionIndex = prevIndex;
-          this.currentQuestionData = {
-            questionId: previousQuestion.questionId,
-            questionName: previousQuestion.questionName,
-            questionTypeName: previousQuestion.questionTypeName,
-            options: previousQuestion?.options,
-          };
-          const givenAnswer = previousQuestion ? previousQuestion.givenAnswer : '';
-          this.markVisited(
-            this.currentQuestionData,
-            givenAnswer ?? '',
-            this.currentQuestionIndex + 1,
-          );
-          this.saveQuizState();
-        }
-      } else this.gotoQuestion(prevIndex + 1);
+      if (targetQuestion) {
+        this.currentQuestionIndex = targetIndex;
+        this.currentQuestionData = {
+          questionId: targetQuestion.questionId,
+          questionName: targetQuestion.questionName,
+          questionTypeName: targetQuestion.questionTypeName,
+          options: targetQuestion.options,
+        };
+        this.saveQuizState();
+      }
     }
   }
 
-  gotoQuestion(questionNo: number): void {
-    const currentQuestionNo = this.currentQuestionIndex + 1;
-    this.currentQuestionIndex = questionNo - 1;
-    this.loadQuestion(this.currentQuestionIndex + 1, currentQuestionNo);
+  /** Navigate to previous question */
+  goToPreviousQuestion(): void {
+    this.goToQuestion(this.currentQuestionIndex); // since currentQuestionIndex is 0-based
   }
 
   /**  Tag config helper */
@@ -403,7 +391,13 @@ export class QuizAttemptLayoutComponent {
     this.closeFullscreen();
   }
 
-  private loadQuestion(nextQuestionNumber: number, currentQuestionNo: number): void {
+  private handleQuestionNavigation(
+    nextQuestionNumber: number,
+    currentQuestionNo: number,
+    isLast: boolean = false,
+  ): void {
+    if (isLast) this.currentQuestionIndex--;
+
     const payLoad: SaveAndNextQuestionRequest = {
       quizId: this.decodedId,
       currentQuestionId: this.currentQuestionData.questionId,
@@ -411,12 +405,17 @@ export class QuizAttemptLayoutComponent {
       nextQuestionNumber,
     };
 
+    const existing = this.visitedQuestions.find((q) => q.questionNo === currentQuestionNo);
+    if (existing) {
+      existing.reviewStatus = VisitedQuestionStatus.saved;
+    }
+
     this.quizAttemptService
       .saveAndGetNextQuestion(payLoad)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {
-          if (res.statusCode === 200 && res.result && res.data) {
+          if (!isLast && res.statusCode === 200 && res.result && res.data) {
             this.currentQuestionData = {
               questionId: res.data.quizQuestionId,
               questionName: res.data.questionName,
@@ -427,8 +426,12 @@ export class QuizAttemptLayoutComponent {
             const thisQuestion = this.visitedQuestions.find(
               (vq) => vq.questionNo === nextQuestionNumber,
             );
-            const givenAnswer = thisQuestion ? thisQuestion.givenAnswer : '';
-            this.markVisited(this.currentQuestionData, givenAnswer ?? '', nextQuestionNumber);
+            const givenAnswer = thisQuestion !== undefined ? thisQuestion.givenAnswer : '';
+            this.markVisited(
+              this.currentQuestionData,
+              givenAnswer !== undefined ? givenAnswer : '',
+              nextQuestionNumber,
+            );
           }
         },
         error: (err) => this.snackbar.showError(err.error.message),

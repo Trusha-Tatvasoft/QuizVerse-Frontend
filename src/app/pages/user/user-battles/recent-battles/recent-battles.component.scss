@@ -1,0 +1,225 @@
+.recent-battles-container {
+  padding: 1rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  position: relative; // Add this
+  height: 100%; // Ensure container takes full height
+
+  @media (max-width: 576px) {
+    padding: 0.5rem;
+  }
+}
+
+.recent-battles-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+
+  @media (max-width: 576px) {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.recent-battles-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.recent-battles-title {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+
+  @media (max-width: 576px) {
+    font-size: 1rem;
+  }
+}
+
+.recent-battles-subtitle {
+  font-size: 0.9rem;
+  color: var(--gray-color);
+
+  @media (max-width: 576px) {
+    font-size: 0.8rem;
+  }
+}
+
+.no-records {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  color: var(--black-color);
+  font-size: 1.2rem;
+  text-align: center;
+
+  @media (max-width: 576px) {
+    padding: 1rem 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+.recent-battle-records {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  touch-action: none;
+}
+
+.recent-battles-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.5rem;
+
+  &:hover {
+    background: #f3f4f6;
+  }
+
+  .profile-wrapper {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    margin-right: 0.8rem;
+
+    .profile-pic,
+    .profile-fallback {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      background: #e5e7eb;
+      color: #374151;
+      object-fit: cover;
+
+      @media (max-width: 576px) {
+        font-size: 0.8rem;
+      }
+    }
+
+    .profile-fallback {
+      &.bg-avatar-0 {
+        background-color: #ffb703;
+        color: #000;
+      }
+
+      &.bg-avatar-1 {
+        background-color: #fb8500;
+        color: #fff;
+      }
+
+      &.bg-avatar-2 {
+        background-color: #219ebc;
+        color: #fff;
+      }
+
+      &.bg-avatar-3 {
+        background-color: #8ecae6;
+        color: #000;
+      }
+
+      &.bg-avatar-4 {
+        background-color: #ff006e;
+        color: #fff;
+      }
+
+      &.bg-avatar-5 {
+        background-color: #8338ec;
+        color: #fff;
+      }
+
+      &.bg-avatar-6 {
+        background-color: #3a86ff;
+        color: #fff;
+      }
+
+      &.bg-avatar-7 {
+        background-color: #06d6a0;
+        color: #000;
+      }
+
+      &.bg-avatar-8 {
+        background-color: #ef476f;
+        color: #fff;
+      }
+
+      &.bg-avatar-9 {
+        background-color: #ffd166;
+        color: #000;
+      }
+
+      &.bg-avatar-10 {
+        background-color: #118ab2;
+        color: #fff;
+      }
+
+      &.bg-avatar-11 {
+        background-color: #073b4c;
+        color: #fff;
+      }
+    }
+
+    @media (max-width: 576px) {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .user-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .username {
+      font-weight: 600;
+
+      @media (max-width: 576px) {
+        font-size: 0.9rem;
+      }
+    }
+
+    .meta {
+      font-size: 0.85rem;
+      color: #888;
+
+      @media (max-width: 576px) {
+        font-size: 0.7rem;
+      }
+    }
+  }
+
+  .battle-result {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    min-width: 120px;
+
+    .battle-result-text {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: right;
+      gap: 16px;
+    }
+
+    @media (max-width: 576px) {
+      min-width: 80px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    padding: 0.5rem 0.6rem;
+    gap: 0.5rem;
+  }
+}
