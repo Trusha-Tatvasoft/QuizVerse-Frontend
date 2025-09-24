@@ -1,6 +1,7 @@
 import { LazyTab } from '../../../../shared/interfaces/tab-component.interface';
 import { UserLeaderboardStats } from '../interfaces/user-leaderboard.interface';
 import { tabLazyComponentMap } from '../../../../utils/tab-component-lazy-map';
+import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
 
 export const defaultUserLeaderboardStats: UserLeaderboardStats = {
   globalRank: 0,
@@ -34,3 +35,10 @@ export const defaultUserLeaderboardTabs: LazyTab[] = [
     loadChildren: tabLazyComponentMap['monthly'],
   },
 ];
+
+export const leaderboardHeaderConfig: PageHeaderComponent = {
+  icon: 'emoji_events',
+  title: 'Leaderboard',
+  subtitle: 'See top players, scores, and your rank in the competition',
+  theme: 'admin',
+};

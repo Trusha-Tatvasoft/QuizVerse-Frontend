@@ -1,6 +1,6 @@
 export enum BadgeType {
   Bronze = 1,
-  Silver = 2,
-  Gold = 3,
-  Platinum = 4,
+  Gold = 2,
+  Platinum = 3,
+  Silver = 4,
 }
