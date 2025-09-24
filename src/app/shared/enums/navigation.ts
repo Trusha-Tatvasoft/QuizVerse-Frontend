@@ -28,12 +28,15 @@ export enum Navigations {
   Categories = 'quiz-categories',
   Difficulties = 'difficulty-levels',
   BattlesAdmin = 'battle-management',
+  TournamentsAdmin = 'tournament-management',
   QuestionPool = 'questions-pool',
   QuestionDifficulty = 'question-difficulty',
   EmailTemplates = 'email-templates',
   Settings = 'platform-settings',
   AiConfig = 'ai',
   Finance = 'financial-management',
+  ContentModeration = 'content-moderation',
+
   Notifications = 'notification-center',
 
   Unauthorized = 'unauthorized',

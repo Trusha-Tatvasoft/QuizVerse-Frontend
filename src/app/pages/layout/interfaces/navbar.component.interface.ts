@@ -8,3 +8,9 @@ export interface Notifications {
   read: boolean;
   tagConfig: TagInputConfig;
 }
+export interface NavbarData {
+  progressPercentage: number | null;
+  currentUserXp: number | null;
+  profilePic: string | null;
+  notificationCount: number;
+}

@@ -121,6 +121,7 @@ export enum EndPoints {
   SendOtp = 'UserProfile/send-otp-to-user',
   VerifyOtp = 'UserProfile/verify-otp',
   UpdateUserProfile = 'UserProfile/update-user-profile',
+  NavbarData = 'UserProfile/get-user-navbar-data',
   // #endregion
 
   // #region PlateformSetting
@@ -155,4 +156,10 @@ export enum EndPoints {
   QuizRating = 'Quiz/quiz-rating',
   SubmitQuizRating = 'Quiz/submit-quiz-rating',
   //  #endregion
+
+  //#region Notification Center
+  NotificationCenter = 'NotificationCenter/get-all-notifications',
+  MarkAsAllRead = 'NotificationCenter/mark-as-all-read',
+  MarkAsRead = 'NotificationCenter/mark-read',
+  //#endregion
 }
