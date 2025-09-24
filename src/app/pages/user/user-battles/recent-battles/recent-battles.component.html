@@ -9,15 +9,18 @@
     <div
       class="filters flex sm:flex-row flex-col self-end items-center mb-[6px] sm:gap-3 gap-1 sm:w-100 w-full"
     >
+      <!-- Battle Result Filter -->
       <mat-form-field appearance="outline" class="filter-select" [floatLabel]="'auto'">
         <mat-select
           [value]="selectedBattleFilter"
           (selectionChange)="battleFilterChanged($event.value)"
         >
           <mat-option [value]="0">All Battles</mat-option>
-          <mat-option [value]="battleFilterType.won">Won</mat-option>
-          <mat-option [value]="battleFilterType.lost">Lost</mat-option>
-          <mat-option [value]="battleFilterType.draw">Draw</mat-option>
+          @for (option of battleFilterOptions; track option.value) {
+            <mat-option [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          }
         </mat-select>
       </mat-form-field>
 
@@ -28,12 +31,11 @@
           (selectionChange)="timeFilterChanged($event.value)"
         >
           <mat-option [value]="0">All Time</mat-option>
-          <mat-option [value]="battleTimeFilterType.last_2_Days">Last 2 Days</mat-option>
-          <mat-option [value]="battleTimeFilterType.last_7_Days">Last 7 Days</mat-option>
-          <mat-option [value]="battleTimeFilterType.current_month">This Month</mat-option>
-          <mat-option [value]="battleTimeFilterType.last_quarter">Last Quarter</mat-option>
-          <mat-option [value]="battleTimeFilterType.current_year">This Year</mat-option>
-          <mat-option [value]="battleTimeFilterType.last_year">Last Year</mat-option>
+          @for (option of battleTimeFilterOptions; track option.value) {
+            <mat-option [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>

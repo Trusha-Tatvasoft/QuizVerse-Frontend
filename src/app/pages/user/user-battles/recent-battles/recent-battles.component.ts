@@ -14,7 +14,9 @@ import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.se
 import { UserBattlesService } from '../../../../services/user/user-battles/user-battles.service';
 import { Subject, takeUntil } from 'rxjs';
 import {
+  BattleFilterDisplayNames,
   BattleFilterType,
+  BattleTimeFilterDisplayNames,
   BattleTimeFilterType,
 } from '../../../../shared/enums/user-recent-battle.enum';
 import {
@@ -52,6 +54,15 @@ export class RecentBattlesComponent {
   currentStart = 0; // Starting index of visible window
   battleFilterType = BattleFilterType;
   battleTimeFilterType = BattleTimeFilterType;
+  battleFilterOptions = Object.entries(BattleFilterDisplayNames).map(([value, label]) => ({
+    value: Number(value),
+    label,
+  }));
+
+  battleTimeFilterOptions = Object.entries(BattleTimeFilterDisplayNames).map(([value, label]) => ({
+    value: Number(value),
+    label,
+  }));
   selectedBattleFilter = 0; // Default filter to show only won battles
   selectedTimeFilter = 0; // Default time filter to current year
   batchNumber = 1; // Current batch number for pagination
@@ -231,11 +242,6 @@ export class RecentBattlesComponent {
     return `bg-avatar-${index}`;
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next(); // Complete all subscriptions
-    this.destroy$.complete();
-  }
-
   // Handle mouse wheel scrolling
   onWheel(event: WheelEvent): void {
     event.preventDefault();
@@ -263,6 +269,11 @@ export class RecentBattlesComponent {
     const items = this.getItemElements();
     const touchEndIndex = this.findClosestIndex(items, touchEndY);
     this.moveWindowBy(this.touchStartIndex - touchEndIndex); // Scroll based on touch swipe
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(); // Complete all subscriptions
+    this.destroy$.complete();
   }
 
   // Get all recent battle DOM items
