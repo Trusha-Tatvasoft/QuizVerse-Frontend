@@ -585,17 +585,12 @@ export function autoSubmitMessage(reason: string): string {
 // #endregion
 
 // #registrer component pattern
-export class RegisterRegexPatterns {
+export class RegexPatterns {
   static readonly NAME = /^[A-Za-z0-9][A-Za-z0-9 .'-]*$/;
   static readonly USERNAME = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:,.<>\/?\\|~]+$/;
   static readonly EMAIL = /^[^\s][a-zA-Z0-9._%+-]*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
   static readonly PASSWORD = /^(?=\S*$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/;
-}
-// #endregion
-
-// #question difficulty component pattern
-export class QuestionDifficultyRegexPatterns {
-  static readonly NAME = /^[A-Za-z][A-Za-z0-9 ]*$/;
-  static readonly Description = /^$|^\S[\s\S]*$/;
+  static readonly DESCRIPTION = /^$|^\S[\s\S]*$/;
+  static readonly QUIZ_DIFFICULTY_NAME = /^[A-Za-z][A-Za-z0-9 ]*$/;
 }
 // #endregion
