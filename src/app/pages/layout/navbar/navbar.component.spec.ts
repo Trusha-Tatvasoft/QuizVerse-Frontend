@@ -251,15 +251,15 @@ describe('NavbarComponent', () => {
     expect(closeSpy).toHaveBeenCalled();
   });
 
-  it('should navigate to BrowseQuizzes on browseQuizRedirect()', () => {
+  it('should navigate to get started button on getStartedRedirect()', () => {
     const navSpy = jest.spyOn(component['router'], 'navigate');
-    component.browseQuizRedirect();
-    expect(navSpy).toHaveBeenCalledWith([Navigations.BrowseQuizzes]);
+    component.getStartedRedirect();
+    expect(navSpy).toHaveBeenCalledWith([Navigations.Login]);
   });
 
   it('should navigate to Login on loginRedirect()', () => {
     const navSpy = jest.spyOn(component['router'], 'navigate');
-    component.loginRedirect();
+    component.signInRedirect();
     expect(navSpy).toHaveBeenCalledWith([Navigations.Login]);
   });
 

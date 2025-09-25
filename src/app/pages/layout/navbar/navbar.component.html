@@ -183,11 +183,11 @@
     <div class="navbar__guest">
       <app-text-button
         [textButtonConfig]="signInButton"
-        (buttonClicked)="loginRedirect()"
+        (buttonClicked)="signInRedirect()"
       ></app-text-button>
       <app-filled-button
         [filledButtonConfig]="getStartedButton"
-        (buttonClicked)="browseQuizRedirect()"
+        (buttonClicked)="getStartedRedirect()"
       ></app-filled-button>
     </div>
   }

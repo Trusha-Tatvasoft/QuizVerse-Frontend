@@ -43,6 +43,7 @@ import { SnackbarService } from '../../../shared/service/snackbar/snackbar.servi
 import { environment } from '../../../../environments/environment.dev';
 import { TimeAgoPipe } from '../../../shared/pipes/time-ago/time-ago.pipe';
 import { UserProfileService } from '../../../services/user/user-profile/user-profile.service';
+import { selectedTabIndexSignal } from '../../../core/auth/components/login-signup/login-signup.component';
 
 @Component({
   selector: 'app-navbar',
@@ -110,7 +111,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.role = role;
     });
     this.loadPlatformConfig();
-    this.loadUserData();
+
+    if (this.isLogin) {
+      this.loadUserData();
+    }
 
     this.userProfileService.profileUpdated$.pipe(takeUntil(this.destroy$)).subscribe((updated) => {
       if (updated) {
@@ -146,12 +150,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
-  browseQuizRedirect() {
-    this.router.navigate([Navigations.BrowseQuizzes]);
+  getStartedRedirect() {
+    this.router.navigate([Navigations.Login]);
+    selectedTabIndexSignal.set(1);
   }
 
-  loginRedirect(): void {
+  signInRedirect(): void {
     this.router.navigate([Navigations.Login]);
+    selectedTabIndexSignal.set(0);
   }
 
   toggleSidebar(): void {
@@ -193,6 +199,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   navigateToDashboard(): void {
     if (!this.isLogin) {
       this.router.navigate([Navigations.Login]);
+      selectedTabIndexSignal.set(0);
       return;
     }
 

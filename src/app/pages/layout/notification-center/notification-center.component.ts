@@ -24,7 +24,7 @@ import { MatFormField, MatSelectModule } from '@angular/material/select';
 import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
 import { enumToCategoryList, typeList } from './notification-center.comonent.mapper';
 import { AuthService } from '../../../core/auth/services/auth.service';
-import { roles } from '../../../utils/constants';
+import { debounceTimeValue, roles } from '../../../utils/constants';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { Notifications } from '../interfaces/navbar.component.interface';
 
@@ -99,7 +99,7 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
 
     // search listener
     this.searchSubject$
-      .pipe(debounceTime(400), distinctUntilChanged(), takeUntil(this.destroy$))
+      .pipe(debounceTime(debounceTimeValue), distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe(() => {
         this.fetchNotifications();
       });
