@@ -69,6 +69,7 @@ export class QuizCategoriesManagementComponent implements OnInit, OnDestroy {
   private readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {
+    this.getFilteredData();
     this.fetchQuizCategories();
   }
 
@@ -80,7 +81,6 @@ export class QuizCategoriesManagementComponent implements OnInit, OnDestroy {
   }
 
   onSearchInputChange(value: string): void {
-    this.getFilteredData();
     this.searchSubject$.next(value);
   }
 

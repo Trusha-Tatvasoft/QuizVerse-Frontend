@@ -223,10 +223,40 @@ describe('QuestionPoolComponent (Jest)', () => {
   });
 
   it('should debounce search input and call fetch after debounce time', fakeAsync(() => {
-    jest.spyOn(component, 'fetchQuestionPoolList');
+    const fetchSpy = jest.spyOn(component, 'fetchQuestionPoolList');
+
+    fixture.detectChanges();
+    // Reset after ngOnInit call
+    fetchSpy.mockClear();
+
+    component.onSearchInputChange('t');
+    component.onSearchInputChange('te');
+    component.onSearchInputChange('tes');
     component.onSearchInputChange('test');
-    tick(debounceTimeValue + 1);
-    expect(component.fetchQuestionPoolList).toHaveBeenCalled();
+
+    tick(debounceTimeValue - 1);
+    expect(fetchSpy).not.toHaveBeenCalled();
+
+    tick(1);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+  }));
+
+  it('should debounce search input and call fetch after debounce time', fakeAsync(() => {
+    const fetchSpy = jest.spyOn(component, 'fetchQuestionPoolList');
+
+    // Skip ngOnInit, just set up search subscription
+    component.getFilteredQuestions();
+
+    component.onSearchInputChange('t');
+    component.onSearchInputChange('te');
+    component.onSearchInputChange('tes');
+    component.onSearchInputChange('test');
+
+    tick(debounceTimeValue - 1);
+    expect(fetchSpy).not.toHaveBeenCalled();
+
+    tick(1);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
   }));
 
   it('should apply selected filters to the request in fetchQuestionPoolList', () => {

@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { QuizCreationStep3Option2Component } from './quiz-creation-step-3-option-2.component';
 import { QuizCreationService } from '../../../../../services/admin/quiz-management/quiz-creation/quiz-creation.service';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
@@ -142,12 +142,38 @@ describe('QuizCreationStep3Option2Component', () => {
   });
 
   describe('searchInputChangeOption2', () => {
-    it('should update searchValue and page number', () => {
+    it('should update searchValue and page number after debounce', fakeAsync(() => {
       const fetchSpy = jest.spyOn(component, 'fetchQuestions');
+
       component.searchInputChangeOption2('test');
-      expect(component.searchValue).toBe('test');
+
+      expect(fetchSpy).not.toHaveBeenCalled();
+
+      tick(500);
+
       expect(component.pagination().pageNumber).toBe(1);
       expect(fetchSpy).toHaveBeenCalled();
+    }));
+
+    describe('searchInputChangeOption2', () => {
+      it('should debounce multiple rapid inputs and only fetch once', fakeAsync(() => {
+        const fetchSpy = jest.spyOn(component, 'fetchQuestions');
+
+        component.searchInputChangeOption2('t');
+        component.searchInputChangeOption2('te');
+        component.searchInputChangeOption2('tes');
+        component.searchInputChangeOption2('test');
+
+        // Before debounce
+        tick(499);
+        expect(fetchSpy).not.toHaveBeenCalled();
+
+        // After debounce (500ms)
+        tick(1);
+
+        expect(fetchSpy).toHaveBeenCalledTimes(1);
+        expect(component.pagination().pageNumber).toBe(1);
+      }));
     });
   });
 

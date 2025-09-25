@@ -3,7 +3,7 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 import { CardInputConfig } from '../../../shared/interfaces/card-component.interface';
 import { CardComponent } from '../../../shared/components/card/card.component';
 import { QuizManagementService } from '../../../services/admin/quiz-management/quiz-management.service';
-import { debounceTime, forkJoin, map, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, forkJoin, map, Subject, takeUntil } from 'rxjs';
 import { QuizManagementSummary } from './interfaces/quiz-management-summary.interface';
 import { CardColor } from '../../../utils/types/card-component.type';
 import { SearchInputComponent } from '../../../shared/components/search-input/search-input.component';
@@ -107,6 +107,7 @@ export class QuizManagementComponent implements OnInit {
     }));
 
   ngOnInit(): void {
+    this.getFilteredQuiz();
     this.loadDropdowns();
     this.getQuizManagementStats();
     this.fetchQuizzes();
@@ -199,14 +200,15 @@ export class QuizManagementComponent implements OnInit {
   }
 
   getFilteredQuiz(): void {
-    this.searchSubject.pipe(debounceTime(debounceTimeValue)).subscribe(() => {
-      this.pagination.set({ ...this.pagination(), pageNumber: 1 });
-      this.fetchQuizzes();
-    });
+    this.searchSubject
+      .pipe(debounceTime(debounceTimeValue), distinctUntilChanged(), takeUntil(this.destroy))
+      .subscribe(() => {
+        this.pagination.set({ ...this.pagination(), pageNumber: 1 });
+        this.fetchQuizzes();
+      });
   }
 
   onSearchInputChange(value: string): void {
-    this.getFilteredQuiz();
     this.searchSubject.next(value);
   }
 

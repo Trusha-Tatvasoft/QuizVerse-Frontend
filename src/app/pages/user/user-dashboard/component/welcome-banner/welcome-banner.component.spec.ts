@@ -8,24 +8,33 @@ import {
   browseQuizzesButtonConfig,
   quickBattleButtonConfig,
 } from '../../configs/dashboard-buttons.config';
+import { Router } from '@angular/router';
+import { Navigations } from '../../../../../shared/enums/navigation';
 
-// Mock FilledButtonComponent
+// Mock FilledButtonComponent (standalone friendly)
 @Component({ selector: 'app-filled-button', template: '' })
 class MockFilledButtonComponent {
   @Input() filledButtonConfig: any;
 }
 
-describe('WelcomeBannerComponent', () => {
+describe('WelcomeBannerComponent (standalone)', () => {
   let component: WelcomeBannerComponent;
   let fixture: any;
+  let router: jest.Mocked<Router>;
 
   beforeEach(async () => {
+    const routerMock: jest.Mocked<Router> = {
+      navigate: jest.fn(),
+    } as any;
+
     await TestBed.configureTestingModule({
       imports: [MatIconModule, WelcomeBannerComponent, MockFilledButtonComponent],
+      providers: [{ provide: Router, useValue: routerMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(WelcomeBannerComponent);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router) as jest.Mocked<Router>;
   });
 
   it('should create the component', () => {
@@ -57,5 +66,23 @@ describe('WelcomeBannerComponent', () => {
 
     expect(firstButton.filledButtonConfig).toEqual(quickBattleButtonConfig);
     expect(secondButton.filledButtonConfig).toEqual(browseQuizzesButtonConfig);
+  });
+
+  it('should navigate to quick battle when quickBattleNavigate is called', () => {
+    component.quickBattleNavigate();
+    expect(router.navigate).toHaveBeenCalledWith([
+      Navigations.User,
+      Navigations.Battles,
+      Navigations.BattleList,
+    ]);
+  });
+
+  it('should navigate to browse quizzes when browseQuizNavigate is called', () => {
+    component.browseQuizNavigate();
+    expect(router.navigate).toHaveBeenCalledWith([
+      Navigations.User,
+      Navigations.QuizList,
+      Navigations.BrowseQuizzes,
+    ]);
   });
 });

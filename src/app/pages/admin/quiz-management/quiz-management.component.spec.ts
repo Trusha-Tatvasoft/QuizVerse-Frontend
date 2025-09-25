@@ -293,12 +293,23 @@ describe('QuizManagementComponent', () => {
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should debounce and fetch quizzes on search input change', fakeAsync(() => {
-      const spy = jest.spyOn(component as any, 'fetchQuizzes');
-      component.onSearchInputChange('Maths');
-      expect(spy).not.toHaveBeenCalled();
-      tick(debounceTimeValue);
-      expect(spy).toHaveBeenCalledTimes(1);
+    it('should debounce search input and call fetch after debounce time', fakeAsync(() => {
+      const fetchSpy = jest.spyOn(component, 'fetchQuizzes');
+
+      fixture.detectChanges();
+      // Reset after ngOnInit call
+      fetchSpy.mockClear();
+
+      component.onSearchInputChange('t');
+      component.onSearchInputChange('te');
+      component.onSearchInputChange('tes');
+      component.onSearchInputChange('test');
+
+      tick(debounceTimeValue - 1);
+      expect(fetchSpy).not.toHaveBeenCalled();
+
+      tick(1);
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
     }));
   });
 
