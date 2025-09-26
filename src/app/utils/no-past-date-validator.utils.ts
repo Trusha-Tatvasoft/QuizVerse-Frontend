@@ -29,3 +29,18 @@ export function afterStartDateValidator(startDateControlName: string): Validator
     return end > start ? null : { afterStartDate: true };
   };
 }
+
+export function afterCurrentStartDateValidator(previousDate: Date): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value || !previousDate) return null;
+
+    const previous = new Date(previousDate);
+    const current = new Date(control.value);
+
+    // Strip time → set both to midnight
+    previous.setHours(0, 0, 0, 0);
+    current.setHours(0, 0, 0, 0);
+
+    return current >= previous ? null : { afterCurrentStartDate: true };
+  };
+}

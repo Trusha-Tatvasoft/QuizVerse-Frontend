@@ -1,4 +1,4 @@
-<main class="quiz-attempt-main">
+<main class="quiz-attempt-main" appDisableQuizShortcuts>
   <div class="w-full flex items-center justify-center md:p-6 px-3 py-6">
     <div class="w-full max-w-7xl h-full flex flex-col md:p-6 p-0 md:pb-0 md:mt-[50px]">
       <!-- Header -->
@@ -93,7 +93,8 @@
               <div class="space-x-3">
                 @if (currentQuestionIndex === totalQuestions - 1) {
                   <app-filled-button
-                    [filledButtonConfig]="disabledNextButtonConfig"
+                    [filledButtonConfig]="saveButtonConfig"
+                    (buttonClicked)="getNextQuestion()"
                   ></app-filled-button>
                 } @else {
                   <app-filled-button
@@ -134,6 +135,10 @@
                       'bg-blue-400 border-blue-600': currentQuestionIndex === idx,
                       'bg-green-100 border-green-500': getQuestionStatus(
                         idx,
+                        visitedQuestionStatus.saved
+                      ),
+                      'bg-orange-100 border-orange-500': getQuestionStatus(
+                        idx,
                         visitedQuestionStatus.answered
                       ),
                       'bg-yellow-100 border-yellow-500': getQuestionStatus(
@@ -147,7 +152,7 @@
                       'bg-gray-100 border-gray-300': !getQuestionStatus(idx),
                       'cursor-not-allowed': !getQuestionStatus(idx),
                     }"
-                    (click)="gotoQuestion(idx + 1)"
+                    (click)="goToQuestion(idx + 1)"
                     [disabled]="!getQuestionStatus(idx)"
                   >
                     {{ idx + 1 }}
@@ -161,7 +166,13 @@
               <div class="legend-first-half mb-1 space-y-1">
                 <div class="flex items-center gap-2">
                   <span class="w-4 h-4 bg-green-100 border border-green-500 rounded"></span>
-                  Answered ({{ getQuestionsCountByStatus(visitedQuestionStatus.answered) }})
+                  Saved ({{ getQuestionsCountByStatus(visitedQuestionStatus.saved) }})
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-4 h-4 bg-orange-100 border border-orange-500 rounded"></span>
+                  Answered/Not Saved ({{
+                    getQuestionsCountByStatus(visitedQuestionStatus.answered)
+                  }})
                 </div>
                 <div class="flex items-center gap-2">
                   <span class="w-4 h-4 bg-yellow-100 border border-yellow-500 rounded"></span>
@@ -188,7 +199,8 @@
             <div class="flex flex-row items-center justify-center">
               <mat-icon class="text-blue-600 text-4xl mr-4">menu_book</mat-icon>
               <span class="text-lg font-semibold">{{
-                getQuestionsCountByStatus(visitedQuestionStatus.answered)
+                getQuestionsCountByStatus(visitedQuestionStatus.answered) +
+                  getQuestionsCountByStatus(visitedQuestionStatus.saved)
               }}</span>
               <span class="text-lg font-semibold">/ {{ totalQuestions }}</span>
             </div>

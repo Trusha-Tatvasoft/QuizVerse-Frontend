@@ -17,7 +17,11 @@ export function getQuestionsCountByStatus(
   status: VisitedQuestionStatus,
 ): number {
   if (status === VisitedQuestionStatus.answered) {
-    return visitedQuestions.filter((v) => v.reviewStatus === status || v.givenAnswer !== '').length;
+    return visitedQuestions.filter(
+      (v) =>
+        v.reviewStatus === status ||
+        (v.givenAnswer !== '' && v.reviewStatus !== VisitedQuestionStatus.saved),
+    ).length;
   }
   return visitedQuestions.filter((v) => v.reviewStatus === status).length;
 }
@@ -63,7 +67,6 @@ export function markVisited(
         givenAnswer === '' ? VisitedQuestionStatus.visited : VisitedQuestionStatus.answered,
     });
   }
-
   return visitedQuestions;
 }
 

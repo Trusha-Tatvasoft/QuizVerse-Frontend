@@ -56,7 +56,7 @@
           >
           <div>
             <span class="font-semibold">Read carefully</span><br />
-            Read each question thoroughly before selecting your answer.
+            Review each question thoroughly before selecting your answer.
           </div>
         </li>
         <li class="flex gap-2">
@@ -66,7 +66,7 @@
           >
           <div>
             <span class="font-semibold">Time management</span><br />
-            You have {{ quizInstructions?.totalTime }} minutes to complete all questions.
+            You have {{ quizInstructions?.totalTime }} minutes to complete the quiz.
           </div>
         </li>
         <li class="flex gap-2">
@@ -76,7 +76,7 @@
           >
           <div>
             <span class="font-semibold">Navigation</span><br />
-            You can navigate between questions and mark them for review.
+            You can move between questions and mark them for review.
           </div>
         </li>
         <li class="flex gap-2">
@@ -86,7 +86,7 @@
           >
           <div>
             <span class="font-semibold">Auto-submit</span><br />
-            Quiz will auto-submit when time runs out.
+            The quiz will auto-submit when the timer runs out.
           </div>
         </li>
         <li class="flex gap-2">
@@ -96,8 +96,8 @@
           >
           <div>
             <span class="font-semibold">Full screen mode</span><br />
-            Your screen will switch to full screen when the quiz starts. Exiting full screen will
-            submit the quiz automatically.
+            The quiz will open in full screen. Exiting full screen will automatically submit your
+            quiz.
           </div>
         </li>
         <li class="flex gap-2">
@@ -106,9 +106,20 @@
             >6</span
           >
           <div>
-            <span class="font-semibold">Referesh Quiz</span><br />
-            Refreshing the quiz page will allow you to resume from the same point where you left
-            off.
+            <span class="font-semibold">Resume on refresh</span><br />
+            If you refresh the quiz page, you will resume from where you left off.
+          </div>
+        </li>
+        <li class="flex gap-2">
+          <span
+            class="w-6 h-6 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 font-semibold"
+            >7</span
+          >
+          <div>
+            <span class="font-semibold">Saving answers</span><br />
+            Answers are saved only when you click <strong>Save & Next</strong>. If you select a new
+            answer but don’t save it, the previously saved answer will be counted. And last question
+            can be submitted by clicking on submit.
           </div>
         </li>
       </ol>

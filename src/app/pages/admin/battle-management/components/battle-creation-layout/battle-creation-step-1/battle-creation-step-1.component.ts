@@ -31,6 +31,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { BattleTimeType } from '../../../../../../shared/enums/battle-management.enum';
 import {
+  afterCurrentStartDateValidator,
   afterStartDateValidator,
   noPastDateValidator,
 } from '../../../../../../utils/no-past-date-validator.utils';
@@ -396,12 +397,24 @@ export class BattleCreationStep1Component {
     const endDateControl = this.newBattleForm.get('endDate');
 
     if (battleType === BattleTimeType.TimeLimited) {
-      startDateControl?.setValidators([Validators.required, noPastDateValidator]);
+      startDateControl?.setValidators([
+        Validators.required,
+        this.isEditMode && this.initialFormValues?.startDate
+          ? afterCurrentStartDateValidator(this.initialFormValues.startDate)
+          : noPastDateValidator,
+      ]);
       endDateControl?.setValidators([
         Validators.required,
         noPastDateValidator,
         afterStartDateValidator('startDate'),
       ]);
+      const startDateField = this.newBattleFields.find((f) => f.name === 'startDate');
+      if (startDateField) {
+        startDateField.validationMessages = {
+          ...startDateField.validationMessages,
+          afterCurrentStartDate: 'Start Date must be same or after the current Start Date.',
+        };
+      }
     } else {
       startDateControl?.clearValidators();
       endDateControl?.clearValidators();
