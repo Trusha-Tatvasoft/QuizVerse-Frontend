@@ -90,18 +90,6 @@
   }
 }
 
-.opponent-info {
-  margin: 1.5rem 0;
-  padding: 10px 25px;
-  text-align: left;
-  background: var(--global-bg-gradient);
-  border-radius: 5px;
-  strong {
-    font-size: 1.2rem;
-    display: block;
-  }
-}
-
 .timer {
   margin-block: 1rem;
   font-size: 0.9rem;
@@ -111,27 +99,4 @@
 .cancel-search-opponent {
   display: flex;
   justify-content: center;
-}
-
-.icon-found {
-  height: 70px;
-  width: 70px;
-  border-radius: 50%;
-  margin-inline: auto;
-
-  img {
-    height: 70px;
-    width: 70px;
-    border-radius: 50%;
-  }
-
-  mat-icon.icon-success {
-    height: 70px;
-    width: 70px;
-    font-size: 60px;
-    font-weight: 100;
-    border-radius: 50%;
-    color: var(--global-secondary-color);
-    border: 5px solid var(--global-secondary-color);
-  }
 }

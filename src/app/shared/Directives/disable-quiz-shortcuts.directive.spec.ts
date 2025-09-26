@@ -12,7 +12,6 @@ describe('DisableQuizShortcutsDirective', () => {
       showWarning: jest.fn(),
     } as unknown as jest.Mocked<SnackbarService>;
 
-    // Configure TestBed for injection context
     TestBed.configureTestingModule({
       providers: [
         DisableQuizShortcutsDirective,
@@ -20,7 +19,6 @@ describe('DisableQuizShortcutsDirective', () => {
       ],
     });
 
-    // Inject directive from Angular context
     directive = TestBed.inject(DisableQuizShortcutsDirective);
   });
 
@@ -29,30 +27,34 @@ describe('DisableQuizShortcutsDirective', () => {
   });
 
   describe('Keyboard events', () => {
-    const blockedKeys = [
-      { key: 'c', ctrl: true },
-      { key: 'v', ctrl: true },
-      { key: 'w', ctrl: true },
-      { key: 'e', ctrl: true },
-      { key: 'r', ctrl: true },
-      { key: 't', ctrl: true },
-      { key: 'n', ctrl: true },
-      { key: 'n', ctrl: true, shift: true },
-      { key: 't', ctrl: true, shift: true },
-      { key: 'Shift' },
-      { key: 'Alt' },
-      { key: 'F5', keyCode: 116 },
-      { key: 'F4', alt: true },
+    const cases = [
+      { key: 'c', ctrl: true, expected: 'CTRL + C' },
+      { key: 'v', ctrl: true, expected: 'CTRL + V' },
+      { key: 'w', ctrl: true, expected: 'CTRL + W' },
+      { key: 'e', ctrl: true, expected: 'CTRL + E' },
+      { key: 'r', ctrl: true, expected: 'CTRL + R' },
+      { key: 't', ctrl: true, expected: 'CTRL + T' },
+      { key: 'n', ctrl: true, expected: 'CTRL + N' },
+      { key: 'f', ctrl: true, expected: 'CTRL + F' },
+      { key: 'n', ctrl: true, shift: true, expected: 'CTRL + SHIFT + N' },
+      { key: 't', ctrl: true, shift: true, expected: 'CTRL + SHIFT + T' },
+      { key: 'r', ctrl: true, shift: true, expected: 'CTRL + SHIFT + R' },
+      { key: 'f5', expected: 'F5' },
+      { key: 'f4', alt: true, expected: 'ALT + F4' },
+      { key: 'arrowleft', alt: true, expected: 'ALT + LEFT' },
+      { key: 'arrowright', alt: true, expected: 'ALT + RIGHT' },
+      { key: 'arrowup', alt: true, expected: 'ALT + UP' },
+      { key: 'arrowdown', alt: true, expected: 'ALT + DOWN' },
+      { key: 'alt', expected: 'ALT' },
     ];
 
-    blockedKeys.forEach(({ key, ctrl = false, shift = false, alt = false, keyCode }) => {
-      it(`should prevent ${ctrl ? 'Ctrl+' : ''}${shift ? 'Shift+' : ''}${alt ? 'Alt+' : ''}${key}`, () => {
+    cases.forEach(({ key, ctrl = false, shift = false, alt = false, expected }) => {
+      it(`should block and warn for ${expected}`, () => {
         const event = new KeyboardEvent('keydown', {
           key,
           ctrlKey: ctrl,
           shiftKey: shift,
-          altKey: alt, // <-- added here
-          keyCode,
+          altKey: alt,
         });
         const preventSpy = jest.spyOn(event, 'preventDefault');
 
@@ -60,12 +62,12 @@ describe('DisableQuizShortcutsDirective', () => {
 
         expect(preventSpy).toHaveBeenCalled();
         expect(snackbarServiceMock.showWarning).toHaveBeenCalledWith(
-          expect.stringContaining(key.toUpperCase()),
+          `The "${expected}" shortcut is disabled during the quiz.`,
         );
       });
     });
 
-    it('should not prevent other keys', () => {
+    it('should not block normal keys', () => {
       const event = new KeyboardEvent('keydown', { key: 'a' });
       const preventSpy = jest.spyOn(event, 'preventDefault');
 
@@ -85,7 +87,7 @@ describe('DisableQuizShortcutsDirective', () => {
 
       expect(preventSpy).toHaveBeenCalled();
       expect(snackbarServiceMock.showWarning).toHaveBeenCalledWith(
-        expect.stringContaining('RIGHT-CLICK'),
+        'The "RIGHT-CLICK" shortcut is disabled during the quiz.',
       );
     });
   });

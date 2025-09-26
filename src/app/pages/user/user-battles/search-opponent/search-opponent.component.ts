@@ -11,6 +11,7 @@ import { BattleHubService } from '../../../../services/user/user-battles/battle-
 import { BattleData, PlayerProfileDTO } from '../interface/search-opponent.interface';
 import { environment } from '../../../../../environments/environment.dev';
 import { Navigations } from '../../../../shared/enums/navigation';
+import { CheatPreventionService } from '../../../../shared/service/cheat-prevention/cheat-prevention.service';
 
 @Component({
   selector: 'app-search-opponent',
@@ -20,12 +21,10 @@ import { Navigations } from '../../../../shared/enums/navigation';
   styleUrls: ['./search-opponent.component.scss'],
 })
 export class SearchOpponentComponent implements OnInit, OnDestroy {
-  isSearching = true;
   cancelSearchButtonConfig = cancelSearchButtonConfig;
   searchSeconds = 0;
   battleId: number | null = null;
   opponent: PlayerProfileDTO | null = null;
-  isImageError: boolean = false;
   battleData: BattleData = {
     battleName: 'Math Champions',
     battleCategory: 'Mathematics',
@@ -39,8 +38,16 @@ export class SearchOpponentComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
   private readonly snackbar = inject(SnackbarService);
   private readonly battleHub = inject(BattleHubService);
+  private readonly cheatPrevention = inject(CheatPreventionService);
 
   async ngOnInit(): Promise<void> {
+    this.cheatPrevention.startMonitoring();
+    this.cheatPrevention.violations$.pipe(takeUntil(this.destroy$)).subscribe((reason) => {
+      if (reason === platformMessages.openedDeveloperTools) {
+        this.snackbar.showError(reason);
+        this.cancelSearch();
+      }
+    });
     await this.connectToHub();
     this.decodeRouteId();
     this.startSearchTimer();
@@ -56,20 +63,24 @@ export class SearchOpponentComponent implements OnInit, OnDestroy {
       this.destroy$.next();
       this.destroy$.complete();
       this.battleHub.stopConnection();
-      this.isSearching = false;
-      this.router.navigate([Navigations.User, Navigations.Battles]);
+      this.router.navigate([Navigations.User, Navigations.Battles, Navigations.BattleList]);
     }, 100);
   }
 
-  imageError() {
-    this.isImageError = true;
+  openFullscreen(): void {
+    const elem = document.documentElement as HTMLElement & {
+      webkitRequestFullscreen?: () => Promise<void>;
+      msRequestFullscreen?: () => void;
+    };
+    if (elem.requestFullscreen) elem.requestFullscreen();
+    else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+    else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
   }
 
   ngOnDestroy(): void {
     this.stopTimer();
     this.destroy$.next();
     this.destroy$.complete();
-    this.battleHub.stopConnection();
   }
 
   private async connectToHub(): Promise<void> {
@@ -81,7 +92,6 @@ export class SearchOpponentComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe((result: PlayerProfileDTO) => {
           if (result) {
-            this.isSearching = false;
             this.stopTimer();
             this.opponent = {
               fullName: result.fullName,
@@ -96,16 +106,24 @@ export class SearchOpponentComponent implements OnInit, OnDestroy {
 
             // Navigate to battle page when matched
             if (this.battleId) {
-              setTimeout(() => {
-                this.router.navigate([Navigations.User, Navigations.Battles]); // Put Battle instructions/battle
-              }, 2000);
+              setTimeout(() => this.openFullscreen(), 0);
+              this.router.navigate(
+                [
+                  Navigations.User,
+                  Navigations.Battles,
+                  Navigations.BattleList,
+                  Navigations.FoundOpponent,
+                  btoa(encodeURIComponent(this.battleId.toString())),
+                ],
+                {
+                  state: { opponent: this.opponent },
+                },
+              );
             }
           }
         });
 
-      this.battleHub.onSearching.pipe(takeUntil(this.destroy$)).subscribe(() => {
-        this.isSearching = true;
-      });
+      this.battleHub.onSearching.pipe(takeUntil(this.destroy$)).subscribe();
     } catch (error) {
       this.snackbar.showError(
         error instanceof Error && error.message
@@ -135,16 +153,14 @@ export class SearchOpponentComponent implements OnInit, OnDestroy {
 
   private decodeRouteId(): void {
     const encodedId = this.route.snapshot.paramMap.get('id');
-    const navigation = this.router.getCurrentNavigation();
+    const state = history.state;
     if (!encodedId) {
       this.snackbar.showError(platformMessages.invalideBattleId);
-      this.router.navigate(['/battles']);
+      this.router.navigate([Navigations.User, Navigations.Battles, Navigations.BattleList]);
       return;
     }
-    if (navigation?.extras.state) {
-      if (navigation.extras.state['battleData']) {
-        this.battleData = navigation.extras.state['battleData'];
-      }
+    if (state?.battleData) {
+      this.battleData = state.battleData;
     }
     try {
       const urlDecoded = decodeURIComponent(encodedId);
@@ -168,7 +184,7 @@ export class SearchOpponentComponent implements OnInit, OnDestroy {
     } catch {
       this.snackbar.showError(platformMessages.invalideBattleId);
       this.battleId = null;
-      this.router.navigate(['/battles']);
+      this.router.navigate([Navigations.User, Navigations.Battles, Navigations.BattleList]);
     }
   }
 }

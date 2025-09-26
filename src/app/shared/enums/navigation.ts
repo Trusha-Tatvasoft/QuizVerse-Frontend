@@ -18,6 +18,7 @@ export enum Navigations {
   BattleAttempt = 'battle-attempt',
   BattleResult = 'battle-result',
   SearchOpponent = 'search-opponent',
+  FoundOpponent = 'found-opponent',
   Tournaments = 'tournaments',
   Leaderboards = 'leaderboards',
   Profile = 'profile',
