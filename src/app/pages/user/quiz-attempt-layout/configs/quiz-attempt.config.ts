@@ -22,15 +22,11 @@ export const previousButtonConfig: ButtonConfig = {
   iconFontSet: 'material-icons',
 };
 
-export const disabledSaveAndNextButtonConfig: ButtonConfig = {
-  label: 'Save & Next',
+export const saveButtonConfig: ButtonConfig = {
+  label: 'Save',
   fontWeight: 500,
   variant: 'primary',
   type: 'submit',
-  imagePosition: 'right',
-  matIcon: 'keyboard_arrow_right',
-  iconFontSet: 'material-icons',
-  isDisabled: true,
 };
 
 export const disabledPreviousButtonConfig: ButtonConfig = {

@@ -1,1 +1,110 @@
-<p>recent-battles works!</p>
+<div class="recent-battles-container">
+  <div class="recent-battles-header">
+    <!-- title + subtitle -->
+    <div class="recent-battles-text">
+      <h3 class="recent-battles-title">Battle Result History</h3>
+      <p class="recent-battles-subtitle">{{ subtitle }}</p>
+    </div>
+    <!-- Filters -->
+    <div
+      class="filters flex sm:flex-row flex-col self-end items-center mb-[6px] sm:gap-3 gap-1 sm:w-100 w-full"
+    >
+      <!-- Battle Result Filter -->
+      <mat-form-field appearance="outline" class="filter-select" [floatLabel]="'auto'">
+        <mat-select
+          [value]="selectedBattleFilter"
+          (selectionChange)="battleFilterChanged($event.value)"
+        >
+          <mat-option [value]="0">All Battles</mat-option>
+          @for (option of battleFilterOptions; track option.value) {
+            <mat-option [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Battle Time Filter -->
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-select
+          [value]="selectedTimeFilter"
+          (selectionChange)="timeFilterChanged($event.value)"
+        >
+          <mat-option [value]="0">All Time</mat-option>
+          @for (option of battleTimeFilterOptions; track option.value) {
+            <mat-option [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  @if (visibleWindow.length === 0) {
+    <div class="no-records">
+      <p>No data available.</p>
+    </div>
+  } @else {
+    <div #list class="recent-battle-records" tabindex="0" (wheel)="onWheel($event)">
+      @for (entry of visibleWindow; track $index) {
+        <div class="recent-battles-item">
+          <!-- 1. Profile + Initials -->
+          <div class="profile-wrapper">
+            @if (entry.profilePic) {
+              <img
+                [src]="entry.profilePic"
+                alt="{{ entry.opponentFullName }}"
+                class="profile-pic"
+                (error)="entry.profilePic = undefined"
+              />
+            } @else {
+              <div
+                class="profile-fallback"
+                [ngClass]="getInitialsColorClass(entry.opponentFullName)"
+              >
+                {{ getInitials(entry.opponentFullName) }}
+              </div>
+            }
+          </div>
+
+          <!-- 2 & 3. Opponent name + Battle name/category -->
+          <div class="user-details">
+            <span class="username">vs {{ entry.opponent }}</span>
+            <span class="meta">
+              <span> {{ entry.battleName }} ·</span>
+              <span> {{ entry.category }} ·</span>
+              <span> {{ entry.battleDate | date: 'dd MMM yyyy' }}</span>
+            </span>
+          </div>
+
+          <!-- 4. Battle result and XP gained -->
+          <div class="battle-result">
+            <div class="battle-result-text">
+              <div>
+                <app-tag
+                  [tagConfig]="getTagConfigForBattleResult(entry)"
+                  class="mb-[3px]"
+                ></app-tag>
+              </div>
+              <div class="battle-result-data">
+                <span class="font-semibold">{{ entry.yourScore }}-{{ entry.opponentScore }}</span>
+                <span class="text-purple-600"> +{{ entry.xpGained }} </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        @if (entry.globalIndex === recentBattlesList.length - 1) {
+          <div class="flex justify-center">
+            @if (hasMoreData) {
+              <app-outline-button
+                [outlineButtonConfig]="loadMoreButtonConfig"
+                (buttonClicked)="loadMore()"
+              ></app-outline-button>
+            }
+          </div>
+        }
+      }
+    </div>
+  }
+</div>

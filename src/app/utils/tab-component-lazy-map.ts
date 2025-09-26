@@ -119,4 +119,9 @@ export const tabLazyComponentMap: Record<string, () => Promise<Type<unknown>>> =
     import('../pages/user/user-leaderboard/monthly-champions/monthly-champions.component').then(
       (m) => m.MonthlyChampionsComponent,
     ),
+
+  'notification status': () =>
+    import(
+      '../pages/layout/notification-center/components/notification-card/notification-card.component'
+    ).then((m) => m.NotificationCardComponent),
 };

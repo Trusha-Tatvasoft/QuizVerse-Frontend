@@ -2,6 +2,11 @@ import { Meta, StoryObj, moduleMetadata } from '@storybook/angular';
 import { NavbarComponent } from './navbar.component';
 import { blue, yellow } from '../../../utils/constants';
 import { AuthService } from '../../../core/auth/services/auth.service';
+import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
+import { NavbarDataService } from '../../../services/common/navbar/navbar-data.service';
+import { UserProfileService } from '../../../services/user/user-profile/user-profile.service';
+import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
+import { of } from 'rxjs';
 
 class MockAuthService {
   logout() {
@@ -9,14 +14,50 @@ class MockAuthService {
   }
 }
 
-// Standalone components don't need moduleMetadata unless using non-standalone children
+class MockPlatformSettingsService {
+  platformConfig$ = of({ logo: 'assets/images/mock-logo.png' });
+}
+
+class MockNavbarDataService {
+  getNavbarData() {
+    return of({
+      result: true,
+      data: {
+        currentUserXp: 500,
+        progressPercentage: 75,
+        notificationCount: 2,
+        profilePic: null,
+      },
+    });
+  }
+}
+
+class MockUserProfileService {
+  profileUpdated$ = of(false);
+}
+
+class MockSnackbarService {
+  showError(title: string, msg: string) {
+    console.error('Snackbar Error:', title, msg);
+  }
+  showSuccess(title: string, msg: string) {
+    console.log('Snackbar Success:', title, msg);
+  }
+}
+
 export default {
   title: 'Layout/Navbar',
   component: NavbarComponent,
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      providers: [{ provide: AuthService, useClass: MockAuthService }],
+      providers: [
+        { provide: AuthService, useClass: MockAuthService },
+        { provide: PlatformSettingsService, useClass: MockPlatformSettingsService },
+        { provide: NavbarDataService, useClass: MockNavbarDataService },
+        { provide: UserProfileService, useClass: MockUserProfileService },
+        { provide: SnackbarService, useClass: MockSnackbarService },
+      ],
     }),
   ],
 } as Meta<NavbarComponent>;
@@ -29,24 +70,28 @@ export const LoggedInUserWithNotifications: Story = {
     isLogin: true,
     isAdmin: false,
     currentXp: 500,
-    xpLimit: 1000,
-    notificationCount: 1,
+    progressPercentage: 78,
+    notificationCount: 2,
     notifications: [
       {
         id: '1',
         title: 'New badge earned!',
         message: 'You have earned a new badge for completing a quiz.',
-        timeAgo: '2m ago',
+        timeAgo: new Date(),
         read: false,
         tagConfig: blue,
+        category: 'achievement',
+        categoryValue: 1,
       },
       {
         id: '2',
         title: 'Reminder',
         message: 'Don’t forget to finish your weekly challenge.',
-        timeAgo: '1h ago',
+        timeAgo: new Date(),
         read: true,
         tagConfig: yellow,
+        category: 'reminder',
+        categoryValue: 2,
       },
     ],
   },
@@ -58,7 +103,7 @@ export const LoggedInAdmin: Story = {
     isLogin: true,
     isAdmin: true,
     currentXp: 700,
-    xpLimit: 1000,
+    progressPercentage: 67,
     notificationCount: 0,
     notifications: [],
   },
@@ -80,7 +125,7 @@ export const LoggedInUserNoNotifications: Story = {
     isLogin: true,
     isAdmin: false,
     currentXp: 250,
-    xpLimit: 1000,
+    progressPercentage: 65,
     notificationCount: 0,
     notifications: [],
   },

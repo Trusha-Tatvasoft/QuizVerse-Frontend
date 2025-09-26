@@ -611,5 +611,6 @@ export const regexPatterns = {
   PASSWORD: /^(?=\S*$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/,
   DESCRIPTION: /^$|^\S[\s\S]*$/,
   QUIZ_DIFFICULTY_NAME: /^[A-Za-z][A-Za-z0-9 ]*$/,
+  CAMEL_CASE_REGEX: /([a-z])([A-Z])/g,
 };
 // #endregion
