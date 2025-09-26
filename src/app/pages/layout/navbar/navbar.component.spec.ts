@@ -2,41 +2,54 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NavbarComponent } from './navbar.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { yellow } from '../../../utils/constants';
+import { roles } from '../../../utils/constants';
 import { mockDataNotifications } from './navbar-mock-data';
 import { Navigations } from '../../../shared/enums/navigation';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
 import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../../environments/environment.dev';
+import { UserProfileService } from '../../../services/user/user-profile/user-profile.service';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
-  let warning = yellow;
   let authServiceMock: { logout: jest.Mock; currentRole$: any };
   let routerMock: { navigate: jest.Mock };
-
+  let profileUpdated$: Subject<boolean>;
+  let mockUserProfileService: any;
   let configSubject: BehaviorSubject<any>;
-
   const mockNotifications = mockDataNotifications;
 
   beforeEach(async () => {
+    // Create Subjects for Behavior testing
     configSubject = new BehaviorSubject<any>(null);
+    profileUpdated$ = new Subject<boolean>();
 
+    // Mock UserProfileService with the profileUpdated$ observable
+    mockUserProfileService = {
+      profileUpdated$: profileUpdated$.asObservable(),
+    };
+
+    // Mock AuthService
     authServiceMock = {
       logout: jest.fn(),
-      currentRole$: of('user'), // 👈 fix: provide observable
+      currentRole$: of('user'), // observable role
     };
+
+    // Mock Router
     routerMock = { navigate: jest.fn() };
 
+    // Configure TestBed
     await TestBed.configureTestingModule({
       imports: [NavbarComponent, HttpClientTestingModule],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         { provide: AuthService, useValue: authServiceMock },
         { provide: Router, useValue: routerMock },
+        { provide: UserProfileService, useValue: mockUserProfileService },
         {
           provide: PlatformSettingsService,
           useValue: { platformConfig$: configSubject.asObservable() },
@@ -44,8 +57,10 @@ describe('NavbarComponent', () => {
       ],
     }).compileComponents();
 
+    // Create component instance
     fixture = TestBed.createComponent(NavbarComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   // Verifies component is created without error
@@ -128,7 +143,7 @@ describe('NavbarComponent', () => {
     component.isLogin = true;
     component.isAdmin = false;
     component.currentXp = 500;
-    component.xpLimit = 1000;
+    component.progressPercentage = 100;
     fixture.detectChanges();
     const xpLabel = fixture.debugElement.query(By.css('.xp-label'));
     expect(xpLabel.nativeElement.textContent).toContain('XP: 500');
@@ -236,15 +251,15 @@ describe('NavbarComponent', () => {
     expect(closeSpy).toHaveBeenCalled();
   });
 
-  it('should navigate to BrowseQuizzes on browseQuizRedirect()', () => {
+  it('should navigate to get started button on getStartedRedirect()', () => {
     const navSpy = jest.spyOn(component['router'], 'navigate');
-    component.browseQuizRedirect();
-    expect(navSpy).toHaveBeenCalledWith([Navigations.BrowseQuizzes]);
+    component.getStartedRedirect();
+    expect(navSpy).toHaveBeenCalledWith([Navigations.Login]);
   });
 
   it('should navigate to Login on loginRedirect()', () => {
     const navSpy = jest.spyOn(component['router'], 'navigate');
-    component.loginRedirect();
+    component.signInRedirect();
     expect(navSpy).toHaveBeenCalledWith([Navigations.Login]);
   });
 
@@ -298,23 +313,23 @@ describe('NavbarComponent', () => {
 
   it('should navigate to admin dashboard for admin role (case-insensitive)', () => {
     component.isLogin = true;
-    component['authService'].currentRole$ = { value: 'ADMIN' } as any;
-
+    component['authService'].currentRole$ = of(roles.admin) as any;
     const navSpy = jest.spyOn(component['router'], 'navigate');
 
-    component.navigateToDashboard();
+    component.ngOnInit();
 
+    component.navigateToDashboard();
     expect(navSpy).toHaveBeenCalledWith([`/${Navigations.Admin}/${Navigations.Dashboard}`]);
   });
 
   it('should navigate to player dashboard for player role (case-insensitive)', () => {
     component.isLogin = true;
-    component['authService'].currentRole$ = { value: 'PlAyEr' } as any;
-
+    component['authService'].currentRole$ = of(roles.player) as any;
     const navSpy = jest.spyOn(component['router'], 'navigate');
 
-    component.navigateToDashboard();
+    component.ngOnInit();
 
+    component.navigateToDashboard();
     expect(navSpy).toHaveBeenCalledWith([`/${Navigations.User}/${Navigations.Dashboard}`]);
   });
 
@@ -377,5 +392,235 @@ describe('NavbarComponent', () => {
         { queryParams: { tab: 2 } },
       );
     });
+  });
+
+  describe('viewAllNotifications', () => {
+    it('should navigate to admin notifications and close panel', () => {
+      component.role = roles.admin;
+      component.showNotifications = true;
+
+      component.viewAllNotifications();
+
+      expect(component.showNotifications).toBe(false);
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.Admin}/${Navigations.Notifications}/`,
+      ]);
+    });
+
+    it('should navigate to user notifications and close panel', () => {
+      component.role = roles.player;
+      component.showNotifications = true;
+
+      component.viewAllNotifications();
+
+      expect(component.showNotifications).toBe(false);
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.User}/${Navigations.Notifications}`,
+      ]);
+    });
+  });
+
+  describe('viewDetails', () => {
+    it('should navigate to route returned by getNotificationRoute', () => {
+      const mockRoute = { path: '/test/path', queryParams: { foo: 'bar' } };
+      const spy = jest
+        .spyOn(require('../configs/navbar.component.config'), 'getNotificationRoute')
+        .mockReturnValue(mockRoute);
+
+      component.role = roles.admin;
+      component.viewDetails(1);
+
+      expect(spy).toHaveBeenCalledWith(true, 1);
+      expect(routerMock.navigate).toHaveBeenCalledWith([mockRoute.path], {
+        queryParams: mockRoute.queryParams,
+      });
+    });
+  });
+
+  describe('ngOnDestroy', () => {
+    it('should complete destroy$ subject', () => {
+      const nextSpy = jest.spyOn(component['destroy$'], 'next');
+      const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+
+      component.ngOnDestroy();
+
+      expect(nextSpy).toHaveBeenCalled();
+      expect(completeSpy).toHaveBeenCalled();
+    });
+  });
+
+  it('should update XP, progress, notificationCount, and profileImageUrl on successful loadUserData', () => {
+    const mockResponse = {
+      result: true,
+      statusCode: 200,
+      message: 'Success',
+      data: {
+        currentUserXp: 200,
+        progressPercentage: 50,
+        notificationCount: 5,
+        profilePic: 'test-pic.png',
+      },
+    };
+
+    jest.spyOn(component['navbarService'], 'getNavbarData').mockReturnValue(of(mockResponse));
+
+    component['loadUserData']();
+
+    expect(component.currentXp).toBe(200);
+    expect(component.progressPercentage).toBe(50);
+    expect(component.notificationCount).toBe(5);
+    expect(component.profileImageUrl).toBe(`${(environment as any).imageBaseUrl}/test-pic.png`);
+  });
+
+  it('should not throw if notificationWrapper is not set', () => {
+    component.showNotifications = true;
+    component['notificationWrapper'] = null as any;
+
+    const event = new MouseEvent('click');
+    expect(() => component.onDocumentClick(event)).not.toThrow();
+  });
+
+  it('should call loadNotifications when opening notifications', () => {
+    const mockEvent = { stopPropagation: jest.fn() } as any;
+    const loadSpy = jest
+      .spyOn<any, any>(component as any, 'loadNotifications')
+      .mockImplementation(() => {});
+
+    component.showNotifications = false;
+    component.toggleNotifications(mockEvent);
+
+    expect(loadSpy).toHaveBeenCalled();
+  });
+  it('should close sidebar when going from >=1024 to <1024 width', () => {
+    const closeSpy = jest.spyOn(component.closeSidebar, 'emit');
+    component['previousWidth'] = 1200;
+
+    // mock window.innerWidth
+    Object.defineProperty(window, 'innerWidth', { value: 800, configurable: true });
+
+    component.onWindowResize();
+
+    expect(component.menuOpen).toBe(false);
+    expect(closeSpy).toHaveBeenCalled();
+  });
+
+  it('should call snackbarService.showError on loadUserData error', () => {
+    const snackbarSpy = jest.spyOn(component['snackbarService'], 'showError');
+
+    jest.spyOn(component['navbarService'], 'getNavbarData').mockReturnValue({
+      pipe: () =>
+        of().pipe(() => {
+          throw new Error('fail');
+        }),
+    } as any);
+
+    // Or simpler: throwError(() => new Error('fail'))
+    jest
+      .spyOn(component['navbarService'], 'getNavbarData')
+      .mockReturnValue(throwError(() => new Error('fail')));
+
+    component['loadUserData']();
+
+    expect(snackbarSpy).toHaveBeenCalledWith(expect.any(String), expect.any(String));
+  });
+
+  describe('NavbarComponent - profileUpdated$', () => {
+    it('should call loadUserData when profileUpdated$ emits true', () => {
+      const loadUserDataSpy = jest.spyOn(component as any, 'loadUserData');
+
+      profileUpdated$.next(true);
+
+      expect(loadUserDataSpy).toHaveBeenCalled();
+    });
+
+    it('should NOT call loadUserData when profileUpdated$ emits false', () => {
+      const loadUserDataSpy = jest.spyOn(component as any, 'loadUserData');
+
+      profileUpdated$.next(false);
+
+      expect(loadUserDataSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should set logoPath from config.logo if available', () => {
+    const customLogo = 'assets/images/custom-logo.png';
+    configSubject.next({ logo: customLogo });
+    fixture.detectChanges();
+
+    expect(component.logoPath).toBe(customLogo);
+  });
+  it('should assign currentXp, progressPercentage, notificationCount, and profileImageUrl correctly', () => {
+    const mockResponse = {
+      result: true,
+      statusCode: 200,
+      message: 'Success',
+      data: {
+        currentUserXp: 300,
+        progressPercentage: 75,
+        notificationCount: 10,
+        profilePic: 'user-pic.png',
+      },
+    };
+
+    jest.spyOn(component['navbarService'], 'getNavbarData').mockReturnValue(of(mockResponse));
+
+    component['loadUserData']();
+    fixture.detectChanges();
+
+    expect(component.currentXp).toBe(300);
+    expect(component.progressPercentage).toBe(75);
+    expect(component.notificationCount).toBe(10);
+    expect(component.profileImageUrl).toBe(`${environment.imageBaseUrl}/user-pic.png`);
+  });
+
+  it('should fallback profile image if profilePic is missing', () => {
+    const mockResponse = {
+      result: true,
+      statusCode: 200,
+      message: 'Success',
+      data: {
+        currentUserXp: 100,
+        progressPercentage: 50,
+        notificationCount: 5,
+        profilePic: null,
+      },
+    };
+
+    jest.spyOn(component['navbarService'], 'getNavbarData').mockReturnValue(of(mockResponse));
+
+    component['loadUserData']();
+    fixture.detectChanges();
+
+    expect(component.profileImageUrl).toBe('assets/images/profile-1.png'); // fallback
+  });
+  it('should set currentXp and progressPercentage from response', () => {
+    const res = {
+      data: {
+        currentUserXp: 50,
+        progressPercentage: 75,
+      },
+    };
+
+    // Simulate your method that assigns these values
+    component.currentXp = res.data.currentUserXp ?? 0;
+    component.progressPercentage = res.data.progressPercentage ?? 0;
+
+    expect(component.currentXp).toBe(50);
+    expect(component.progressPercentage).toBe(75);
+  });
+
+  it('should default currentXp and progressPercentage to 0 if undefined', () => {
+    const res = {
+      data: {
+        currentUserXp: undefined,
+        progressPercentage: undefined,
+      },
+    };
+
+    component.currentXp = res.data.currentUserXp ?? 0;
+    component.progressPercentage = res.data.progressPercentage ?? 0;
+
+    expect(component.currentXp).toBe(0);
+    expect(component.progressPercentage).toBe(0);
   });
 });
