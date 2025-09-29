@@ -23,7 +23,7 @@ export const stepsToCreateBattle = [
 export const battleCreationFormFields: DynamicFormField[] = [
   {
     name: 'battleTitle',
-    label: 'Battle Title',
+    label: 'Battle Title*',
     type: 'text',
     placeholder: 'Enter battle title',
     validators: [
@@ -42,7 +42,7 @@ export const battleCreationFormFields: DynamicFormField[] = [
   },
   {
     name: 'battleCategory',
-    label: 'Battle Category',
+    label: 'Battle Category*',
     type: 'select',
     placeholder: 'Select battle category',
     validators: [Validators.required],
@@ -54,7 +54,7 @@ export const battleCreationFormFields: DynamicFormField[] = [
   },
   {
     name: 'description',
-    label: 'Description',
+    label: 'Description*',
     type: 'textarea',
     placeholder: 'Enter battle description',
     validators: [
@@ -72,7 +72,7 @@ export const battleCreationFormFields: DynamicFormField[] = [
 
   {
     name: 'battleType',
-    label: 'Battle Type',
+    label: 'Battle Type*',
     type: 'select',
     placeholder: 'Select battle type',
     validators: [Validators.required],
@@ -84,7 +84,7 @@ export const battleCreationFormFields: DynamicFormField[] = [
   },
   {
     name: 'difficultyLevel',
-    label: 'Difficulty Level',
+    label: 'Difficulty Level*',
     type: 'select',
     placeholder: 'Select difficulty level',
     validators: [Validators.required],
@@ -96,7 +96,7 @@ export const battleCreationFormFields: DynamicFormField[] = [
   },
   {
     name: 'startDate',
-    label: 'Start Date',
+    label: 'Start Date*',
     type: 'date',
     placeholder: 'Select start date (mm/dd/yyyy)',
     validators: [Validators.required, noPastDateValidator],
@@ -108,7 +108,7 @@ export const battleCreationFormFields: DynamicFormField[] = [
   },
   {
     name: 'endDate',
-    label: 'End Date',
+    label: 'End Date*',
     type: 'date',
     placeholder: 'Select end date (mm/dd/yyyy)',
     validators: [Validators.required, noPastDateValidator, afterStartDateValidator('startDate')],

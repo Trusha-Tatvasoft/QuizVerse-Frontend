@@ -37,7 +37,7 @@ export const addButtonConfig: ButtonConfig = {
 export const quizDifficultyFormFields: DynamicFormField[] = [
   {
     name: 'name',
-    label: 'Difficulty Name',
+    label: 'Difficulty Name*',
     type: 'text',
     placeholder: 'Name',
     icon: 'account_circle',
@@ -49,7 +49,7 @@ export const quizDifficultyFormFields: DynamicFormField[] = [
   },
   {
     name: 'description',
-    label: 'Description',
+    label: 'Description*',
     type: 'textarea',
     placeholder: 'Tell us about difficulty level',
     icon: 'info',

@@ -39,7 +39,7 @@ export const cancelButtonConfig: ButtonConfig = {
 export const registerFormFields: DynamicFormField[] = [
   {
     name: 'fullName',
-    label: 'Full Name',
+    label: 'Full Name*',
     type: 'text',
     placeholder: 'Full name',
     icon: 'account_circle',
@@ -58,7 +58,7 @@ export const registerFormFields: DynamicFormField[] = [
   },
   {
     name: 'username',
-    label: 'Username',
+    label: 'Username*',
     type: 'text',
     placeholder: 'Username',
     icon: 'person',
@@ -78,7 +78,7 @@ export const registerFormFields: DynamicFormField[] = [
   },
   {
     name: 'email',
-    label: 'Email',
+    label: 'Email*',
     type: 'email',
     placeholder: 'Email address',
     icon: 'mail',
@@ -108,7 +108,7 @@ export const registerFormFields: DynamicFormField[] = [
   },
   {
     name: 'password',
-    label: 'Password',
+    label: 'Password*',
     type: 'password',
     placeholder: 'Password',
     icon: 'lock',
@@ -127,7 +127,7 @@ export const registerFormFields: DynamicFormField[] = [
   },
   {
     name: 'confirmPassword',
-    label: 'Confirm Password',
+    label: 'Confirm Password*',
     type: 'password',
     placeholder: 'Confirm your password',
     icon: 'lock',
@@ -141,7 +141,7 @@ export const registerFormFields: DynamicFormField[] = [
 export const userFormFields: DynamicFormField[] = [
   {
     name: 'fullName',
-    label: 'Full Name',
+    label: 'Full Name*',
     type: 'text',
     placeholder: 'Full name',
     icon: 'account_circle',
@@ -160,7 +160,7 @@ export const userFormFields: DynamicFormField[] = [
   },
   {
     name: 'username',
-    label: 'Username',
+    label: 'Username*',
     type: 'text',
     placeholder: 'Username',
     icon: 'person',
@@ -180,7 +180,7 @@ export const userFormFields: DynamicFormField[] = [
   },
   {
     name: 'email',
-    label: 'Email',
+    label: 'Email*',
     type: 'email',
     placeholder: 'Email address',
     icon: 'mail',
@@ -197,7 +197,7 @@ export const userFormFields: DynamicFormField[] = [
   },
   {
     name: 'password',
-    label: 'Password',
+    label: 'Password*',
     type: 'password',
     placeholder: 'Password',
     icon: 'lock',

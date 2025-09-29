@@ -221,6 +221,8 @@ export const platformMessages = {
   //#region registerMessages
   emailExists: 'Email already exists.',
   usernameExists: 'Username already exists.',
+  welcomeTitle: 'Welcome to QuizVerse!!',
+  successfullLogin: 'You have been successfully logged in',
   //#endregion
 
   //#region QuestionPool Messages

@@ -19,7 +19,7 @@ export const signInButtonConfig: ButtonConfig = {
 export const loginFormFields: DynamicFormField[] = [
   {
     name: 'email',
-    label: 'Email',
+    label: 'Email*',
     type: 'email',
     placeholder: 'Enter your email',
     icon: 'mail',
@@ -34,7 +34,7 @@ export const loginFormFields: DynamicFormField[] = [
   },
   {
     name: 'password',
-    label: 'Password',
+    label: 'Password*',
     type: 'password',
     placeholder: 'Enter your password',
     icon: 'lock',

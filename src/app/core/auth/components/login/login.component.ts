@@ -94,7 +94,10 @@ export class LoginComponent implements OnDestroy {
           } else {
             this.router.navigate([`${Navigations.User}/${Navigations.Dashboard}`]);
           }
-          this.snackbar.showSuccess('Welcome back!', 'You have been successfully logged in!');
+          this.snackbar.showSuccess(
+            platformMessages.welcomeTitle,
+            platformMessages.successfullLogin,
+          );
         },
         error: (err) => {
           this.snackbar.showError(
