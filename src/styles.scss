@@ -633,3 +633,15 @@ app-data-table {
 .user-search-container .mat-mdc-form-field-hint-wrapper {
   padding: 0px;
 }
+
+// notification-center
+@media (max-width: 372px) {
+  .notification-center-view {
+    .outline-button {
+      width: 100%;
+    }
+  }
+  .text-button {
+    width: 100% !important;
+  }
+}

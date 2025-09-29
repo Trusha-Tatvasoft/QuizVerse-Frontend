@@ -1,4 +1,13 @@
-import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  signal,
+} from '@angular/core';
 import { OutlineButtonComponent } from '../../../../../../../shared/components/outline-button/outline-button.component';
 import { MatOption, MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -22,7 +31,7 @@ import {
   tablePaginationConfig,
 } from '../../../../../../../utils/constants';
 import { searchInputConfig } from '../../../../../question-pool/configs/question-pool.config';
-import { debounceTime, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { PaginationRequest } from '../../../../../../../shared/interfaces/pagination-request.interface';
 import {
   getTagConfigWithDifficulty,
@@ -48,7 +57,7 @@ import { FormControl } from '@angular/forms';
   templateUrl: './battle-creation-step-3-option-2.component.html',
   styleUrl: './battle-creation-step-3-option-2.component.scss',
 })
-export class BattleCreationStep3Option2Component {
+export class BattleCreationStep3Option2Component implements OnInit, OnDestroy {
   // Inputs from parent
   @Input() selectedQuestions: QuestionsList[] = [];
   @Input() battleStep1Data: BattleStep1Data;
@@ -81,6 +90,7 @@ export class BattleCreationStep3Option2Component {
   private readonly searchSubject = new Subject<string>();
 
   ngOnInit(): void {
+    this.getSearchedQuestions();
     this.fetchQuestions();
   }
 
@@ -92,7 +102,7 @@ export class BattleCreationStep3Option2Component {
   // Setup search with debounce and reset page number
   getSearchedQuestions(): void {
     this.searchSubject
-      .pipe(debounceTime(debounceTimeValue), takeUntil(this.destroy$))
+      .pipe(debounceTime(debounceTimeValue), distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe(() => {
         this.pagination.update((p) => ({ ...p, pageNumber: 1 }));
         this.fetchQuestions();
@@ -101,7 +111,6 @@ export class BattleCreationStep3Option2Component {
 
   // Called when search input changes
   searchInputChangeOption2(value: string) {
-    this.getSearchedQuestions();
     this.searchSubject.next(value);
   }
 

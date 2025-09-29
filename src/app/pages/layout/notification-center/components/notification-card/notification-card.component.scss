@@ -1,0 +1,11 @@
+.notification-inner {
+  max-height: 50vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+@media (max-width: 700px) {
+  .notification-inner {
+    max-height: 40vh;
+  }
+}

@@ -121,6 +121,7 @@ export enum EndPoints {
   SendOtp = 'UserProfile/send-otp-to-user',
   VerifyOtp = 'UserProfile/verify-otp',
   UpdateUserProfile = 'UserProfile/update-user-profile',
+  NavbarData = 'UserProfile/get-user-navbar-data',
   // #endregion
 
   // #region PlateformSetting
@@ -131,7 +132,7 @@ export enum EndPoints {
   // #region UserBattles
   GetBattleLeaderboardList = 'UserBattles/get-battle-leaderboard-list',
   GetUserAvailableBattles = 'UserBattles/get-user-available-battles',
-  GetUserRecentBattles = 'UserBattles/get-user-recent-battles',
+  GetUserRecentBattles = 'UserBattles/get-user-battle-history',
   SendBattleRequest = 'UserBattles/send-battle-request',
   CheckUserExistence = 'UserBattles/check-user-existence',
   SearchUser = 'UserBattles/search-user',
@@ -158,4 +159,10 @@ export enum EndPoints {
   QuizRating = 'Quiz/quiz-rating',
   SubmitQuizRating = 'Quiz/submit-quiz-rating',
   //  #endregion
+
+  //#region Notification Center
+  NotificationCenter = 'NotificationCenter/get-all-notifications',
+  MarkAsAllRead = 'NotificationCenter/mark-as-all-read',
+  MarkAsRead = 'NotificationCenter/mark-read',
+  //#endregion
 }

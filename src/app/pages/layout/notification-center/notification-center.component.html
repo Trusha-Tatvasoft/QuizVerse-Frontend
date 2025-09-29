@@ -1,0 +1,114 @@
+<main class="admin-management-page">
+  <div class="admin-page-header">
+    <app-page-header
+      [icon]="notificationConfig.icon"
+      [title]="notificationConfig.title"
+      [subtitle]="notificationConfig.subtitle"
+      [theme]="notificationConfig.theme"
+    ></app-page-header>
+  </div>
+
+  <div class="player-management-toolbar">
+    <div class="flex flex-col gap-3 w-full">
+      <div class="flex gap-3 search-container">
+        <!-- Search Input -->
+        <app-search-input
+          [placeholder]="searchInputConfig.placeholder"
+          [control]="searchControl"
+          (search)="onSearchInputChange($event)"
+          class="browse-quiz-search"
+        ></app-search-input>
+
+        <!-- Filter Button (Large) -->
+        <div class="filter-btn-large">
+          <app-filled-button
+            [filledButtonConfig]="markAsAllReadButton"
+            class="min-w-[155px]"
+            (buttonClicked)="markAsAllRead()"
+          ></app-filled-button>
+        </div>
+      </div>
+
+      <!-- Top Filters (Category, Difficulty, Type, Actions) -->
+      <div class="w-100 flex filter-btn-container">
+        <div class="browse-quiz-filters">
+          @if (isAdmin) {
+            <mat-form-field appearance="outline" class="filter-select">
+              <mat-select
+                [(value)]="selectedAdminCategory"
+                (selectionChange)="onFilterChange()"
+                placeholder="All Category"
+              >
+                <mat-option [value]="null">All Category</mat-option>
+                @for (role of adminCategoryList; track role.value) {
+                  <mat-option [value]="role.value">{{ role.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          } @else {
+            <mat-form-field appearance="outline" class="filter-select">
+              <mat-select
+                [(value)]="selectedUserCategory"
+                (selectionChange)="onFilterChange()"
+                placeholder="All Category"
+              >
+                <mat-option [value]="null">All Category</mat-option>
+                @for (role of userCategoryList; track role.value) {
+                  <mat-option [value]="role.value">{{ role.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          }
+
+          <mat-form-field appearance="outline" class="filter-select">
+            <mat-select
+              [(value)]="selectedType"
+              (selectionChange)="onFilterChange()"
+              placeholder="All Types"
+            >
+              <mat-option [value]="null">All Types</mat-option>
+              @for (role of typeList; track role.value) {
+                <mat-option [value]="role.value">{{ role.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="filter-select">
+            <mat-select
+              [(value)]="selectedTime"
+              (selectionChange)="onFilterChange()"
+              placeholder="All Time"
+            >
+              <mat-option [value]="null">All Time</mat-option>
+              @for (role of timeFilters; track role.value) {
+                <mat-option [value]="role.value">{{ role.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-3 w-full mark-clear-btn">
+            <div class="text-nowrap quiz-btn-container">
+              <app-outline-button
+                [outlineButtonConfig]="clearFilterBtn"
+                (buttonClicked)="clearFilters()"
+              ></app-outline-button>
+            </div>
+            <div class="filter-btn-small quiz-btn-container">
+              <app-filled-button
+                [filledButtonConfig]="markAsAllReadButton"
+                class="min-w-[155px]"
+                (buttonClicked)="markAsAllRead()"
+              ></app-filled-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="user-profile-tabs">
+    <app-common-tab [tabs]="tabs" [selectedIndex]="selectedTab" (tabChanged)="onTabChanged($event)">
+    </app-common-tab>
+  </div>
+</main>

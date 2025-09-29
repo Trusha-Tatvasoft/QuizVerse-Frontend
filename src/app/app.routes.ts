@@ -31,6 +31,7 @@ import { QuizInstructionsComponent } from './pages/user/quiz-attempt-layout/quiz
 import { QuestionDifficultyComponent } from './pages/admin/question-difficulty/question-difficulty.component';
 import { QuizResultPageComponent } from './pages/user/quiz-result-page/quiz-result-page.component';
 import { SearchOpponentComponent } from './pages/user/user-battles/search-opponent/search-opponent.component';
+import { NotificationCenterComponent } from './pages/layout/notification-center/notification-center.component';
 
 export const routes: Routes = [
   {
@@ -155,6 +156,11 @@ export const routes: Routes = [
         component: QuestionDifficultyComponent,
         title: 'Quizeverse | Question Difficulty',
       },
+      {
+        path: Navigations.Notifications,
+        component: NotificationCenterComponent,
+        title: 'Quizeverse | Notification Center',
+      },
     ],
   },
   {
@@ -211,6 +217,11 @@ export const routes: Routes = [
             title: 'Quizeverse | Quiz Result',
           },
         ],
+      },
+      {
+        path: Navigations.Notifications,
+        component: NotificationCenterComponent,
+        title: 'Quizeverse | Notification Center',
       },
     ],
   },

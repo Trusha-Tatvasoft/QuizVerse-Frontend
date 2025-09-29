@@ -180,13 +180,23 @@ describe('QuizCategoriesManagementComponent (Jest)', () => {
     expect(component.sort().sortDescending).toBe(true);
   });
 
-  it('should debounce and call fetchQuizCategories after search input change', fakeAsync(() => {
-    jest.spyOn(component as any, 'fetchQuizCategories');
+  it('should debounce search input and call fetch after debounce time', fakeAsync(() => {
+    const fetchSpy = jest.spyOn(component, 'fetchQuizCategories');
 
-    component.onSearchInputChange('science');
-    tick(debounceTimeValue + 1);
+    fixture.detectChanges();
+    // Reset after ngOnInit call
+    fetchSpy.mockClear();
 
-    expect((component as any).fetchQuizCategories).toHaveBeenCalled();
+    component.onSearchInputChange('t');
+    component.onSearchInputChange('te');
+    component.onSearchInputChange('tes');
+    component.onSearchInputChange('test');
+
+    tick(debounceTimeValue - 1);
+    expect(fetchSpy).not.toHaveBeenCalled();
+
+    tick(1);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
   }));
 
   it('should show error snackbar when fetch fails with error object', () => {

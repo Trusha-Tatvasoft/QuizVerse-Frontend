@@ -16,7 +16,7 @@
       <div class="cta-buttons">
         <app-filled-button
           [filledButtonConfig]="startPlayButton"
-          (buttonClicked)="loginRedirect()"
+          (buttonClicked)="startPlayRedirect()"
         ></app-filled-button>
         <app-outline-button
           [outlineButtonConfig]="browseQuizButton"
@@ -59,7 +59,7 @@
         </p>
         <app-outline-button
           [outlineButtonConfig]="joinPlatFormButton"
-          (buttonClicked)="loginRedirect()"
+          (buttonClicked)="joinPlatFormRedirect()"
         ></app-outline-button>
       </div>
     </div>

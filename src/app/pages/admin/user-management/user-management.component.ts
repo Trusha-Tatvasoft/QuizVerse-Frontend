@@ -103,7 +103,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-    // Initial data fetch
+    this.getFilteredUser();
     this.fetchUsers();
   }
 
@@ -120,7 +120,6 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
 
   onSearchInputChange(value: string): void {
-    this.getFilteredUser();
     this.searchSubject.next(value);
   }
 

@@ -1,0 +1,11 @@
+@media (max-width: 375px) {
+  .mark-clear-btn {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 700px) {
+  .quiz-btn-container {
+    width: 100% !important;
+  }
+}

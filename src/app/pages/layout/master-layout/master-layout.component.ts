@@ -23,11 +23,7 @@ export class MasterLayoutComponent implements OnInit, OnDestroy {
   role: UserType = 'player';
   isLogin: boolean = true;
   isAdmin: boolean = false;
-  currentXp: number = 500;
-  xpLimit: number = 1000;
-  notificationCount: number = 0;
   sidebarItems = navigationItems.UserRoutes.filter((item) => item.label !== 'Profile');
-  notifications = [];
 
   ngOnInit(): void {
     this.authService.currentRole$.pipe(takeUntil(this.destroy$)).subscribe((role) => {

@@ -6,9 +6,12 @@ import { environment } from '../../../../environments/environment.dev';
 import { UserBattleLeaderboardData } from '../../../pages/user/user-battles/interface/user-battles.interface';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { AvailableBattle } from '../../../pages/user/user-battles/interface/quiz-battles.interface';
-import { UserRecentBattles } from '../../../pages/user/user-battles/interface/recent-battles.interface';
 import { skipLoader } from '../../../utils/constants';
 import { BattleUserSearchResult } from '../../../pages/user/user-battles/available-battles/interfaces/challenge-friend.interface';
+import {
+  UserRecentBattlesRequestDto,
+  UserRecentBattlesResponseDto,
+} from '../../../pages/user/user-battles/interface/recent-battles.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -37,9 +40,12 @@ export class UserBattlesService {
    * @returns Observable that emits an ApiResponse containing
    *          an array of UserRecentBattles (battle result, opponent, category, XP earned, etc.).
    */
-  getUserRecentBattles(): Observable<ApiResponse<UserRecentBattles[]>> {
-    return this.http.get<ApiResponse<UserRecentBattles[]>>(
+  getUserRecentBattles(
+    battleHistoryRequest: UserRecentBattlesRequestDto,
+  ): Observable<ApiResponse<UserRecentBattlesResponseDto | null>> {
+    return this.http.post<ApiResponse<UserRecentBattlesResponseDto | null>>(
       `${environment.baseUrl}/${EndPoints.GetUserRecentBattles}`,
+      battleHistoryRequest,
     );
   }
 

@@ -18,6 +18,7 @@ import { AuthService } from '../../../core/auth/services/auth.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
 import { platformMessages } from '../../../utils/constants';
+import { Navigations } from '../../../shared/enums/navigation';
 
 describe('LandingPageComponent (Jest)', () => {
   let component: LandingPageComponent;
@@ -144,16 +145,23 @@ describe('LandingPageComponent (Jest)', () => {
     expect(brand.textContent).toContain('QuizVerse');
   });
 
-  it('should navigate to login on loginRedirect', () => {
+  it('should navigate to login on startPlayRedirect', () => {
     const navigateSpy = jest.spyOn(router, 'navigate');
-    component.loginRedirect();
-    expect(navigateSpy).toHaveBeenCalledWith(['login']);
+    component.startPlayRedirect();
+    expect(navigateSpy).toHaveBeenCalledWith([Navigations.Login]);
   });
 
-  it('should navigate to browse on browseQuizRedirect', () => {
+  //NOTE: after creating guest user browse quiz view this will be uncomment
+  // it('should navigate to browse on browseQuizRedirect', () => {
+  //   const navigateSpy = jest.spyOn(router, 'navigate');
+  //   component.browseQuizRedirect();
+  //   expect(navigateSpy).toHaveBeenCalledWith([Navigations.BrowseQuizzes]);
+  // });
+
+  it('should navigate to joinPlatFormRedirect', () => {
     const navigateSpy = jest.spyOn(router, 'navigate');
-    component.browseQuizRedirect();
-    expect(navigateSpy).toHaveBeenCalledWith(['browse-quizzes']);
+    component.joinPlatFormRedirect();
+    expect(navigateSpy).toHaveBeenCalledWith([Navigations.Login]);
   });
 
   it('should trigger click events via DOM for buttons', () => {

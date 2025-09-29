@@ -9,6 +9,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import { OutlineButtonComponent } from '../../../../shared/components/outline-button/outline-button.component';
 import { LoaderService } from '../../../../shared/service/loader/loader.service';
+import { selectedTabIndexSignal } from '../login-signup/login-signup.component';
 
 @Component({
   selector: 'app-reset-link-invalid',
@@ -35,5 +36,6 @@ export class ResetLinkInvalidComponent {
   // Navigate back to login screen
   onBackToSignInClick(): void {
     this.router.navigate([Navigations.Login]);
+    selectedTabIndexSignal.set(0);
   }
 }

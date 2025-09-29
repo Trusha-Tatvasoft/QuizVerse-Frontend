@@ -19,6 +19,7 @@ import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.se
 import { platformMessages } from '../../../../utils/constants';
 import { Navigations } from '../../../../shared/enums/navigation';
 import { ResetCredential } from '../../interfaces/forgot-reset-password.interface';
+import { selectedTabIndexSignal } from '../login-signup/login-signup.component';
 
 @Component({
   selector: 'app-reset-password',
@@ -160,6 +161,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
           );
 
           this.router.navigate([Navigations.Login]);
+          selectedTabIndexSignal.set(0);
         },
         error: (err) => {
           this.snackbarService.showError(
