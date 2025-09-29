@@ -12,7 +12,7 @@ import { FormControl } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { QuestionPoolListingComponent } from './components/question-pool-listing/question-pool-listing.component';
 import { DropdownService } from '../../../shared/service/dropdown/dropdown.service';
-import { debounceTime, forkJoin, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, forkJoin, Subject, takeUntil } from 'rxjs';
 import { DropDownType } from '../../../shared/enums/dropdown-types.enum';
 import { CommonListDropDown } from '../../../shared/interfaces/common-dropdown.interface';
 import { QuestionPoolService } from '../../../services/admin/question-pool/question-pool.service';
@@ -81,6 +81,7 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadDropdowns();
+    this.getFilteredQuestions();
     this.fetchQuestionPoolList();
   }
 
@@ -107,14 +108,15 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
   //#endregion
 
   getFilteredQuestions(): void {
-    this.searchSubject.pipe(debounceTime(debounceTimeValue)).subscribe(() => {
-      this.pagination.set({ ...this.pagination(), pageNumber: 1 });
-      this.fetchQuestionPoolList();
-    });
+    this.searchSubject
+      .pipe(debounceTime(debounceTimeValue), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.pagination.set({ ...this.pagination(), pageNumber: 1 });
+        this.fetchQuestionPoolList();
+      });
   }
 
   onSearchInputChange(value: string): void {
-    this.getFilteredQuestions();
     this.searchSubject.next(value);
   }
 

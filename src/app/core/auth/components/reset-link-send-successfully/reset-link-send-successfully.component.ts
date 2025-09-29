@@ -9,6 +9,7 @@ import { OutlineButtonComponent } from '../../../../shared/components/outline-bu
 import { Navigations } from '../../../../shared/enums/navigation';
 import { Router, RouterLink } from '@angular/router';
 import { LoaderService } from '../../../../shared/service/loader/loader.service';
+import { selectedTabIndexSignal } from '../login-signup/login-signup.component';
 
 @Component({
   selector: 'app-reset-link-send-successfully',
@@ -45,5 +46,6 @@ export class ResetLinkSendSuccessfullyComponent {
   // Handler for "Back to Sign In" button
   onSignInClick() {
     this.router.navigate([Navigations.Login]);
+    selectedTabIndexSignal.set(0);
   }
 }

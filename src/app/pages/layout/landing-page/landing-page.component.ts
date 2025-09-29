@@ -20,6 +20,7 @@ import { SnackbarService } from '../../../shared/service/snackbar/snackbar.servi
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { LoaderService } from '../../../shared/service/loader/loader.service';
 import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
+import { selectedTabIndexSignal } from '../../../core/auth/components/login-signup/login-signup.component';
 
 @Component({
   selector: 'app-landing-page',
@@ -51,11 +52,18 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   }
 
   browseQuizRedirect() {
-    this.router.navigate([Navigations.BrowseQuizzes]);
+    //NOTE: Remaining to create browse quiz for guset user
+    // this.router.navigate([Navigations.BrowseQuizzes]);
   }
 
-  loginRedirect(): void {
+  startPlayRedirect(): void {
     this.router.navigate([Navigations.Login]);
+    selectedTabIndexSignal.set(0);
+  }
+
+  joinPlatFormRedirect(): void {
+    this.router.navigate([Navigations.Login]);
+    selectedTabIndexSignal.set(1);
   }
 
   ngOnDestroy(): void {
