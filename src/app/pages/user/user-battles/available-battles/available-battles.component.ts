@@ -20,6 +20,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { platformMessages } from '../../../../utils/constants';
 import { BattleData } from '../interface/battle-data.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { ChallengeFriendComponent } from './components/challenge-friend/challenge-friend.component';
 
 @Component({
   selector: 'app-available-battles',
@@ -46,6 +48,7 @@ export class AvailableBattlesComponent implements OnInit, OnDestroy {
   private readonly snakbarService = inject(SnackbarService);
   private readonly router = inject(Router);
   private readonly destroy$ = new Subject<void>();
+  private readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {
     this.availableBattles();
@@ -85,26 +88,23 @@ export class AvailableBattlesComponent implements OnInit, OnDestroy {
     );
   }
 
-  navigateToChallengeFriend(battle: AvailableBattle & { difficultyTag: TagInputConfig }): void {
-    const encodedId = btoa(battle.battleId.toString());
-    const battleData: BattleData = {
-      battleName: battle.battleName,
-      battleCategory: battle.category,
-      battleXp: battle.maxXP,
-      battleDifficulty: battle.difficulty,
-    };
-    this.router.navigate(
-      [
-        Navigations.User,
-        Navigations.Battles,
-        Navigations.BattleList,
-        Navigations.QuizResult, // replace with correct target component
-        encodedId,
-      ],
-      {
-        state: { battleData }, // pass battle object
+  openChallengeFriendDialgue(battle: AvailableBattle) {
+    const dialogRef = this.dialog.open(ChallengeFriendComponent, {
+      width: '600px',
+      disableClose: false,
+      panelClass: 'custom-dialog-container',
+      autoFocus: false,
+      data: {
+        battleId: battle.battleId,
+        battleName: battle.battleName,
       },
-    );
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.availableBattles();
+      }
+    });
   }
 
   ngOnDestroy(): void {

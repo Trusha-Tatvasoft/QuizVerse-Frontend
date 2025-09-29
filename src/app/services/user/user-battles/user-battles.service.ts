@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
@@ -7,6 +7,8 @@ import { UserBattleLeaderboardData } from '../../../pages/user/user-battles/inte
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { AvailableBattle } from '../../../pages/user/user-battles/interface/quiz-battles.interface';
 import { UserRecentBattles } from '../../../pages/user/user-battles/interface/recent-battles.interface';
+import { skipLoader } from '../../../utils/constants';
+import { BattleUserSearchResult } from '../../../pages/user/user-battles/available-battles/interfaces/challenge-friend.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -38,6 +40,64 @@ export class UserBattlesService {
   getUserRecentBattles(): Observable<ApiResponse<UserRecentBattles[]>> {
     return this.http.get<ApiResponse<UserRecentBattles[]>>(
       `${environment.baseUrl}/${EndPoints.GetUserRecentBattles}`,
+    );
+  }
+
+  /**
+   * Send a battle request to another user.
+   * @param receiverUsername The username of the user who will receive the battle request.
+   * @param battleId The ID of the battle to be requested.
+   * @returns Observable that emits an ApiResponse indicating success or failure.
+   */
+  sendBattleRequest(receiverUsername: string, battleId: number): Observable<ApiResponse<null>> {
+    const payload = {
+      receiverUsername,
+      battleId,
+    };
+
+    return this.http.post<ApiResponse<null>>(
+      `${environment.baseUrl}/${EndPoints.SendBattleRequest}`,
+      payload,
+    );
+  }
+
+  /**
+   * Check if a user exists in the system by their username.
+   * @param username The username of the friend to verify.
+   * @returns Observable that emits an ApiResponse indicating whether the user exists.
+   */
+  checkUserExistence(username: string): Observable<ApiResponse<null>> {
+    return this.http.get<ApiResponse<null>>(
+      `${environment.baseUrl}/${EndPoints.CheckUserExistence}/${username}`,
+      {
+        headers: new HttpHeaders({
+          [skipLoader]: 'true',
+        }),
+      },
+    );
+  }
+
+  /**
+   * Search users by username for a given battle.
+   * @param userName The username (or partial name) to search.
+   * @param battleId The battle ID to filter results.
+   * @returns Observable that emits an ApiResponse with user search results.
+   */
+  searchUsers(
+    userName: string,
+    battleId: number,
+  ): Observable<ApiResponse<BattleUserSearchResult[]>> {
+    return this.http.get<ApiResponse<BattleUserSearchResult[]>>(
+      `${environment.baseUrl}/${EndPoints.SearchUser}`,
+      {
+        params: {
+          userName,
+          battleId,
+        },
+        headers: new HttpHeaders({
+          [skipLoader]: 'true',
+        }),
+      },
     );
   }
 }

@@ -1,0 +1,243 @@
+.main-dialog-content {
+  background-color: white;
+  height: auto;
+}
+
+mat-icon {
+  color: #9ca3af;
+  font-size: 18px;
+}
+
+.user-search-container {
+  position: relative;
+  z-index: 1000;
+}
+
+.no-results {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.profile-wrapper {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  margin-right: 0.5rem;
+
+  .profile-pic,
+  .profile-fallback {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    object-fit: cover;
+  }
+
+  .profile-fallback {
+    &.bg-avatar-0 {
+      background-color: #ffb703;
+      color: #000;
+    }
+
+    &.bg-avatar-1 {
+      background-color: #fb8500;
+      color: #fff;
+    }
+
+    &.bg-avatar-2 {
+      background-color: #219ebc;
+      color: #fff;
+    }
+
+    &.bg-avatar-3 {
+      background-color: #8ecae6;
+      color: #000;
+    }
+
+    &.bg-avatar-4 {
+      background-color: #ff006e;
+      color: #fff;
+    }
+
+    &.bg-avatar-5 {
+      background-color: #8338ec;
+      color: #fff;
+    }
+
+    &.bg-avatar-6 {
+      background-color: #3a86ff;
+      color: #fff;
+    }
+
+    &.bg-avatar-7 {
+      background-color: #06d6a0;
+      color: #000;
+    }
+
+    &.bg-avatar-8 {
+      background-color: #ef476f;
+      color: #fff;
+    }
+
+    &.bg-avatar-9 {
+      background-color: #ffd166;
+      color: #000;
+    }
+
+    &.bg-avatar-10 {
+      background-color: #118ab2;
+      color: #fff;
+    }
+
+    &.bg-avatar-11 {
+      background-color: #073b4c;
+      color: #fff;
+    }
+  }
+}
+
+.user-search-dropdown {
+  background: white;
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  max-height: 256px;
+  overflow-y: auto;
+  z-index: 1000;
+  margin-top: 4px;
+
+  .user-search-item {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    border-bottom: 1px solid #f3f4f6;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover,
+    &.highlighted {
+      background-color: #f9fafb;
+      border-left: 2px solid #3b82f6;
+    }
+
+    &.highlighted {
+      background-color: #eff6ff;
+    }
+
+    &.disabled-item {
+      opacity: 0.6;
+      cursor: not-allowed;
+      pointer-events: none;
+      background-color: #f9fafb;
+
+      &:hover {
+        background-color: #f9fafb;
+        border-left: none;
+      }
+    }
+
+    .user-info {
+      flex: 1;
+      min-width: 0;
+
+      .user-details {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2px;
+
+        .username {
+          font-size: 14px;
+          font-weight: 500;
+          color: #111827;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .full-name {
+        font-size: 14px;
+        color: #6b7280;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+.selected-user-display {
+  margin-top: 12px;
+  padding: 12px;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+
+  .selected-user-content {
+    display: flex;
+    align-items: center;
+
+    .selected-user-info {
+      display: flex;
+      flex-direction: column;
+
+      .selected-username {
+        font-size: 14px;
+        font-weight: 500;
+        color: #1e40af;
+      }
+
+      .selected-details {
+        font-size: 12px;
+        color: #1d4ed8;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .user-search-dropdown {
+    .user-search-item {
+      padding: 10px;
+
+      .profile-wrapper {
+        width: 36px;
+        height: 36px;
+        margin-right: 10px;
+
+        .profile-pic,
+        .profile-fallback {
+          font-size: 0.75rem;
+        }
+      }
+
+      .user-info {
+        .user-details {
+          .username {
+            font-size: 13px;
+          }
+        }
+
+        .full-name {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+}
