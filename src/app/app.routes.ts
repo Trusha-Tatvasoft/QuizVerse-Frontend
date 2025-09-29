@@ -32,6 +32,8 @@ import { QuestionDifficultyComponent } from './pages/admin/question-difficulty/q
 import { QuizResultPageComponent } from './pages/user/quiz-result-page/quiz-result-page.component';
 import { SearchOpponentComponent } from './pages/user/user-battles/search-opponent/search-opponent.component';
 import { NotificationCenterComponent } from './pages/layout/notification-center/notification-center.component';
+import { BattleInstructionComponent } from './pages/user/battle-attempt-layout/battle-instruction/battle-instruction.component';
+import { BattleAttemptLayoutComponent } from './pages/user/battle-attempt-layout/battle-attempt-layout.component';
 
 export const routes: Routes = [
   {
@@ -198,7 +200,6 @@ export const routes: Routes = [
             path: `${Navigations.BattleList}/${Navigations.SearchOpponent}/:id`,
             component: SearchOpponentComponent,
           },
-          { path: `${Navigations.BattleList}`, component: UserBattlesComponent },
         ],
       },
       {
@@ -235,6 +236,37 @@ export const routes: Routes = [
         title: 'Quizeverse | Play Quizzes',
         children: [
           { path: `${Navigations.QuizAttempt}/:id`, component: QuizAttemptLayoutComponent },
+        ],
+      },
+    ],
+  },
+  {
+    path: Navigations.User,
+    canActivate: [authGuard],
+    data: { roles: ['player'] },
+    children: [
+      {
+        path: Navigations.Battles,
+        title: 'Quizeverse | Battle Instruction',
+        children: [
+          {
+            path: `${Navigations.BattleList}/${Navigations.BattleInstruction}/:id`,
+            component: BattleInstructionComponent,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: Navigations.User,
+    canActivate: [authGuard],
+    data: { roles: ['player'] },
+    children: [
+      {
+        path: Navigations.Battles,
+        title: 'Quizeverse | Play Battle',
+        children: [
+          { path: `${Navigations.BattleAttempt}/:id`, component: BattleAttemptLayoutComponent },
         ],
       },
     ],
