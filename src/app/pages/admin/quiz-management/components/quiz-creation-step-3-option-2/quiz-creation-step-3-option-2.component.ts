@@ -10,6 +10,7 @@ import {
   searchInputConfig,
 } from '../../configs/quiz-creation.config';
 import {
+  debounceTimeValue,
   platformMessages,
   quizCRUDMessages,
   tablePaginationConfig,
@@ -18,7 +19,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { PaginationRequest } from '../../../../../shared/interfaces/pagination-request.interface';
 import { QuizCreationService } from '../../../../../services/admin/quiz-management/quiz-creation/quiz-creation.service';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
-import { Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { TagInputConfig } from '../../../../../shared/interfaces/tag-component.interface';
 import {
   getTagConfigWithDifficulty,
@@ -64,6 +65,7 @@ export class QuizCreationStep3Option2Component {
   searchInputConfig = searchInputConfig;
 
   private readonly destroy$ = new Subject<void>();
+  private readonly searchSubject = new Subject<string>();
 
   pagination = signal({ pageNumber: 1, pageSize: tablePaginationConfig.PageSize });
   sort = signal({ sortColumn: '', sortDescending: false });
@@ -74,6 +76,7 @@ export class QuizCreationStep3Option2Component {
   selectedDifficulty?: number;
 
   ngOnInit(): void {
+    this.setupSearchSubscription();
     this.fetchQuestions();
   }
 
@@ -86,10 +89,19 @@ export class QuizCreationStep3Option2Component {
     this.closeQuestionAdditionOption.emit();
   }
 
+  private setupSearchSubscription(): void {
+    this.searchSubject
+      .pipe(debounceTime(debounceTimeValue), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe((value) => {
+        this.searchValue = value;
+        this.pagination.update((p) => ({ ...p, pageNumber: 1 }));
+        this.fetchQuestions();
+      });
+  }
+
+  // Called when search input changes
   searchInputChangeOption2(value: string) {
-    this.searchValue = value;
-    this.pagination.update((p) => ({ ...p, pageNumber: 1 }));
-    this.fetchQuestions();
+    this.searchSubject.next(value);
   }
 
   filterChangeOption2() {

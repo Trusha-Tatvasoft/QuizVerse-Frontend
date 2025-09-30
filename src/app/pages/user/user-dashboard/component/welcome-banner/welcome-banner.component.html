@@ -8,8 +8,14 @@
     </p>
 
     <div class="user-dashboard-actions">
-      <app-filled-button [filledButtonConfig]="quickBattleConfig"></app-filled-button>
-      <app-filled-button [filledButtonConfig]="browseQuizzesConfig"></app-filled-button>
+      <app-filled-button
+        [filledButtonConfig]="quickBattleConfig"
+        (buttonClicked)="quickBattleNavigate()"
+      ></app-filled-button>
+      <app-filled-button
+        [filledButtonConfig]="browseQuizzesConfig"
+        (buttonClicked)="browseQuizNavigate()"
+      ></app-filled-button>
     </div>
   </div>
 </div>

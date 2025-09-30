@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   UserDashboardData,
   UserPerformanceSummary,
@@ -34,7 +34,7 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
   templateUrl: './user-dashboard.component.html',
   styleUrl: './user-dashboard.component.scss',
 })
-export class UserDashboardComponent {
+export class UserDashboardComponent implements OnInit, OnDestroy {
   quizStatsConfigs: CardInputConfig[] = [];
   bannerData = defaultBannerData;
 
