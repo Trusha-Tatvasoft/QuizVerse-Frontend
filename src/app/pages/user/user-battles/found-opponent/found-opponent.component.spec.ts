@@ -8,7 +8,7 @@ import { CheatPreventionService } from '../../../../shared/service/cheat-prevent
 import { Subject, of } from 'rxjs';
 import { Navigations } from '../../../../shared/enums/navigation';
 import {
-  autoBattleEndMessage,
+  autoSubmitBattleMessage,
   platformMessages,
   battleIdStorageKey,
 } from '../../../../utils/constants';
@@ -255,7 +255,13 @@ describe('FoundOpponentComponent', () => {
       tick(2000);
 
       expect(mockRouter.navigate).toHaveBeenCalledWith(
-        [Navigations.User, Navigations.Battles, Navigations.BattleList],
+        [
+          Navigations.User,
+          Navigations.Battles,
+          Navigations.BattleList,
+          Navigations.BattleInstruction,
+          btoa(encodeURIComponent('123')),
+        ],
         { state: { battleId: 'MTIz' } },
       );
     }));
@@ -269,7 +275,12 @@ describe('FoundOpponentComponent', () => {
       tick(2000);
 
       expect(mockRouter.navigate).toHaveBeenCalledWith(
-        [Navigations.User, Navigations.Battles, Navigations.BattleList],
+        [
+          Navigations.User,
+          Navigations.Battles,
+          Navigations.BattleAttempt,
+          btoa(encodeURIComponent('456')),
+        ],
         { state: { battleId: 'MTIz' } },
       );
     }));
@@ -313,7 +324,7 @@ describe('FoundOpponentComponent', () => {
       await component.completeBattle('Cheating detected');
 
       expect(mockSnackbarService.showError).toHaveBeenCalledWith(
-        autoBattleEndMessage('Cheating detected'),
+        autoSubmitBattleMessage('Cheating detected'),
       );
       expect(document.exitFullscreen).toHaveBeenCalled();
       expect(mockBattleHubService.interruptBattle).toHaveBeenCalledWith(456);

@@ -6,7 +6,7 @@ import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.se
 import { Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  autoBattleEndMessage,
+  autoSubmitBattleMessage,
   battleIdStorageKey,
   platformMessages,
 } from '../../../../utils/constants';
@@ -61,12 +61,22 @@ export class FoundOpponentComponent {
   redirectToBattle(): void {
     if (!this.reloadAttempted) {
       if (this.battleId && this.battleId > 0) {
+        const battleId = this.battleId!.toString();
         setTimeout(() => {
-          this.router.navigate([Navigations.User, Navigations.Battles, Navigations.BattleList], {
-            state: {
-              battleId: btoa(encodeURIComponent(this.battleId!.toString())),
+          this.router.navigate(
+            [
+              Navigations.User,
+              Navigations.Battles,
+              Navigations.BattleList,
+              Navigations.BattleInstruction,
+              btoa(encodeURIComponent(battleId)),
+            ],
+            {
+              state: {
+                battleId: btoa(encodeURIComponent(battleId)),
+              },
             },
-          }); // put battle instrction route
+          ); // put battle instrction route
         }, 2000);
       } else {
         this.snackbar.showError(platformMessages.invalideBattleId);
@@ -75,12 +85,21 @@ export class FoundOpponentComponent {
     } else {
       const battleId = this.battleId!.toString();
       if (this.battleAttemptId !== null) {
+        const battleAttemptId = this.battleAttemptId!.toString();
         setTimeout(() => {
-          this.router.navigate([Navigations.User, Navigations.Battles, Navigations.BattleList], {
-            state: {
-              battleId: btoa(encodeURIComponent(battleId)),
+          this.router.navigate(
+            [
+              Navigations.User,
+              Navigations.Battles,
+              Navigations.BattleAttempt,
+              btoa(encodeURIComponent(battleAttemptId)),
+            ],
+            {
+              state: {
+                battleId: btoa(encodeURIComponent(battleId)),
+              },
             },
-          }); // put battle Question route
+          ); // put battle Question route
         }, 2000);
       } else {
         this.snackbar.showError('Could not resume the battle. Please start a new battle.');
@@ -94,7 +113,7 @@ export class FoundOpponentComponent {
   }
 
   completeBattle(reason: string): void {
-    this.snackbar.showError(autoBattleEndMessage(reason));
+    this.snackbar.showError(autoSubmitBattleMessage(reason));
     this.closeFullscreen();
     if (this.battleHub.connected) {
       this.battleHub.interruptBattle(this.battleAttemptId!);

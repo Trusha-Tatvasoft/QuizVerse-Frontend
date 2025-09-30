@@ -307,20 +307,13 @@ export const platformMessages = {
   matchMakingFailed: 'Failed to connect to matchmaking service',
   searchTimeOut: 'Search timed out. No opponents found.',
   battleResumed: 'Battle resumed successfully',
-  // Response Messages by hub
-  battleHubMatchFound: 'MatchFound',
-  battleHubBattleResumed: 'BattleResumed',
-  battleHubContinueBattle: 'ContinueBattle',
-  battleError: 'Error',
-  battleHubBattleEndedForPlayer: 'BattleEndedForParticularPlayerDueToInterrupt',
-  battleHubPlayerInterrupted: 'PlayerInterrupted',
+
   // Request Messages for hub
   battleHubSearching: 'Searching',
   battleHubStartMatching: 'StartMatchmaking',
   battleHubCancelMatching: 'CancelMatchmaking',
   battleHubResumeBattle: 'ResumeBattle',
   battleHubBattleIntrupted: 'IntruptByPlayer',
-  battleHubBattleStarted: 'BattleStarted',
   connectionFailed: 'Connection failed:',
   matchedWith: 'Matched with',
   connectionLost: 'Connection lost. Reconnecting...',
@@ -329,9 +322,6 @@ export const platformMessages = {
   serverNotConnected: 'Not connected to server',
   failedtoStartMatching: 'Failed to start matchmaking',
   failedtoResumeBattle: 'Failed to resume battle',
-  opponentLeft: 'Your opponent has left the battle.',
-  opponentBattleEnded: 'The battle has ended for your opponent.',
-  battleComplted: 'Battle Completed!! Redirecting to result',
   failedtoEndBattle: 'Failed to end battle',
   failedtoCancelMatching: 'Failed to cancel matchmaking',
   errorInConnection: `Error stopping connection`,
@@ -342,6 +332,8 @@ export const platformMessages = {
   //#endregion
 
   // #region play battle
+  battleHubMatchFound: 'MatchFound',
+  battleError: 'Error',
   battleHubBattleStarted: 'BattleStarted',
   battleHubBattleResumed: 'BattleResumed',
   battleHubContinueBattle: 'ContinueBattle',
@@ -647,16 +639,6 @@ export const quizPlayStateKey = 'quizAttemptState';
 export function autoSubmitMessage(reason: string): string {
   return `Quiz will be auto-submitted due to: ${reason}`;
 }
-
-export function autoBattleEndMessage(reason: string): string {
-  return `Battle will end automatically due to: ${reason}`;
-}
-
-export const battleInstructionsShowTime = 30; // seconds
-
-export const battleIdStorageKey = 'battleAttemptId';
-
-export const userIdClaimKey = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata';
 // #endregion
 
 // #registrer component pattern
