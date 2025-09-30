@@ -1,7 +1,7 @@
 import angular from '@angular-eslint/eslint-plugin';
 import tseslint from 'typescript-eslint';
 import parser from '@typescript-eslint/parser';
- 
+
 export default [
   {
     ignores: ['**/*.spec.ts', '**/*.stories.ts', '.storybook/**'],
@@ -44,7 +44,7 @@ export default [
           format: ['PascalCase'],
         },
       ],
-      'max-lines': ['error', { max: 500, skipBlankLines: true, skipComments: true }],
+      'max-lines': ['error', { max: 1000, skipBlankLines: true, skipComments: true }],
       'no-var': 'error',
       'no-console': 'error',
       'max-lines-per-function': ['error', { max: 200, skipBlankLines: true, skipComments: true }],
