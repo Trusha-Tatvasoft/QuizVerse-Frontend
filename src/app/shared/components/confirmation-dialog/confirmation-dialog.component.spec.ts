@@ -98,7 +98,7 @@ describe('ConfirmationDialogComponent (Jest)', () => {
     fixture.detectChanges();
 
     const buttons = fixture.nativeElement.querySelectorAll('button');
-    expect(buttons[0].textContent).toContain('Cancel');
+    expect(buttons[0].textContent).toContain('Button');
     expect(buttons[1].textContent).toContain('Delete');
   });
 

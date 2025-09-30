@@ -35,6 +35,7 @@ import { NotificationCenterComponent } from './pages/layout/notification-center/
 import { FoundOpponentComponent } from './pages/user/user-battles/found-opponent/found-opponent.component';
 import { BattleInstructionComponent } from './pages/user/battle-attempt-layout/battle-instruction/battle-instruction.component';
 import { BattleAttemptLayoutComponent } from './pages/user/battle-attempt-layout/battle-attempt-layout.component';
+import { AdminProfileComponent } from './pages/admin/admin-profile/admin-profile.component';
 
 export const routes: Routes = [
   {
@@ -163,6 +164,11 @@ export const routes: Routes = [
         path: Navigations.Notifications,
         component: NotificationCenterComponent,
         title: 'Quizeverse | Notification Center',
+      },
+      {
+        path: Navigations.Profile,
+        component: AdminProfileComponent,
+        title: 'Quizeverse | Question Difficulty',
       },
     ],
   },

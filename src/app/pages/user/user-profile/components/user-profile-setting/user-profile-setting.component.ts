@@ -279,6 +279,8 @@ export class UserProfileSettingComponent implements OnInit, OnDestroy {
           this.snackbar.showSuccess(platformMessages.otpVerifySuccess);
           this.otpVerified.set(true);
           this.verifiedEmail.set(this.form.get('email')?.value);
+          this.otpSent.set(false);
+          this.updateOtpButtonConfig();
         },
         error: () => {
           this.snackbar.showError(platformMessages.otpVerifyFailed);

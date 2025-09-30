@@ -1,0 +1,132 @@
+<div class="profile-page player-management-page">
+  <div class="admin-page-header">
+    <app-page-header
+      [icon]="adminProfileConfig.icon"
+      [title]="adminProfileConfig.title"
+      [subtitle]="adminProfileConfig.subtitle"
+      [theme]="adminProfileConfig.theme"
+    ></app-page-header>
+  </div>
+  <!-- Profile Header -->
+  <div class="player-management-toolbar">
+    <!-- Profile image -->
+    <div class="profile-avatar">
+      <img [src]="profilePicUrl" alt="Profile Avatar" class="avatar-img" />
+
+      <label for="profile-upload" class="avatar-icon">
+        <mat-icon fontSet="material-icons-outlined">photo_camera</mat-icon>
+      </label>
+      <input id="profile-upload" type="file" accept="image/*" (change)="profileUpload($event)" />
+    </div>
+
+    <!-- Profile Info -->
+    <div class="profile-info flex justify-center flex-col align-center">
+      <span class="font-medium text-[30px]"> Hey, {{ headerFullName }}!👋 </span>
+      <span class="subtext">
+        {{ headerEmail }}
+      </span>
+    </div>
+  </div>
+  <div class="admin-profile-data form-wrapper">
+    <h3 class="font-[500] text-[24px] pb-2">Update Your Details</h3>
+    <form [formGroup]="adminProfileForm" (ngSubmit)="onSubmit()">
+      <div class="py-3">
+        @for (field of adminProfileFields; track field.name) {
+          @if (field.name !== 'otp' || otpSent()) {
+            <div [ngClass]="field.gridClass || 'col-span-1'">
+              <mat-label class="block mb-1 font-medium text-gray-700">
+                {{ field.label }}
+              </mat-label>
+
+              @if (field.type === 'textarea') {
+                <mat-form-field appearance="outline" class="custom-form-field-text full-width">
+                  <mat-icon matPrefix fontSet="material-icons-outlined">
+                    {{ field.icon || 'edit' }}
+                  </mat-icon>
+                  <textarea
+                    matInput
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder"
+                    class="custom-input-field h-[15px]"
+                  ></textarea>
+                  @if (
+                    adminProfileForm.get(field.name)?.touched &&
+                    adminProfileForm.get(field.name)?.invalid
+                  ) {
+                    <mat-error>{{ getError(field.name) }}</mat-error>
+                  }
+                </mat-form-field>
+              } @else {
+                <div class="form-field-wrapper">
+                  <mat-form-field class="custom-form-field flex-1" appearance="outline">
+                    <mat-icon matPrefix fontSet="material-icons-outlined">
+                      {{ field.icon || 'edit' }}
+                    </mat-icon>
+                    <input
+                      matInput
+                      [formControlName]="field.name"
+                      [placeholder]="field.placeholder"
+                      [type]="field.type"
+                      autocomplete="off"
+                      class="custom-input-field"
+                      (blur)="field.name === 'email' && validateEmail()"
+                    />
+                    @if (
+                      adminProfileForm.get(field.name)?.touched &&
+                      adminProfileForm.get(field.name)?.invalid
+                    ) {
+                      <mat-error>{{ getError(field.name) }}</mat-error>
+                    }
+                  </mat-form-field>
+
+                  @if (field.name === 'email') {
+                    @if (countdown() > 0) {
+                      <div class="resend-otp-timer">Resend OTP in {{ countdown() }}s</div>
+                    } @else {
+                      @if (isOtpLimitReached()) {
+                        <mat-tooltip [matTooltip]="'OTP limit reached.'">
+                          <div class="btn-container">
+                            <app-outline-button
+                              class="otp-btn"
+                              [outlineButtonConfig]="otpButtonConfig()"
+                              (buttonClicked)="sendOrResendOtp()"
+                            ></app-outline-button>
+                          </div>
+                        </mat-tooltip>
+                      } @else {
+                        <div class="btn-container">
+                          <app-outline-button
+                            class="otp-btn"
+                            [outlineButtonConfig]="otpButtonConfig()"
+                            (buttonClicked)="sendOrResendOtp()"
+                          ></app-outline-button>
+                        </div>
+                      }
+                    }
+                  }
+                  @if (field.name === 'otp' && otpSent()) {
+                    <div class="btn-container">
+                      <app-outline-button
+                        class="otp-btn"
+                        [outlineButtonConfig]="verifyOtpBtn"
+                        (buttonClicked)="verifyOtp()"
+                      ></app-outline-button>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        }
+      </div>
+
+      <div class="dialog-actions flex mt-2">
+        <app-filled-button [filledButtonConfig]="updateProfileButton"></app-filled-button>
+        <app-outline-button
+          [outlineButtonConfig]="cancelButton"
+          (buttonClicked)="cancelChanges()"
+        ></app-outline-button>
+      </div>
+    </form>
+  </div>
+</div>

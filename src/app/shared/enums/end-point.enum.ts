@@ -122,6 +122,8 @@ export enum EndPoints {
   VerifyOtp = 'UserProfile/verify-otp',
   UpdateUserProfile = 'UserProfile/update-user-profile',
   NavbarData = 'UserProfile/get-user-navbar-data',
+  GetAdminProfile = 'UserProfile/get-admin-profile',
+  UpdateAdminProfile = 'UserProfile/update-admin-profile',
   // #endregion
 
   // #region PlateformSetting
