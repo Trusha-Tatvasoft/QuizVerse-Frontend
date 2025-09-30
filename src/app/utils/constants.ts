@@ -286,12 +286,14 @@ export const platformMessages = {
   openedDeveloperTools: 'Developer tools opened',
   windowsLostFocus: 'Window lost focus',
   switchTab: 'Switched tab or minimized window',
-  fullScreenExit: 'You exited fullscreen! Quiz will be submitted.',
+  fullScreenExit: 'You exited fullscreen!',
+  failedToExitFullScreen: 'Failed to exit fullscreen',
   timeUp: 'Time is up!',
   quizSubmitSuccess: 'Quiz submitted successfully!',
   lastQuestion: 'This is the last question cannot navigate further.',
   completedQuiz: 'You have already completed this quiz and cannot play again.',
   inspectOpen: 'Cannot start the quiz while developer tools are open.',
+  inspectOpenBattle: 'Cannot start the battle while developer tools are open.',
   //#endregion
 
   // #region
@@ -308,6 +310,7 @@ export const platformMessages = {
   battleHubMatchFound: 'MatchFound',
   battleHubStartMatching: 'StartMatchmaking',
   battleHubCancelMatching: 'CancelMatchmaking',
+  battleHubResumeBattle: 'ResumeBattle',
   connectionFailed: 'Connection failed:',
   matchedWith: 'Matched with',
   connectionLost: 'Connection lost. Reconnecting...',
@@ -601,12 +604,16 @@ export const quizPlayStateKey = 'quizAttemptState';
 export function autoSubmitMessage(reason: string): string {
   return `Quiz will be auto-submitted due to: ${reason}`;
 }
+
+export function autoBattleEndMessage(reason: string): string {
+  return `Battle will end automatically due to: ${reason}`;
+}
 // #endregion
 
 // #registrer component pattern
 export const regexPatterns = {
-  NAME: /^[A-Za-z0-9][A-Za-z0-9 .'-]*$/,
-  USERNAME: /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:,.<>\/?\\|~]+$/,
+  NAME: /^[A-Za-z][A-Za-z .'-]*$/,
+  USERNAME: /^[a-zA-Z][a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:,.<>\/\\|~]+$/,
   EMAIL: /^[^\s][a-zA-Z0-9._%+-]*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
   PASSWORD: /^(?=\S*$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/,
   DESCRIPTION: /^$|^\S[\s\S]*$/,

@@ -12,15 +12,33 @@ export class DisableQuizShortcutsDirective {
     const key = event.key.toLowerCase();
 
     const isBlocked =
-      (event.ctrlKey && ['c', 'v', 'w', 'e', 'r', 't', 'n'].includes(key)) ||
-      (event.ctrlKey && event.shiftKey && ['n', 't'].includes(key)) ||
-      ['shift', 'alt'].includes(key) ||
+      (event.ctrlKey && ['c', 'v', 'w', 'e', 'r', 't', 'n', 'f'].includes(key)) ||
+      (event.ctrlKey && event.shiftKey && ['n', 't', 'r'].includes(key)) ||
+      ['alt'].includes(key) ||
       key === 'f5' ||
-      (event.altKey && key === 'f4');
+      (event.altKey && key === 'f4') ||
+      (event.altKey && ['arrowleft', 'arrowright', 'arrowup', 'arrowdown'].includes(key));
 
     if (isBlocked) {
       event.preventDefault();
-      this.showBlockedShortcutWarning(key);
+
+      let shortcut = key.toUpperCase();
+
+      // Format Ctrl shortcuts
+      if (event.ctrlKey && event.shiftKey) {
+        shortcut = `Ctrl + Shift + ${key.toUpperCase()}`;
+      } else if (event.ctrlKey) {
+        shortcut = `Ctrl + ${key.toUpperCase()}`;
+      }
+
+      // Format Alt shortcuts
+      if (event.altKey && key === 'f4') {
+        shortcut = 'Alt + F4';
+      } else if (event.altKey && key.startsWith('arrow')) {
+        shortcut = `Alt + ${key.replace('arrow', '').toUpperCase()}`;
+      }
+
+      this.showBlockedShortcutWarning(shortcut);
     }
   }
 

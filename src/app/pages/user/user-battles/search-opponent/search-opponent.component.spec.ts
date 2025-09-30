@@ -69,6 +69,14 @@ describe('SearchOpponentComponent', () => {
 
     // Reset mocks
     jest.clearAllMocks();
+    mockBattleHubService.onMatchFound = new Subject<PlayerProfileDTO>();
+    mockBattleHubService.onSearching = new Subject<void>();
+  });
+
+  afterEach(() => {
+    if (component['timerInterval']) {
+      clearInterval(component['timerInterval']);
+    }
   });
 
   it('should create', () => {
@@ -116,9 +124,9 @@ describe('SearchOpponentComponent', () => {
         winRate: 60,
       };
 
+      component.battleId = 123;
       mockBattleHubService.onMatchFound.next(mockOpponent);
 
-      expect(component.isSearching).toBe(false);
       expect(component.opponent).toEqual({
         fullName: 'Opponent Player',
         userId: 42,
@@ -129,16 +137,36 @@ describe('SearchOpponentComponent', () => {
       });
     });
 
-    it('should subscribe to onSearching and set isSearching to true', async () => {
+    it('should navigate to battle page when match is found', async () => {
       mockBattleHubService.connect.mockResolvedValue(undefined);
 
       await (component as any).connectToHub();
 
-      component.isSearching = false;
+      const mockOpponent: PlayerProfileDTO = {
+        fullName: 'Opponent Player',
+        userId: 42,
+        currentLevel: 5,
+        profilePic: 'profile.png',
+        userName: 'opponent123',
+        winRate: 60,
+      };
 
-      mockBattleHubService.onSearching.next();
+      component.battleId = 123;
 
-      expect(component.isSearching).toBe(true);
+      mockBattleHubService.onMatchFound.next(mockOpponent);
+
+      expect(mockRouter.navigate).toHaveBeenCalledWith(
+        [
+          Navigations.User,
+          Navigations.Battles,
+          Navigations.BattleList,
+          Navigations.FoundOpponent,
+          btoa(encodeURIComponent('123')),
+        ],
+        {
+          state: { opponent: component.opponent },
+        },
+      );
     });
 
     it('should show error snackbar if connect throws', async () => {
@@ -147,6 +175,16 @@ describe('SearchOpponentComponent', () => {
       await (component as any).connectToHub();
 
       expect(mockSnackbarService.showError).toHaveBeenCalledWith('Connection failed');
+    });
+
+    it('should show generic error if connection fails without specific message', async () => {
+      mockBattleHubService.connect.mockRejectedValue({});
+
+      await (component as any).connectToHub();
+
+      expect(mockSnackbarService.showError).toHaveBeenCalledWith(
+        platformMessages.matchMakingFailed,
+      );
     });
   });
 
@@ -163,6 +201,18 @@ describe('SearchOpponentComponent', () => {
       expect(mockRouter.navigate).not.toHaveBeenCalled();
     }));
 
+    it('should start matchmaking after connection is established if not connected', fakeAsync(() => {
+      mockBattleHubService.connected = false;
+      mockBattleHubService.connect.mockResolvedValue(undefined);
+      mockActivatedRoute.snapshot.paramMap.get.mockReturnValue(encodeURIComponent(btoa('123')));
+
+      component['decodeRouteId']();
+      tick();
+
+      expect(mockBattleHubService.connect).toHaveBeenCalled();
+      expect(mockBattleHubService.startMatchmaking).toHaveBeenCalledWith(123);
+    }));
+
     it('should handle invalid battleId and navigate to battles', fakeAsync(() => {
       mockActivatedRoute.snapshot.paramMap.get.mockReturnValue(encodeURIComponent(btoa('invalid')));
 
@@ -171,7 +221,11 @@ describe('SearchOpponentComponent', () => {
 
       expect(component.battleId).toBe(null);
       expect(mockSnackbarService.showError).toHaveBeenCalledWith(platformMessages.invalideBattleId);
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/battles']);
+      expect(mockRouter.navigate).toHaveBeenCalledWith([
+        Navigations.User,
+        Navigations.Battles,
+        Navigations.BattleList,
+      ]);
     }));
 
     it('should handle missing battleId and navigate to battles', fakeAsync(() => {
@@ -182,33 +236,32 @@ describe('SearchOpponentComponent', () => {
 
       expect(component.battleId).toBe(null);
       expect(mockSnackbarService.showError).toHaveBeenCalledWith(platformMessages.invalideBattleId);
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/battles']);
+      expect(mockRouter.navigate).toHaveBeenCalledWith([
+        Navigations.User,
+        Navigations.Battles,
+        Navigations.BattleList,
+      ]);
     }));
 
     it('should set battleData from navigation state', fakeAsync(() => {
       mockActivatedRoute.snapshot.paramMap.get.mockReturnValue(encodeURIComponent(btoa('123')));
-      mockRouter.getCurrentNavigation.mockReturnValue({
-        extras: {
-          state: {
-            battleData: {
-              battleName: 'Math Champions',
-              battleCategory: 'Mathematics',
-              battleDifficulty: 'Medium',
-              battleXp: 150,
-            },
-          },
-        },
+      const mockBattleData = {
+        battleName: 'Math Champions',
+        battleCategory: 'Mathematics',
+        battleDifficulty: 'Medium',
+        battleXp: 150,
+      };
+
+      // Mock history state
+      Object.defineProperty(history, 'state', {
+        value: { battleData: mockBattleData },
+        writable: true,
       });
 
       component['decodeRouteId']();
       tick();
 
-      expect(component.battleData).toEqual({
-        battleName: 'Math Champions',
-        battleCategory: 'Mathematics',
-        battleDifficulty: 'Medium',
-        battleXp: 150,
-      });
+      expect(component.battleData).toEqual(mockBattleData);
     }));
   });
 
@@ -222,6 +275,9 @@ describe('SearchOpponentComponent', () => {
 
       tick(1000);
       expect(component.searchSeconds).toBe(2);
+
+      // Clean up
+      component['stopTimer']();
     }));
 
     it('should cancel search after 30 seconds', fakeAsync(() => {
@@ -231,28 +287,59 @@ describe('SearchOpponentComponent', () => {
       tick(30000);
 
       expect(component.isSearchTimeOut).toBe(true);
-      expect(mockSnackbarService.showWarning).toHaveBeenCalledWith(
-        'Search timed out. No opponents found.',
-      );
+      expect(mockSnackbarService.showWarning).toHaveBeenCalledWith(platformMessages.searchTimeOut);
       expect(cancelSpy).toHaveBeenCalled();
+
+      // Clean up
+      component['stopTimer']();
     }));
+
+    it('should not exceed 30 seconds', fakeAsync(() => {
+      component['startSearchTimer']();
+
+      tick(35000); // 35 seconds
+
+      expect(component.searchSeconds).toBe(30);
+      expect(component.isSearchTimeOut).toBe(true);
+
+      // Clean up
+      component['stopTimer']();
+    }));
+  });
+
+  describe('stopTimer', () => {
+    it('should clear timer interval and set it to null', () => {
+      component['timerInterval'] = setInterval(() => {}, 1000);
+
+      component['stopTimer']();
+
+      expect(component['timerInterval']).toBeNull();
+    });
+
+    it('should handle case when timerInterval is null', () => {
+      component['timerInterval'] = null;
+
+      expect(() => component['stopTimer']()).not.toThrow();
+      expect(component['timerInterval']).toBeNull();
+    });
   });
 
   describe('cancelSearch', () => {
     it('should cancel matchmaking, stop timer, and navigate to battles', fakeAsync(() => {
       component.battleId = 123;
       component['timerInterval'] = setInterval(() => {}, 1000);
-      const stopTimerSpy = jest.spyOn(component, 'stopTimer' as any);
 
       component.cancelSearch();
       tick(100);
 
       expect(mockBattleHubService.cancelMatchmaking).toHaveBeenCalledWith(123);
-      expect(mockSnackbarService.showInfo).toHaveBeenCalledWith('Search cancelled');
-      expect(stopTimerSpy).toHaveBeenCalled();
-      expect(component.isSearching).toBe(false);
+      expect(mockSnackbarService.showInfo).toHaveBeenCalledWith(platformMessages.cancelSearch);
       expect(mockBattleHubService.stopConnection).toHaveBeenCalled();
-      expect(mockRouter.navigate).toHaveBeenCalledWith([Navigations.User, Navigations.Battles]);
+      expect(mockRouter.navigate).toHaveBeenCalledWith([
+        Navigations.User,
+        Navigations.Battles,
+        Navigations.BattleList,
+      ]);
     }));
 
     it('should not show info message if search timed out', fakeAsync(() => {
@@ -264,25 +351,106 @@ describe('SearchOpponentComponent', () => {
 
       expect(mockSnackbarService.showInfo).not.toHaveBeenCalled();
     }));
+
+    it('should handle case when battleId is null', fakeAsync(() => {
+      component.battleId = null;
+      component['timerInterval'] = setInterval(() => {}, 1000);
+
+      component.cancelSearch();
+      tick(100);
+
+      expect(mockBattleHubService.cancelMatchmaking).not.toHaveBeenCalled();
+      expect(mockSnackbarService.showInfo).toHaveBeenCalledWith(platformMessages.cancelSearch);
+    }));
   });
 
-  describe('imageError', () => {
-    it('should set isImageError to true', () => {
-      component.imageError();
-      expect(component.isImageError).toBe(true);
+  describe('openFullscreen', () => {
+    it('should attempt to open fullscreen with various browser methods', () => {
+      const mockElem = {
+        requestFullscreen: jest.fn(),
+        webkitRequestFullscreen: jest.fn(),
+        msRequestFullscreen: jest.fn(),
+      };
+
+      jest.spyOn(document, 'documentElement', 'get').mockReturnValue(mockElem as any);
+
+      component.openFullscreen();
+
+      expect(mockElem.requestFullscreen).toHaveBeenCalled();
+    });
+
+    it('should try webkit method if standard method not available', () => {
+      const mockElem = {
+        requestFullscreen: undefined,
+        webkitRequestFullscreen: jest.fn(),
+        msRequestFullscreen: jest.fn(),
+      };
+
+      jest.spyOn(document, 'documentElement', 'get').mockReturnValue(mockElem as any);
+
+      component.openFullscreen();
+
+      expect(mockElem.webkitRequestFullscreen).toHaveBeenCalled();
+    });
+
+    it('should try ms method if other methods not available', () => {
+      const mockElem = {
+        requestFullscreen: undefined,
+        webkitRequestFullscreen: undefined,
+        msRequestFullscreen: jest.fn(),
+      };
+
+      jest.spyOn(document, 'documentElement', 'get').mockReturnValue(mockElem as any);
+
+      component.openFullscreen();
+
+      expect(mockElem.msRequestFullscreen).toHaveBeenCalled();
     });
   });
 
   describe('ngOnDestroy', () => {
-    it('should clean up timer and hub connection', () => {
+    it('should clean up timer, destroy subject, and stop hub connection', () => {
+      // Set up timer interval
       component['timerInterval'] = setInterval(() => {}, 1000);
-      const stopTimerSpy = jest.spyOn(component, 'stopTimer' as any);
+      const clearIntervalSpy = jest.spyOn(window, 'clearInterval');
+
+      // Spy on internal methods
+      const stopTimerSpy = jest.spyOn(component as any, 'stopTimer');
+      const nextSpy = jest.spyOn(component['destroy$'], 'next');
+      const completeSpy = jest.spyOn(component['destroy$'], 'complete');
 
       component.ngOnDestroy();
 
       expect(stopTimerSpy).toHaveBeenCalled();
-      expect(mockBattleHubService.stopConnection).toHaveBeenCalled();
+      expect(nextSpy).toHaveBeenCalled();
+      expect(completeSpy).toHaveBeenCalled();
       expect(component['destroy$'].isStopped).toBe(true);
+      expect(clearIntervalSpy).toHaveBeenCalled();
+
+      clearIntervalSpy.mockRestore();
+    });
+
+    it('should handle ngOnDestroy when timerInterval is null', () => {
+      component['timerInterval'] = null;
+
+      expect(() => component.ngOnDestroy()).not.toThrow();
+      expect(component['destroy$'].isStopped).toBe(true);
+    });
+  });
+
+  describe('Component Properties', () => {
+    it('should have correct initial values', () => {
+      expect(component.cancelSearchButtonConfig).toBeDefined();
+      expect(component.searchSeconds).toBe(0);
+      expect(component.battleId).toBeNull();
+      expect(component.opponent).toBeNull();
+      expect(component.battleData).toEqual({
+        battleName: 'Math Champions',
+        battleCategory: 'Mathematics',
+        battleDifficulty: 'Medium',
+        battleXp: 150,
+      });
+      expect(component.isSearchTimeOut).toBe(false);
     });
   });
 });

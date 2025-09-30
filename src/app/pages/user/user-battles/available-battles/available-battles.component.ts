@@ -64,6 +64,10 @@ export class AvailableBattlesComponent implements OnInit, OnDestroy {
   }
 
   navigateToBattle(battle: AvailableBattle & { difficultyTag: TagInputConfig }): void {
+    if (this.isDevToolsOpen()) {
+      this.snakbarService.showError(platformMessages.inspectOpenBattle);
+      return;
+    }
     const encodedId = btoa(battle.battleId.toString());
     const battleData: BattleData = {
       battleName: battle.battleName,
@@ -76,7 +80,7 @@ export class AvailableBattlesComponent implements OnInit, OnDestroy {
         Navigations.User,
         Navigations.Battles,
         Navigations.BattleList,
-        Navigations.QuizResult, // replace with correct target component
+        Navigations.SearchOpponent, // replace with correct target component
         encodedId,
       ],
       {
@@ -102,7 +106,7 @@ export class AvailableBattlesComponent implements OnInit, OnDestroy {
         encodedId,
       ],
       {
-        state: { battleData }, // pass battle object
+        state: { battleData: battleData }, // pass battle object
       },
     );
   }
@@ -136,5 +140,12 @@ export class AvailableBattlesComponent implements OnInit, OnDestroy {
           );
         },
       });
+  }
+
+  private isDevToolsOpen(): boolean {
+    const threshold = 160; // pixels, typical devtools width/height
+    const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+    const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+    return widthThreshold || heightThreshold;
   }
 }
