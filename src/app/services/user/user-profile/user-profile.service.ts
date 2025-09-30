@@ -14,6 +14,10 @@ import {
   VerifyOtpRequest,
 } from '../../../pages/user/user-profile/interfaces/user-profile-setting.interface';
 import { skipLoader } from '../../../utils/constants';
+import {
+  AdminProfileUpdatedData,
+  AdminUserProfileFormData,
+} from '../../../pages/admin/admin-profile/interface/admin-profile.component.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -53,25 +57,25 @@ export class UserProfileService {
 
   getUserOverview(): Observable<ApiResponse<UserOverview>> {
     return this.http.get<ApiResponse<UserOverview>>(
-      `${environment.baseUrl}/UserProfile/get-user-overview`,
+      `${environment.baseUrl}/${EndPoints.GetUserOverview}`,
     );
   }
 
   getUserBadges(): Observable<ApiResponse<UserBadges[]>> {
     return this.http.get<ApiResponse<UserBadges[]>>(
-      `${environment.baseUrl}/UserProfile/get-user-badges`,
+      `${environment.baseUrl}/${EndPoints.GetUserBadges}`,
     );
   }
 
   getUserProfileSetting(): Observable<ApiResponse<UserProfileSetting>> {
     return this.http.get<ApiResponse<UserProfileSetting>>(
-      `${environment.baseUrl}/UserProfile/get-user-profile-setting`,
+      `${environment.baseUrl}/${EndPoints.GetUserProfileSetting}`,
     );
   }
 
   checkEmailAvailable(email: string): Observable<ApiResponse<boolean>> {
     return this.http.get<ApiResponse<boolean>>(
-      `${environment.baseUrl}/UserProfile/is-email-available?email=${encodeURIComponent(email)}`,
+      `${environment.baseUrl}/${EndPoints.CheckEmailAvailable}?email=${encodeURIComponent(email)}`,
       {
         headers: new HttpHeaders({
           [skipLoader]: 'true',
@@ -81,22 +85,19 @@ export class UserProfileService {
   }
 
   sendOtp(data: UserProfileSetting): Observable<ApiResponse<string>> {
-    return this.http.post<ApiResponse<string>>(
-      `${environment.baseUrl}/UserProfile/send-otp-to-user`,
-      data,
-    );
+    return this.http.post<ApiResponse<string>>(`${environment.baseUrl}/${EndPoints.SendOtp}`, data);
   }
 
   verifyOtp(data: VerifyOtpRequest): Observable<ApiResponse<boolean>> {
     return this.http.post<ApiResponse<boolean>>(
-      `${environment.baseUrl}/UserProfile/verify-otp`,
+      `${environment.baseUrl}/${EndPoints.VerifyOtp}`,
       data,
     );
   }
 
   updateUserProfile(data: UserProfileSetting) {
     return this.http
-      .put<ApiResponse<string>>(`${environment.baseUrl}/UserProfile/update-user-profile`, data)
+      .put<ApiResponse<string>>(`${environment.baseUrl}/${EndPoints.UpdateUserProfile}`, data)
       .pipe(
         tap((res) => {
           if (res.result) {
@@ -104,5 +105,18 @@ export class UserProfileService {
           }
         }),
       );
+  }
+
+  getAdminProfile(): Observable<ApiResponse<AdminUserProfileFormData>> {
+    return this.http.get<ApiResponse<AdminUserProfileFormData>>(
+      `${environment.baseUrl}/${EndPoints.GetAdminProfile}`,
+    );
+  }
+
+  updateAdminProfile(data: AdminProfileUpdatedData) {
+    return this.http.put<ApiResponse<string>>(
+      `${environment.baseUrl}/${EndPoints.UpdateAdminProfile}`,
+      data,
+    );
   }
 }
