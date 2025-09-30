@@ -39,6 +39,7 @@ import {
 } from 'rxjs';
 import { platformMessages } from '../../../../../../utils/constants';
 import { SnackbarService } from '../../../../../../shared/service/snackbar/snackbar.service';
+import { ApiResponse } from '../../../../../../shared/interfaces/api-response.interface';
 
 @Component({
   selector: 'app-challenge-friend',
@@ -92,57 +93,65 @@ export class ChallengeFriendComponent {
   }
 
   ngOnInit(): void {
+    this.initializeUserSearchListener();
+  }
+
+  initializeUserSearchListener(): void {
     this.challengeFriendForm
       .get(this.challengeFriendFormField.name)
       ?.valueChanges.pipe(
         debounceTime(600),
         distinctUntilChanged(),
-        switchMap((value: string) => {
-          const trimmed = value.trim();
-          this.searchQuery = trimmed;
-
-          if (!trimmed) {
-            this.filteredUsers = [];
-            this.closeDropdown();
-            this.selectedUser = null;
-            return of(null);
-          }
-
-          return this.userBattlesService.searchUsers(trimmed, this.data.battleId).pipe(
-            catchError(() => {
-              this.filteredUsers = [];
-              return of(null);
-            }),
-          );
-        }),
+        switchMap((value: string) => this.handleSearch(value)),
         takeUntil(this.destroy$),
       )
-      .subscribe((response) => {
-        if (!response) {
-          if (this.searchQuery) {
-            this.openDropdown(this.usernameInput.nativeElement);
-          }
-          return;
-        }
+      .subscribe((response) => this.handleSearchResponse(response));
+  }
 
-        if (response.result && response.data) {
-          const raw = response.data ?? [];
-          this.filteredUsers = raw.map((u) => ({
-            ...u,
-            profilePic: u.profilePic ? `${environment.imageBaseUrl}/${u.profilePic}` : '',
-          }));
+  handleSearch(value: string) {
+    const trimmed = value.trim();
+    this.searchQuery = trimmed;
 
-          if (this.filteredUsers.length > 0 && this.usernameInput) {
-            this.openDropdown(this.usernameInput.nativeElement);
-          } else {
-            this.closeDropdown();
-          }
-        } else {
-          this.filteredUsers = [];
-          this.closeDropdown();
-        }
-        this.highlightedIndex = -1;
-      });
+    if (!trimmed) {
+      this.filteredUsers = [];
+      this.closeDropdown();
+      this.selectedUser = null;
+      return of(null);
+    }
+
+    return this.userBattlesService.searchUsers(trimmed, this.data.battleId).pipe(
+      catchError(() => {
+        this.filteredUsers = [];
+        return of(null);
+      }),
+    );
+  }
+
+  handleSearchResponse(response: ApiResponse<BattleUserSearchResult[]> | null): void {
+    if (!response) {
+      if (this.searchQuery) {
+        this.openDropdown(this.usernameInput.nativeElement);
+      }
+      return;
+    }
+
+    if (response.result && response.data) {
+      const raw = response.data ?? [];
+      this.filteredUsers = raw.map((u) => ({
+        ...u,
+        profilePic: u.profilePic ? `${environment.imageBaseUrl}/${u.profilePic}` : '',
+      }));
+
+      if (this.filteredUsers.length > 0 && this.usernameInput) {
+        this.openDropdown(this.usernameInput.nativeElement);
+      } else {
+        this.closeDropdown();
+      }
+    } else {
+      this.filteredUsers = [];
+      this.closeDropdown();
+    }
+    this.highlightedIndex = -1;
   }
 
   openDropdown(origin: HTMLElement) {
