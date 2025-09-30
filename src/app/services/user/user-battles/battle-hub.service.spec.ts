@@ -7,6 +7,7 @@ import {
   BattleStartDetails,
 } from '../../../pages/user/user-battles/interface/search-opponent.interface';
 import { platformMessages } from '../../../utils/constants';
+import { ReplaySubject, Subject } from 'rxjs';
 
 // Create a complete mock for SignalR
 const mockHubConnection = {
@@ -523,39 +524,55 @@ describe('BattleHubService', () => {
   });
 
   describe('submitAnswer', () => {
-    beforeEach(async () => {
-      mockHubConnection.start.mockResolvedValue(undefined);
+    beforeEach(() => {
       service['hubConnection'] = mockHubConnection as any;
       service['isConnected'] = true;
       mockHubConnection.state = 'Connected';
     });
 
-    it('should submit answer successfully', async () => {
+    it('should call hubConnection.invoke when connected', () => {
       mockHubConnection.invoke.mockResolvedValue(undefined);
+      const errorSpy = jest.spyOn(service['_errorSubject'], 'next');
 
-      await service.submitAnswer(123, 1, 'A');
+      service.submitAnswer(123, 1, 'A');
 
       expect(mockHubConnection.invoke).toHaveBeenCalledWith('SubmitAnswer', 123, 1, 'A');
-      expect(mockSnackbarService.showError).not.toHaveBeenCalled();
+      expect(service['_errorSubject'].next).not.toHaveBeenCalled();
     });
 
-    it('should handle submit answer failure', async () => {
+    it('should emit error if not connected and not call invoke', () => {
+      service['isConnected'] = false;
+      const errorSpy = jest.spyOn(service['_errorSubject'], 'next');
+
+      service.submitAnswer(123, 1, 'A');
+
+      expect(errorSpy).toHaveBeenCalledWith(
+        'Connection lost. Please check your internet and try again.',
+      );
+      expect(mockHubConnection.invoke).not.toHaveBeenCalled();
+    });
+
+    it('should emit error message from Error object when invoke fails', async () => {
       const error = new Error('Failed to submit');
       mockHubConnection.invoke.mockRejectedValue(error);
       const errorSpy = jest.spyOn(service['_errorSubject'], 'next');
 
-      await expect(service.submitAnswer(123, 1, 'A')).rejects.toThrow('Failed to submit');
+      service.submitAnswer(123, 1, 'A');
+      await Promise.resolve(); // flush the .catch microtask
+
       expect(mockHubConnection.invoke).toHaveBeenCalledWith('SubmitAnswer', 123, 1, 'A');
       expect(errorSpy).toHaveBeenCalledWith('Failed to submit');
     });
 
-    it('should handle submit answer failure with null error', async () => {
+    it('should emit default platform message when invoke fails with non-Error', async () => {
       mockHubConnection.invoke.mockRejectedValue({});
       const errorSpy = jest.spyOn(service['_errorSubject'], 'next');
 
-      await expect(service.submitAnswer(123, 1, 'A')).rejects.toThrow('Failed to submit answer');
+      service.submitAnswer(123, 1, 'A');
+      await Promise.resolve(); // flush the .catch microtask
+
       expect(mockHubConnection.invoke).toHaveBeenCalledWith('SubmitAnswer', 123, 1, 'A');
-      expect(errorSpy).toHaveBeenCalledWith('Failed to submit answer');
+      expect(errorSpy).toHaveBeenCalledWith(platformMessages.answerSubmitFailed);
     });
   });
 
@@ -770,6 +787,91 @@ describe('BattleHubService', () => {
       });
 
       service['_errorSubject'].next(errorMessage);
+    });
+  });
+
+  describe('stopConnection', () => {
+    beforeEach(() => {
+      service['hubConnection'] = mockHubConnection as any;
+      service['isConnected'] = true;
+      service['connectionPromise'] = Promise.resolve();
+    });
+
+    it('should stop connection successfully', async () => {
+      mockHubConnection.stop.mockResolvedValue(undefined);
+
+      await service.stopConnection();
+
+      expect(mockHubConnection.stop).toHaveBeenCalled();
+      expect(service['isConnected']).toBe(false);
+      expect(service['connectionPromise']).toBe(null);
+    });
+
+    it('should handle stop connection failure', async () => {
+      const error = new Error('Stop failed');
+      mockHubConnection.stop.mockRejectedValue(error);
+
+      await service.stopConnection();
+
+      expect(mockSnackbarService.showError).toHaveBeenCalledWith('Stop failed');
+      expect(service['isConnected']).toBe(true); // still true because stop failed
+    });
+
+    it('should handle stop connection failure with non-Error', async () => {
+      mockHubConnection.stop.mockRejectedValue({});
+
+      await service.stopConnection();
+
+      expect(mockSnackbarService.showError).toHaveBeenCalledWith(
+        platformMessages.errorInConnection,
+      );
+      expect(service['isConnected']).toBe(true);
+    });
+  });
+
+  describe('cleanupBattleSubjects - new subjects functionality', () => {
+    it('should create new subjects after cleanup', (done) => {
+      service.cleanupBattleSubjects();
+
+      expect(service['battleStarted$']).toBeInstanceOf(ReplaySubject);
+      expect(service['battleResumed$']).toBeInstanceOf(ReplaySubject);
+      expect(service['continueBattle$']).toBeInstanceOf(Subject);
+      expect(service['question$']).toBeInstanceOf(ReplaySubject);
+      expect(service['scoreUpdate$']).toBeInstanceOf(Subject);
+      expect(service['lastAnsweredDetail$']).toBeInstanceOf(Subject);
+      expect(service['playerInterrupted$']).toBeInstanceOf(Subject);
+      expect(service['battleEndedForParticularPlayer$']).toBeInstanceOf(Subject);
+      expect(service['_errorSubject']).toBeInstanceOf(Subject);
+
+      // test new subjects are functional
+      service.onBattleStarted.subscribe((val) => {
+        expect(val).toEqual({ battleAttemptId: 999 } as any);
+        done();
+      });
+
+      service['battleStarted$'].next({ battleAttemptId: 999 } as any);
+    });
+  });
+
+  describe('connected getter', () => {
+    it('should return false if hubConnection is null', () => {
+      service['hubConnection'] = null;
+      service['isConnected'] = true;
+      expect(service.connected).toBe(false);
+    });
+
+    it('should return false if hubConnection.state is not Connected', () => {
+      mockHubConnection.state = 'Disconnected';
+      service['hubConnection'] = mockHubConnection as any;
+      service['isConnected'] = true;
+      expect(service.connected).toBe(false);
+    });
+
+    it('should return true only if hubConnection.state is Connected and isConnected true', () => {
+      mockHubConnection.state = 'Connected';
+      service['hubConnection'] = mockHubConnection as any;
+      service['isConnected'] = true;
+      expect(service.connected).toBe(true);
     });
   });
 });
