@@ -146,7 +146,7 @@ describe('AvailableBattlesComponent', () => {
     };
 
     expect(mockRouter.navigate).toHaveBeenCalledWith(
-      ['user', 'battles', 'battle-list', 'quiz-result', encodedId],
+      ['user', 'battles', 'battle-list', 'search-opponent', encodedId],
       { state: { battleData } },
     );
   });
