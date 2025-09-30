@@ -243,13 +243,6 @@ export const routes: Routes = [
           { path: `${Navigations.QuizAttempt}/:id`, component: QuizAttemptLayoutComponent },
         ],
       },
-    ],
-  },
-  {
-    path: Navigations.User,
-    canActivate: [authGuard],
-    data: { roles: ['player'] },
-    children: [
       {
         path: Navigations.Battles,
         title: 'Quizeverse | Play Battle',
@@ -259,38 +252,16 @@ export const routes: Routes = [
             component: FoundOpponentComponent,
             title: 'Quizeverse | Found Opponent',
           },
-        ],
-      },
-    ],
-  },
-
-  {
-    path: Navigations.User,
-    canActivate: [authGuard],
-    data: { roles: ['player'] },
-    children: [
-      {
-        path: Navigations.Battles,
-        title: 'Quizeverse | Battle Instruction',
-        children: [
           {
             path: `${Navigations.BattleList}/${Navigations.BattleInstruction}/:id`,
             component: BattleInstructionComponent,
+            title: 'Quizeverse | Battle Instruction',
           },
-        ],
-      },
-    ],
-  },
-  {
-    path: Navigations.User,
-    canActivate: [authGuard],
-    data: { roles: ['player'] },
-    children: [
-      {
-        path: Navigations.Battles,
-        title: 'Quizeverse | Play Battle',
-        children: [
-          { path: `${Navigations.BattleAttempt}/:id`, component: BattleAttemptLayoutComponent },
+          {
+            path: `${Navigations.BattleAttempt}/:id`,
+            component: BattleAttemptLayoutComponent,
+            title: 'Quizeverse | Play Battle',
+          },
         ],
       },
     ],
