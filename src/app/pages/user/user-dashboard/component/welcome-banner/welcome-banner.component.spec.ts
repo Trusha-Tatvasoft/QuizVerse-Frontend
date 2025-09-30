@@ -47,7 +47,7 @@ describe('WelcomeBannerComponent (standalone)', () => {
     fixture.detectChanges();
 
     const titleEl = fixture.nativeElement.querySelector('.title');
-    expect(titleEl.textContent).toContain('Welcome back, Alice!');
+    expect(titleEl.textContent).toContain('Welcome, Alice!');
 
     const subtitleEl = fixture.nativeElement.querySelector('.subtitle');
     expect(subtitleEl.textContent).toContain('#12');

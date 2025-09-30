@@ -197,7 +197,7 @@ export class QuizCategoriesManagementComponent implements OnInit, OnDestroy {
   openAddOrEditCategory(categoryData?: QuizCategoryList): void {
     const dialogRef = this.dialog.open(AddEditQuizCategoryComponent, {
       width: '600px',
-      disableClose: true,
+      disableClose: false,
       panelClass: 'custom-dialog-radius',
     });
 
@@ -255,7 +255,7 @@ export class QuizCategoriesManagementComponent implements OnInit, OnDestroy {
   openConfirmationDialog(dialogData: ConfirmationDialogData, onConfirm: () => void): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '600px',
-      disableClose: true,
+      disableClose: false,
       data: dialogData,
       panelClass: 'custom-dialog-radius',
     });

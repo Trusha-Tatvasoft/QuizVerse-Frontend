@@ -776,7 +776,7 @@ describe('UserManagementComponent', () => {
       expect.any(Function),
       expect.objectContaining({
         data: dialogData,
-        disableClose: true,
+        disableClose: false,
         width: '600px',
         panelClass: 'custom-dialog-radius',
       }),
@@ -807,7 +807,7 @@ describe('UserManagementComponent', () => {
       expect.objectContaining({
         data: dialogData,
         width: '600px',
-        disableClose: true,
+        disableClose: false,
         panelClass: 'custom-dialog-radius',
       }),
     );

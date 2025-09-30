@@ -341,7 +341,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   openConfirmationDialog(dialogData: ConfirmationDialogData, onConfirm: () => void): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '600px',
-      disableClose: true,
+      disableClose: false,
       data: dialogData,
       panelClass: 'custom-dialog-radius',
     });

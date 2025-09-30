@@ -173,7 +173,7 @@ describe('BattleManagementComponent', () => {
 
     expect(dialog.open).toHaveBeenCalledWith(ConfirmationDialogComponent, {
       width: '600px',
-      disableClose: true,
+      disableClose: false,
       data: expect.any(Object),
       panelClass: 'custom-dialog-radius',
     });

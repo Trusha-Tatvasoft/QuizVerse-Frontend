@@ -29,7 +29,7 @@ export function buildBaseFields(): DynamicFormField[] {
   return [
     {
       name: 'category',
-      label: 'Category',
+      label: 'Category*',
       type: 'select',
       placeholder: 'Select category',
       validators: [Validators.required],
@@ -39,7 +39,7 @@ export function buildBaseFields(): DynamicFormField[] {
     },
     {
       name: 'type',
-      label: 'Question Type',
+      label: 'Question Type*',
       type: 'select',
       placeholder: 'Select question type',
       validators: [Validators.required],
@@ -49,7 +49,7 @@ export function buildBaseFields(): DynamicFormField[] {
     },
     {
       name: 'difficulty',
-      label: 'Difficulty',
+      label: 'Difficulty*',
       type: 'select',
       placeholder: 'Select difficulty',
       validators: [Validators.required],
@@ -59,7 +59,7 @@ export function buildBaseFields(): DynamicFormField[] {
     },
     {
       name: 'questionText',
-      label: 'Question',
+      label: 'Question*',
       type: 'textarea',
       placeholder: 'Enter your question...',
       icon: 'help_outline',
@@ -79,7 +79,7 @@ export function buildFieldsByQuestionType(type: number): DynamicFormField[] {
       return [
         {
           name: 'option1',
-          label: 'Option 1',
+          label: 'Option 1*',
           type: 'text',
           placeholder: 'Option 1',
           validators: [Validators.required],
@@ -91,7 +91,7 @@ export function buildFieldsByQuestionType(type: number): DynamicFormField[] {
         },
         {
           name: 'option2',
-          label: 'Option 2',
+          label: 'Option 2*',
           type: 'text',
           placeholder: 'Option 2',
           validators: [Validators.required],
@@ -103,7 +103,7 @@ export function buildFieldsByQuestionType(type: number): DynamicFormField[] {
         },
         {
           name: 'option3',
-          label: 'Option 3',
+          label: 'Option 3*',
           type: 'text',
           placeholder: 'Option 3',
           validators: [Validators.required],
@@ -115,7 +115,7 @@ export function buildFieldsByQuestionType(type: number): DynamicFormField[] {
         },
         {
           name: 'option4',
-          label: 'Option 4',
+          label: 'Option 4*',
           type: 'text',
           placeholder: 'Option 4',
           validators: [Validators.required],
@@ -127,7 +127,7 @@ export function buildFieldsByQuestionType(type: number): DynamicFormField[] {
         },
         {
           name: 'correctAnswer',
-          label: 'Correct Answer',
+          label: 'Correct Answer*',
           type: 'select',
           placeholder: 'Select correct answer',
           validators: [Validators.required],
@@ -145,7 +145,7 @@ export function buildFieldsByQuestionType(type: number): DynamicFormField[] {
       return [
         {
           name: 'correctAnswer',
-          label: 'Correct Answer',
+          label: 'Correct Answer*',
           type: 'select',
           placeholder: 'Select answer',
           options: [
@@ -161,7 +161,7 @@ export function buildFieldsByQuestionType(type: number): DynamicFormField[] {
       return [
         {
           name: 'correctAnswer',
-          label: 'Correct Answer',
+          label: 'Correct Answer*',
           type: 'textarea',
           placeholder: 'Enter detailed answer',
           validators: [Validators.required],
@@ -173,7 +173,7 @@ export function buildFieldsByQuestionType(type: number): DynamicFormField[] {
       return [
         {
           name: 'correctAnswer',
-          label: 'Correct Answer',
+          label: 'Correct Answer*',
           type: 'text',
           placeholder: 'Enter correct answer',
           validators: [Validators.required],

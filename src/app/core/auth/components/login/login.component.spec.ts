@@ -160,8 +160,8 @@ describe('LoginComponent', () => {
     component.onSubmit();
 
     expect(snackbarSpy.showSuccess).toHaveBeenCalledWith(
-      'Welcome back!',
-      'You have been successfully logged in!',
+      'Welcome to QuizVerse!!',
+      'You have been successfully logged in',
     );
     expect(navSpy).toHaveBeenCalledWith([`${Navigations.Admin}/${Navigations.Dashboard}`]);
   });

@@ -7,7 +7,7 @@ import { EmailTemplateType } from '../../../../shared/enums/email-template.enum'
 export const emailTemplateFormFields: DynamicFormField[] = [
   {
     name: 'templateType',
-    label: 'Template Type',
+    label: 'Template Type*',
     type: 'select',
     placeholder: 'Select template type',
     icon: 'category',
@@ -24,7 +24,7 @@ export const emailTemplateFormFields: DynamicFormField[] = [
   },
   {
     name: 'title',
-    label: 'Template Title',
+    label: 'Template Title*',
     type: 'text',
     placeholder: 'Internal title for this template',
     icon: 'title',
@@ -35,7 +35,7 @@ export const emailTemplateFormFields: DynamicFormField[] = [
   },
   {
     name: 'subject',
-    label: 'Email Subject',
+    label: 'Email Subject*',
     type: 'text',
     placeholder: 'Email subject line',
     icon: 'subject',
@@ -46,7 +46,7 @@ export const emailTemplateFormFields: DynamicFormField[] = [
   },
   {
     name: 'body',
-    label: 'Email Body',
+    label: 'Email Body*',
     type: 'textarea',
     placeholder: 'Email content (use {{variable}} for dynamic content)',
     icon: 'description',

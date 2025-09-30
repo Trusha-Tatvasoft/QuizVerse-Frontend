@@ -1,0 +1,135 @@
+<div class="main-dialog-content">
+  <!-- Header -->
+  <div class="dialog-header px-5 py-3">
+    <h2 mat-dialog-title>Challenge a Friend</h2>
+    <span class="dialog-sub-header">
+      Send a battle challenge for "{{ battleName }}" to your friend.
+    </span>
+  </div>
+
+  <button mat-icon-button class="close-btn-dialog-all" (click)="onCancel()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <!-- Form -->
+  <form [formGroup]="challengeFriendForm" class="p-5" (ngSubmit)="onSubmit()">
+    <div class="grid gap-3 pb-3">
+      <div class="form-field">
+        <mat-label class="mb-2">{{ challengeFriendFormField.label }}</mat-label>
+
+        <div class="user-search-container">
+          <mat-form-field
+            [ngClass]="['custom-form-field', 'full-width', 'mt-3']"
+            appearance="outline"
+            floatLabel="auto"
+          >
+            <input
+              matInput
+              #usernameInput
+              [id]="challengeFriendFormField.name"
+              [type]="challengeFriendFormField.type"
+              [formControlName]="challengeFriendFormField.name"
+              [placeholder]="challengeFriendFormField.placeholder"
+              autocomplete="off"
+            />
+
+            @if (searchQuery && filteredUsers.length === 0) {
+              <mat-hint class="p-0"> Friend not found, find or invite them! </mat-hint>
+            }
+          </mat-form-field>
+        </div>
+
+        <!-- Selected User Display -->
+        @if (selectedUser) {
+          <div class="selected-user-display">
+            <div class="selected-user-content">
+              <div class="profile-wrapper">
+                <ng-container *ngIf="selectedUser.profilePic; else initialsFallbackSelected">
+                  <img
+                    [src]="selectedUser.profilePic"
+                    [alt]="selectedUser.fullName"
+                    class="profile-pic"
+                    (error)="selectedUser.profilePic = null"
+                  />
+                </ng-container>
+                <ng-template #initialsFallbackSelected>
+                  <div
+                    class="profile-fallback"
+                    [ngClass]="getInitialsColorClass(selectedUser.fullName)"
+                  >
+                    {{ getInitials(selectedUser.fullName || selectedUser.userName) }}
+                  </div>
+                </ng-template>
+              </div>
+              <div class="selected-user-info">
+                <span class="selected-username">{{ selectedUser.userName }}</span>
+                <span class="selected-details">
+                  {{ selectedUser.fullName }} • {{ selectedUser.totalXp | number }}
+                  XP
+                </span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <mat-dialog-actions class="dialog-actions flex justify-end gap-3 p-0">
+      <app-outline-button
+        [outlineButtonConfig]="cancelButton"
+        (buttonClicked)="onCancel()"
+      ></app-outline-button>
+
+      <app-filled-button
+        class="w-auto"
+        [filledButtonConfig]="sendChallengeButton"
+      ></app-filled-button>
+    </mat-dialog-actions>
+  </form>
+</div>
+
+<!-- Dropdown Overlay Template -->
+<ng-template #dropdownTemplate>
+  @if (filteredUsers.length > 0 || (searchQuery && filteredUsers.length === 0)) {
+    <div class="user-search-dropdown">
+      <!-- User Results -->
+      @for (user of filteredUsers; track user; let i = $index) {
+        <div
+          class="user-search-item"
+          [class.highlighted]="i === highlightedIndex && !user.hasRequest"
+          [class.disabled-item]="user.hasRequest"
+          (click)="!user.hasRequest && selectUser(user)"
+        >
+          <div class="profile-wrapper">
+            <ng-container *ngIf="user.profilePic; else initialsFallback">
+              <img
+                [src]="user.profilePic"
+                alt="{{ user.userName }}"
+                class="profile-pic"
+                (error)="user.profilePic = null"
+              />
+            </ng-container>
+            <ng-template #initialsFallback>
+              <div class="profile-fallback" [ngClass]="getInitialsColorClass(user.fullName)">
+                {{ getInitials(user.fullName || user.userName) }}
+              </div>
+            </ng-template>
+          </div>
+          <div class="user-info">
+            <div class="user-details">
+              <span class="username">{{ user.userName }}</span>
+              <app-tag [tagConfig]="getXPTagConfig(user.totalXp)"></app-tag>
+            </div>
+            <span class="full-name">
+              {{ user.fullName }}
+              @if (user.hasRequest) {
+                <app-tag [tagConfig]="getRequestTagConfig()"></app-tag>
+              }
+            </span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</ng-template>

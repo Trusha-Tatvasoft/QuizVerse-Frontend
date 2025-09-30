@@ -5,7 +5,7 @@ import { ButtonConfig } from '../../../../shared/interfaces/button-config.interf
 export const profileFormFields: DynamicFormField[] = [
   {
     name: 'fullName',
-    label: 'Full Name',
+    label: 'Full Name*',
     type: 'text',
     placeholder: 'Enter your full name',
     icon: 'person',
@@ -24,7 +24,7 @@ export const profileFormFields: DynamicFormField[] = [
   },
   {
     name: 'email',
-    label: 'Email',
+    label: 'Email*',
     type: 'email',
     placeholder: 'Enter your email',
     icon: 'email',
@@ -41,7 +41,7 @@ export const profileFormFields: DynamicFormField[] = [
   },
   {
     name: 'otp',
-    label: 'OTP',
+    label: 'OTP*',
     type: 'text',
     placeholder: 'Enter OTP',
     validators: [],

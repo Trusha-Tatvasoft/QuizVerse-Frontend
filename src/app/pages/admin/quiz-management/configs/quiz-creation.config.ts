@@ -66,7 +66,7 @@ export const questionCreationMethodsOptions = [
 export const quizCreationFormFields: DynamicFormField[] = [
   {
     name: 'quizTitle',
-    label: 'Quiz Title',
+    label: 'Quiz Title*',
     type: 'text',
     placeholder: 'Enter quiz title',
     validators: [
@@ -85,7 +85,7 @@ export const quizCreationFormFields: DynamicFormField[] = [
   },
   {
     name: 'quizCategory',
-    label: 'Quiz Category',
+    label: 'Quiz Category*',
     type: 'select',
     placeholder: 'Select quiz category',
     validators: [Validators.required],
@@ -101,7 +101,7 @@ export const quizCreationFormFields: DynamicFormField[] = [
   },
   {
     name: 'description',
-    label: 'Description',
+    label: 'Description*',
     type: 'textarea',
     placeholder: 'Enter quiz description',
     validators: [
@@ -118,7 +118,7 @@ export const quizCreationFormFields: DynamicFormField[] = [
   },
   {
     name: 'quizTiming',
-    label: 'Quiz Timing (minutes)',
+    label: 'Quiz Timing (minutes)*',
     type: 'number',
     placeholder: 'Enter quiz timing',
     validators: [Validators.required, Validators.min(2), Validators.max(180)],
@@ -130,7 +130,7 @@ export const quizCreationFormFields: DynamicFormField[] = [
   },
   {
     name: 'difficultyLevel',
-    label: 'Difficulty Level',
+    label: 'Difficulty Level*',
     type: 'select',
     placeholder: 'Select difficulty level',
     validators: [Validators.required],
@@ -154,12 +154,12 @@ export const quizCreationFormFields: DynamicFormField[] = [
   },
   {
     name: 'price',
-    label: 'Price (in ₹)',
+    label: 'Price (in ₹)*',
     type: 'number',
     placeholder: 'Enter quiz price',
-    validators: [Validators.min(0)],
+    validators: [Validators.min(1)],
     validationMessages: {
-      min: 'Price cannot be negative.',
+      min: 'Price cannot be less than 1.',
     },
     gridClass: 'col-span-1 sm:col-span-1',
   },
@@ -339,7 +339,7 @@ export const questionFormFieldForAddQuestionManually: DynamicFormField[] = [
   },
   {
     name: 'difficulty',
-    label: 'Difficulty',
+    label: 'Difficulty*',
     type: 'select',
     placeholder: 'Select difficulty level',
     validators: [Validators.required],
@@ -355,7 +355,7 @@ export const questionFormFieldForAddQuestionManually: DynamicFormField[] = [
   },
   {
     name: 'questionText',
-    label: 'Question',
+    label: 'Question*',
     type: 'text',
     placeholder: 'Enter question here',
     validators: [Validators.required, Validators.pattern(/^$|^\S[\s\S]*$/)],
@@ -367,7 +367,7 @@ export const questionFormFieldForAddQuestionManually: DynamicFormField[] = [
   },
   {
     name: 'option1',
-    label: 'Option 1',
+    label: 'Option 1*',
     type: 'text',
     placeholder: 'Option 1',
     validators: [Validators.required],
@@ -378,7 +378,7 @@ export const questionFormFieldForAddQuestionManually: DynamicFormField[] = [
   },
   {
     name: 'option2',
-    label: 'Option 2',
+    label: 'Option 2*',
     type: 'text',
     placeholder: 'Option 2',
     validators: [Validators.required],
@@ -389,7 +389,7 @@ export const questionFormFieldForAddQuestionManually: DynamicFormField[] = [
   },
   {
     name: 'option3',
-    label: 'Option 3',
+    label: 'Option 3*',
     type: 'text',
     placeholder: 'Option 3',
     validators: [Validators.required],
@@ -400,7 +400,7 @@ export const questionFormFieldForAddQuestionManually: DynamicFormField[] = [
   },
   {
     name: 'option4',
-    label: 'Option 4',
+    label: 'Option 4*',
     type: 'text',
     placeholder: 'Option 4',
     validators: [Validators.required],
@@ -411,7 +411,7 @@ export const questionFormFieldForAddQuestionManually: DynamicFormField[] = [
   },
   {
     name: 'correctAnswer',
-    label: 'Correct Answer',
+    label: 'Correct Answer*',
     type: 'text',
     placeholder: 'Enter correct answer',
     validators: [Validators.required],
