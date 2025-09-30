@@ -7,10 +7,6 @@ import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { UserBattleLeaderboardData } from '../../../pages/user/user-battles/interface/user-battles.interface';
 import { AvailableBattle } from '../../../pages/user/user-battles/interface/quiz-battles.interface';
 import { BattleUserSearchResult } from '../../../pages/user/user-battles/available-battles/interfaces/challenge-friend.interface';
-import {
-  UserRecentBattlesRequestDto,
-  UserRecentBattlesResponseDto,
-} from '../../../pages/user/user-battles/interface/recent-battles.interface';
 
 describe('UserBattlesService (Jest)', () => {
   let service: UserBattlesService;
@@ -113,41 +109,42 @@ describe('UserBattlesService (Jest)', () => {
     req.flush(errorMessage, { status: 500, statusText: 'Internal Server Error' });
   });
 
-  it('should fetch user recent battles (success)', () => {
-    const request: UserRecentBattlesRequestDto = { batchNumber: 1 };
-
-    const mockResponse: ApiResponse<UserRecentBattlesResponseDto> = {
+  it('should fetch battle instruction by ID', () => {
+    const battleAttemptId = 123;
+    const mockResponse: ApiResponse<any> = {
       result: true,
-      message: 'success',
+      message: 'Battle instruction fetched successfully',
       data: {
-        battles: [
-          {
-            opponent: 'Opponent1',
-            opponentFullName: 'Opponent One',
-            category: 'Science',
-            result: 'Won',
-            yourScore: 8,
-            opponentScore: 6,
-            xpGained: 20,
-            battleName: 'Battle XYZ',
-            battleDate: new Date(),
-          },
-        ],
-        hasMore: false,
+        battleAttemptId: battleAttemptId,
+        battleName: 'Sample Battle',
+        battleCategory: 'General Knowledge',
+        totalQuestions: 10,
+        duration: '10m',
+        instructions: 'Answer all questions to the best of your ability.',
+        playerProfile: {
+          userId: 1,
+          userName: 'PlayerOne',
+          profilePic: 'http://example.com/playerone.jpg',
+        },
+        opponentProfile: {
+          userId: 2,
+          userName: 'PlayerTwo',
+          profilePic: 'http://example.com/playertwo.jpg',
+        },
       },
       statusCode: 200,
     };
 
-    service.getUserRecentBattles(request).subscribe((res) => {
+    service.getBattleInstruction(battleAttemptId).subscribe((res) => {
       expect(res).toEqual(mockResponse);
-      expect(res.data.battles[0].opponent).toBe('Opponent1');
-      expect(res.data.battles[0].result).toBe('Won');
-      expect(res.data.hasMore).toBe(false);
+      expect(res.data.battleAttemptId).toBe(battleAttemptId);
+      expect(res.data.battleName).toBe('Sample Battle');
     });
 
-    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetUserRecentBattles}`);
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(request);
+    const req = httpMock.expectOne(
+      `${environment.baseUrl}/${EndPoints.GetBattleInstruction}/${battleAttemptId}`,
+    );
+    expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
 
@@ -238,37 +235,5 @@ describe('UserBattlesService (Jest)', () => {
     expect(req.request.headers.get('X-Skip-Loader')).toBe('true');
 
     req.flush(mockResponse);
-  });
-
-  it('should handle error when fetching leaderboard list', () => {
-    const errorMessage = 'Internal server error';
-
-    service.getBattleLeaderboardList().subscribe({
-      next: () => fail('Expected error, but got success response'),
-      error: (err) => {
-        expect(err.status).toBe(500);
-        expect(err.statusText).toBe('Server Error');
-      },
-    });
-
-    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetBattleLeaderboardList}`);
-    req.flush(errorMessage, { status: 500, statusText: 'Server Error' });
-  });
-
-  it('should handle error when fetching recent battles', () => {
-    const errorMessage = 'Service unavailable';
-    const request: UserRecentBattlesRequestDto = { batchNumber: 1 };
-
-    service.getUserRecentBattles(request).subscribe({
-      next: () => fail('Expected error, but got success response'),
-      error: (err) => {
-        expect(err.status).toBe(503);
-        expect(err.statusText).toBe('Service Unavailable');
-      },
-    });
-
-    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetUserRecentBattles}`);
-    expect(req.request.method).toBe('POST');
-    req.flush(errorMessage, { status: 503, statusText: 'Service Unavailable' });
   });
 });

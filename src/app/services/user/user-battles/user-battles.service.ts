@@ -12,6 +12,7 @@ import {
   UserRecentBattlesRequestDto,
   UserRecentBattlesResponseDto,
 } from '../../../pages/user/user-battles/interface/recent-battles.interface';
+import { BattleInstruction } from '../../../pages/user/battle-attempt-layout/interfaces/battle-attempt.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -105,5 +106,10 @@ export class UserBattlesService {
         }),
       },
     );
+  }
+
+  getBattleInstruction(battleId: number): Observable<ApiResponse<BattleInstruction>> {
+    const url = `${environment.baseUrl}/${EndPoints.GetBattleInstruction}/${battleId}`;
+    return this.http.get<ApiResponse<BattleInstruction>>(url);
   }
 }

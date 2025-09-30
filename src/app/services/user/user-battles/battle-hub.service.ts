@@ -9,6 +9,13 @@ import {
 } from '../../../pages/user/user-battles/interface/search-opponent.interface';
 import { ReplaySubject, Subject } from 'rxjs';
 import { AuthService } from '../../../core/auth/services/auth.service';
+import {
+  BattleQuestion,
+  LastAnswerdQuestionDetail,
+  ScoreChangedDto,
+} from '../../../pages/user/battle-attempt-layout/interfaces/battle-attempt.interface';
+import { Router } from '@angular/router';
+import { Navigations } from '../../../shared/enums/navigation';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +24,7 @@ export class BattleHubService {
   private hubConnection: signalR.HubConnection | null = null;
   private readonly snackbar = inject(SnackbarService);
   private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   // Matchmaking events
   private readonly searching$ = new Subject<void>();
@@ -26,8 +34,11 @@ export class BattleHubService {
   private battleStarted$ = new ReplaySubject<BattleStartDetails>(1);
   private battleResumed$ = new ReplaySubject<BattleStartDetails>(1);
   private continueBattle$ = new Subject<{ battleAttemptId: number; message: string }>();
+  private question$ = new ReplaySubject<BattleQuestion>(1);
+  private scoreUpdate$ = new Subject<ScoreChangedDto>();
   private playerInterrupted$ = new Subject<{ userId: number }>();
   private battleEndedForParticularPlayer$ = new Subject<{ userId: number }>();
+  private lastAnsweredDetail$ = new Subject<LastAnswerdQuestionDetail>();
   private _errorSubject = new Subject<string>();
 
   private battleAttemptId: number | null = null;
@@ -51,12 +62,24 @@ export class BattleHubService {
     return this.battleResumed$.asObservable();
   }
 
+  get onQuestion() {
+    return this.question$.asObservable();
+  }
+
+  get onScoreUpdate() {
+    return this.scoreUpdate$.asObservable();
+  }
+
   get onPlayerInterrupted() {
     return this.playerInterrupted$.asObservable();
   }
 
   get onBattleEndedForParticularPlayer() {
     return this.battleEndedForParticularPlayer$.asObservable();
+  }
+
+  get lastAnsweredDetail() {
+    return this.lastAnsweredDetail$.asObservable();
   }
 
   get onError() {
@@ -168,19 +191,17 @@ export class BattleHubService {
     }
   }
 
-  /** Submit answer */
-  async submitAnswer(battleId: number, index: number, answer: string): Promise<void> {
+  submitAnswer(battleId: number, index: number, answer: string): void {
     if (!this.connected) {
-      throw new Error('Connection lost. Please check your internet and try again.');
+      this._errorSubject.next('Connection lost. Please check your internet and try again.');
+      return;
     }
 
-    try {
-      return await this.hubConnection!.invoke('SubmitAnswer', battleId, index, answer);
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to submit answer';
+    this.hubConnection!.invoke('SubmitAnswer', battleId, index, answer).catch((error: unknown) => {
+      const errorMessage =
+        error instanceof Error ? error.message : platformMessages.answerSubmitFailed;
       this._errorSubject.next(errorMessage);
-      throw new Error(errorMessage);
-    }
+    });
   }
 
   /** Interrupt battle */
@@ -203,18 +224,25 @@ export class BattleHubService {
     this.battleStarted$.complete();
     this.battleResumed$.complete();
     this.continueBattle$.complete();
+    this.question$.complete();
+    this.scoreUpdate$.complete();
+    this.lastAnsweredDetail$.complete();
     this.playerInterrupted$.complete();
     this.battleEndedForParticularPlayer$.complete();
     this._errorSubject.complete();
+
     // Create NEW instances for all subjects (not just some)
     this.battleStarted$ = new ReplaySubject<BattleStartDetails>(1);
     this.battleResumed$ = new ReplaySubject<BattleStartDetails>(1);
     this.continueBattle$ = new Subject<{ battleAttemptId: number; message: string }>();
+    this.question$ = new ReplaySubject<BattleQuestion>(1);
+    this.scoreUpdate$ = new Subject<ScoreChangedDto>();
+    this.lastAnsweredDetail$ = new Subject<LastAnswerdQuestionDetail>();
     this.playerInterrupted$ = new Subject<{ userId: number }>();
     this.battleEndedForParticularPlayer$ = new Subject<{ userId: number }>();
     this._errorSubject = new Subject<string>();
-    // Reset state
 
+    // Reset state
     this.battleAttemptId = null;
   }
 
@@ -225,9 +253,11 @@ export class BattleHubService {
         this.isConnected = false;
         this.connectionPromise = null;
       } catch (error: unknown) {
-        const errorMessage =
-          error instanceof Error ? error.message : platformMessages.errorInConnection;
-        this.snackbar.showError(errorMessage);
+        this.snackbar.showError(
+          error instanceof Error && error.message
+            ? error.message
+            : platformMessages.errorInConnection,
+        );
       }
     }
   }
@@ -258,6 +288,25 @@ export class BattleHubService {
       platformMessages.battleHubContinueBattle,
       (data: { battleAttemptId: number; message: string }) => {
         this.continueBattle$.next(data);
+      },
+    );
+
+    // Game events
+    this.hubConnection.on(platformMessages.battleHubReceiveQuestion, (question: BattleQuestion) => {
+      this.question$.next(question);
+    });
+
+    this.hubConnection.on(
+      platformMessages.battleHubReceiveScoreUpdate,
+      (score: ScoreChangedDto) => {
+        this.scoreUpdate$.next(score);
+      },
+    );
+
+    this.hubConnection.on(
+      platformMessages.battleHubLastAnsweredDetail,
+      (detail: LastAnswerdQuestionDetail) => {
+        this.lastAnsweredDetail$.next(detail);
       },
     );
 
@@ -293,6 +342,7 @@ export class BattleHubService {
       const errorMsg = message || 'An unexpected error occurred.';
       this._errorSubject.next(errorMsg);
       this.snackbar.showError(errorMsg);
+      this.router.navigate([Navigations.Battles, Navigations.BattleList]);
     });
 
     // Connection events

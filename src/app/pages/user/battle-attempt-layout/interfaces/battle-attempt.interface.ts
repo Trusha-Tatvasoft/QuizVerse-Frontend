@@ -14,7 +14,7 @@ export interface PlayerProfileDto {
   fullName: string;
   currentLevel: number;
   winRate: number;
-  profilePic: string;
+  profilePic?: string;
 }
 
 export interface BattleStartDetails {
@@ -22,6 +22,7 @@ export interface BattleStartDetails {
   playerProfile: PlayerProfileDto;
   opponentProfile: PlayerProfileDto;
   totalQuestions: number;
+  battleName: string;
 }
 
 // play battle
