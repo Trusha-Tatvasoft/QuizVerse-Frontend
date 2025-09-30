@@ -53,7 +53,7 @@ export const registerFormFields: DynamicFormField[] = [
       required: 'Full Name is required.',
       minlength: 'Full Name must be at least 1 characters.',
       maxlength: 'Full Name must not exceed 255 characters.',
-      pattern: "Full Name must start with a letter/number and may only include . - '",
+      pattern: "Full Name must start with a letter and may only include (.-')",
     },
   },
   {
@@ -72,8 +72,7 @@ export const registerFormFields: DynamicFormField[] = [
       required: 'Username is required.',
       minlength: 'Username must be at least 3 characters.',
       maxlength: 'Username must not exceed 255 characters.',
-      pattern:
-        'Username can only contain letters, numbers, and special characters (!@#$%^&*()_+-=[]{};:,.<>/?\\|~)',
+      pattern: 'Username must start with a letter and may include numbers/special characters',
     },
   },
   {
@@ -155,7 +154,7 @@ export const userFormFields: DynamicFormField[] = [
       required: 'Full Name is required.',
       minlength: 'Full Name must be at least 1 characters.',
       maxlength: 'Full Name must not exceed 255 characters.',
-      pattern: "Full Name must start with a letter/number and may only include . - '",
+      pattern: "Full Name must start with a letter and may only include (.-')",
     },
   },
   {
@@ -174,8 +173,7 @@ export const userFormFields: DynamicFormField[] = [
       required: 'Username is required.',
       minlength: 'Username must be at least 3 characters.',
       maxlength: 'Username must not exceed 255 characters.',
-      pattern:
-        'Username can only contain letters, numbers, and special characters (!@#$%^&*()_+-=[]{};:,.<>/?\\|~)',
+      pattern: 'Username must start with a letter and may include numbers/special characters',
     },
   },
   {

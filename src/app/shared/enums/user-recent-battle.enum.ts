@@ -13,7 +13,7 @@ export enum BattleFilterType {
   won = 3,
 }
 
-export const BattleTimeFilterDisplayNames: Record<BattleTimeFilterType, string> = {
+export const battleTimeFilterDisplayNames: Record<BattleTimeFilterType, string> = {
   [BattleTimeFilterType.last_2_Days]: 'Last 2 Days',
   [BattleTimeFilterType.last_7_Days]: 'Last 7 Days',
   [BattleTimeFilterType.current_month]: 'This Month',
@@ -22,7 +22,7 @@ export const BattleTimeFilterDisplayNames: Record<BattleTimeFilterType, string> 
   [BattleTimeFilterType.last_year]: 'Last Year',
 };
 
-export const BattleFilterDisplayNames: Record<BattleFilterType, string> = {
+export const battleFilterDisplayNames: Record<BattleFilterType, string> = {
   [BattleFilterType.draw]: 'Draw',
   [BattleFilterType.lost]: 'Lost',
   [BattleFilterType.won]: 'Won',

@@ -1,0 +1,28 @@
+<main class="opponent-found-main" appDisableQuizShortcuts>
+  <div class="search-container">
+    <div class="card">
+      <!-- Opponent Found State -->
+      <div class="icon-found">
+        @if (opponent?.profilePic) {
+          @if (!isImageError) {
+            <img [src]="opponent?.profilePic" (error)="imageError()" />
+          } @else {
+            <mat-icon fontSet="material-icons-outlined" class="icon-success">person</mat-icon>
+          }
+        } @else {
+          <mat-icon fontSet="material-icons-outlined" class="icon-success">person</mat-icon>
+        }
+      </div>
+      <h2 class="font-bold my-2">Opponent Found!</h2>
+      <p class="my-2">Get ready to battle</p>
+
+      <div class="opponent-info">
+        <strong>{{ opponent?.userName }}</strong>
+        <p>Level {{ opponent?.currentLevel }}</p>
+        <p>{{ opponent?.winRate }} win rate</p>
+      </div>
+
+      <p class="timer">Starting battle in a few seconds...</p>
+    </div>
+  </div>
+</main>

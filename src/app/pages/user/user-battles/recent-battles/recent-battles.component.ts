@@ -14,9 +14,9 @@ import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.se
 import { UserBattlesService } from '../../../../services/user/user-battles/user-battles.service';
 import { Subject, takeUntil } from 'rxjs';
 import {
-  BattleFilterDisplayNames,
+  battleFilterDisplayNames,
   BattleFilterType,
-  BattleTimeFilterDisplayNames,
+  battleTimeFilterDisplayNames,
   BattleTimeFilterType,
 } from '../../../../shared/enums/user-recent-battle.enum';
 import {
@@ -54,12 +54,12 @@ export class RecentBattlesComponent {
   currentStart = 0; // Starting index of visible window
   battleFilterType = BattleFilterType;
   battleTimeFilterType = BattleTimeFilterType;
-  battleFilterOptions = Object.entries(BattleFilterDisplayNames).map(([value, label]) => ({
+  battleFilterOptions = Object.entries(battleFilterDisplayNames).map(([value, label]) => ({
     value: Number(value),
     label,
   }));
 
-  battleTimeFilterOptions = Object.entries(BattleTimeFilterDisplayNames).map(([value, label]) => ({
+  battleTimeFilterOptions = Object.entries(battleTimeFilterDisplayNames).map(([value, label]) => ({
     value: Number(value),
     label,
   }));
