@@ -10,6 +10,7 @@ import {
   refreshTokenKey,
   roleClaimKey,
   platformMessages,
+  userIdClaimKey,
 } from '../../../utils/constants';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { provideHttpClient } from '@angular/common/http';
@@ -64,6 +65,12 @@ describe('AuthService (Jest)', () => {
         [roleClaimKey]: role,
       }),
     );
+    return `${header}.${payload}.signature`;
+  }
+
+  function createTokenWithUserId(userId: string): string {
+    const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+    const payload = btoa(JSON.stringify({ [userIdClaimKey]: userId }));
     return `${header}.${payload}.signature`;
   }
 
@@ -295,5 +302,52 @@ describe('AuthService (Jest)', () => {
     const invalidToken = 'not.a.valid.token';
     const result = service.isTokenExpired(invalidToken);
     expect(result).toBe(true);
+  });
+
+  describe('getUserIdFromToken', () => {
+    it('should return userId when claim exists in token', () => {
+      const token = createTokenWithUserId('12345');
+      const result = service.getUserIdFromToken(token);
+      expect(result).toBe('12345');
+    });
+
+    it('should return null if token does not contain userId claim', () => {
+      const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+      const payload = btoa(JSON.stringify({})); // no userId
+      const token = `${header}.${payload}.signature`;
+
+      const result = service.getUserIdFromToken(token);
+      expect(result).toBeNull();
+    });
+
+    it('should return null for malformed token', () => {
+      const invalidToken = 'bad.token';
+      const result = service.getUserIdFromToken(invalidToken);
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('getCurrentUserId', () => {
+    it('should return userId if access token exists and contains claim', () => {
+      const token = createTokenWithUserId('abc123');
+      cookieServiceMock.get.mockImplementation((key: string) =>
+        key === accessTokenKey ? token : '',
+      );
+
+      const result = service.getCurrentUserId();
+      expect(result).toBe('abc123');
+    });
+
+    it('should return null if no access token exists', () => {
+      cookieServiceMock.get.mockReturnValue('');
+      const result = service.getCurrentUserId();
+      expect(result).toBeNull();
+    });
+
+    it('should return null if access token is malformed', () => {
+      cookieServiceMock.get.mockReturnValue('bad.token.value');
+      const result = service.getCurrentUserId();
+      expect(result).toBeNull();
+    });
   });
 });

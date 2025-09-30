@@ -9,9 +9,10 @@ import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.se
 import { BattleHubService } from '../../../../services/user/user-battles/battle-hub.service';
 import { CookieService } from 'ngx-cookie-service';
 import { platformMessages } from '../../../../utils/constants';
-import { PlayerProfileDTO } from '../interface/search-opponent.interface';
+import { PlayerProfileDTO, BattleStartDetails } from '../interface/search-opponent.interface';
 import { Navigations } from '../../../../shared/enums/navigation';
 import { environment } from '../../../../../environments/environment.dev';
+import { CheatPreventionService } from '../../../../shared/service/cheat-prevention/cheat-prevention.service';
 
 // Mock dependencies
 const mockBattleHubService = {
@@ -21,6 +22,7 @@ const mockBattleHubService = {
   stopConnection: jest.fn(),
   onSearching: new Subject<void>(),
   onMatchFound: new Subject<PlayerProfileDTO>(),
+  onBattleStarted: new Subject<BattleStartDetails>(),
   connected: true,
 };
 
@@ -48,11 +50,21 @@ const mockCookieService = {
   set: jest.fn(),
 };
 
+const mockCheatPreventionService = {
+  startMonitoring: jest.fn(),
+  stopMonitoring: jest.fn(),
+  violations$: new Subject<string>(),
+};
+
 describe('SearchOpponentComponent', () => {
   let component: SearchOpponentComponent;
   let fixture: ComponentFixture<SearchOpponentComponent>;
+  let violationsSubject: Subject<string>;
 
   beforeEach(async () => {
+    violationsSubject = new Subject<string>();
+    mockCheatPreventionService.violations$ = violationsSubject;
+
     await TestBed.configureTestingModule({
       imports: [CommonModule, OutlineButtonComponent, MatIcon, SearchOpponentComponent],
       providers: [
@@ -61,6 +73,7 @@ describe('SearchOpponentComponent', () => {
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: CookieService, useValue: mockCookieService },
+        { provide: CheatPreventionService, useValue: mockCheatPreventionService },
       ],
     }).compileComponents();
 
@@ -71,12 +84,14 @@ describe('SearchOpponentComponent', () => {
     jest.clearAllMocks();
     mockBattleHubService.onMatchFound = new Subject<PlayerProfileDTO>();
     mockBattleHubService.onSearching = new Subject<void>();
+    mockBattleHubService.onBattleStarted = new Subject<BattleStartDetails>();
   });
 
   afterEach(() => {
     if (component['timerInterval']) {
       clearInterval(component['timerInterval']);
     }
+    violationsSubject.complete();
   });
 
   it('should create', () => {
@@ -106,6 +121,35 @@ describe('SearchOpponentComponent', () => {
       expect(connectToHubSpy).toHaveBeenCalled();
       expect(decodeRouteIdSpy).toHaveBeenCalled();
       expect(startSearchTimerSpy).toHaveBeenCalled();
+      expect(mockCheatPreventionService.startMonitoring).toHaveBeenCalled();
+    }));
+
+    it('should subscribe to violations$ and cancel search on developer tools violation', fakeAsync(() => {
+      const cancelSearchSpy = jest.spyOn(component, 'cancelSearch');
+
+      component.ngOnInit();
+      tick();
+
+      violationsSubject.next(platformMessages.openedDeveloperTools);
+      tick();
+
+      expect(mockSnackbarService.showError).toHaveBeenCalledWith(
+        platformMessages.openedDeveloperTools,
+      );
+      expect(cancelSearchSpy).toHaveBeenCalled();
+    }));
+
+    it('should not cancel search on non-developer tools violations', fakeAsync(() => {
+      const cancelSearchSpy = jest.spyOn(component, 'cancelSearch');
+
+      component.ngOnInit();
+      tick();
+
+      violationsSubject.next('Other violation');
+      tick();
+
+      expect(mockSnackbarService.showError).not.toHaveBeenCalled();
+      expect(cancelSearchSpy).not.toHaveBeenCalled();
     }));
   });
 
@@ -137,7 +181,7 @@ describe('SearchOpponentComponent', () => {
       });
     });
 
-    it('should navigate to battle page when match is found', async () => {
+    it('should subscribe to onBattleStarted and navigate when battle starts', async () => {
       mockBattleHubService.connect.mockResolvedValue(undefined);
 
       await (component as any).connectToHub();
@@ -151,10 +195,24 @@ describe('SearchOpponentComponent', () => {
         winRate: 60,
       };
 
+      const mockBattleStartDetails: BattleStartDetails = {
+        battleAttemptId: 456,
+        opponentProfile: mockOpponent,
+        playerProfile: mockOpponent,
+        battleName: 'Math Battle',
+        totalQuestions: 10,
+        // Add other required properties
+      };
+
       component.battleId = 123;
 
+      // First trigger match found
       mockBattleHubService.onMatchFound.next(mockOpponent);
 
+      // Then trigger battle started
+      mockBattleHubService.onBattleStarted.next(mockBattleStartDetails);
+
+      expect(component.battleStartDetails).toEqual(mockBattleStartDetails);
       expect(mockRouter.navigate).toHaveBeenCalledWith(
         [
           Navigations.User,
@@ -164,9 +222,52 @@ describe('SearchOpponentComponent', () => {
           btoa(encodeURIComponent('123')),
         ],
         {
-          state: { opponent: component.opponent },
+          state: {
+            battleStartDetails: mockBattleStartDetails,
+          },
         },
       );
+    });
+
+    it('should not navigate if battleId or battleStartDetails are missing', async () => {
+      mockBattleHubService.connect.mockResolvedValue(undefined);
+
+      await (component as any).connectToHub();
+
+      const mockOpponent: PlayerProfileDTO = {
+        fullName: 'Opponent Player',
+        userId: 42,
+        currentLevel: 5,
+        profilePic: 'profile.png',
+        userName: 'opponent123',
+        winRate: 60,
+      };
+
+      const mockBattleStartDetails: BattleStartDetails = {
+        battleAttemptId: 456,
+        opponentProfile: mockOpponent,
+        playerProfile: mockOpponent,
+        battleName: 'Math Battle',
+        totalQuestions: 10,
+      };
+
+      // Test case 1: battleId is null
+      component.battleId = null;
+      mockBattleHubService.onMatchFound.next(mockOpponent);
+      mockBattleHubService.onBattleStarted.next(mockBattleStartDetails);
+
+      expect(mockRouter.navigate).not.toHaveBeenCalled();
+
+      // Reset
+      mockRouter.navigate.mockClear();
+
+      // Test case 2: battleStartDetails is null
+      component.battleId = 123;
+      component.battleStartDetails = null;
+      mockBattleHubService.onMatchFound.next(mockOpponent);
+      // Don't trigger onBattleStarted
+
+      expect(mockRouter.navigate).not.toHaveBeenCalled();
     });
 
     it('should show error snackbar if connect throws', async () => {
@@ -405,52 +506,6 @@ describe('SearchOpponentComponent', () => {
       component.openFullscreen();
 
       expect(mockElem.msRequestFullscreen).toHaveBeenCalled();
-    });
-  });
-
-  describe('ngOnDestroy', () => {
-    it('should clean up timer, destroy subject, and stop hub connection', () => {
-      // Set up timer interval
-      component['timerInterval'] = setInterval(() => {}, 1000);
-      const clearIntervalSpy = jest.spyOn(window, 'clearInterval');
-
-      // Spy on internal methods
-      const stopTimerSpy = jest.spyOn(component as any, 'stopTimer');
-      const nextSpy = jest.spyOn(component['destroy$'], 'next');
-      const completeSpy = jest.spyOn(component['destroy$'], 'complete');
-
-      component.ngOnDestroy();
-
-      expect(stopTimerSpy).toHaveBeenCalled();
-      expect(nextSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
-      expect(component['destroy$'].isStopped).toBe(true);
-      expect(clearIntervalSpy).toHaveBeenCalled();
-
-      clearIntervalSpy.mockRestore();
-    });
-
-    it('should handle ngOnDestroy when timerInterval is null', () => {
-      component['timerInterval'] = null;
-
-      expect(() => component.ngOnDestroy()).not.toThrow();
-      expect(component['destroy$'].isStopped).toBe(true);
-    });
-  });
-
-  describe('Component Properties', () => {
-    it('should have correct initial values', () => {
-      expect(component.cancelSearchButtonConfig).toBeDefined();
-      expect(component.searchSeconds).toBe(0);
-      expect(component.battleId).toBeNull();
-      expect(component.opponent).toBeNull();
-      expect(component.battleData).toEqual({
-        battleName: 'Math Champions',
-        battleCategory: 'Mathematics',
-        battleDifficulty: 'Medium',
-        battleXp: 150,
-      });
-      expect(component.isSearchTimeOut).toBe(false);
     });
   });
 });

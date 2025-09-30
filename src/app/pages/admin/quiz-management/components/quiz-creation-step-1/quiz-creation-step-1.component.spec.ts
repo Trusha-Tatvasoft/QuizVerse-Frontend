@@ -265,19 +265,12 @@ describe('QuizCreationStep1Component', () => {
     });
 
     it('should create a tag with correct properties when adding a new tag', () => {
-      const uuid = '123e4567-e89b-12d3-a456-426614174000';
-      Object.defineProperty(global, 'crypto', {
-        value: { randomUUID: () => uuid },
-        writable: true,
-      });
-
       component.tagInput = 'newTag';
       component.addTag();
 
       const tag = component.tagList[0];
 
       expect(tag).toBeDefined();
-      expect(tag.id).toBe(uuid);
       expect(tag.label).toBe('newTag');
       expect(tag.type).toBe('selectable');
       expect(tag.isSelected).toBe(true);
@@ -289,15 +282,9 @@ describe('QuizCreationStep1Component', () => {
     });
 
     it('should not add duplicate tags', () => {
-      const uuid = '123e4567-e89b-12d3-a456-426614174000';
-      Object.defineProperty(global, 'crypto', {
-        value: { randomUUID: () => uuid },
-        writable: true,
-      });
-
       component.tagList = [
         {
-          id: uuid,
+          id: Date.now().toString(),
           label: 'existingTag',
           type: 'selectable',
           isSelected: true,

@@ -2,7 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { BattleHubService } from './battle-hub.service';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { AuthService } from '../../../core/auth/services/auth.service';
-import { PlayerProfileDTO } from '../../../pages/user/user-battles/interface/search-opponent.interface';
+import {
+  PlayerProfileDTO,
+  BattleStartDetails,
+} from '../../../pages/user/user-battles/interface/search-opponent.interface';
+import { platformMessages } from '../../../utils/constants';
 
 // Create a complete mock for SignalR
 const mockHubConnection = {
@@ -76,6 +80,7 @@ describe('BattleHubService', () => {
     service['isConnected'] = false;
     service['connectionPromise'] = null;
     service['hubConnection'] = null;
+    jest.clearAllMocks();
   });
 
   it('should be created', () => {
@@ -105,7 +110,7 @@ describe('BattleHubService', () => {
 
       await expect(service.connect()).rejects.toThrow('Connection failed');
       expect(mockSnackbarService.showError).toHaveBeenCalledWith(
-        'Connection failed: Connection failed',
+        `${platformMessages.connectionFailed} Connection failed`,
       );
       expect(service['isConnected']).toBe(false);
       expect(service['connectionPromise']).toBe(null);
@@ -117,8 +122,43 @@ describe('BattleHubService', () => {
       const firstCall = service.connect();
       const secondCall = service.connect();
 
-      // Both should return the same promise instance
       expect(firstCall).toEqual(secondCall);
+      await firstCall;
+      expect(service['isConnected']).toBe(true);
+    });
+  });
+
+  describe('ensureConnection', () => {
+    it('should return immediately if already connected', async () => {
+      service['isConnected'] = true;
+      mockHubConnection.state = 'Connected';
+
+      await service.ensureConnection();
+
+      expect(mockHubConnection.start).not.toHaveBeenCalled();
+    });
+
+    it('should call connect if not connected and no promise exists', async () => {
+      service['isConnected'] = false;
+      service['connectionPromise'] = null;
+      mockHubConnection.start.mockResolvedValue(undefined);
+
+      await service.ensureConnection();
+
+      expect(mockHubConnection.start).toHaveBeenCalled();
+      expect(service['isConnected']).toBe(true);
+    });
+
+    it('should return existing connection promise if connecting', async () => {
+      service['isConnected'] = false;
+      mockHubConnection.start.mockResolvedValue(undefined);
+      const connectSpy = jest.spyOn(service, 'connect');
+
+      const firstCall = service.ensureConnection();
+      const secondCall = service.ensureConnection();
+
+      expect(firstCall).toEqual(secondCall);
+      expect(connectSpy).toHaveBeenCalledTimes(1);
       await firstCall;
       expect(service['isConnected']).toBe(true);
     });
@@ -127,21 +167,32 @@ describe('BattleHubService', () => {
   describe('event handlers', () => {
     let searchingHandler: Function | undefined;
     let matchFoundHandler: Function | undefined;
+    let battleStartedHandler: Function | undefined;
+    let battleResumedHandler: Function | undefined;
+    let continueBattleHandler: Function | undefined;
+    let playerInterruptedHandler: Function | undefined;
+    let battleEndedHandler: Function | undefined;
+    let errorHandler: Function | undefined;
     let reconnectingHandler: Function | undefined;
     let reconnectedHandler: Function | undefined;
     let closeHandler: Function | undefined;
 
     beforeEach(() => {
-      // Reset mocks to ensure clean state
       mockHubConnection.on.mockReset();
       mockHubConnection.onreconnecting.mockReset();
       mockHubConnection.onreconnected.mockReset();
       mockHubConnection.onclose.mockReset();
 
-      // Capture the event handlers when they are registered
       mockHubConnection.on.mockImplementation((event: string, handler: Function) => {
-        if (event === 'Searching') searchingHandler = handler;
-        if (event === 'MatchFound') matchFoundHandler = handler;
+        if (event === platformMessages.battleHubSearching) searchingHandler = handler;
+        if (event === platformMessages.battleHubMatchFound) matchFoundHandler = handler;
+        if (event === platformMessages.battleHubBattleStarted) battleStartedHandler = handler;
+        if (event === platformMessages.battleHubBattleResumed) battleResumedHandler = handler;
+        if (event === platformMessages.battleHubContinueBattle) continueBattleHandler = handler;
+        if (event === platformMessages.battleHubPlayerInterrupted)
+          playerInterruptedHandler = handler;
+        if (event === platformMessages.battleHubBattleEndedForPlayer) battleEndedHandler = handler;
+        if (event === platformMessages.battleError) errorHandler = handler;
       });
 
       mockHubConnection.onreconnecting.mockImplementation((handler: Function) => {
@@ -156,7 +207,6 @@ describe('BattleHubService', () => {
         closeHandler = handler;
       });
 
-      // Register handlers after setting up mocks
       service['registerEventHandlers']();
     });
 
@@ -175,13 +225,15 @@ describe('BattleHubService', () => {
         userName: 'test-user',
         userId: 1,
         currentLevel: 5,
-        fullName: 'test user',
+        fullName: 'Test User',
         winRate: 75,
       };
 
       matchFoundHandler!(mockPlayer);
       expect(matchFoundSpy).toHaveBeenCalledWith(mockPlayer);
-      expect(mockSnackbarService.showSuccess).toHaveBeenCalledWith('Matched with test-user!');
+      expect(mockSnackbarService.showSuccess).toHaveBeenCalledWith(
+        `${platformMessages.matchedWith} test-user!`,
+      );
     });
 
     it('should handle null result in MatchFound', () => {
@@ -193,22 +245,133 @@ describe('BattleHubService', () => {
       expect(mockSnackbarService.showSuccess).not.toHaveBeenCalled();
     });
 
+    it('should register BattleStarted event handler', () => {
+      expect(battleStartedHandler).toBeDefined();
+      const battleStartedSpy = jest.spyOn(service['battleStarted$'], 'next');
+      const mockDetails: BattleStartDetails = {
+        battleAttemptId: 456,
+        opponentProfile: {
+          userId: 1,
+          userName: 'opponent',
+          fullName: 'Opponent',
+          currentLevel: 5,
+          winRate: 75,
+        },
+        playerProfile: {
+          userId: 2,
+          userName: 'player',
+          fullName: 'Player',
+          currentLevel: 5,
+          winRate: 80,
+        },
+        battleName: 'Math Battle',
+        totalQuestions: 10,
+      };
+
+      battleStartedHandler!(mockDetails);
+      expect(battleStartedSpy).toHaveBeenCalledWith(mockDetails);
+      expect(service['battleAttemptId']).toBe(456);
+    });
+
+    it('should register BattleResumed event handler', () => {
+      expect(battleResumedHandler).toBeDefined();
+      const battleResumedSpy = jest.spyOn(service['battleResumed$'], 'next');
+      const mockDetails: BattleStartDetails = {
+        battleAttemptId: 789,
+        opponentProfile: {
+          userId: 1,
+          userName: 'opponent',
+          fullName: 'Opponent',
+          currentLevel: 5,
+          winRate: 75,
+        },
+        playerProfile: {
+          userId: 2,
+          userName: 'player',
+          fullName: 'Player',
+          currentLevel: 5,
+          winRate: 80,
+        },
+        battleName: 'Math Battle',
+        totalQuestions: 10,
+      };
+
+      battleResumedHandler!(mockDetails);
+      expect(battleResumedSpy).toHaveBeenCalledWith(mockDetails);
+      expect(service['battleAttemptId']).toBe(789);
+    });
+
+    it('should register ContinueBattle event handler', () => {
+      expect(continueBattleHandler).toBeDefined();
+      const continueBattleSpy = jest.spyOn(service['continueBattle$'], 'next');
+      const mockData = { battleAttemptId: 123, message: 'Continue battle' };
+
+      continueBattleHandler!(mockData);
+      expect(continueBattleSpy).toHaveBeenCalledWith(mockData);
+    });
+
+    it('should register PlayerInterrupted event handler', () => {
+      expect(playerInterruptedHandler).toBeDefined();
+      const playerInterruptedSpy = jest.spyOn(service['playerInterrupted$'], 'next');
+      const mockData = { userId: 1 };
+
+      playerInterruptedHandler!(mockData);
+      expect(playerInterruptedSpy).toHaveBeenCalledWith(mockData);
+    });
+
+    it('should register BattleEndedForPlayer event handler', () => {
+      expect(battleEndedHandler).toBeDefined();
+      const battleEndedSpy = jest.spyOn(service['battleEndedForParticularPlayer$'], 'next');
+      const mockData = { userId: 2 };
+
+      battleEndedHandler!(mockData);
+      expect(battleEndedSpy).toHaveBeenCalledWith(mockData);
+    });
+
+    it('should register BattleError event handler', () => {
+      expect(errorHandler).toBeDefined();
+      const errorSpy = jest.spyOn(service['_errorSubject'], 'next');
+      const errorMessage = 'An error occurred';
+
+      errorHandler!(errorMessage);
+      expect(errorSpy).toHaveBeenCalledWith(errorMessage);
+      expect(mockSnackbarService.showError).toHaveBeenCalledWith(errorMessage);
+    });
+
+    it('should handle BattleError with null message', () => {
+      expect(errorHandler).toBeDefined();
+      const errorSpy = jest.spyOn(service['_errorSubject'], 'next');
+
+      errorHandler!(null);
+      expect(errorSpy).toHaveBeenCalledWith('An unexpected error occurred.');
+      expect(mockSnackbarService.showError).toHaveBeenCalledWith('An unexpected error occurred.');
+    });
+
     it('should handle reconnecting event', () => {
       expect(reconnectingHandler).toBeDefined();
       reconnectingHandler!(new Error('Connection lost. Reconnecting...'));
       expect(mockSnackbarService.showInfo).toHaveBeenCalledWith('Connection lost. Reconnecting...');
     });
 
+    it('should handle reconnecting event with null error', () => {
+      expect(reconnectingHandler).toBeDefined();
+      reconnectingHandler!(null);
+      expect(mockSnackbarService.showInfo).toHaveBeenCalledWith(platformMessages.connectionLost);
+    });
+
     it('should handle reconnected event', () => {
       expect(reconnectedHandler).toBeDefined();
       reconnectedHandler!('new-connection-id');
-      expect(mockSnackbarService.showSuccess).toHaveBeenCalledWith('Connection restored');
+      expect(mockSnackbarService.showSuccess).toHaveBeenCalledWith(
+        platformMessages.connectionRestore,
+      );
     });
 
     it('should handle connection close with error', () => {
       expect(closeHandler).toBeDefined();
       closeHandler!(new Error('Connection closed unexpectedly'));
       expect(service['isConnected']).toBe(false);
+      expect(service['connectionPromise']).toBe(null);
       expect(mockSnackbarService.showError).toHaveBeenCalledWith('Connection closed unexpectedly');
     });
 
@@ -216,6 +379,7 @@ describe('BattleHubService', () => {
       expect(closeHandler).toBeDefined();
       closeHandler!(null);
       expect(service['isConnected']).toBe(false);
+      expect(service['connectionPromise']).toBe(null);
       expect(mockSnackbarService.showError).not.toHaveBeenCalled();
     });
   });
@@ -225,6 +389,10 @@ describe('BattleHubService', () => {
       expect(service.connected).toBe(true);
 
       mockHubConnection.state = 'Disconnected';
+      expect(service.connected).toBe(false);
+
+      service['isConnected'] = false;
+      mockHubConnection.state = 'Connected';
       expect(service.connected).toBe(false);
     });
   });
@@ -237,16 +405,21 @@ describe('BattleHubService', () => {
       mockHubConnection.state = 'Connected';
     });
 
-    it('should start matchmaking when connected', () => {
+    it('should start matchmaking when connected', async () => {
       mockHubConnection.invoke.mockResolvedValue(undefined);
       service.startMatchmaking(123);
-      expect(mockHubConnection.invoke).toHaveBeenCalledWith('StartMatchmaking', 123);
+      expect(mockHubConnection.invoke).toHaveBeenCalledWith(
+        platformMessages.battleHubStartMatching,
+        123,
+      );
     });
 
     it('should show error when starting matchmaking without connection', () => {
       service['isConnected'] = false;
       service.startMatchmaking(123);
-      expect(mockSnackbarService.showError).toHaveBeenCalledWith('Not connected to server');
+      expect(mockSnackbarService.showError).toHaveBeenCalledWith(
+        platformMessages.serverNotConnected,
+      );
       expect(mockHubConnection.invoke).not.toHaveBeenCalled();
     });
 
@@ -256,28 +429,30 @@ describe('BattleHubService', () => {
 
       service.startMatchmaking(123);
 
-      // Wait for async operation
       await new Promise((resolve) => setTimeout(resolve, 0));
 
       expect(mockSnackbarService.showError).toHaveBeenCalledWith('Server error');
     });
 
-    it('should handle start matchmaking failure null errro', async () => {
-      const error = new Error('');
-      mockHubConnection.invoke.mockRejectedValue(error);
+    it('should handle start matchmaking failure with null error', async () => {
+      mockHubConnection.invoke.mockRejectedValue({});
 
       service.startMatchmaking(123);
 
-      // Wait for async operation
       await new Promise((resolve) => setTimeout(resolve, 0));
 
-      expect(mockSnackbarService.showError).toHaveBeenCalledWith('Failed to start matchmaking');
+      expect(mockSnackbarService.showError).toHaveBeenCalledWith(
+        platformMessages.failedtoStartMatching,
+      );
     });
 
-    it('should cancel matchmaking when connected', () => {
+    it('should cancel matchmaking when connected', async () => {
       mockHubConnection.invoke.mockResolvedValue(undefined);
       service.cancelMatchmaking(123);
-      expect(mockHubConnection.invoke).toHaveBeenCalledWith('CancelMatchmaking', 123);
+      expect(mockHubConnection.invoke).toHaveBeenCalledWith(
+        platformMessages.battleHubCancelMatching,
+        123,
+      );
     });
 
     it('should not cancel matchmaking when not connected', () => {
@@ -296,30 +471,176 @@ describe('BattleHubService', () => {
 
       expect(mockSnackbarService.showError).toHaveBeenCalledWith('Failed to cancel matchmaking');
     });
+
+    it('should handle cancel matchmaking failure with null error', async () => {
+      mockHubConnection.invoke.mockRejectedValue({});
+
+      service.cancelMatchmaking(123);
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(mockSnackbarService.showError).toHaveBeenCalledWith(
+        platformMessages.failedtoCancelMatching,
+      );
+    });
   });
 
-  describe('stopConnection', () => {
+  describe('resumeBattle', () => {
     beforeEach(async () => {
       mockHubConnection.start.mockResolvedValue(undefined);
-      await service.connect();
+      service['hubConnection'] = mockHubConnection as any;
+      service['isConnected'] = true;
+      mockHubConnection.state = 'Connected';
     });
 
-    it('should stop connection successfully', async () => {
-      mockHubConnection.stop.mockResolvedValue(undefined);
+    it('should resume battle successfully', async () => {
+      mockHubConnection.invoke.mockResolvedValue(undefined);
 
-      await service.stopConnection();
+      await service.resumeBattle(456);
 
-      expect(mockHubConnection.stop).toHaveBeenCalled();
-      expect(service['isConnected']).toBe(false);
-      expect(service['connectionPromise']).toBe(null);
+      expect(mockHubConnection.invoke).toHaveBeenCalledWith('ResumeBattle', 456);
+      expect(mockSnackbarService.showError).not.toHaveBeenCalled();
     });
 
-    it('should handle stop connection failure', async () => {
-      mockHubConnection.stop.mockRejectedValue(new Error('Stop failed'));
+    it('should handle resume battle failure', async () => {
+      const error = new Error('Failed to resume');
+      mockHubConnection.invoke.mockRejectedValue(error);
+      const errorSpy = jest.spyOn(service['_errorSubject'], 'next');
 
-      await service.stopConnection();
+      await expect(service.resumeBattle(456)).rejects.toThrow('Failed to resume');
+      expect(mockHubConnection.invoke).toHaveBeenCalledWith('ResumeBattle', 456);
+      expect(errorSpy).toHaveBeenCalledWith('Failed to resume');
+    });
 
-      expect(mockSnackbarService.showError).toHaveBeenCalledWith('Stop failed');
+    it('should handle resume battle failure with null error', async () => {
+      mockHubConnection.invoke.mockRejectedValue({});
+      const errorSpy = jest.spyOn(service['_errorSubject'], 'next');
+
+      await expect(service.resumeBattle(456)).rejects.toThrow('Failed to resume battle');
+      expect(mockHubConnection.invoke).toHaveBeenCalledWith('ResumeBattle', 456);
+      expect(errorSpy).toHaveBeenCalledWith('Failed to resume battle');
+    });
+  });
+
+  describe('submitAnswer', () => {
+    beforeEach(async () => {
+      mockHubConnection.start.mockResolvedValue(undefined);
+      service['hubConnection'] = mockHubConnection as any;
+      service['isConnected'] = true;
+      mockHubConnection.state = 'Connected';
+    });
+
+    it('should submit answer successfully', async () => {
+      mockHubConnection.invoke.mockResolvedValue(undefined);
+
+      await service.submitAnswer(123, 1, 'A');
+
+      expect(mockHubConnection.invoke).toHaveBeenCalledWith('SubmitAnswer', 123, 1, 'A');
+      expect(mockSnackbarService.showError).not.toHaveBeenCalled();
+    });
+
+    it('should handle submit answer failure', async () => {
+      const error = new Error('Failed to submit');
+      mockHubConnection.invoke.mockRejectedValue(error);
+      const errorSpy = jest.spyOn(service['_errorSubject'], 'next');
+
+      await expect(service.submitAnswer(123, 1, 'A')).rejects.toThrow('Failed to submit');
+      expect(mockHubConnection.invoke).toHaveBeenCalledWith('SubmitAnswer', 123, 1, 'A');
+      expect(errorSpy).toHaveBeenCalledWith('Failed to submit');
+    });
+
+    it('should handle submit answer failure with null error', async () => {
+      mockHubConnection.invoke.mockRejectedValue({});
+      const errorSpy = jest.spyOn(service['_errorSubject'], 'next');
+
+      await expect(service.submitAnswer(123, 1, 'A')).rejects.toThrow('Failed to submit answer');
+      expect(mockHubConnection.invoke).toHaveBeenCalledWith('SubmitAnswer', 123, 1, 'A');
+      expect(errorSpy).toHaveBeenCalledWith('Failed to submit answer');
+    });
+  });
+
+  describe('interruptBattle', () => {
+    beforeEach(async () => {
+      mockHubConnection.start.mockResolvedValue(undefined);
+      service['hubConnection'] = mockHubConnection as any;
+      service['isConnected'] = true;
+      mockHubConnection.state = 'Connected';
+    });
+
+    it('should interrupt battle when connected', () => {
+      mockHubConnection.invoke.mockResolvedValue(undefined);
+
+      service.interruptBattle(456);
+
+      expect(mockHubConnection.invoke).toHaveBeenCalledWith('IntruptByPlayer', 456);
+      expect(mockSnackbarService.showError).not.toHaveBeenCalled();
+    });
+
+    it('should not invoke interrupt when not connected', () => {
+      service['isConnected'] = false;
+
+      service.interruptBattle(456);
+
+      expect(mockHubConnection.invoke).not.toHaveBeenCalled();
+      expect(mockSnackbarService.showError).not.toHaveBeenCalled();
+    });
+
+    it('should handle interrupt battle failure', async () => {
+      const error = new Error('Failed to interrupt');
+      mockHubConnection.invoke.mockRejectedValue(error);
+
+      service.interruptBattle(456);
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(mockHubConnection.invoke).toHaveBeenCalledWith('IntruptByPlayer', 456);
+      expect(mockSnackbarService.showError).toHaveBeenCalledWith('Failed to interrupt');
+    });
+
+    it('should handle interrupt battle failure with null error', async () => {
+      mockHubConnection.invoke.mockRejectedValue({});
+
+      service.interruptBattle(456);
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(mockHubConnection.invoke).toHaveBeenCalledWith('IntruptByPlayer', 456);
+      expect(mockSnackbarService.showError).toHaveBeenCalledWith('Failed to interrupt battle');
+    });
+  });
+
+  describe('getCurrentBattleAttemptId', () => {
+    it('should return current battle attempt ID', () => {
+      service['battleAttemptId'] = 456;
+      expect(service.getCurrentBattleAttemptId()).toBe(456);
+    });
+
+    it('should return null when no battle attempt ID is set', () => {
+      service['battleAttemptId'] = null;
+      expect(service.getCurrentBattleAttemptId()).toBe(null);
+    });
+  });
+
+  describe('cleanupBattleSubjects', () => {
+    it('should complete all subjects and reset battleAttemptId', () => {
+      const battleStartedSpy = jest.spyOn(service['battleStarted$'], 'complete');
+      const battleResumedSpy = jest.spyOn(service['battleResumed$'], 'complete');
+      const continueBattleSpy = jest.spyOn(service['continueBattle$'], 'complete');
+      const playerInterruptedSpy = jest.spyOn(service['playerInterrupted$'], 'complete');
+      const battleEndedSpy = jest.spyOn(service['battleEndedForParticularPlayer$'], 'complete');
+      const errorSpy = jest.spyOn(service['_errorSubject'], 'complete');
+
+      service['battleAttemptId'] = 456;
+
+      service.cleanupBattleSubjects();
+
+      expect(battleStartedSpy).toHaveBeenCalled();
+      expect(battleResumedSpy).toHaveBeenCalled();
+      expect(continueBattleSpy).toHaveBeenCalled();
+      expect(playerInterruptedSpy).toHaveBeenCalled();
+      expect(battleEndedSpy).toHaveBeenCalled();
+      expect(errorSpy).toHaveBeenCalled();
+      expect(service['battleAttemptId']).toBe(null);
     });
   });
 
@@ -337,7 +658,7 @@ describe('BattleHubService', () => {
         userName: 'test-user',
         userId: 1,
         currentLevel: 5,
-        fullName: 'test user',
+        fullName: 'Test User',
         winRate: 75,
       };
 
@@ -347,6 +668,108 @@ describe('BattleHubService', () => {
       });
 
       service['matchFound$'].next(mockPlayer);
+    });
+
+    it('should emit battleStarted event', (done) => {
+      const mockDetails: BattleStartDetails = {
+        battleAttemptId: 456,
+        opponentProfile: {
+          userId: 1,
+          userName: 'opponent',
+          fullName: 'Opponent',
+          currentLevel: 5,
+          winRate: 75,
+        },
+        playerProfile: {
+          userId: 2,
+          userName: 'player',
+          fullName: 'Player',
+          currentLevel: 5,
+          winRate: 80,
+        },
+        battleName: 'Math Battle',
+        totalQuestions: 10,
+      };
+
+      service.onBattleStarted.subscribe((details) => {
+        expect(details).toEqual(mockDetails);
+        done();
+      });
+
+      service['battleStarted$'].next(mockDetails);
+    });
+
+    it('should emit battleResumed event', (done) => {
+      const mockDetails: BattleStartDetails = {
+        battleAttemptId: 789,
+        opponentProfile: {
+          userId: 1,
+          userName: 'opponent',
+          fullName: 'Opponent',
+          currentLevel: 5,
+          winRate: 75,
+        },
+        playerProfile: {
+          userId: 2,
+          userName: 'player',
+          fullName: 'Player',
+          currentLevel: 5,
+          winRate: 80,
+        },
+        battleName: 'Math Battle',
+        totalQuestions: 10,
+      };
+
+      service.onBattleResumed.subscribe((details) => {
+        expect(details).toEqual(mockDetails);
+        done();
+      });
+
+      service['battleResumed$'].next(mockDetails);
+    });
+
+    it('should emit continueBattle event', (done) => {
+      const mockData = { battleAttemptId: 123, message: 'Continue battle' };
+
+      service['continueBattle$'].subscribe((data) => {
+        expect(data).toEqual(mockData);
+        done();
+      });
+
+      service['continueBattle$'].next(mockData);
+    });
+
+    it('should emit playerInterrupted event', (done) => {
+      const mockData = { userId: 1 };
+
+      service.onPlayerInterrupted.subscribe((data) => {
+        expect(data).toEqual(mockData);
+        done();
+      });
+
+      service['playerInterrupted$'].next(mockData);
+    });
+
+    it('should emit battleEndedForParticularPlayer event', (done) => {
+      const mockData = { userId: 2 };
+
+      service.onBattleEndedForParticularPlayer.subscribe((data) => {
+        expect(data).toEqual(mockData);
+        done();
+      });
+
+      service['battleEndedForParticularPlayer$'].next(mockData);
+    });
+
+    it('should emit error event', (done) => {
+      const errorMessage = 'An error occurred';
+
+      service.onError.subscribe((message) => {
+        expect(message).toEqual(errorMessage);
+        done();
+      });
+
+      service['_errorSubject'].next(errorMessage);
     });
   });
 });

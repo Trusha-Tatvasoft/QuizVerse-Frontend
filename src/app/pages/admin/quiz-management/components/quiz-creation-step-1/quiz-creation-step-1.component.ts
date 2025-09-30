@@ -215,7 +215,7 @@ export class QuizCreationStep1Component {
 
   private createTag(label: string): TagInputConfig {
     return {
-      id: crypto.randomUUID(),
+      id: Date.now().toString(),
       label,
       type: 'selectable',
       isSelected: true,

@@ -29,3 +29,11 @@ export interface MatchmakingResultDTO {
   playerProfile?: PlayerProfileDTO;
   opponentProfile?: PlayerProfileDTO;
 }
+
+export interface BattleStartDetails {
+  playerProfile: PlayerProfileDTO;
+  opponentProfile: PlayerProfileDTO;
+  battleAttemptId: number;
+  totalQuestions: number;
+  battleName: string;
+}
