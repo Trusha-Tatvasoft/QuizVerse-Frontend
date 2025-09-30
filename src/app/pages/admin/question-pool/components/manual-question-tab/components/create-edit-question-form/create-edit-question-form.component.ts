@@ -79,10 +79,11 @@ export class CreateEditQuestionFormComponent implements OnInit, OnDestroy {
     this.form.get('type')?.valueChanges.subscribe((type) => this.updateFieldsByType(type));
 
     this.loadDropdowns();
-
-    if (this.questionId) {
-      this.loadQuestionDetails(this.questionId);
-    }
+    setTimeout(() => {
+      if (this.questionId) {
+        this.loadQuestionDetails(this.questionId);
+      }
+    }, 75);
   }
 
   ngOnDestroy() {
