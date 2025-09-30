@@ -98,12 +98,13 @@ describe('CreateEditQuestionFormComponent', () => {
     expect(updateDropdownOptions).toHaveBeenCalled();
   });
 
-  it('ngOnInit with questionId should load question details', () => {
+  it('ngOnInit with questionId should load question details', fakeAsync(() => {
     component.questionId = 5;
     component.ngOnInit();
+    tick(75);
     expect(mockQuestionService.getQuestionPreviewById).toHaveBeenCalledWith(5);
     expect(patchFormWithQuestion).toHaveBeenCalled();
-  });
+  }));
 
   it('buildForm should create controls from fields', () => {
     component.baseFields = buildBaseFields();
