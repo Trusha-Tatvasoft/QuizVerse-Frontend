@@ -45,7 +45,7 @@ export const categoryIconOptions = [
 export const quizCategoryFormFeild: DynamicFormField[] = [
   {
     name: 'name',
-    label: 'Category Name',
+    label: 'Category Name*',
     type: 'text',
     placeholder: 'Name',
     icon: 'account_circle',
@@ -56,7 +56,7 @@ export const quizCategoryFormFeild: DynamicFormField[] = [
   },
   {
     name: 'description',
-    label: 'Description',
+    label: 'Description*',
     type: 'textarea',
     placeholder: 'Tell us about quiz categories',
     icon: 'info',

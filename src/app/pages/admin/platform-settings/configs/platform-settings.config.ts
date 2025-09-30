@@ -14,7 +14,7 @@ export const platformSettingHeaderConfig = {
 export const platformSettingsFormFields: DynamicFormField[] = [
   {
     name: 'landingPageQuote',
-    label: 'Landing Page Quote',
+    label: 'Landing Page Quote*',
     type: 'textarea',
     placeholder: 'Enter landing page quote',
     validators: [
@@ -31,7 +31,7 @@ export const platformSettingsFormFields: DynamicFormField[] = [
   },
   {
     name: 'primaryColor',
-    label: 'Primary Color',
+    label: 'Primary Color*',
     type: 'color',
     placeholder: '#000000',
     validators: [Validators.required, Validators.pattern(/^#([0-9A-Fa-f]{6})$/)],
@@ -43,7 +43,7 @@ export const platformSettingsFormFields: DynamicFormField[] = [
   },
   {
     name: 'secondaryColor',
-    label: 'Secondary Color',
+    label: 'Secondary Color*',
     type: 'color',
     placeholder: '#FFFFFF',
     validators: [Validators.required, Validators.pattern(/^#([0-9A-Fa-f]{6})$/)],

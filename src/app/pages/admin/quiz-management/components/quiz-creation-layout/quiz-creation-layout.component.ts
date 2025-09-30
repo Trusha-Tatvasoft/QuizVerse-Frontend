@@ -373,10 +373,11 @@ export class QuizCreationLayoutComponent {
           this.isEditMode = true;
         },
         error: (err) => {
-          this.snackbar.showError(
-            platformMessages.errorTitle,
-            err?.error?.message || platformMessages.errorMessage,
-          );
+          const errorMessage = err?.error?.message || platformMessages.errorMessage;
+          if (errorMessage.includes('playing')) {
+            this.router.navigate([Navigations.Admin, Navigations.Quizzes]);
+          }
+          this.snackbar.showError(platformMessages.errorTitle, errorMessage);
         },
       });
   }

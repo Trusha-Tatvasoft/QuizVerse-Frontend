@@ -92,7 +92,7 @@ export const deleteQuestionDifficultyDialog: ConfirmationDialogData = {
 export const questionDifficultyFormFields: DynamicFormField[] = [
   {
     name: 'name',
-    label: 'Difficulty Name',
+    label: 'Difficulty Name*',
     type: 'text',
     placeholder: 'Name',
     icon: 'account_circle',
@@ -109,7 +109,7 @@ export const questionDifficultyFormFields: DynamicFormField[] = [
   },
   {
     name: 'description',
-    label: 'Description',
+    label: 'Description*',
     type: 'textarea',
     placeholder: 'Tell us about difficulty level',
     icon: 'info',
@@ -126,7 +126,7 @@ export const questionDifficultyFormFields: DynamicFormField[] = [
   },
   {
     name: 'xpPerQuestion',
-    label: 'XP Per Question',
+    label: 'XP Per Question*',
     type: 'number',
     placeholder: 'XP',
     icon: 'emoji_events',
