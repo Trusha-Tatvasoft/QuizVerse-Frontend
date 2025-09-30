@@ -147,14 +147,6 @@ describe('BattleCreationLayoutComponent', () => {
     questionsDifficulty: [],
   };
 
-  beforeAll(() => {
-    if (!(global as any).crypto) {
-      (global as any).crypto = {};
-    }
-    (global as any).crypto.randomUUID = () =>
-      'mock-uuid-' + Math.random().toString(36).substring(2, 9);
-  });
-
   beforeEach(async () => {
     battleManagementService = {
       getBattle: jest.fn().mockReturnValue(

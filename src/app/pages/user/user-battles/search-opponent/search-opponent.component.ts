@@ -8,7 +8,11 @@ import { Subject, takeUntil } from 'rxjs';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { platformMessages } from '../../../../utils/constants';
 import { BattleHubService } from '../../../../services/user/user-battles/battle-hub.service';
-import { BattleData, PlayerProfileDTO } from '../interface/search-opponent.interface';
+import {
+  BattleData,
+  BattleStartDetails,
+  PlayerProfileDTO,
+} from '../interface/search-opponent.interface';
 import { environment } from '../../../../../environments/environment.dev';
 import { Navigations } from '../../../../shared/enums/navigation';
 import { CheatPreventionService } from '../../../../shared/service/cheat-prevention/cheat-prevention.service';
@@ -25,6 +29,7 @@ export class SearchOpponentComponent implements OnInit, OnDestroy {
   searchSeconds = 0;
   battleId: number | null = null;
   opponent: PlayerProfileDTO | null = null;
+  battleStartDetails: BattleStartDetails | null = null;
   battleData: BattleData = {
     battleName: 'Math Champions',
     battleCategory: 'Mathematics',
@@ -103,23 +108,31 @@ export class SearchOpponentComponent implements OnInit, OnDestroy {
               userName: result.userName,
               winRate: result.winRate,
             };
-
-            // Navigate to battle page when matched
-            if (this.battleId) {
-              setTimeout(() => this.openFullscreen(), 0);
-              this.router.navigate(
-                [
-                  Navigations.User,
-                  Navigations.Battles,
-                  Navigations.BattleList,
-                  Navigations.FoundOpponent,
-                  btoa(encodeURIComponent(this.battleId.toString())),
-                ],
-                {
-                  state: { opponent: this.opponent },
-                },
-              );
-            }
+            this.battleHub.onBattleStarted
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((result: BattleStartDetails) => {
+                if (result) {
+                  this.battleStartDetails = result;
+                }
+                // Navigate to battle page when matched
+                if (this.battleId && this.battleStartDetails) {
+                  setTimeout(() => this.openFullscreen(), 0);
+                  this.router.navigate(
+                    [
+                      Navigations.User,
+                      Navigations.Battles,
+                      Navigations.BattleList,
+                      Navigations.FoundOpponent,
+                      btoa(encodeURIComponent(this.battleId.toString())),
+                    ],
+                    {
+                      state: {
+                        battleStartDetails: this.battleStartDetails,
+                      },
+                    },
+                  );
+                }
+              });
           }
         });
 

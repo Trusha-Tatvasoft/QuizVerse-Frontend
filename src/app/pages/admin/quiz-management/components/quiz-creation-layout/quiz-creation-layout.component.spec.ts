@@ -115,14 +115,6 @@ describe('QuizCreationLayoutComponent', () => {
     difficultyDistribution: [],
   };
 
-  beforeAll(() => {
-    if (!(global as any).crypto) {
-      (global as any).crypto = {};
-    }
-    (global as any).crypto.randomUUID = () =>
-      'mock-uuid-' + Math.random().toString(36).substring(2, 9);
-  });
-
   beforeEach(async () => {
     quizCreationService = {
       createOrUpdateQuiz: jest

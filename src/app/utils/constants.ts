@@ -306,11 +306,14 @@ export const platformMessages = {
   cancelSearch: 'Search cancelled',
   matchMakingFailed: 'Failed to connect to matchmaking service',
   searchTimeOut: 'Search timed out. No opponents found.',
+  battleResumed: 'Battle resumed successfully',
+
+  // Request Messages for hub
   battleHubSearching: 'Searching',
-  battleHubMatchFound: 'MatchFound',
   battleHubStartMatching: 'StartMatchmaking',
   battleHubCancelMatching: 'CancelMatchmaking',
   battleHubResumeBattle: 'ResumeBattle',
+  battleHubBattleIntrupted: 'IntruptByPlayer',
   connectionFailed: 'Connection failed:',
   matchedWith: 'Matched with',
   connectionLost: 'Connection lost. Reconnecting...',
@@ -318,6 +321,8 @@ export const platformMessages = {
   connectionClosedError: 'Connection closed unexpectedly',
   serverNotConnected: 'Not connected to server',
   failedtoStartMatching: 'Failed to start matchmaking',
+  failedtoResumeBattle: 'Failed to resume battle',
+  failedtoEndBattle: 'Failed to end battle',
   failedtoCancelMatching: 'Failed to cancel matchmaking',
   errorInConnection: `Error stopping connection`,
   // #endregion
@@ -327,6 +332,8 @@ export const platformMessages = {
   //#endregion
 
   // #region play battle
+  battleHubMatchFound: 'MatchFound',
+  battleError: 'Error',
   battleHubBattleStarted: 'BattleStarted',
   battleHubBattleResumed: 'BattleResumed',
   battleHubContinueBattle: 'ContinueBattle',
@@ -631,10 +638,6 @@ export const quizPlayStateKey = 'quizAttemptState';
 
 export function autoSubmitMessage(reason: string): string {
   return `Quiz will be auto-submitted due to: ${reason}`;
-}
-
-export function autoBattleEndMessage(reason: string): string {
-  return `Battle will end automatically due to: ${reason}`;
 }
 // #endregion
 

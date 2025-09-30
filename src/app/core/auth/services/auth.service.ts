@@ -15,6 +15,7 @@ import {
   platformMessages,
   refreshTokenKey,
   roleClaimKey,
+  userIdClaimKey,
 } from '../../../utils/constants';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { Navigations } from '../../../shared/enums/navigation';
@@ -144,5 +145,21 @@ export class AuthService {
         platformMessages.sessionExpiredMessage,
       );
     }
+  }
+
+  getUserIdFromToken(token: string): string | null {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+
+      // userId is stored in this claim
+      return payload[userIdClaimKey] || null;
+    } catch {
+      return null;
+    }
+  }
+
+  getCurrentUserId(): string | null {
+    const token = this.getAccessToken();
+    return token ? this.getUserIdFromToken(token) : null;
   }
 }
