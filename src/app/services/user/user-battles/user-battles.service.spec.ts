@@ -6,6 +6,7 @@ import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { UserBattleLeaderboardData } from '../../../pages/user/user-battles/interface/user-battles.interface';
 import { AvailableBattle } from '../../../pages/user/user-battles/interface/quiz-battles.interface';
+import { BattleUserSearchResult } from '../../../pages/user/user-battles/available-battles/interfaces/challenge-friend.interface';
 import {
   UserRecentBattlesRequestDto,
   UserRecentBattlesResponseDto,
@@ -147,6 +148,95 @@ describe('UserBattlesService (Jest)', () => {
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetUserRecentBattles}`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(request);
+    req.flush(mockResponse);
+  });
+
+  it('should send a battle request correctly', () => {
+    const receiverUsername = 'johnDoe';
+    const battleId = 5;
+
+    const mockResponse: ApiResponse<null> = {
+      result: true,
+      message: 'Request sent successfully',
+      data: null,
+      statusCode: 200,
+    };
+
+    service.sendBattleRequest(receiverUsername, battleId).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.SendBattleRequest}`);
+
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({
+      receiverUsername,
+      battleId,
+    });
+
+    req.flush(mockResponse);
+  });
+
+  it('should check if a user exists by username', () => {
+    const username = 'johnDoe';
+
+    const mockResponse: ApiResponse<null> = {
+      result: true,
+      message: 'User exists',
+      data: null,
+      statusCode: 200,
+    };
+
+    service.checkUserExistence(username).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne(
+      `${environment.baseUrl}/${EndPoints.CheckUserExistence}/${username}`,
+    );
+
+    expect(req.request.method).toBe('GET');
+    expect(req.request.headers.get('X-Skip-Loader')).toBe('true');
+
+    req.flush(mockResponse);
+  });
+
+  it('should search users by username and battleId', () => {
+    const userName = 'john';
+    const battleId = 3;
+
+    const mockResponse: ApiResponse<BattleUserSearchResult[]> = {
+      result: true,
+      message: 'Search completed',
+      data: [
+        {
+          fullName: 'John Doe',
+          userName: 'john123',
+          profilePic: 'https://xyz.com/profile.png',
+          totalXp: 500,
+          hasRequest: false,
+        },
+      ],
+      statusCode: 200,
+    };
+
+    service.searchUsers(userName, battleId).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+      expect(res.data.length).toBe(1);
+      expect(res.data[0].userName).toBe('john123');
+    });
+
+    const req = httpMock.expectOne((request) => {
+      return (
+        request.url === `${environment.baseUrl}/${EndPoints.SearchUser}` &&
+        request.params.get('userName') === userName &&
+        request.params.get('battleId') === battleId.toString()
+      );
+    });
+
+    expect(req.request.method).toBe('GET');
+    expect(req.request.headers.get('X-Skip-Loader')).toBe('true');
+
     req.flush(mockResponse);
   });
 

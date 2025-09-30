@@ -133,6 +133,9 @@ export enum EndPoints {
   GetBattleLeaderboardList = 'UserBattles/get-battle-leaderboard-list',
   GetUserAvailableBattles = 'UserBattles/get-user-available-battles',
   GetUserRecentBattles = 'UserBattles/get-user-battle-history',
+  SendBattleRequest = 'UserBattles/send-battle-request',
+  CheckUserExistence = 'UserBattles/check-user-existence',
+  SearchUser = 'UserBattles/search-user',
   GetBattleInstruction = 'UserBattles/get-battle-instructions',
   //#endregion
 
