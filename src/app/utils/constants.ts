@@ -321,6 +321,34 @@ export const platformMessages = {
   failedtoCancelMatching: 'Failed to cancel matchmaking',
   errorInConnection: `Error stopping connection`,
   // #endregion
+
+  //#region Battle Instruction
+  failBattleInstruction: 'Failed to load battle instruction',
+  //#endregion
+
+  // #region play battle
+  battleHubBattleStarted: 'BattleStarted',
+  battleHubBattleResumed: 'BattleResumed',
+  battleHubContinueBattle: 'ContinueBattle',
+  battleHubReceiveQuestion: 'ReceiveQuestion',
+  battleHubReceiveScoreUpdate: 'ReceiveScoreUpdate',
+  battleHubLastAnsweredDetail: 'LastAnsweredDetail',
+  battleHubPlayerInterrupted: 'PlayerInterrupted',
+  battleHubBattleEndedForPlayer: 'BattleEndedForParticularPlayerDueToInterrupt',
+
+  // Battle flow messages
+  battleStart: 'Battle started! All the best!',
+  timeoutNextQuestion: "Time's up! Moving to the next question...",
+  invalidBattleId: 'Invalid battle id',
+  answerSubmitFailed: 'Failed to submit answer',
+  resumeBattleFailed: 'Failed to resume battle',
+  opponentLeft: 'Your opponent has left the battle.',
+  opponentBattleEnded: 'The battle has ended for your opponent.',
+  battleComplted: 'Battle Completed!! Redirecting to result',
+  battleResumeSuccess: 'Battle resumed successfully',
+  battleHubError: 'Error',
+  questionLoadFail: 'Falied to load Question',
+  // #endregion
 };
 //#endregion
 
@@ -620,4 +648,17 @@ export const regexPatterns = {
   QUIZ_DIFFICULTY_NAME: /^[A-Za-z][A-Za-z0-9 ]*$/,
   CAMEL_CASE_REGEX: /([a-z])([A-Z])/g,
 };
+// #endregion
+
+//#region Battle play
+export function autoSubmitBattleMessage(reason: string): string {
+  return `Battle will end automatically due to: ${reason}`;
+}
+
+export const battleInstructionsShowTime = 30; // seconds
+
+export const battleIdStorageKey = 'battleAttemptId';
+
+export const userIdClaimKey = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata';
+
 // #endregion

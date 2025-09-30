@@ -583,6 +583,15 @@ html {
   top: 3px;
 }
 
+// play-battle - question opt label
+.option-text {
+  div {
+    .mdc-label {
+      font-size: 1rem;
+    }
+  }
+}
+
 // slider - browse quizzes
 .mat-mdc-slider.mdc-slider.mat-primary {
   margin: 0px;

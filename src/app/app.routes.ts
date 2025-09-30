@@ -33,6 +33,8 @@ import { QuizResultPageComponent } from './pages/user/quiz-result-page/quiz-resu
 import { SearchOpponentComponent } from './pages/user/user-battles/search-opponent/search-opponent.component';
 import { NotificationCenterComponent } from './pages/layout/notification-center/notification-center.component';
 import { FoundOpponentComponent } from './pages/user/user-battles/found-opponent/found-opponent.component';
+import { BattleInstructionComponent } from './pages/user/battle-attempt-layout/battle-instruction/battle-instruction.component';
+import { BattleAttemptLayoutComponent } from './pages/user/battle-attempt-layout/battle-attempt-layout.component';
 
 export const routes: Routes = [
   {
@@ -241,13 +243,6 @@ export const routes: Routes = [
           { path: `${Navigations.QuizAttempt}/:id`, component: QuizAttemptLayoutComponent },
         ],
       },
-    ],
-  },
-  {
-    path: Navigations.User,
-    canActivate: [authGuard],
-    data: { roles: ['player'] },
-    children: [
       {
         path: Navigations.Battles,
         title: 'Quizeverse | Play Battle',
@@ -257,11 +252,20 @@ export const routes: Routes = [
             component: FoundOpponentComponent,
             title: 'Quizeverse | Found Opponent',
           },
+          {
+            path: `${Navigations.BattleList}/${Navigations.BattleInstruction}/:id`,
+            component: BattleInstructionComponent,
+            title: 'Quizeverse | Battle Instruction',
+          },
+          {
+            path: `${Navigations.BattleAttempt}/:id`,
+            component: BattleAttemptLayoutComponent,
+            title: 'Quizeverse | Play Battle',
+          },
         ],
       },
     ],
   },
-
   {
     path: Navigations.Unauthorized,
     component: UnauthorizedComponent,
