@@ -9,7 +9,7 @@ export const battleHeaderConfig = {
 
 export const createNewBattleConfig: ButtonConfig = {
   label: 'Create New Battle',
-  variant: 'gradient',
+  variant: 'secondary',
   fontWeight: 500,
   matIcon: 'add',
   iconFontSet: 'material-icons',

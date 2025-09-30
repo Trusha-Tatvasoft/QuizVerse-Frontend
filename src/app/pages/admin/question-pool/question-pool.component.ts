@@ -245,7 +245,7 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
   openConfirmationDialog(dialogData: ConfirmationDialogData, onConfirm: () => void): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '600px',
-      disableClose: true,
+      disableClose: false,
       data: dialogData,
     });
 
@@ -263,6 +263,7 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
       maxWidth: '100vw',
       maxHeight: '95vh',
       autoFocus: false,
+      disableClose: false,
       data: {
         mode,
         ...{ id: question },

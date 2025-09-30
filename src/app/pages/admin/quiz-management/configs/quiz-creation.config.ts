@@ -157,9 +157,9 @@ export const quizCreationFormFields: DynamicFormField[] = [
     label: 'Price (in ₹)',
     type: 'number',
     placeholder: 'Enter quiz price',
-    validators: [Validators.min(0)],
+    validators: [Validators.min(1)],
     validationMessages: {
-      min: 'Price cannot be negative.',
+      min: 'Price cannot be less than 1.',
     },
     gridClass: 'col-span-1 sm:col-span-1',
   },

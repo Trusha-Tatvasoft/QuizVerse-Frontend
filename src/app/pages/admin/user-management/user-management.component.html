@@ -69,9 +69,10 @@
 </main>
 
 @if (showUserDialog()) {
-  <div class="dialog-backdrop">
+  <div class="dialog-backdrop" (click)="closeUserDialog()">
     <app-user-form-dialog
       [user]="selectedUser()"
+      (click)="$event.stopPropagation()"
       (closeDialog)="closeUserDialog()"
       (saveUser)="onSaveUser($event)"
     >
