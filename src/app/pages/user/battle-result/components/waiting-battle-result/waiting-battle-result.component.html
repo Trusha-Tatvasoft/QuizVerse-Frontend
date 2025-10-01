@@ -1,0 +1,20 @@
+<div class="victory-container">
+  <div class="waiting-state">
+    <div class="loader-container">
+      <div class="battle-loader"></div>
+    </div>
+    <h2>Battle In Progress</h2>
+    <p class="waiting-text">
+      The battle is still in progress. You can continue to other pages — the result will
+      automatically appear in your battle history once the battle is completed.
+    </p>
+
+    <div class="quiz-rating-action battle-rating-action">
+      <app-filled-button
+        [filledButtonConfig]="dashboardButtonConfig"
+        (buttonClicked)="redirectToDashboard()"
+      >
+      </app-filled-button>
+    </div>
+  </div>
+</div>

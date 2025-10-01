@@ -1,0 +1,117 @@
+@if (!loading) {
+  <div class="victory-container">
+    <!-- Header with dynamic color -->
+    <div class="battle-container">
+      <div class="battle-header" [ngClass]="battleResult.result">
+        @if (battleResult.result === 'Victory') {
+          <mat-icon class="result-icon" fontSet="material-icons-outlined">emoji_events</mat-icon>
+        } @else if (battleResult.result === 'Defeat') {
+          <mat-icon class="result-icon">cancel</mat-icon>
+        } @else {
+          <mat-icon class="result-icon">handshake</mat-icon>
+        }
+
+        <h1>
+          {{
+            battleResult.result === 'Victory'
+              ? 'Victory!'
+              : battleResult.result === 'Defeat'
+                ? 'Defeat'
+                : 'Draw'
+          }}
+        </h1>
+        <p>{{ battleResult.title }}</p>
+      </div>
+
+      <!-- Battle Summary -->
+      <div class="battle-summary">
+        <h2>Battle Summary</h2>
+
+        <div class="summary-content">
+          <!-- You -->
+          <div class="player">
+            <div class="avatar you">
+              @if (battleResult.you.profileImageUrl && !imageError) {
+                <img
+                  [src]="battleResult.you.profileImageUrl"
+                  [alt]="battleResult.you.fullName"
+                  (error)="imageError = true"
+                />
+              } @else {
+                <span>
+                  {{ getInitials(battleResult.you.fullName) }}
+                </span>
+              }
+            </div>
+
+            <p>{{ battleResult.you.username }}</p>
+            <p
+              class="score"
+              [ngClass]="{
+                win: battleResult.you.isWinner && battleResult.result !== 'Draw',
+                lose: !battleResult.you.isWinner && battleResult.result !== 'Draw',
+                draw: battleResult.result === 'Draw',
+              }"
+            >
+              {{ battleResult.you.score }}
+            </p>
+            @if (battleResult.you.isWinner && battleResult.result !== 'Draw') {
+              <div class="result-badge victory">
+                <mat-icon fontSet="material-icons-outlined">emoji_events</mat-icon>
+                <span>Winner</span>
+              </div>
+            }
+          </div>
+
+          <div class="vs">VS</div>
+
+          <!-- Opponent -->
+          <div class="player">
+            <div class="avatar opponent">
+              <img
+                *ngIf="battleResult.opponent.profileImageUrl && !imageError"
+                [src]="battleResult.opponent.profileImageUrl"
+                [alt]="battleResult.opponent.fullName"
+                (error)="imageError = true"
+              />
+
+              <span *ngIf="!battleResult.opponent.profileImageUrl || imageError">
+                {{ getInitials(battleResult.opponent.fullName) }}
+              </span>
+            </div>
+
+            <p>{{ battleResult.opponent.username }}</p>
+            <p
+              class="score"
+              [ngClass]="{
+                win: battleResult.you.isWinner && battleResult.result !== 'Draw',
+                lose: !battleResult.you.isWinner && battleResult.result !== 'Draw',
+                draw: battleResult.result === 'Draw',
+              }"
+            >
+              {{ battleResult.opponent.score }}
+            </p>
+            @if (battleResult.opponent.isWinner && battleResult.result !== 'Draw') {
+              <div class="result-badge victory">
+                <mat-icon fontSet="material-icons-outlined">emoji_events</mat-icon>
+                <span>Winner</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Rewards -->
+      <div class="rewards">
+        <h2>Rewards Earned</h2>
+        <p class="points">+{{ battleResult.rewards.points }}</p>
+        <p class="exp">{{ battleResult.rewards.description }}</p>
+      </div>
+
+      <!-- Timer -->
+      <div class="timer">
+        Redirecting in <span>{{ formatTime() }}</span>
+      </div>
+    </div>
+  </div>
+}
