@@ -40,7 +40,7 @@ export class WaitingBattleResultComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((battleCompletion: BattleCompletionResult) => {
         if (battleCompletion?.battleStatus > 0) {
-          const encodedId = encodeURIComponent(this.decodedBattleId.toString());
+          const encodedId = btoa(encodeURIComponent(this.decodedBattleId));
           this.router.navigate([
             `${Navigations.User}/${Navigations.Battles}/${Navigations.BattleList}/${Navigations.BattleResult}/${encodedId}`,
           ]);
