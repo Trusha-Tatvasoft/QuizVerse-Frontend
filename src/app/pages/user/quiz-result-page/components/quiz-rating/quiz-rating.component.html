@@ -10,7 +10,7 @@
       @if (field.type === 'star-rating') {
         <div class="form-field">
           <label class="form-label">{{ field.label }}</label>
-          <div class="stars">
+          <div class="stars" [ngClass]="{ 'disable-icon': ratingSubmitted }">
             @for (star of stars; track $index) {
               <mat-icon
                 fontSet="material-icons"

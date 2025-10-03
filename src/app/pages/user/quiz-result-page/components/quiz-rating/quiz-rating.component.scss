@@ -60,6 +60,11 @@
       }
     }
   }
+  .disable-icon {
+    mat-icon {
+      cursor: not-allowed;
+    }
+  }
 
   // Actions container with proper button targeting
   .quiz-rating-action {

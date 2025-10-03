@@ -1,6 +1,7 @@
 import { TagInputConfig } from '../../../../shared/interfaces/tag-component.interface';
 
 export interface QuizResult {
+  quizId: number;
   quizName: string;
   categoryName: string;
   difficultyLevel: string;
@@ -9,6 +10,7 @@ export interface QuizResult {
 }
 
 export interface QuizResultWithTag {
+  quizId: number;
   quizName: string;
   categoryName: string;
   difficultyLevel: string;
