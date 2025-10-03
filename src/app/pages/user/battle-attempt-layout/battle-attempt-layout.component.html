@@ -24,14 +24,22 @@
       <!-- Scores -->
       <div class="battle-scores card">
         <!-- Player 1 Avatar -->
-        <!-- Player 1 Avatar -->
         @if (me.imageUrl) {
           <div class="avatar player1-avatar">
             <img [src]="me.imageUrl" alt="Profile" (error)="(me.imageUrl == undefined)" />
           </div>
+          @if (!isImageError['me']) {
+            <div class="avatar player1-avatar">
+              <img [src]="me.imageUrl" alt="You" (error)="imageError('me')" />
+            </div>
+          } @else {
+            <div class="avatar player1-avatar" [ngClass]="getInitialsColorClass(me?.name || 'You')">
+              {{ getInitials(me?.name || 'You') }}
+            </div>
+          }
         } @else {
-          <div class="avatar player1-avatar">
-            <ng-template #showYou>You</ng-template>
+          <div class="avatar player1-avatar" [ngClass]="getInitialsColorClass(me?.name || 'You')">
+            {{ getInitials(me?.name || 'You') }}
           </div>
         }
 
@@ -40,21 +48,29 @@
 
         <!-- Player 2 Avatar -->
         @if (opponent.imageUrl) {
-          <div class="avatar player2-avatar">
-            <img
-              [src]="opponent.imageUrl"
-              alt="Opponent"
-              (error)="(opponent.imageUrl == undefined)"
-            />
-          </div>
+          @if (!isImageError['opponent']) {
+            <div class="avatar player2-avatar">
+              <img [src]="opponent.imageUrl" alt="Opponent" (error)="imageError('opponent')" />
+            </div>
+          } @else {
+            <div
+              class="avatar player2-avatar"
+              [ngClass]="getInitialsColorClass(opponent?.name || 'Opponent')"
+            >
+              {{ getInitials(opponent?.name || 'Opponent') }}
+            </div>
+          }
         } @else {
-          <div class="avatar player2-avatar">
-            <ng-template #showInitials>{{ getInitials(opponent?.name || 'Opponent') }}</ng-template>
+          <div
+            class="avatar player2-avatar"
+            [ngClass]="getInitialsColorClass(opponent?.name || 'Opponent')"
+          >
+            {{ getInitials(opponent?.name || 'Opponent') }}
           </div>
         }
 
         <!-- Player 1 Name -->
-        <div class="player-name player1-name">{{ me?.name || 'You' }}</div>
+        <div class="player-name player1-name">{{ 'You' }}</div>
 
         <!-- VS Text -->
         <div class="vs">

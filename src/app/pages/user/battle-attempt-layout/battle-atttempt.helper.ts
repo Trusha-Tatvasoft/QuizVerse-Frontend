@@ -1,15 +1,12 @@
 import { environment } from '../../../../environments/environment.dev';
 import { TagInputConfig } from '../../../shared/interfaces/tag-component.interface';
+import { globalGetInitials } from '../../../utils/get-profile-initials.utils';
 import { TagColor } from '../../../utils/types/tag-component.type';
 import { BattleStartDetails } from './interfaces/battle-attempt.interface';
 
 // Get initials for avatar/tag
 export function getInitials(name: string): string {
-  if (!name) return '';
-  const words = name.trim().split(' ');
-  return words.length === 1
-    ? words[0].charAt(0).toUpperCase()
-    : words[0].charAt(0).toUpperCase() + words[1].charAt(0).toUpperCase();
+  return globalGetInitials(name);
 }
 
 // Map backend question type to display string
@@ -77,7 +74,7 @@ export class BattlePlayerHelper {
 
       player1 = {
         id: playerProfileId,
-        name: 'You',
+        name: details.playerProfile.fullName || details.playerProfile.userName,
         imageUrl: mapProfilePic(details.playerProfile.profilePic),
         score: 0,
       };
@@ -100,7 +97,7 @@ export class BattlePlayerHelper {
 
       player2 = {
         id: opponentProfileId,
-        name: 'You',
+        name: details.opponentProfile.fullName || details.opponentProfile.userName,
         imageUrl: mapProfilePic(details.opponentProfile.profilePic),
         score: 0,
       };

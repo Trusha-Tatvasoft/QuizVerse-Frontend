@@ -189,11 +189,22 @@ describe('FoundOpponentComponent', () => {
     it('should decode valid battle ID and set battleStartDetails from history.state', () => {
       mockActivatedRoute.snapshot.paramMap.get.mockReturnValue(encodeURIComponent(btoa('123')));
 
+      // Mock history.state with both opponent and battleStartDetails
+      Object.defineProperty(window, 'history', {
+        value: {
+          state: {
+            opponent: mockOpponent,
+            battleStartDetails: mockBattleStartDetails,
+          },
+        },
+        writable: true,
+      });
+
       component['decodeRouteId']();
 
       expect(component.battleId).toBe(123);
       expect(component.battleStartDetails).toEqual(mockBattleStartDetails);
-      expect(component.opponent).toEqual(mockOpponent);
+      expect(component.opponent).toEqual(mockOpponent); // ✅ now passes
       expect(component.battleAttemptId).toBe(456);
       expect(localStorage.setItem).toHaveBeenCalledWith(
         battleIdStorageKey,

@@ -13,6 +13,10 @@ import { battleRequestMessages, platformMessages } from '../../../../../utils/co
 import { Subject, takeUntil } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BattleRequestStatus } from '../../../../../shared/enums/user-dashboard.enum';
+import {
+  globalGetInitials,
+  globalGetInitialsColorClass,
+} from '../../../../../utils/get-profile-initials.utils';
 
 @Component({
   selector: 'app-battle-request',
@@ -127,21 +131,10 @@ export class BattleRequestComponent implements OnInit {
   }
 
   private getInitials(name: string): string {
-    if (!name) return '';
-    const words = name.trim().split(' ');
-    return words.length === 1
-      ? words[0].charAt(0).toUpperCase()
-      : words[0].charAt(0).toUpperCase() + words[1].charAt(0).toUpperCase();
+    return globalGetInitials(name);
   }
 
   private getInitialsColorClass(name: string): string {
-    if (!name) return 'bg-avatar-0';
-    const colorsCount = 12;
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const index = Math.abs(hash) % colorsCount;
-    return `bg-avatar-${index}`;
+    return globalGetInitialsColorClass(name);
   }
 }

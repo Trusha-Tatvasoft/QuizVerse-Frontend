@@ -35,6 +35,7 @@ import { ConfirmationDialogComponent } from '../../../shared/components/confirma
 import { MatDialog } from '@angular/material/dialog';
 import { CheatPreventionService } from '../../../shared/service/cheat-prevention/cheat-prevention.service';
 import { DisableQuizShortcutsDirective } from '../../../shared/Directives/disable-quiz-shortcuts.directive';
+import { globalGetInitialsColorClass } from '../../../utils/get-profile-initials.utils';
 
 @Component({
   selector: 'app-battle-attempt-layout',
@@ -88,6 +89,7 @@ export class BattleAttemptLayoutComponent implements OnInit, OnDestroy {
     imageUrl: '',
     score: 0,
   };
+  isImageError: Record<string, boolean> = { me: false, opponent: false };
 
   opponentTag: TagInputConfig = getPlayer2TagConfig(this.opponentStatus);
   questions: BattleQuestion[] = [];
@@ -499,4 +501,12 @@ export class BattleAttemptLayoutComponent implements OnInit, OnDestroy {
       });
   }
   //#endregion
+
+  getInitialsColorClass(name: string): string {
+    return globalGetInitialsColorClass(name);
+  }
+
+  imageError(player: string): void {
+    this.isImageError[player] = true;
+  }
 }
