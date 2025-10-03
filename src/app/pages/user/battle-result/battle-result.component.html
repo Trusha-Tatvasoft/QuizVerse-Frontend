@@ -68,16 +68,18 @@
           <!-- Opponent -->
           <div class="player">
             <div class="avatar opponent">
-              <img
-                *ngIf="battleResult.opponent.profileImageUrl && !imageError"
-                [src]="battleResult.opponent.profileImageUrl"
-                [alt]="battleResult.opponent.fullName"
-                (error)="imageError = true"
-              />
-
-              <span *ngIf="!battleResult.opponent.profileImageUrl || imageError">
-                {{ getInitials(battleResult.opponent.fullName) }}
-              </span>
+              @if (battleResult.opponent.profileImageUrl && !imageError) {
+                <img
+                  [src]="battleResult.opponent.profileImageUrl"
+                  [alt]="battleResult.opponent.fullName"
+                  (error)="imageError = true"
+                />
+              }
+              @if (!battleResult.opponent.profileImageUrl || imageError) {
+                <span>
+                  {{ getInitials(battleResult.opponent.fullName) }}
+                </span>
+              }
             </div>
 
             <p>{{ battleResult.opponent.username }}</p>

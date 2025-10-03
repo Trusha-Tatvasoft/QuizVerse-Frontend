@@ -31,21 +31,7 @@ export class WaitingBattleResultComponent implements OnInit, OnDestroy {
     this.decodeRouteId();
 
     // Connect to BattleHub if not connected
-    if (!this.battleHubService.connected) {
-      this.battleHubService.connect();
-    }
-
-    // Subscribe to battle ended event
-    this.battleHubService.onBattleEnded
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((battleCompletion: BattleCompletionResult) => {
-        if (battleCompletion?.battleStatus > 0) {
-          const encodedId = btoa(encodeURIComponent(this.decodedBattleId));
-          this.router.navigate([
-            `${Navigations.User}/${Navigations.Battles}/${Navigations.BattleList}/${Navigations.BattleResult}/${encodedId}`,
-          ]);
-        }
-      });
+    this.subscribeToBattleEnded();
   }
 
   /**
@@ -85,5 +71,24 @@ export class WaitingBattleResultComponent implements OnInit, OnDestroy {
     if (this.battleHubService.stopConnection) {
       this.battleHubService.stopConnection();
     }
+  }
+
+  private subscribeToBattleEnded(): void {
+    // Ensure connection
+    if (!this.battleHubService.connected) {
+      this.battleHubService.connect();
+    }
+
+    // Subscribe to battle ended event
+    this.battleHubService.onBattleEnded
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((battleCompletion: BattleCompletionResult) => {
+        if (battleCompletion?.battleStatus > 0) {
+          const encodedId = btoa(encodeURIComponent(this.decodedBattleId));
+          this.router.navigate([
+            `${Navigations.User}/${Navigations.Battles}/${Navigations.BattleList}/${Navigations.BattleResult}/${encodedId}`,
+          ]);
+        }
+      });
   }
 }
