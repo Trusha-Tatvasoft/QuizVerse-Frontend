@@ -16,6 +16,7 @@ import {
 } from '../../../pages/user/battle-attempt-layout/interfaces/battle-attempt.interface';
 import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
+import { UserProfileService } from '../user-profile/user-profile.service';
 
 @Injectable({
   providedIn: 'root',
@@ -40,6 +41,7 @@ export class BattleHubService {
   private battleEndedForParticularPlayer$ = new Subject<{ userId: number }>();
   private lastAnsweredDetail$ = new Subject<LastAnswerdQuestionDetail>();
   private _errorSubject = new Subject<string>();
+  private readonly useprofileUpdatedSource = inject(UserProfileService).profileUpdatedSource;
 
   private battleAttemptId: number | null = null;
   private isConnected = false;

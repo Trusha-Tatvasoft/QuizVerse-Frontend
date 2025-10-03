@@ -7,8 +7,9 @@ import { tabLazyComponentMap } from '../../../utils/tab-component-lazy-map';
  */
 export const googleButtonConfig: ButtonConfig = {
   label: 'Google',
-  imageSrc: '../../../../../assets/images/google.svg',
+  imageSrc: '../../../../../assets/images/google1.svg',
   variant: 'secondary',
+  fontWeight: 500,
 };
 
 /**
@@ -16,9 +17,7 @@ export const googleButtonConfig: ButtonConfig = {
  */
 export const facebookButtonConfig: ButtonConfig = {
   label: 'Facebook',
-  matIcon: 'facebook',
-  iconFontSet: 'material-icons',
-  imagePosition: 'left',
+  imageSrc: '../../../../../assets/images/facebook.svg',
   variant: 'secondary',
   fontWeight: 500,
 };

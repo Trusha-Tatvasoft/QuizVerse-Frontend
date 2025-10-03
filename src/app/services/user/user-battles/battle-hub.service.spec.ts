@@ -8,6 +8,7 @@ import {
 } from '../../../pages/user/user-battles/interface/search-opponent.interface';
 import { platformMessages } from '../../../utils/constants';
 import { ReplaySubject, Subject } from 'rxjs';
+import { UserProfileService } from '../user-profile/user-profile.service';
 
 // Create a complete mock for SignalR
 const mockHubConnection = {
@@ -53,6 +54,9 @@ const mockAuthService = {
   getAccessToken: jest.fn().mockReturnValue('test-token'),
 };
 
+const mockUserProfileService = {
+  profileUpdatedSource: new Subject<any>(),
+};
 describe('BattleHubService', () => {
   let service: BattleHubService;
 
@@ -62,6 +66,7 @@ describe('BattleHubService', () => {
         BattleHubService,
         { provide: SnackbarService, useValue: mockSnackbarService },
         { provide: AuthService, useValue: mockAuthService },
+        { provide: UserProfileService, useValue: mockUserProfileService },
       ],
     });
 
