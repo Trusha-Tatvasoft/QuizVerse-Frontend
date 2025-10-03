@@ -1,11 +1,12 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { WaitingBattleResultComponent } from './waiting-battle-result.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BattleHubService } from '../../../../../services/user/user-battles/battle-hub.service';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
-import { of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Navigations } from '../../../../../shared/enums/navigation';
 import { platformMessages } from '../../../../../utils/constants';
+import { UserBattlesService } from '../../../../../services/user/user-battles/user-battles.service';
 
 describe('WaitingBattleResultComponent', () => {
   let component: WaitingBattleResultComponent;
@@ -14,20 +15,18 @@ describe('WaitingBattleResultComponent', () => {
   let mockRouter: any;
   let mockBattleHubService: any;
   let mockSnackbarService: any;
+  let mockUserBattleService: any;
 
   let mockActivatedRoute = {
     snapshot: {
       paramMap: {
-        get: jest.fn(() => encodeURIComponent(btoa('123'))), // this ensures decodedBattleId = 123
+        get: jest.fn(() => encodeURIComponent(btoa('123'))), // default valid id
       },
     },
   };
 
   beforeEach(async () => {
     mockRouter = { navigate: jest.fn() };
-    mockActivatedRoute = {
-      snapshot: { paramMap: { get: jest.fn() } },
-    };
     mockBattleHubService = {
       connected: false,
       connect: jest.fn(),
@@ -39,10 +38,12 @@ describe('WaitingBattleResultComponent', () => {
       showError: jest.fn(),
       showSuccess: jest.fn(),
     };
+    mockUserBattleService = { getBattleResult: jest.fn() };
 
     await TestBed.configureTestingModule({
       imports: [WaitingBattleResultComponent],
       providers: [
+        { provide: UserBattlesService, useValue: mockUserBattleService },
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: BattleHubService, useValue: mockBattleHubService },
@@ -73,24 +74,24 @@ describe('WaitingBattleResultComponent', () => {
       expect(component.decodedBattleId).toBe(123);
     });
 
-    it('should show error for invalid route ID', () => {
-      mockActivatedRoute.snapshot.paramMap.get.mockReturnValue('invalid');
+    it('should set decodedBattleId=0 and show error for invalid base64 string', () => {
+      mockActivatedRoute.snapshot.paramMap.get.mockReturnValue('%%%invalid%%%');
 
       component.decodeRouteId();
 
-      expect(component.decodedBattleId).toBe(NaN);
+      expect(component.decodedBattleId).toBe(0);
       expect(mockSnackbarService.showError).toHaveBeenCalledWith(
         platformMessages.errorTitle,
         platformMessages.invalidBattleId,
       );
     });
 
-    it('should show error if no ID present', () => {
-      mockActivatedRoute.snapshot.paramMap.get.mockReturnValue('123');
+    it('should set decodedBattleId=0 and show error if no ID present', () => {
+      mockActivatedRoute.snapshot.paramMap.get.mockReturnValue('');
 
       component.decodeRouteId();
 
-      expect(component.decodedBattleId).toBe(NaN);
+      expect(component.decodedBattleId).toBe(0);
       expect(mockSnackbarService.showError).toHaveBeenCalledWith(
         platformMessages.errorTitle,
         platformMessages.invalidBattleId,
