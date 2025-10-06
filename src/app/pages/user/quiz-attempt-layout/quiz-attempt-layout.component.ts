@@ -54,6 +54,7 @@ import {
   markVisited,
 } from '../../../utils/quiz-play-helper-functions.utils';
 import { DisableQuizShortcutsDirective } from '../../../shared/Directives/disable-quiz-shortcuts.directive';
+import { UserProfileService } from '../../../services/user/user-profile/user-profile.service';
 
 @Component({
   selector: 'app-quiz-attempt-layout',
@@ -111,6 +112,7 @@ export class QuizAttemptLayoutComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly dialog = inject(MatDialog);
+  private readonly useprofileUpdatedSource = inject(UserProfileService).profileUpdatedSource;
   private readonly destroy$ = new Subject<void>();
   private readonly QUIZ_STATE_KEY = quizPlayStateKey;
 
@@ -310,6 +312,7 @@ export class QuizAttemptLayoutComponent {
               ],
               { replaceUrl: true },
             );
+            this.useprofileUpdatedSource.next(true);
           }
         },
         error: (err) => {

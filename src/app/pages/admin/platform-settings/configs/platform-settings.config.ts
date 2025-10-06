@@ -20,12 +20,12 @@ export const platformSettingsFormFields: DynamicFormField[] = [
     validators: [
       Validators.required,
       Validators.maxLength(500),
-      Validators.pattern(/^$|^\S[\s\S]*$/),
+      Validators.pattern(/^(?!\s)(?!.*[<>]).+$/),
     ],
     validationMessages: {
       required: 'Landing Page Quote is required.',
       maxlength: 'Quote must not exceed 500 characters.',
-      pattern: 'Question should not start with a space.',
+      pattern: 'Question should not start with a space and enter plain text only.',
     },
     gridClass: 'col-span-1 sm:col-span-2',
   },
@@ -68,7 +68,7 @@ export const platformSettingsFormFields: DynamicFormField[] = [
 export const savePlateformButtonConfig: ButtonConfig = {
   label: 'Save Platform Settings',
   fontWeight: 500,
-  variant: 'gradient',
+  variant: 'secondary',
   type: 'submit',
 };
 

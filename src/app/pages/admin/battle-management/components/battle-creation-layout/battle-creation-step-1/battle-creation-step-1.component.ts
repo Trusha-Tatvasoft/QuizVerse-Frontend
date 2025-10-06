@@ -295,7 +295,8 @@ export class BattleCreationStep1Component {
     });
 
     this.totalQuestionsStep1 = totalQuestions;
-    this.totalTimeStep1 = totalTime / 60; // convert seconds → minutes
+    const time = totalTime / 60; // convert seconds → minutes
+    this.totalTimeStep1 = Number(time.toFixed(2));
     this.totalXPStep1 = totalXP;
   }
 
@@ -584,11 +585,11 @@ export class BattleCreationStep1Component {
               label: `${item.questionDifficultyName} Questions (${item.xpGained} XP each)`,
               type: 'number',
               placeholder: `No of ${lower} questions`,
-              validators: [Validators.required, Validators.min(0), Validators.max(255)],
+              validators: [Validators.required, Validators.min(0), Validators.max(100)],
               validationMessages: {
-                required: `No of ${item.questionDifficultyName} Questions is required.`,
+                required: `${item.questionDifficultyName} Questions is required.`,
                 min: `No of ${item.questionDifficultyName} Questions cannot be less than 0.`,
-                max: `No of ${item.questionDifficultyName} Questions cannot be more than 255.`,
+                max: `No of ${item.questionDifficultyName} Questions cannot be more than 100.`,
               },
             };
 

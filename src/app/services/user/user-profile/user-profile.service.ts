@@ -24,7 +24,7 @@ import {
 })
 export class UserProfileService {
   private readonly http = inject(HttpClient);
-  private readonly profileUpdatedSource = new BehaviorSubject<boolean>(false);
+  public readonly profileUpdatedSource = new BehaviorSubject<boolean>(false);
   profileUpdated$ = this.profileUpdatedSource.asObservable();
 
   /**

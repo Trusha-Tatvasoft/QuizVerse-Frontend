@@ -85,7 +85,7 @@
                           variant: 'secondary',
                           type: 'button',
                           imagePosition: 'left',
-                          isDisabled: false,
+                          isDisabled: action.isDisabled || false,
                           label: '',
                         }"
                         (click)="onActionClick(action, row)"

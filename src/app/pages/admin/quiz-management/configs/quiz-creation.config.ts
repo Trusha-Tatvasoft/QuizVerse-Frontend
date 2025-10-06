@@ -243,7 +243,7 @@ export const selectQuestionMethodPrimaryButtonConfig: ButtonConfig = {
   label: 'Coming Soon',
   fontWeight: 500,
   type: 'button',
-  variant: 'primary',
+  variant: 'secondary',
 };
 
 export const selectQuestionMethodSecondaryButtonConfig: ButtonConfig = {
@@ -264,7 +264,7 @@ export const selectQuestionMethodDefaultButtonConfig: ButtonConfig = {
   label: 'Coming Soon',
   fontWeight: 500,
   type: 'button',
-  variant: 'gradient',
+  variant: 'secondary',
 };
 
 export const chooseFileButtonConfig: ButtonConfig = {

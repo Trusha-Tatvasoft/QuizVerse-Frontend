@@ -113,7 +113,7 @@ export class TableComponent implements OnInit, OnChanges {
     this.sortChange.emit({ active: sort.active, direction: sort.direction });
   }
 
-  onActionClick(action: { icon: string; tooltip?: string }, row: TableData) {
+  onActionClick(action: { icon: string; tooltip?: string; isDisabled?: boolean }, row: TableData) {
     this.actionClick.emit({ action: action.icon, row });
   }
 

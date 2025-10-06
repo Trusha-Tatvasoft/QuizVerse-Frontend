@@ -525,7 +525,7 @@ export const quizCRUDMessages = {
       ? `No ${difficultyName} questions allowed.`
       : `Max ${difficultyLimit} ${difficultyName} questions allowed.`,
   difficultyWiseQuestionSelectionError: 'Please select the questions as per your quiz settings.',
-  minimumNumberOfQuestionError: 'Total questions must be at least 5.',
+  minimumNumberOfQuestionError: 'Total questions must be between 5 and 100.',
   mcqOptionError: 'Correct answer must match one of the options.',
   fileTypeError: 'Select only Excel or csv.',
   invalideQuizId: 'Invalid quiz id',
