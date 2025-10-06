@@ -48,11 +48,7 @@ export function userToUserListingTableData(user: UserListData): TableData {
     },
     actions: [
       { icon: 'edit', tooltip: 'Edit User' },
-      {
-        icon: 'delete',
-        tooltip: user.roleId === 1 ? 'Cannot delete admin' : 'Delete User',
-        isDisabled: user.roleId === 1 ? true : false,
-      },
+      { icon: 'delete', tooltip: 'Delete User' },
       ...(user.status !== UserStatus.Suspended ? [{ icon: 'block', tooltip: 'Suspend User' }] : []), // Add "block" only if not suspended
       {
         icon: user.status === UserStatus.Active ? 'remove_circle_outline' : 'check_circle_outline',
