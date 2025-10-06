@@ -1,20 +1,6 @@
 .quiz-creation {
-  padding: 24px 32px;
-  background: var(--global-bg-gradient);
-  min-height: 100%;
-
   @media (min-width: 1024px) {
     width: calc(100vw - 283px);
-  }
-
-  .page-heading {
-    font-size: revert;
-    font-weight: revert;
-    margin-bottom: 24px;
-  }
-
-  .quiz-creation-page-header {
-    margin-bottom: 24px;
   }
 }
 
@@ -72,4 +58,33 @@
 
 .text-inactive {
   color: var(--gray-color);
+}
+
+.quiz-creation-btn {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 0.5rem;
+
+  @media (max-width: 450px) {
+    grid-template-columns: 1fr;
+  }
+
+  .previous-btn {
+    display: flex;
+    @media (max-width: 450px) {
+      flex-direction: column;
+      width: 100%;
+    }
+  }
+
+  .next-btns {
+    display: flex;
+    gap: 1rem;
+    justify-content: end;
+
+    @media (max-width: 450px) {
+      gap: 0.5rem;
+      flex-direction: column-reverse;
+    }
+  }
 }
