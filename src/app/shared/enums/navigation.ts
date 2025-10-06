@@ -17,6 +17,7 @@ export enum Navigations {
   BattleInstruction = 'battle-instruction',
   BattleAttempt = 'battle-attempt',
   BattleResult = 'battle-result',
+  WaitingBattleResult = 'waiting-battle-result',
   SearchOpponent = 'search-opponent',
   FoundOpponent = 'found-opponent',
   Tournaments = 'tournaments',
@@ -46,5 +47,7 @@ export enum Navigations {
 
   BattleCreation = 'battle-creation',
   BattleUpdation = 'edit-battle',
+
   BattleList = 'battle-list',
+  SearchOpponentComponent = 'SearchOpponentComponent',
 }

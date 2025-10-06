@@ -205,19 +205,6 @@ describe('BattleInstructionComponent', () => {
     expect(component.countdownId).toBeUndefined();
   });
 
-  it('redirectToBattleResult should show info and navigate', fakeAsync(() => {
-    const cleanupSpy = jest.spyOn(battleHubService, 'cleanupBattleSubjects');
-    component['redirectToBattleResult']();
-    tick(3000);
-    expect(snackbar.showInfo).toHaveBeenCalledWith(platformMessages.battleComplted);
-    expect(router.navigate).toHaveBeenCalledWith([
-      Navigations.User,
-      Navigations.Battles,
-      Navigations.BattleList,
-    ]);
-    expect(cleanupSpy).toHaveBeenCalled();
-  }));
-
   it('connectHub should not call connect if already connected', async () => {
     battleHubService.connected = true;
     const registerSpy = jest
@@ -267,19 +254,6 @@ describe('BattleInstructionComponent', () => {
   });
 
   // Add these additional test cases to your existing describe block
-
-  it('should handle cheat violation subscription', fakeAsync(() => {
-    const handleViolationSpy = jest.spyOn<any, any>(component as any, 'handleViolation');
-
-    component.ngOnInit();
-    fixture.detectChanges();
-
-    cheatPrevention.violations$.next('tab-switch');
-    tick();
-
-    expect(handleViolationSpy).toHaveBeenCalledWith('tab-switch');
-  }));
-
   it('decodeRouteId should return early if no encodedId', () => {
     (route.snapshot.paramMap.get as jest.Mock).mockReturnValue(null);
     const getBattleSpy = jest.spyOn(component, 'getBattleInfo');

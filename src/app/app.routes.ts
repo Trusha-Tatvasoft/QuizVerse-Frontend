@@ -36,6 +36,8 @@ import { FoundOpponentComponent } from './pages/user/user-battles/found-opponent
 import { BattleInstructionComponent } from './pages/user/battle-attempt-layout/battle-instruction/battle-instruction.component';
 import { BattleAttemptLayoutComponent } from './pages/user/battle-attempt-layout/battle-attempt-layout.component';
 import { AdminProfileComponent } from './pages/admin/admin-profile/admin-profile.component';
+import { BattleResultComponent } from './pages/user/battle-result/battle-result.component';
+import { WaitingBattleResultComponent } from './pages/user/battle-result/components/waiting-battle-result/waiting-battle-result.component';
 
 export const routes: Routes = [
   {
@@ -210,6 +212,16 @@ export const routes: Routes = [
             path: `${Navigations.BattleList}/${Navigations.SearchOpponent}/:id`,
             component: SearchOpponentComponent,
             title: 'Quizeverse | Search Opponent',
+          },
+          {
+            path: `${Navigations.BattleList}/${Navigations.BattleResult}/:id`,
+            component: BattleResultComponent,
+            title: 'Quizeverse | Battle Result',
+          },
+          {
+            path: `${Navigations.BattleList}/${Navigations.WaitingBattleResult}/:id`,
+            component: WaitingBattleResultComponent,
+            title: 'Quizeverse | Waiting For Battle Result',
           },
         ],
       },
