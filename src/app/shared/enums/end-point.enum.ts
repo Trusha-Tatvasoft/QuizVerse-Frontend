@@ -139,6 +139,7 @@ export enum EndPoints {
   CheckUserExistence = 'UserBattles/check-user-existence',
   SearchUser = 'UserBattles/search-user',
   GetBattleInstruction = 'UserBattles/get-battle-instructions',
+  GetBattleResult = 'UserBattles/get-battle-result',
   //#endregion
 
   // #region BrowseQuizzes

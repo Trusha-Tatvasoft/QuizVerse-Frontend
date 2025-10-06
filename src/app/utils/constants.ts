@@ -326,7 +326,10 @@ export const platformMessages = {
   failedtoResumeBattle: 'Failed to resume battle',
   failedtoEndBattle: 'Failed to end battle',
   failedtoCancelMatching: 'Failed to cancel matchmaking',
-  errorInConnection: `Error stopping connection`,
+  errorInConnection: 'Error stopping connection',
+  battleEndedMessage: 'Battle ended!',
+  battleResultFailedError: 'Failed to fetch battle result',
+  battleNotCompletedError: 'Battle not completed yet!',
   // #endregion
 
   //#region Battle Instruction
@@ -344,6 +347,7 @@ export const platformMessages = {
   battleHubLastAnsweredDetail: 'LastAnsweredDetail',
   battleHubPlayerInterrupted: 'PlayerInterrupted',
   battleHubBattleEndedForPlayer: 'BattleEndedForParticularPlayerDueToInterrupt',
+  battleEnded: 'battleEnded',
 
   // Battle flow messages
   battleStart: 'Battle started! All the best!',
@@ -357,6 +361,7 @@ export const platformMessages = {
   battleResumeSuccess: 'Battle resumed successfully',
   battleHubError: 'Error',
   questionLoadFail: 'Falied to load Question',
+  failedLoadUserBattles: 'Failed to fatch user battles',
   // #endregion
 };
 //#endregion
