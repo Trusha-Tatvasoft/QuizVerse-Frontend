@@ -16,6 +16,7 @@ import {
 } from '../../../pages/user/battle-attempt-layout/interfaces/battle-attempt.interface';
 import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
+import { BattleCompletionResult } from '../../../pages/user/battle-result/interfaces/battle-completion.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +30,7 @@ export class BattleHubService {
   // Matchmaking events
   private readonly searching$ = new Subject<void>();
   private readonly matchFound$ = new Subject<PlayerProfileDTO>();
+  private readonly battleEnded$ = new ReplaySubject<BattleCompletionResult>(1);
 
   // Battle events
   private battleStarted$ = new ReplaySubject<BattleStartDetails>(1);
@@ -40,7 +42,6 @@ export class BattleHubService {
   private battleEndedForParticularPlayer$ = new Subject<{ userId: number }>();
   private lastAnsweredDetail$ = new Subject<LastAnswerdQuestionDetail>();
   private _errorSubject = new Subject<string>();
-
   private battleAttemptId: number | null = null;
   private isConnected = false;
   private connectionPromise: Promise<void> | null = null;
@@ -88,6 +89,10 @@ export class BattleHubService {
 
   get connected(): boolean {
     return this.isConnected && this.hubConnection?.state === signalR.HubConnectionState.Connected;
+  }
+
+  get onBattleEnded() {
+    return this.battleEnded$.asObservable();
   }
 
   /** Establish SignalR connection */
@@ -334,6 +339,13 @@ export class BattleHubService {
       this.matchFound$.next(result);
       if (result !== null) {
         this.snackbar.showSuccess(`${platformMessages.matchedWith} ${result.userName}!`);
+      }
+    });
+
+    this.hubConnection.on(platformMessages.battleEnded, (result: BattleCompletionResult) => {
+      this.battleEnded$.next(result);
+      if (result) {
+        this.snackbar.showSuccess(platformMessages.successTitle, 'Battle ended!');
       }
     });
 

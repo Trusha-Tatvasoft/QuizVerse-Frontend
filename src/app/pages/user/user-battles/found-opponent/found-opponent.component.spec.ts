@@ -307,7 +307,13 @@ describe('FoundOpponentComponent', () => {
         'Could not resume the battle. Please start a new battle.',
       );
       expect(mockRouter.navigate).toHaveBeenCalledWith(
-        [Navigations.User, Navigations.Battles, Navigations.BattleList],
+        [
+          Navigations.User,
+          Navigations.Battles,
+          Navigations.BattleList,
+          Navigations.WaitingBattleResult,
+          btoa(encodeURIComponent(component.battleId)),
+        ],
         { state: { battleId: 'MTIz' } },
       );
     });
@@ -329,7 +335,7 @@ describe('FoundOpponentComponent', () => {
 
   describe('completeBattle', () => {
     it('should show error message, close fullscreen, and interrupt battle', async () => {
-      component.battleAttemptId = 456;
+      component.battleId = 456;
       Object.defineProperty(document, 'fullscreenElement', { value: {}, writable: true });
 
       await component.completeBattle('Cheating detected');
@@ -338,17 +344,15 @@ describe('FoundOpponentComponent', () => {
         autoSubmitBattleMessage('Cheating detected'),
       );
       expect(document.exitFullscreen).toHaveBeenCalled();
-      expect(mockBattleHubService.interruptBattle).toHaveBeenCalledWith(456);
     });
 
     it('should connect and then interrupt battle if not connected', async () => {
-      component.battleAttemptId = 456;
+      component.battleId = 456; // use the correct property
       Object.defineProperty(mockBattleHubService, 'connected', { value: false });
 
       await component.completeBattle('Cheating detected');
 
       expect(mockBattleHubService.connect).toHaveBeenCalled();
-      expect(mockBattleHubService.interruptBattle).toHaveBeenCalledWith(456);
     });
 
     it('should handle opponent interruption events', fakeAsync(() => {

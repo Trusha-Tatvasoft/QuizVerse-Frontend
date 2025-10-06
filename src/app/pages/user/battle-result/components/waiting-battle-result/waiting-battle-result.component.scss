@@ -1,0 +1,107 @@
+.victory-container {
+  min-height: 92vh; // full page height
+  width: 100%;
+  margin: 0 auto;
+  background: var(--global-bg-gradient); // full-page background
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.waiting-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #333;
+  max-width: 500px;
+  margin: 4rem auto;
+  border: 1px solid var(--global-primary-border-color);
+
+  .loader-container {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .battle-loader {
+    width: 50px;
+    height: 50px;
+    position: relative;
+  }
+
+  .battle-loader::before,
+  .battle-loader::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    border-style: solid;
+  }
+
+  .battle-loader::before {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 5px solid var(--global-secondary-color);
+    border-top-color: transparent;
+    border-right-color: transparent;
+    animation: spin 1.2s linear infinite;
+  }
+
+  .battle-loader::after {
+    top: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    border: 3px solid var(--global-secondary-color);
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    animation: spin-reverse 1.5s linear infinite;
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    color: #222;
+  }
+
+  .waiting-text {
+    font-size: 16px;
+    color: #555;
+    max-width: 420px;
+    line-height: 1.6;
+  }
+
+  .battle-rating-action {
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin-reverse {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(-360deg);
+    }
+  }
+}

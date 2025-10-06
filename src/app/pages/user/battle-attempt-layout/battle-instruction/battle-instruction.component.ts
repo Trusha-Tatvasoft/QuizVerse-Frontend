@@ -210,9 +210,16 @@ export class BattleInstructionComponent implements OnInit, OnDestroy {
   }
 
   private redirectToBattleResult(): void {
+    const state = history.state;
     setTimeout(() => {
       this.snackbar.showInfo(platformMessages.battleComplted);
-      this.router.navigate([Navigations.User, Navigations.Battles, Navigations.BattleList]); // put result route here
+      this.router.navigate([
+        Navigations.User,
+        Navigations.Battles,
+        Navigations.BattleList,
+        Navigations.WaitingBattleResult,
+        state.battleId,
+      ]); // put result route here
       this.battleHubService.cleanupBattleSubjects();
     }, 3000);
   }

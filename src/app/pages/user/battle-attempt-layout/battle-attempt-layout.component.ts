@@ -291,7 +291,13 @@ export class BattleAttemptLayoutComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.battleHubService.cleanupBattleSubjects();
       this.snackbar.showInfo(platformMessages.battleComplted);
-      this.router.navigate([Navigations.User, Navigations.Battles, Navigations.BattleList]); // put result route here
+      this.router.navigate([
+        Navigations.User,
+        Navigations.Battles,
+        Navigations.BattleList,
+        Navigations.WaitingBattleResult,
+        state.battleId,
+      ]); // put result route here
       closeFullscreen();
     }, 3000);
   }

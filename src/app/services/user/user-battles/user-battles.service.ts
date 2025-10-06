@@ -5,6 +5,7 @@ import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { environment } from '../../../../environments/environment.dev';
 import { UserBattleLeaderboardData } from '../../../pages/user/user-battles/interface/user-battles.interface';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
+import { BattleResultResponse } from '../../../pages/user/battle-result/interfaces/battle-result.interface';
 import { AvailableBattle } from '../../../pages/user/user-battles/interface/quiz-battles.interface';
 import { skipLoader } from '../../../utils/constants';
 import { BattleUserSearchResult } from '../../../pages/user/user-battles/available-battles/interfaces/challenge-friend.interface';
@@ -111,5 +112,11 @@ export class UserBattlesService {
   getBattleInstruction(battleId: number): Observable<ApiResponse<BattleInstruction>> {
     const url = `${environment.baseUrl}/${EndPoints.GetBattleInstruction}/${battleId}`;
     return this.http.get<ApiResponse<BattleInstruction>>(url);
+  }
+
+  getBattleResult(battleId: number): Observable<ApiResponse<BattleResultResponse>> {
+    return this.http.get<ApiResponse<BattleResultResponse>>(
+      `${environment.baseUrl}/${EndPoints.GetBattleResult}/${battleId}`,
+    );
   }
 }
