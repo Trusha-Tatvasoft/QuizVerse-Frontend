@@ -7,6 +7,7 @@ import { TextButtonComponent } from '../../../../../shared/components/text-butto
 import {
   loadMoreButtonConfig,
   playButtonConfig,
+  quizResultButtonConfig,
   showLessButtonConfig,
 } from '../../configs/dashboard-buttons.config';
 import { ApiResponse } from '../../../../../shared/interfaces/api-response.interface';
@@ -15,6 +16,8 @@ import { FeaturedQuizList, FeaturedQuizWithTag } from '../../interfaces/featured
 import { Subject, takeUntil } from 'rxjs';
 import { createDifficultyTag } from '../../../../../utils/types/difficulty-tag.type';
 import { platformMessages } from '../../../../../utils/constants';
+import { Router } from '@angular/router';
+import { Navigations } from '../../../../../shared/enums/navigation';
 
 @Component({
   selector: 'app-featured-quiz',
@@ -33,9 +36,11 @@ export class FeaturedQuizComponent implements OnInit {
   loadMoreButtonConfig = loadMoreButtonConfig;
   showLessButtonConfig = showLessButtonConfig;
   playButtonConfig = playButtonConfig;
+  quizResultConfig = quizResultButtonConfig;
 
   private readonly dashboardService = inject(UserDashboardService);
   private readonly destroy$ = new Subject<void>();
+  private readonly router = inject(Router);
 
   ngOnInit(): void {
     this.loadFeaturedQuizzes();
@@ -87,5 +92,19 @@ export class FeaturedQuizComponent implements OnInit {
       this.currentBatch = 1;
       this.hasMore = true; // allow "Load More" again
     }
+  }
+
+  playQuiz(quizId: number): void {
+    const encodedId = btoa(encodeURIComponent(quizId));
+    this.router.navigate([
+      `${Navigations.User}/${Navigations.QuizList}/${Navigations.BrowseQuizzes}/${Navigations.QuizInstruction}/${encodedId}`,
+    ]);
+  }
+
+  showQuizResult(quizId: number): void {
+    const encodedId = btoa(encodeURIComponent(quizId));
+    this.router.navigate([
+      `${Navigations.User}/${Navigations.QuizList}/${Navigations.BrowseQuizzes}/${Navigations.QuizResult}/${encodedId}`,
+    ]);
   }
 }
