@@ -103,16 +103,26 @@ export class FoundOpponentComponent {
         }, 2000);
       } else {
         this.snackbar.showError('Could not resume the battle. Please start a new battle.');
-        this.router.navigate([Navigations.User, Navigations.Battles, Navigations.BattleList], {
-          state: {
-            battleId: btoa(encodeURIComponent(battleId)),
+        this.router.navigate(
+          [
+            Navigations.User,
+            Navigations.Battles,
+            Navigations.BattleList,
+            Navigations.WaitingBattleResult,
+            btoa(encodeURIComponent(battleId)),
+          ],
+          {
+            state: {
+              battleId: btoa(encodeURIComponent(battleId)),
+            },
           },
-        }); // put result route
+        ); // put result route
       }
     }
   }
 
   completeBattle(reason: string): void {
+    const battleId = this.battleId!.toString();
     this.snackbar.showError(autoSubmitBattleMessage(reason));
     this.closeFullscreen();
     if (this.battleHub.connected) {
@@ -139,6 +149,13 @@ export class FoundOpponentComponent {
           }, 1500);
         }
       });
+    this.router.navigate([
+      Navigations.User,
+      Navigations.Battles,
+      Navigations.BattleList,
+      Navigations.WaitingBattleResult,
+      btoa(encodeURIComponent(battleId)),
+    ]);
   }
 
   resumeBattle(): void {

@@ -1,0 +1,356 @@
+.victory-container {
+  min-height: 92vh; // full page height
+  width: 100%;
+  margin: 0 auto;
+  background: var(--global-bg-gradient); // full-page background
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+
+  .battle-container {
+    width: 100%;
+    max-width: 700px;
+  }
+
+  .battle-header {
+    width: 100%;
+    max-width: 700px;
+    border-radius: 9px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 24px;
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    mat-icon {
+      font-size: 2.5rem;
+      height: auto;
+      width: auto;
+    }
+
+    p {
+      font-size: 18px;
+    }
+
+    &.Victory {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #a3ffc3;
+    }
+
+    &.Defeat {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    &.Draw {
+      background: #fef9c3;
+      color: #92400e;
+    }
+  }
+
+  .timer {
+    background: #ffffff;
+    margin: 24px 0 0 0;
+    width: 100%;
+    max-width: 700px;
+    padding: 16px;
+    border: 1px solid var(--global-primary-border-color);
+    border-radius: 9px;
+    font-size: 18px;
+    text-align: center;
+    font-weight: 600;
+    color: #374151;
+
+    span {
+      color: var(--global-secondary-color);
+      font-weight: 700;
+    }
+  }
+
+  .battle-summary {
+    width: 100%;
+    max-width: 700px;
+    background: #ffffff;
+    border-radius: 9px;
+    border: 1px solid var(--global-primary-border-color);
+    padding: 24px;
+    text-align: center;
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .summary-content {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+
+      .player {
+        height: 160px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+
+        .avatar.you {
+          background-color: #e74c3c;
+        }
+
+        .avatar.opponent {
+          background-color: #27ae60;
+        }
+
+        p {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .avatar {
+          width: 64px;
+          height: 64px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto;
+          font-weight: 650;
+          font-size: 20px;
+          color: #fff;
+          overflow: hidden;
+          text-transform: uppercase;
+
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+        }
+      }
+
+      .result-badge {
+        display: inline-flex;
+        height: 22px;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 3px 6px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 12px;
+
+        mat-icon {
+          height: 15px;
+          font-size: 15px;
+        }
+
+        &.victory {
+          background: var(--light-green-color);
+          color: var(--green-color);
+        }
+
+        &.lose {
+          background: #fee2e2;
+          color: var(--red-color);
+          border: 1px solid #fecaca;
+        }
+
+        &.draw {
+          background: #fef9c3;
+          color: #92400e;
+          border: 1px solid #fde68a;
+        }
+      }
+
+      .score {
+        font-size: 24px;
+        font-weight: 700;
+
+        &.win {
+          color: var(--green-color);
+        }
+
+        &.lose {
+          color: var(--red-color);
+        }
+
+        &.draw {
+          color: #92400e;
+        }
+      }
+
+      .status {
+        font-size: 14px;
+
+        &.win {
+          color: var(--green-color);
+        }
+      }
+    }
+
+    .vs {
+      font-size: 16px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+  }
+}
+
+.rewards {
+  margin-top: 24px;
+  width: 100%;
+  max-width: 700px;
+  background: #ffffff;
+  border-radius: 9px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  text-align: center;
+  border: 1px solid var(--global-primary-border-color);
+
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .points {
+    color: var(--global-secondary-color);
+    font-weight: 700;
+    font-size: 24px;
+  }
+
+  .exp {
+    color: #6b7280;
+    font-size: 14px;
+  }
+}
+
+/* Responsive for Tablet */
+@media (max-width: 1024px) {
+  .victory-container {
+    .battle-header {
+      h1 {
+        font-size: 24px;
+      }
+
+      p {
+        font-size: 16px;
+      }
+
+      mat-icon {
+        font-size: 2rem;
+      }
+    }
+
+    .timer {
+      font-size: 16px;
+      padding: 14px;
+    }
+
+    .battle-summary {
+      padding: 20px;
+
+      h2 {
+        font-size: 18px;
+      }
+
+      .summary-content .player .avatar {
+        width: 56px;
+        height: 56px;
+        font-size: 18px;
+      }
+
+      .score {
+        font-size: 22px;
+      }
+    }
+
+    .rewards {
+      padding: 20px;
+
+      h2 {
+        font-size: 18px;
+      }
+
+      .points {
+        font-size: 22px;
+      }
+    }
+  }
+}
+
+/* Responsive for Mobile */
+@media (max-width: 768px) {
+  .victory-container {
+    padding: 16px;
+
+    .battle-header,
+    .battle-summary,
+    .rewards {
+      padding: 16px;
+    }
+
+    .battle-header {
+      h1 {
+        font-size: 20px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+
+      mat-icon {
+        font-size: 1.8rem;
+      }
+    }
+
+    .timer {
+      font-size: 14px;
+      padding: 12px;
+    }
+
+    .battle-summary .summary-content {
+      flex-direction: column;
+      gap: 16px;
+
+      .player .avatar {
+        width: 48px;
+        height: 48px;
+        font-size: 16px;
+      }
+
+      .score {
+        font-size: 20px;
+      }
+    }
+
+    .battle-summary h2 {
+      font-size: 16px;
+    }
+
+    .rewards {
+      padding: 16px;
+
+      h2 {
+        font-size: 16px;
+      }
+
+      .points {
+        font-size: 20px;
+      }
+
+      .exp {
+        font-size: 12px;
+      }
+    }
+  }
+}
