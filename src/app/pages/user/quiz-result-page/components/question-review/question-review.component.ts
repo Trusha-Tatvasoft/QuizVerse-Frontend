@@ -11,7 +11,7 @@ import {
 } from '../../interfaces/quiz-question-review.interface';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
 import { platformMessages } from '../../../../../utils/constants';
-import { QuizResultService } from '../../../../../services/user/quiz-result.service';
+import { QuizResultService } from '../../../../../services/user/quiz-result/quiz-result.service';
 import {
   correctAnswerTagConfig,
   notAttemptedTagConfig,

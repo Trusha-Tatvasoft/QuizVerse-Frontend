@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { QuizResultHeaderComponent } from './quiz-result-header.component';
-import { QuizResultService } from '../../../../../services/user/quiz-result.service';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
 import { ApiResponse } from '../../../../../shared/interfaces/api-response.interface';
 import { QuizCompletedSummary } from '../../interfaces/quiz-completed-summary.interface';
 import { defaultQuizCompletedSummary } from '../../configs/default-quiz-completed-summary.configs';
 import { platformMessages } from '../../../../../utils/constants';
+import { QuizResultService } from '../../../../../services/user/quiz-result/quiz-result.service';
 
 describe('QuizResultHeaderComponent', () => {
   let component: QuizResultHeaderComponent;

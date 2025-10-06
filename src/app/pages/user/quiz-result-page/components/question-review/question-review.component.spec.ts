@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { QuestionReviewComponent } from './question-review.component';
-import { QuizResultService } from '../../../../../services/user/quiz-result.service';
+import { QuizResultService } from '../../../../../services/user/quiz-result/quiz-result.service';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
 import { platformMessages } from '../../../../../utils/constants';
 import { QuizQuestionReviewExtended } from '../../interfaces/quiz-question-review.interface';
@@ -171,7 +171,7 @@ describe('QuestionReviewComponent', () => {
           data: null,
           statusCode: 200,
           message: 'Reported successfully',
-        } as unknown as ApiResponse<string>),
+        } as ApiResponse<null>),
       );
 
       const question = {

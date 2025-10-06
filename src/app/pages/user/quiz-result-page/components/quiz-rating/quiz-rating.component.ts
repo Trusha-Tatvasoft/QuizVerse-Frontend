@@ -19,7 +19,7 @@ import {
   submitRatingButtonConfig,
   backToDashboardButtonConfig,
 } from '../../configs/quiz-result-buttons.configs';
-import { QuizResultService } from '../../../../../services/user/quiz-result.service';
+import { QuizResultService } from '../../../../../services/user/quiz-result/quiz-result.service';
 import { QuizRating } from '../../interfaces/quiz-ratting.interface';
 import { DynamicFormField } from '../../../../../shared/interfaces/dynamic-form-field.interface';
 import { quizRatingFormField } from '../../configs/quiz-rating-form-field.configs';
