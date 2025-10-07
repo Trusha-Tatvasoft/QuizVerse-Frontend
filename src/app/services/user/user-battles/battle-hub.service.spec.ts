@@ -8,6 +8,7 @@ import {
 } from '../../../pages/user/user-battles/interface/search-opponent.interface';
 import { platformMessages } from '../../../utils/constants';
 import { ReplaySubject, Subject } from 'rxjs';
+import { UserBattlesService } from './user-battles.service';
 
 // Create a complete mock for SignalR
 const mockHubConnection = {
@@ -53,6 +54,10 @@ const mockAuthService = {
   getAccessToken: jest.fn().mockReturnValue('test-token'),
 };
 
+const mockUserBattlesService = {
+  someMethod: jest.fn(),
+};
+
 describe('BattleHubService', () => {
   let service: BattleHubService;
 
@@ -62,6 +67,7 @@ describe('BattleHubService', () => {
         BattleHubService,
         { provide: SnackbarService, useValue: mockSnackbarService },
         { provide: AuthService, useValue: mockAuthService },
+        { provide: UserBattlesService, useValue: mockUserBattlesService },
       ],
     });
 
@@ -872,6 +878,52 @@ describe('BattleHubService', () => {
       service['hubConnection'] = mockHubConnection as any;
       service['isConnected'] = true;
       expect(service.connected).toBe(true);
+    });
+  });
+
+  describe('battle-specific observables', () => {
+    it('should emit question event', (done) => {
+      const mockQuestion = { questionId: 1, questionText: 'Sample?' } as any;
+
+      service.onQuestion.subscribe((question) => {
+        expect(question).toEqual(mockQuestion);
+        done();
+      });
+
+      service['question$'].next(mockQuestion);
+    });
+
+    it('should emit scoreUpdate event', (done) => {
+      const mockScore = { userId: 1, score: 10 } as any;
+
+      service.onScoreUpdate.subscribe((score) => {
+        expect(score).toEqual(mockScore);
+        done();
+      });
+
+      service['scoreUpdate$'].next(mockScore);
+    });
+
+    it('should emit lastAnsweredDetail event', (done) => {
+      const mockDetail = { questionId: 1, answer: 'A' } as any;
+
+      service.lastAnsweredDetail.subscribe((detail) => {
+        expect(detail).toEqual(mockDetail);
+        done();
+      });
+
+      service['lastAnsweredDetail$'].next(mockDetail);
+    });
+
+    it('should emit battleEnded event', (done) => {
+      const mockResult = { battleAttemptId: 123, winnerId: 1 } as any;
+
+      service.onBattleEnded.subscribe((result) => {
+        expect(result).toEqual(mockResult);
+        done();
+      });
+
+      service['battleEnded$'].next(mockResult);
     });
   });
 });

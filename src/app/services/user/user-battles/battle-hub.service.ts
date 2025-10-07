@@ -17,6 +17,7 @@ import {
 import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
 import { BattleCompletionResult } from '../../../pages/user/battle-result/interfaces/battle-completion.interface';
+import { UserBattlesService } from './user-battles.service';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +26,7 @@ export class BattleHubService {
   private hubConnection: signalR.HubConnection | null = null;
   private readonly snackbar = inject(SnackbarService);
   private readonly authService = inject(AuthService);
+  private readonly userBattlesService = inject(UserBattlesService);
   private readonly router = inject(Router);
 
   // Matchmaking events
@@ -346,6 +348,8 @@ export class BattleHubService {
       this.battleEnded$.next(result);
       if (result) {
         this.snackbar.showSuccess(platformMessages.successTitle, 'Battle ended!');
+        this.userBattlesService.updateBattleResults$.next(true);
+        this.stopConnection();
       }
     });
 

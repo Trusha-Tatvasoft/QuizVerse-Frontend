@@ -44,7 +44,7 @@ export class WaitingBattleResultComponent implements OnInit, OnDestroy {
         const urlDecoded = decodeURIComponent(encodedId);
         const base64Decoded = atob(urlDecoded);
         this.decodedBattleId = Number(base64Decoded);
-      } catch (error) {
+      } catch {
         this.decodedBattleId = 0;
         this.snackbar.showError(platformMessages.errorTitle, platformMessages.invalidBattleId);
       }
@@ -67,9 +67,6 @@ export class WaitingBattleResultComponent implements OnInit, OnDestroy {
 
     if (this.battleHubService.cleanupBattleSubjects) {
       this.battleHubService.cleanupBattleSubjects();
-    }
-    if (this.battleHubService.stopConnection) {
-      this.battleHubService.stopConnection();
     }
   }
 

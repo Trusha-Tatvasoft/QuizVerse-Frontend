@@ -5,7 +5,7 @@ import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.se
 import { CommonModule } from '@angular/common';
 import { TagComponent } from '../../../../shared/components/tag/tag.component';
 import { OutlineButtonComponent } from '../../../../shared/components/outline-button/outline-button.component';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
@@ -83,8 +83,12 @@ describe('RecentBattlesComponent', () => {
   };
 
   beforeEach(async () => {
+    const updateBattleResultsSubject = new Subject<boolean>();
+
     mockUserBattlesService = {
       getUserRecentBattles: jest.fn(),
+      updateBattleResults$: updateBattleResultsSubject,
+      updateBattleResultsObservable$: updateBattleResultsSubject.asObservable(),
     } as any;
 
     mockSnackbarService = {

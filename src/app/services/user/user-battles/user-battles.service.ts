@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { environment } from '../../../../environments/environment.dev';
 import { UserBattleLeaderboardData } from '../../../pages/user/user-battles/interface/user-battles.interface';
@@ -20,6 +20,9 @@ import { BattleInstruction } from '../../../pages/user/battle-attempt-layout/int
 })
 export class UserBattlesService {
   constructor(private readonly http: HttpClient) {}
+
+  public updateBattleResults$ = new BehaviorSubject<boolean>(false);
+  updateBattleResultsObservable$ = this.updateBattleResults$.asObservable();
 
   /**
    * Fetch the leaderboard list for battles.

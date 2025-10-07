@@ -127,7 +127,6 @@ describe('WaitingBattleResultComponent', () => {
     it('should cleanup subjects and stop connection', () => {
       component.ngOnDestroy();
       expect(mockBattleHubService.cleanupBattleSubjects).toHaveBeenCalled();
-      expect(mockBattleHubService.stopConnection).toHaveBeenCalled();
     });
   });
 });
