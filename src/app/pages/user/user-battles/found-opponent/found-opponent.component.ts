@@ -229,9 +229,11 @@ export class FoundOpponentComponent {
       this.router.navigate([Navigations.User, Navigations.Battles, Navigations.BattleList]);
       return;
     }
+    if (state?.opponent) {
+      this.opponent = state.opponent;
+    }
     if (state?.battleStartDetails) {
       this.battleStartDetails = state.battleStartDetails;
-      this.opponent = state.battleStartDetails.opponentProfile;
       this.battleAttemptId = this.battleStartDetails!.battleAttemptId;
       const expiry = Date.now() + 10 * 60 * 1000;
       localStorage.setItem(

@@ -128,6 +128,7 @@ export class SearchOpponentComponent implements OnInit, OnDestroy {
                     {
                       state: {
                         battleStartDetails: this.battleStartDetails,
+                        opponent: this.opponent,
                       },
                     },
                   );
