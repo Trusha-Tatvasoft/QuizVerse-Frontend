@@ -63,6 +63,7 @@ export class AdminProfileComponent implements OnInit, OnDestroy {
   sendOtpBtn = sendOtpButtonConfig;
   resendOtpBtn = resendOtpButtonConfig;
   maxOtpAttempts = maxOtpAttempts;
+  isImageError: boolean = false;
 
   adminProfileConfig = adminProfilePageHeader;
   adminProfileForm: FormGroup;
@@ -440,6 +441,11 @@ export class AdminProfileComponent implements OnInit, OnDestroy {
           );
         },
       });
+  }
+
+  profileImageError() {
+    this.profilePicUrl = defaultProfilePic;
+    this.isImageError = true;
   }
   //#endregion
 

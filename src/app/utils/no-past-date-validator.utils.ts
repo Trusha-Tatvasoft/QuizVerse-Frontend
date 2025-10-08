@@ -26,7 +26,7 @@ export function afterStartDateValidator(startDateControlName: string): Validator
     const start = new Date(startDate);
     const end = new Date(endDate);
 
-    return end > start ? null : { afterStartDate: true };
+    return end >= start ? null : { afterStartDate: true };
   };
 }
 

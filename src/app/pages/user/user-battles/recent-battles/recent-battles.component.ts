@@ -12,7 +12,7 @@ import { TagInputConfig } from '../../../../shared/interfaces/tag-component.inte
 import { TagColor } from '../../../../utils/types/tag-component.type';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { UserBattlesService } from '../../../../services/user/user-battles/user-battles.service';
-import { Subject, takeUntil } from 'rxjs';
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import {
   battleFilterDisplayNames,
   BattleFilterType,
@@ -72,6 +72,7 @@ export class RecentBattlesComponent {
   batchNumber = 1; // Current batch number for pagination
   hasMoreData = false; // Flag to indicate if more data can be loaded
   loadMoreButtonConfig = loadMoreButtonConfig; // Configuration for the "Load More" button
+  runFirstTime: boolean = true;
 
   private readonly snackbar = inject(SnackbarService); // Snackbar service for showing messages
   private readonly userBattleService = inject(UserBattlesService); // Service to fetch user battles
@@ -80,9 +81,26 @@ export class RecentBattlesComponent {
   private lastWheelTs = 0; // Timestamp of last scroll wheel event to throttle scrolling
   private touchStartY = 0; // Y position when touch starts
   private touchStartIndex = 0; // Index of item at touch start position
+  private readonly updateBattleResults$ = this.userBattleService.updateBattleResultsObservable$;
 
   ngOnInit(): void {
     this.getUserRecentBattles(); // Fetch user's recent battles on component initialization
+
+    this.updateBattleResults$
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+      .subscribe((update) => {
+        if (!this.runFirstTime) {
+          if (update) {
+            this.recentBattlesList = [];
+            this.batchNumber = 1;
+            setTimeout(() => {
+              this.getUserRecentBattles();
+              this.userBattleService.updateBattleResults$.next(false);
+            }, 100);
+          }
+        }
+        this.runFirstTime = false;
+      });
   }
 
   ngOnChanges(changes: SimpleChanges) {

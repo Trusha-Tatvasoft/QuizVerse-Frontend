@@ -16,7 +16,7 @@ import { TagComponent } from '../../../../shared/components/tag/tag.component';
 import { TagInputConfig } from '../../../../shared/interfaces/tag-component.interface';
 import { Router } from '@angular/router';
 import { Navigations } from '../../../../shared/enums/navigation';
-import { Subject, takeUntil } from 'rxjs';
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { platformMessages } from '../../../../utils/constants';
 import { BattleData } from '../interface/battle-data.interface';
@@ -43,15 +43,31 @@ export class AvailableBattlesComponent implements OnInit, OnDestroy {
   battles: (AvailableBattle & { difficultyTag: TagInputConfig })[] = [];
   loading = true;
   error: string | null = null;
+  runFirstTime: boolean = true;
 
   private readonly userBattlesService = inject(UserBattlesService);
   private readonly snakbarService = inject(SnackbarService);
   private readonly router = inject(Router);
   private readonly destroy$ = new Subject<void>();
   private readonly dialog = inject(MatDialog);
+  private readonly updateBattleResults$ = this.userBattlesService.updateBattleResultsObservable$;
 
   ngOnInit(): void {
     this.availableBattles();
+
+    this.updateBattleResults$
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+      .subscribe((update) => {
+        if (!this.runFirstTime) {
+          if (update) {
+            setTimeout(() => {
+              this.availableBattles();
+              this.userBattlesService.updateBattleResults$.next(false);
+            }, 100);
+          }
+        }
+        this.runFirstTime = false;
+      });
   }
 
   navigateToResult(battleId: number): void {

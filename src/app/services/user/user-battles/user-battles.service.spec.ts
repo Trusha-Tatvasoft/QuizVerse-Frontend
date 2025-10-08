@@ -7,6 +7,10 @@ import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { UserBattleLeaderboardData } from '../../../pages/user/user-battles/interface/user-battles.interface';
 import { AvailableBattle } from '../../../pages/user/user-battles/interface/quiz-battles.interface';
 import { BattleUserSearchResult } from '../../../pages/user/user-battles/available-battles/interfaces/challenge-friend.interface';
+import {
+  UserRecentBattlesRequestDto,
+  UserRecentBattlesResponseDto,
+} from '../../../pages/user/user-battles/interface/recent-battles.interface';
 
 describe('UserBattlesService (Jest)', () => {
   let service: UserBattlesService;
@@ -233,6 +237,62 @@ describe('UserBattlesService (Jest)', () => {
 
     expect(req.request.method).toBe('GET');
     expect(req.request.headers.get('X-Skip-Loader')).toBe('true');
+
+    req.flush(mockResponse);
+  });
+
+  it('should fetch user recent battles', () => {
+    const requestDto: UserRecentBattlesRequestDto = {
+      batchNumber: 1,
+      filterBy: null,
+      timefilterBy: null,
+    };
+
+    const mockResponse: ApiResponse<UserRecentBattlesResponseDto | null> = {
+      result: true,
+      message: 'Recent battles fetched successfully',
+      data: {
+        battles: [
+          {
+            battleName: 'Math Battle',
+            opponent: 'PlayerTwo',
+            opponentFullName: 'John Doe',
+            profilePic: 'http://example.com/player2.jpg',
+            category: 'Math',
+            result: 'Win',
+            yourScore: 8,
+            opponentScore: 6,
+            xpGained: 50,
+            battleDate: new Date('2025-10-07T10:00:00Z'),
+          },
+          {
+            battleName: 'Science Battle',
+            opponent: 'PlayerThree',
+            opponentFullName: 'Jane Smith',
+            profilePic: 'http://example.com/player3.jpg',
+            category: 'Science',
+            result: 'Loss',
+            yourScore: 5,
+            opponentScore: 7,
+            xpGained: 30,
+            battleDate: new Date('2025-10-06T15:00:00Z'),
+          },
+        ],
+        hasMore: false,
+      } as UserRecentBattlesResponseDto,
+      statusCode: 200,
+    };
+
+    service.getUserRecentBattles(requestDto).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+      expect(res.data?.battles.length).toBe(2);
+      expect(res.data?.battles[0].opponentFullName).toBe('John Doe');
+      expect(res.data?.hasMore).toBe(false);
+    });
+
+    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetUserRecentBattles}`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(requestDto);
 
     req.flush(mockResponse);
   });

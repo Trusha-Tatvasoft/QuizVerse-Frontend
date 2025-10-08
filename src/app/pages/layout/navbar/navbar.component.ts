@@ -44,10 +44,7 @@ import { environment } from '../../../../environments/environment.dev';
 import { TimeAgoPipe } from '../../../shared/pipes/time-ago/time-ago.pipe';
 import { UserProfileService } from '../../../services/user/user-profile/user-profile.service';
 import { selectedTabIndexSignal } from '../../../core/auth/components/login-signup/login-signup.component';
-import {
-  globalGetInitials,
-  globalGetInitialsColorClass,
-} from '../../../utils/get-profile-initials.utils';
+import { globalGetInitials } from '../../../utils/get-profile-initials.utils';
 
 @Component({
   selector: 'app-navbar',
@@ -227,6 +224,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   profileImageError() {
     this.profileImageUrl = 'assets/images/profile-1.png';
+    this.isImageError = true;
   }
 
   //NOTE: Uncomment and use after backend API is implemented to fetch and display notifications

@@ -215,7 +215,26 @@ export class PlatformSettingsComponent implements OnInit {
           if (res.result) {
             this.platformConfig = res.data;
             this.patchFormValues(res.data);
-            if (res.data.logo) this.previewUrl = `${environment.imageBaseUrl}/${res.data.logo}`;
+            if (res.data.logo) {
+              const logoUrl = `${environment.imageBaseUrl}/${res.data.logo}`;
+              this.previewUrl = logoUrl;
+
+              // Fetch image as Blob and create File
+              fetch(logoUrl)
+                .then(async (response) => {
+                  if (!response.ok) throw new Error('Failed to fetch image');
+                  const blob = await response.blob();
+                  const fileName = res.data.logo!.split('/').pop();
+
+                  // Create a real File object
+                  const file = new File([blob], fileName!, { type: blob.type });
+
+                  // Store in form and state
+                  this.selectedFile = file;
+                  this.platformSettingsForm.get('siteLogo')?.setValue(file);
+                })
+                .catch();
+            }
           } else {
             this.snackbar.showError(platformMessages.errorTitle, res.message);
           }

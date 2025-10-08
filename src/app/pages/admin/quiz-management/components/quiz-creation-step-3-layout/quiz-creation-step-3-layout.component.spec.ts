@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { QuizCreationStep3LayoutComponent } from './quiz-creation-step-3-layout.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { QuizCreationService } from '../../../../../services/admin/quiz-management/quiz-creation/quiz-creation.service';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { DynamicFormField } from '../../../../../shared/interfaces/dynamic-form-field.interface';
 import { quizCRUDMessages } from '../../../../../utils/constants';
+import { QuestionsList } from '../../../battle-management/interfaces/battle-creation.interface';
 
 describe('QuizCreationStep3LayoutComponent', () => {
   let component: QuizCreationStep3LayoutComponent;
@@ -474,5 +475,374 @@ describe('QuizCreationStep3LayoutComponent', () => {
 
     expect(component.questionForm.get('option3')).toBeNull();
     expect(component.questionForm.get('option4')).toBeNull();
+  });
+
+  describe('Additional Branch Coverage Tests', () => {
+    it('should return true for correctAnswer field when type is true/false in shouldRenderField', () => {
+      component.questionTypeOptions = [{ value: 2, label: 'True/False' }];
+      component.questionForm = new FormBuilder().group({
+        type: [2],
+        correctAnswer: [''],
+      });
+      component.questionForm.get('type')?.setValue(2);
+
+      const field: DynamicFormField = { name: 'correctAnswer' } as any;
+      expect(component.shouldRenderField(field)).toBe(true);
+    });
+
+    it('should show error and not add MCQ question when options are not unique', () => {
+      component.questionTypeOptions = [{ value: 1, label: 'Multiple Choice' }];
+      component.questionDifficultyOption = [{ value: 1, label: 'Easy' }];
+      component.questionForm = new FormBuilder().group({
+        type: [1],
+        difficulty: [1],
+        questionText: ['Test Question'],
+        correctAnswer: ['opt1'],
+        option1: ['opt1'],
+        option2: ['opt2'],
+        option3: ['opt2'], // duplicate with option2
+        option4: ['opt4'],
+      });
+
+      component.addQuestion();
+
+      expect(snackbar.showError).toHaveBeenCalledWith(quizCRUDMessages.notUniqueOptions);
+      expect(component.selectedQuestions.length).toBe(0);
+    });
+
+    it('should not add question when difficulty limit is reached', () => {
+      component.questionTypeOptions = [{ value: 2, label: 'True/False' }];
+      component.questionDifficultyOption = [{ value: 1, label: 'Easy' }];
+      component.quizStep1Data = {
+        quizCategory: 1,
+        difficultyDistribution: [{ key: 'EasyQuestions', value: 1 }], // limit is 1
+        totalQuestions: 10,
+      } as any;
+
+      // Add one Easy question already
+      component.selectedQuestions = [
+        {
+          queDifficultyId: 1,
+          queDifficultyName: 'Easy',
+          queText: 'Existing Q',
+          queTypeId: 2,
+        } as any,
+      ];
+
+      component.questionForm = new FormBuilder().group({
+        type: [2],
+        difficulty: [1],
+        questionText: ['New Q'],
+        correctAnswer: [true],
+      });
+
+      component.addQuestion();
+
+      expect(snackbar.showError).toHaveBeenCalledWith(
+        quizCRUDMessages.maxDifficultyQuestionsError(1, 'Easy'),
+      );
+      expect(component.selectedQuestions.length).toBe(1);
+    });
+
+    it('should mark form as touched when form is invalid on addQuestion', () => {
+      component.questionTypeOptions = [{ value: 1, label: 'Multiple Choice' }];
+      component.questionForm = new FormBuilder().group({
+        type: [null, Validators.required], // make invalid
+        difficulty: [null, Validators.required],
+        questionText: ['', Validators.required],
+        correctAnswer: ['', Validators.required],
+        option1: ['', Validators.required],
+        option2: ['', Validators.required],
+        option3: ['', Validators.required],
+        option4: ['', Validators.required],
+      });
+
+      const markTouchedSpy = jest.spyOn(component.questionForm, 'markAllAsTouched');
+
+      component.addQuestion();
+
+      expect(markTouchedSpy).toHaveBeenCalled();
+      expect(component.selectedQuestions.length).toBe(0);
+    });
+
+    it('should handle error when fetching question difficulty dropdown data', () => {
+      const errorResponse = { error: { message: 'Difficulty API error' } };
+
+      quizService.getDropDownData
+        .mockReturnValueOnce(of({ data: [], result: true, statusCode: 200, message: 'Success' }))
+        .mockReturnValueOnce(throwError(() => errorResponse));
+
+      component.getDropDownsData();
+
+      expect(snackbar.showError).toHaveBeenCalledWith(expect.any(String), 'Difficulty API error');
+    });
+
+    it('should handle error when fetching question type dropdown data', () => {
+      const errorResponse = { error: { message: 'Type API error' } };
+
+      quizService.getDropDownData
+        .mockReturnValueOnce(of({ data: [], result: true, statusCode: 200, message: 'Success' }))
+        .mockReturnValueOnce(throwError(() => errorResponse)); // Second call fails
+
+      component.getDropDownsData();
+
+      expect(snackbar.showError).toHaveBeenCalledWith(expect.any(String), 'Type API error');
+    });
+
+    it('should decrement currentPageSelected when last item on page > 1 is deleted', () => {
+      component.selectedQuestions = [
+        { queText: 'Q1', queTypeName: 'MCQ', queDifficultyName: 'Easy' } as any,
+        { queText: 'Q2', queTypeName: 'MCQ', queDifficultyName: 'Easy' } as any,
+      ];
+      component.pageSizeSelected = 1;
+      component.currentPageSelected = 2; // On page 2 with 1 item
+
+      component.updateSelectedQuestionsTable();
+
+      // Simulate having only 1 item on the current page
+      component.questionsTableData = [
+        {
+          queText: 'Q2',
+          queTypeName: { tagConfig: {} as any },
+          queDifficultyName: { tagConfig: {} as any },
+          action: [],
+          index: 1,
+        },
+      ];
+
+      // Delete the last item
+      component.selectedQuestions = [component.selectedQuestions[0]];
+      component.updateSelectedQuestionsTable();
+
+      expect(component.currentPageSelected).toBe(1);
+    });
+
+    it('should return false when total selected questions exceed total limit', () => {
+      component.quizStep1Data = {
+        quizCategory: 1,
+        difficultyDistribution: [{ key: 'EasyQuestions', value: 5 }],
+        totalQuestions: 3, // Total limit is 3
+      } as any;
+
+      component.selectedQuestions = [
+        { queDifficultyName: 'Easy' } as any,
+        { queDifficultyName: 'Easy' } as any,
+        { queDifficultyName: 'Easy' } as any,
+        { queDifficultyName: 'Easy' } as any, // 4 questions > limit of 3
+      ];
+
+      const result = (component as any).areAllSelectedQuestionsWithinLimit();
+
+      expect(result).toBe(false);
+    });
+
+    it('should return true when quizStep1Data is not provided', () => {
+      component.quizStep1Data = null as any;
+      component.selectedQuestions = [{ queDifficultyName: 'Easy' } as any];
+
+      const result = (component as any).areAllSelectedQuestionsWithinLimit();
+
+      expect(result).toBe(true);
+    });
+
+    it('should return true when selectedQuestions is not an array', () => {
+      component.quizStep1Data = {
+        quizCategory: 1,
+        difficultyDistribution: [{ key: 'EasyQuestions', value: 2 }],
+        totalQuestions: 10,
+      } as any;
+      component.selectedQuestions = null as any;
+
+      const result = (component as any).areAllSelectedQuestionsWithinLimit();
+
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('selectedQuestionsChangeFromInnerStep3Option3Parent', () => {
+    it('should update selectedQuestions, totalQuestionsSelected, and call helper methods', () => {
+      // Ensure helper methods are mocked so they don't throw
+      jest.spyOn(component, 'fillMissingLabelsForSelectedQuestions').mockImplementation(() => {});
+      jest.spyOn(component, 'updateSelectedQuestionsTable').mockImplementation(() => {});
+
+      const mockQuestions: QuestionsList[] = [
+        { id: 1, queText: 'Q1', queTypeName: 'Multiple Choice' },
+        { id: 2, queText: 'Q2', queTypeName: 'Single Choice' },
+      ];
+
+      component.selectedQuestionsChangeFromInnerStep3Option3Parent(mockQuestions);
+
+      expect(component.selectedQuestions).toEqual(mockQuestions);
+      expect(component.totalQuestionsSelected).toBe(mockQuestions.length);
+      expect(component.fillMissingLabelsForSelectedQuestions).toHaveBeenCalled();
+      expect(component.updateSelectedQuestionsTable).toHaveBeenCalled();
+    });
+  });
+
+  describe('closeQuestionAdditionOptionParent', () => {
+    it('should set isInnerStep3 to false', () => {
+      component.isInnerStep3 = true;
+
+      component.closeQuestionAdditionOptionParent();
+
+      expect(component.isInnerStep3).toBe(false);
+    });
+  });
+
+  beforeEach(() => {
+    // Ensure minimal setup before each test
+    component.quizStep1Data = {
+      quizCategory: 1,
+      difficultyDistribution: [{ key: 'Easy', value: 5 }],
+      totalQuestions: 10,
+    } as any;
+
+    component.questionTypeOptions = [
+      { value: 1, label: 'Multiple Choice' },
+      { value: 2, label: 'True/False' },
+      { value: 3, label: 'Short Answer' },
+      { value: 4, label: 'Fill in the Blank' },
+    ];
+  });
+
+  // True/False question with false answer
+  it('should add a True/False question with false answer', () => {
+    component.questionForm.setValue({
+      type: 2, // True/False
+      difficulty: 1,
+      questionText: 'Is this false?',
+      correctAnswer: false,
+      option1: '',
+      option2: '',
+      option3: '',
+      option4: '',
+    });
+
+    component.addQuestion();
+
+    const q = component.selectedQuestions[0];
+    expect(q.queOptionsAns![0].value).toBe('False');
+    expect(component.totalQuestionsSelected).toBe(1);
+  });
+
+  it('should set default categoryId = 0 if quizStep1Data.quizCategory is undefined', () => {
+    (component.quizStep1Data as any).quizCategory = null;
+
+    component.questionForm.setValue({
+      type: 3, // Short Answer
+      difficulty: 1,
+      questionText: 'Short answer question',
+      correctAnswer: 'Answer',
+      option1: '',
+      option2: '',
+      option3: '',
+      option4: '',
+    });
+
+    component.addQuestion();
+
+    expect(component.selectedQuestions[0].categoryId).toBe(0);
+  });
+
+  it('should set queTypeName to "Unknown" if type option not found', () => {
+    component.questionTypeOptions = [];
+
+    component.questionForm.setValue({
+      type: 999, // non-existent
+      difficulty: 1,
+      questionText: 'Unknown type question',
+      correctAnswer: 'Answer',
+      option1: '',
+      option2: '',
+      option3: '',
+      option4: '',
+    });
+
+    component.addQuestion();
+
+    expect(component.selectedQuestions.length).toBe(0);
+  });
+
+  // Add question when difficultyLimit is null
+  it('should allow adding question if difficultyLimit is null', () => {
+    component.quizStep1Data.difficultyDistribution = []; // no limits
+
+    component.questionForm.setValue({
+      type: 3, // Short Answer
+      difficulty: 1,
+      questionText: 'Question without limit',
+      correctAnswer: 'Answer',
+      option1: '',
+      option2: '',
+      option3: '',
+      option4: '',
+    });
+
+    component.addQuestion();
+
+    expect(component.selectedQuestions.length).toBe(1);
+  });
+
+  // Fill-in-the-Blank missing placeholder
+  it('should show error for Fill-in-the-Blank with missing placeholder', () => {
+    component.questionForm.setValue({
+      type: 4, // Fill in the Blank
+      difficulty: 1,
+      questionText: 'This is missing placeholder', // no {{}} here
+      correctAnswer: 'Answer',
+      option1: '',
+      option2: '',
+      option3: '',
+      option4: '',
+    });
+
+    component.addQuestion();
+
+    expect((component as any).snackbar.showError).toHaveBeenCalledWith(
+      quizCRUDMessages.fillInTheBlankFormatError,
+    );
+    expect(component.selectedQuestions.length).toBe(0);
+  });
+
+  // MCQ correctAnswer not in options
+  it('should show error if MCQ correctAnswer not in options', () => {
+    component.questionForm.setValue({
+      type: 1, // Multiple Choice
+      difficulty: 1,
+      questionText: 'MCQ question',
+      correctAnswer: 'Z', // invalid
+      option1: 'A',
+      option2: 'B',
+      option3: 'C',
+      option4: 'D',
+    });
+
+    component.addQuestion();
+
+    expect((component as any).snackbar.showError).toHaveBeenCalledWith(
+      quizCRUDMessages.mcqOptionError,
+    );
+    expect(component.selectedQuestions.length).toBe(0);
+  });
+
+  // MCQ options not unique
+  it('should show error if MCQ options are not unique', () => {
+    component.questionForm.setValue({
+      type: 1, // Multiple Choice
+      difficulty: 1,
+      questionText: 'MCQ duplicate options',
+      correctAnswer: 'A',
+      option1: 'A',
+      option2: 'A', // duplicate
+      option3: 'C',
+      option4: 'D',
+    });
+
+    component.addQuestion();
+
+    expect((component as any).snackbar.showError).toHaveBeenCalledWith(
+      quizCRUDMessages.notUniqueOptions,
+    );
+    expect(component.selectedQuestions.length).toBe(0);
   });
 });

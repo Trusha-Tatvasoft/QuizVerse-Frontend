@@ -329,7 +329,7 @@ export class BattleAttemptLayoutComponent implements OnInit, OnDestroy {
         });
       }
       this.snackbar.showInfo(platformMessages.battleResumeSuccess);
-    } catch (err) {
+    } catch {
       this.snackbar.showError(platformMessages.resumeBattleFailed);
     }
   };
