@@ -38,6 +38,7 @@ import { BattleAttemptLayoutComponent } from './pages/user/battle-attempt-layout
 import { AdminProfileComponent } from './pages/admin/admin-profile/admin-profile.component';
 import { BattleResultComponent } from './pages/user/battle-result/battle-result.component';
 import { WaitingBattleResultComponent } from './pages/user/battle-result/components/waiting-battle-result/waiting-battle-result.component';
+import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 
 export const routes: Routes = [
   {
@@ -288,5 +289,10 @@ export const routes: Routes = [
     path: Navigations.Unauthorized,
     component: UnauthorizedComponent,
     title: 'QuizVerse | Unauthorized',
+  },
+  {
+    path: '**',
+    component: NotFoundComponent,
+    title: 'QuizVerse | Page Not Found',
   },
 ];
