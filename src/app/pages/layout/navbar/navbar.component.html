@@ -147,12 +147,10 @@
 
       <!-- Profile Menu -->
       <button class="profile-button cursor-pointer" [matMenuTriggerFor]="menu">
-        @if (profileImageUrl) {
-          @if (!isImageError) {
-            <img [src]="profileImageUrl" alt="Profile" (error)="profileImageError()" />
-          } @else {
-            <img [src]="profileImageUrl" alt="Profile" (error)="profileImageError()" />
-          }
+        @if (!isImageError) {
+          <img [src]="profileImageUrl" alt="Profile" (error)="profileImageError()" />
+        } @else {
+          <img [src]="profileImageUrl" alt="Profile" />
         }
       </button>
 

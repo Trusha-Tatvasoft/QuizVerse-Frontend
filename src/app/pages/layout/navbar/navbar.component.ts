@@ -34,7 +34,7 @@ import { OutlineButtonComponent } from '../../../shared/components/outline-butto
 import { Notifications } from '../interfaces/navbar.component.interface';
 import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
-import { defaultLogoPath, plateformName, platformMessages, roles } from '../../../utils/constants';
+import { plateformName, platformMessages, roles } from '../../../utils/constants';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
 import { NavbarDataService } from '../../../services/common/navbar/navbar-data.service';
@@ -44,10 +44,7 @@ import { environment } from '../../../../environments/environment.dev';
 import { TimeAgoPipe } from '../../../shared/pipes/time-ago/time-ago.pipe';
 import { UserProfileService } from '../../../services/user/user-profile/user-profile.service';
 import { selectedTabIndexSignal } from '../../../core/auth/components/login-signup/login-signup.component';
-import {
-  globalGetInitials,
-  globalGetInitialsColorClass,
-} from '../../../utils/get-profile-initials.utils';
+import { globalGetInitials } from '../../../utils/get-profile-initials.utils';
 
 @Component({
   selector: 'app-navbar',
@@ -227,6 +224,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   profileImageError() {
     this.profileImageUrl = 'assets/images/profile-1.png';
+    this.isImageError = true;
   }
 
   //NOTE: Uncomment and use after backend API is implemented to fetch and display notifications

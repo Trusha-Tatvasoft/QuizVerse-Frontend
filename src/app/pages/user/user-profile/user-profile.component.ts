@@ -26,6 +26,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   profilePicUrl: string = defaultProfilePic;
   user: UserBasicProfile | null = null;
   totalTabs = this.tabs.length;
+  isImageError: boolean = false;
 
   selectedTab = signal(0);
 
@@ -104,6 +105,11 @@ export class UserProfileComponent implements OnInit, OnDestroy {
           },
         });
     }
+  }
+
+  profileImageError() {
+    this.profilePicUrl = defaultProfilePic;
+    this.isImageError = true;
   }
 
   ngOnDestroy() {

@@ -19,6 +19,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { resumeBattleDialog } from '../configs/play-battle.config';
 import { BattleHubService } from '../../../../services/user/user-battles/battle-hub.service';
 import { AuthService } from '../../../../core/auth/services/auth.service';
+import { globalGetInitials } from '../../../../utils/get-profile-initials.utils';
 
 @Component({
   selector: 'app-found-opponent',
@@ -195,6 +196,10 @@ export class FoundOpponentComponent {
 
   imageError() {
     this.isImageError = true;
+  }
+
+  getInitials(name: string): string {
+    return globalGetInitials(name);
   }
 
   openConfirmationDialog(

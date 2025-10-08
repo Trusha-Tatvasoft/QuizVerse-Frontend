@@ -11,8 +11,16 @@
   <div class="player-management-toolbar">
     <!-- Profile image -->
     <div class="profile-avatar">
-      <img [src]="profilePicUrl" alt="Profile Avatar" class="avatar-img" />
-
+      @if (!isImageError) {
+        <img
+          [src]="profilePicUrl"
+          alt="Profile Avatar"
+          class="avatar-img"
+          (error)="profileImageError()"
+        />
+      } @else {
+        <img [src]="profilePicUrl" alt="Profile Avatar" class="avatar-img" />
+      }
       <label for="profile-upload" class="avatar-icon">
         <mat-icon fontSet="material-icons-outlined">photo_camera</mat-icon>
       </label>

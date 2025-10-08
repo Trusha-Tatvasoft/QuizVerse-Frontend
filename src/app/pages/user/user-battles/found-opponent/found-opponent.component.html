@@ -7,10 +7,14 @@
           @if (!isImageError) {
             <img [src]="opponent?.profilePic" (error)="imageError()" />
           } @else {
-            <mat-icon fontSet="material-icons-outlined" class="icon-success">person</mat-icon>
+            <div class="icon-success">
+              {{ getInitials(opponent?.fullName || opponent?.userName || 'Opponent') }}
+            </div>
           }
         } @else {
-          <mat-icon fontSet="material-icons-outlined" class="icon-success">person</mat-icon>
+          <div class="icon-success">
+            {{ getInitials(opponent?.fullName || opponent?.userName || 'Opponent') }}
+          </div>
         }
       </div>
       <h2 class="font-bold my-2">Opponent Found!</h2>
