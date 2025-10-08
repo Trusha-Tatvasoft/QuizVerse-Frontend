@@ -216,6 +216,7 @@ export const platformMessages = {
   unavailableMessage: 'Server Unavailable',
   sessionExpiredTitle: 'Session expired',
   sessionExpiredMessage: 'Please log in again.',
+  infoTitle: 'Info',
   //#endregion
 
   //#region registerMessages
