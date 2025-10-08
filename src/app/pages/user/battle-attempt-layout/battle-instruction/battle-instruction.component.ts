@@ -13,7 +13,7 @@ import {
 } from '../../../../utils/constants';
 import { Navigations } from '../../../../shared/enums/navigation';
 import { TagComponent } from '../../../../shared/components/tag/tag.component';
-import { resumeBattleDialog } from '../configs/battle-attempt.config';
+import { resumeBattleDialog, skipButtonConfig } from '../configs/battle-attempt.config';
 import { TagInputConfig } from '../../../../shared/interfaces/tag-component.interface';
 import { BattleHubService } from '../../../../services/user/user-battles/battle-hub.service';
 import { UserBattlesService } from '../../../../services/user/user-battles/user-battles.service';
@@ -24,10 +24,17 @@ import { getSavedBattleId, openFullscreen, saveBattleId } from '../battle-atttem
 import { BattleInstruction, BattleStartDetails } from '../interfaces/battle-attempt.interface';
 import { AuthService } from '../../../../core/auth/services/auth.service';
 import { DisableQuizShortcutsDirective } from '../../../../shared/Directives/disable-quiz-shortcuts.directive';
+import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 
 @Component({
   selector: 'app-battle-instruction',
-  imports: [CommonModule, TagComponent, MatIcon, DisableQuizShortcutsDirective],
+  imports: [
+    CommonModule,
+    TagComponent,
+    MatIcon,
+    DisableQuizShortcutsDirective,
+    FilledButtonComponent,
+  ],
   templateUrl: './battle-instruction.component.html',
   styleUrls: ['./battle-instruction.component.scss'],
 })
@@ -38,6 +45,7 @@ export class BattleInstructionComponent implements OnInit, OnDestroy {
   battleInstructions: BattleInstruction;
   currentUserExitedFullScreen = false;
   countdownSeconds = battleInstructionsShowTime;
+  skipBtnConfig = skipButtonConfig;
 
   private readonly snackbar = inject(SnackbarService);
   private readonly router = inject(Router);
@@ -146,6 +154,11 @@ export class BattleInstructionComponent implements OnInit, OnDestroy {
         );
       },
     });
+  }
+
+  skipToBattle(): void {
+    this.battleHubService.skipInstructions(this.attemptedId);
+    this.navigateToBattle(this.attemptedId);
   }
 
   navigateToBattle(attemptId: number) {

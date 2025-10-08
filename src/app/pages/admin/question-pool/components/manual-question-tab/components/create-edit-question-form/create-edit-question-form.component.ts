@@ -50,7 +50,7 @@ import { platformMessages } from '../../../../../../../utils/constants';
   styleUrls: ['./create-edit-question-form.component.scss'],
 })
 export class CreateEditQuestionFormComponent implements OnInit, OnDestroy {
-  @Input() questionId?: number;
+  @Input() questionData?: QuestionDetail;
 
   private readonly dialogRef = inject(MatDialogRef<QuestionFormDialogComponent>);
   private readonly dropdownService = inject(DropdownService);
@@ -79,33 +79,15 @@ export class CreateEditQuestionFormComponent implements OnInit, OnDestroy {
     this.form.get('type')?.valueChanges.subscribe((type) => this.updateFieldsByType(type));
 
     this.loadDropdowns();
-    setTimeout(() => {
-      if (this.questionId) {
-        this.loadQuestionDetails(this.questionId);
-      }
-    }, 75);
+  }
+
+  patchFormWithQuestionData(data: QuestionDetail) {
+    patchFormWithQuestion(this.form, data, this.categoryList, this.difficultyList, this.typeList);
   }
 
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  // load question details for the edit
-  loadQuestionDetails(id: number) {
-    this.questionService
-      .getQuestionPreviewById(id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        const question: QuestionDetail = res.data;
-        patchFormWithQuestion(
-          this.form,
-          question,
-          this.categoryList,
-          this.difficultyList,
-          this.typeList,
-        );
-      });
   }
 
   loadDropdowns() {
@@ -121,6 +103,10 @@ export class CreateEditQuestionFormComponent implements OnInit, OnDestroy {
         this.typeList = types;
 
         updateDropdownOptions(this.fields, this.categoryList, this.difficultyList, this.typeList);
+
+        if (this.questionData) {
+          this.patchFormWithQuestionData(this.questionData);
+        }
       });
   }
 
@@ -179,7 +165,7 @@ export class CreateEditQuestionFormComponent implements OnInit, OnDestroy {
       const dto = mapFormToQuestionRequest(this.form);
 
       this.questionService
-        .createOrUpdateQuestion(this.questionId ?? 0, dto)
+        .createOrUpdateQuestion(this.questionData?.id ?? 0, dto)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (res) => {

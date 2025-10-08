@@ -9,6 +9,7 @@ import {
   createTemplateButtonConfig,
   emailHeaderConfig,
   emailTableColumnsConfig,
+  EmailTemplatesResponseDto,
 } from './configs/email-template.component.config';
 import { emailTemplateToTableData } from './email-template.component.mapper';
 import { PaginationRequest } from '../../../shared/interfaces/pagination-request.interface';
@@ -121,7 +122,7 @@ export class EmailTemplateComponent {
         break;
 
       case emailActions.EDIT:
-        this.openEmailTemplateDialgue('edit', emailTemplate['id'] as number);
+        this.loadEmailTemplateForEdit(emailTemplate['id'] as number);
         break;
 
       case emailActions.ACTIVATE:
@@ -147,16 +148,37 @@ export class EmailTemplateComponent {
     }
   }
 
+  loadEmailTemplateForEdit(id: number): void {
+    this.emailService.getEmailTemplateById(id).subscribe({
+      next: (res) => {
+        if (res.result && res.data) {
+          this.openEmailTemplateDialgue(res.data);
+        } else {
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            res.message || platformMessages.failedToFetchTemplate,
+          );
+        }
+      },
+      error: (err) => {
+        this.snackbar.showError(
+          platformMessages.errorTitle,
+          err?.error?.message || platformMessages.failedToFetchTemplate,
+        );
+      },
+    });
+  }
+
   //#region Create Email Dialog
-  openEmailTemplateDialgue(mode: 'create' | 'edit' = 'create', template?: number) {
+  openEmailTemplateDialgue(templateData?: EmailTemplatesResponseDto) {
     const dialogRef = this.dialog.open(EmailTemplateFormComponent, {
       minWidth: '50vw',
       maxWidth: '100vw',
       maxHeight: '95vh',
       autoFocus: false,
       data: {
-        mode,
-        id: template,
+        mode: templateData ? 'edit' : 'create',
+        templateData: templateData ?? null,
       },
     });
 

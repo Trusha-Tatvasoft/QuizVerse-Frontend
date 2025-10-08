@@ -34,7 +34,7 @@ import { OutlineButtonComponent } from '../../../shared/components/outline-butto
 import { Notifications } from '../interfaces/navbar.component.interface';
 import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
-import { defaultLogoPath, plateformName, platformMessages, roles } from '../../../utils/constants';
+import { plateformName, platformMessages, roles } from '../../../utils/constants';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
 import { NavbarDataService } from '../../../services/common/navbar/navbar-data.service';

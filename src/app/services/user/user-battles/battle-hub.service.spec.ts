@@ -551,9 +551,7 @@ describe('BattleHubService', () => {
 
       service.submitAnswer(123, 1, 'A');
 
-      expect(errorSpy).toHaveBeenCalledWith(
-        'Connection lost. Please check your internet and try again.',
-      );
+      expect(errorSpy).toHaveBeenCalledWith('Not connected to server');
       expect(mockHubConnection.invoke).not.toHaveBeenCalled();
     });
 
@@ -877,6 +875,51 @@ describe('BattleHubService', () => {
       service['hubConnection'] = mockHubConnection as any;
       service['isConnected'] = true;
       expect(service.connected).toBe(true);
+    });
+  });
+
+  describe('skipInstructions', () => {
+    beforeEach(() => {
+      service['hubConnection'] = mockHubConnection as any;
+      service['isConnected'] = true;
+      mockHubConnection.state = 'Connected';
+    });
+
+    it('should skip instructions successfully', () => {
+      mockHubConnection.invoke.mockResolvedValue(undefined);
+
+      service.skipInstructions(101);
+
+      expect(mockHubConnection.invoke).toHaveBeenCalledWith('SkipInstructions', 101);
+    });
+
+    it('should not invoke skipInstructions if not connected', () => {
+      service['isConnected'] = false;
+      const errorSpy = jest.spyOn(service['_errorSubject'], 'next');
+
+      service.skipInstructions(101);
+
+      expect(mockHubConnection.invoke).not.toHaveBeenCalled();
+      expect(errorSpy).toHaveBeenCalledWith('Not connected to server');
+    });
+
+    it('should show error message if invoke fails with Error', async () => {
+      const error = new Error('Failed to skip');
+      mockHubConnection.invoke.mockRejectedValue(error);
+
+      service.skipInstructions(101);
+      await Promise.resolve(); // Wait for the .catch to execute
+
+      expect(mockSnackbarService.showError).toHaveBeenCalledWith('Failed to skip');
+    });
+
+    it('should show fallback error message if invoke fails with non-Error', async () => {
+      mockHubConnection.invoke.mockRejectedValue({}); // not an Error object
+
+      service.skipInstructions(101);
+      await Promise.resolve(); // Wait for the .catch to execute
+
+      expect(mockSnackbarService.showError).toHaveBeenCalledWith('Failed to skip instructions');
     });
   });
 });

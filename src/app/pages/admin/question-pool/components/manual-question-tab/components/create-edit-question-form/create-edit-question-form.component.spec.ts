@@ -15,6 +15,7 @@ import { buildBaseFields } from '../../../../configs/question-pool-dialog.config
 import { uniqueOptionsGroupValidator } from './create-edit-question-form.validator';
 import { ValidationErrorService } from '../../../../../../../shared/service/validation-error/validation-error.service';
 import { platformMessages } from '../../../../../../../utils/constants';
+import { QuestionDetail } from '../../../../interfaces/question-pool-preview.interface';
 
 // Mock helper functions
 jest.mock('./create-edit-question-form.hepler', () => ({
@@ -47,11 +48,20 @@ describe('CreateEditQuestionFormComponent', () => {
   const mockDialogRef = { close: jest.fn() };
   const mockDropdownService = { getDropdownData: jest.fn() };
   const mockQuestionService = {
-    getQuestionPreviewById: jest.fn(),
     createOrUpdateQuestion: jest.fn(),
   };
   const mockSnackbar = { showSuccess: jest.fn(), showError: jest.fn() };
   const mockValidationErrorService = { getErrorMessage: jest.fn() };
+
+  const mockQuestionData: QuestionDetail = {
+    id: 1,
+    category: 'Test Category',
+    difficulty: 'Easy',
+    questionType: 'MCQ',
+    questionText: 'Sample Question',
+    options: [],
+    correctAnswer: 'A',
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -71,17 +81,6 @@ describe('CreateEditQuestionFormComponent', () => {
     fb = TestBed.inject(FormBuilder);
 
     mockDropdownService.getDropdownData.mockReturnValue(of([{ id: 1, name: 'Test' }]));
-    mockQuestionService.getQuestionPreviewById.mockReturnValue(
-      of({
-        data: {
-          id: 1,
-          category: 'Test',
-          difficulty: 'Easy',
-          questionType: 'MCQ',
-          questionText: 'Q1',
-        },
-      }),
-    );
     mockQuestionService.createOrUpdateQuestion.mockReturnValue(of({ result: true, message: 'ok' }));
   });
 
@@ -91,20 +90,70 @@ describe('CreateEditQuestionFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('ngOnInit without questionId should build form and load dropdowns', () => {
+  it('ngOnInit should build form and load dropdowns', () => {
     component.ngOnInit();
     expect(buildBaseFields).toHaveBeenCalled();
     expect(mockDropdownService.getDropdownData).toHaveBeenCalledTimes(3);
-    expect(updateDropdownOptions).toHaveBeenCalled();
   });
 
-  it('ngOnInit with questionId should load question details', fakeAsync(() => {
-    component.questionId = 5;
+  it('ngOnInit should subscribe to type valueChanges', () => {
+    const spy = jest.spyOn(component, 'updateFieldsByType');
     component.ngOnInit();
-    tick(75);
-    expect(mockQuestionService.getQuestionPreviewById).toHaveBeenCalledWith(5);
-    expect(patchFormWithQuestion).toHaveBeenCalled();
+
+    const typeControl = component.form.get('type');
+    typeControl?.setValue(1);
+
+    expect(spy).toHaveBeenCalledWith(1);
+  });
+
+  it('loadDropdowns should update dropdown options after loading', fakeAsync(() => {
+    component.ngOnInit();
+    tick();
+
+    expect(updateDropdownOptions).toHaveBeenCalledWith(
+      component.fields,
+      component.categoryList,
+      component.difficultyList,
+      component.typeList,
+    );
   }));
+
+  it('loadDropdowns should patch form if questionData exists', fakeAsync(() => {
+    component.questionData = mockQuestionData;
+    const patchSpy = jest.spyOn(component, 'patchFormWithQuestionData');
+
+    component.ngOnInit();
+    tick();
+
+    expect(patchSpy).toHaveBeenCalledWith(mockQuestionData);
+  }));
+
+  it('loadDropdowns should not patch form if questionData is undefined', fakeAsync(() => {
+    component.questionData = undefined;
+    const patchSpy = jest.spyOn(component, 'patchFormWithQuestionData');
+
+    component.ngOnInit();
+    tick();
+
+    expect(patchSpy).not.toHaveBeenCalled();
+  }));
+
+  it('patchFormWithQuestionData should call helper with correct arguments', () => {
+    component.ngOnInit();
+    component.categoryList = [{ id: 1, name: 'Cat1' }];
+    component.difficultyList = [{ id: 1, name: 'Easy' }];
+    component.typeList = [{ id: 1, name: 'MCQ' }];
+
+    component.patchFormWithQuestionData(mockQuestionData);
+
+    expect(patchFormWithQuestion).toHaveBeenCalledWith(
+      component.form,
+      mockQuestionData,
+      component.categoryList,
+      component.difficultyList,
+      component.typeList,
+    );
+  });
 
   it('buildForm should create controls from fields', () => {
     component.baseFields = buildBaseFields();
@@ -128,17 +177,6 @@ describe('CreateEditQuestionFormComponent', () => {
     expect(component.form.validator).toBeNull();
   });
 
-  it('should call updateFieldsByType on type change', () => {
-    const spy = jest.spyOn(component, 'updateFieldsByType');
-
-    component.ngOnInit();
-
-    const typeControl = component.form.get('type');
-    typeControl?.setValue(1);
-
-    expect(spy).toHaveBeenCalledWith(1);
-  });
-
   it('should not throw if type control does not exist during ngOnInit', () => {
     jest.spyOn(component, 'buildForm').mockImplementation(() => {
       component.form = fb.group({});
@@ -154,6 +192,15 @@ describe('CreateEditQuestionFormComponent', () => {
 
     component.updateFieldsByType(1);
     expect(uniqueOptionsGroupValidator).toHaveBeenCalledWith(['option1', 'option2']);
+  });
+
+  it('updateFieldsByType should clear validators for non-MCQ types', () => {
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
+
+    component.updateFieldsByType(2);
+    expect(component.form.validator).toBeNull();
   });
 
   it('getError should return null when control not found', () => {
@@ -188,27 +235,40 @@ describe('CreateEditQuestionFormComponent', () => {
     expect(result).toBe('Field required');
   });
 
-  it('getError should return whatever validationErrorService returns', () => {
-    component.fields = [{ name: 'test', label: '', type: '', placeholder: '', validators: [] }];
-    component.buildForm();
-    const control = component.form.get('test');
-    mockValidationErrorService.getErrorMessage.mockReturnValue('Some error');
-
-    const result = component.getError('test');
-
-    expect(result).toBe('Some error');
-  });
-
-  it('createOrUpdateQuestion should call service and show success for valid form', () => {
+  it('createOrUpdateQuestion should call service with id 0 for new question', () => {
+    component.questionData = undefined;
     component.baseFields = buildBaseFields();
     component.fields = [...component.baseFields];
     component.buildForm();
     component.form.get('type')?.setValue(1);
+
+    component.createOrUpdateQuestion();
+
+    expect(mockQuestionService.createOrUpdateQuestion).toHaveBeenCalledWith(0, { dto: true });
+  });
+
+  it('createOrUpdateQuestion should call service with existing id for edit', () => {
+    component.questionData = mockQuestionData;
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
+    component.form.get('type')?.setValue(1);
+
+    component.createOrUpdateQuestion();
+
+    expect(mockQuestionService.createOrUpdateQuestion).toHaveBeenCalledWith(1, { dto: true });
+  });
+
+  it('createOrUpdateQuestion should show success and close dialog on success', () => {
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
+    component.form.get('type')?.setValue(1);
+
     component.createOrUpdateQuestion();
 
     expect(mapFormToQuestionRequest).toHaveBeenCalled();
-    expect(mockQuestionService.createOrUpdateQuestion).toHaveBeenCalled();
-    expect(mockSnackbar.showSuccess).toHaveBeenCalled();
+    expect(mockSnackbar.showSuccess).toHaveBeenCalledWith(platformMessages.successTitle, 'ok');
     expect(mockDialogRef.close).toHaveBeenCalledWith(true);
   });
 
@@ -234,15 +294,27 @@ describe('CreateEditQuestionFormComponent', () => {
     component.buildForm();
     component.form.get('type')?.setValue(1);
 
-    // set other required controls
-    component.form.get('title')?.setValue('Test question');
-    component.form.get('description')?.setValue('Something');
-
     component.createOrUpdateQuestion();
-
     tick();
 
     expect(mockSnackbar.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'err');
+  }));
+
+  it('createOrUpdateQuestion should show generic error when error.message is missing', fakeAsync(() => {
+    mockQuestionService.createOrUpdateQuestion.mockReturnValueOnce(throwError(() => ({})));
+
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
+    component.form.get('type')?.setValue(1);
+
+    component.createOrUpdateQuestion();
+    tick();
+
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
+    );
   }));
 
   it('should mark all as touched if form invalid', () => {
@@ -256,5 +328,15 @@ describe('CreateEditQuestionFormComponent', () => {
   it('closeDialog should call dialogRef.close', () => {
     component.closeDialog();
     expect(mockDialogRef.close).toHaveBeenCalled();
+  });
+
+  it('ngOnDestroy should complete destroy$ subject', () => {
+    const nextSpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

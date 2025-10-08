@@ -34,7 +34,7 @@ describe('EmailTemplateComponent (Jest)', () => {
       subject: 'Welcome Subject',
       templateType: 0,
       status: true,
-      body: null,
+      body: '<p>Welcome body</p>',
     },
     {
       id: 2,
@@ -42,7 +42,7 @@ describe('EmailTemplateComponent (Jest)', () => {
       subject: 'Reminder Subject',
       templateType: 1,
       status: false,
-      body: null,
+      body: '<p>Reminder body</p>',
     },
   ];
 
@@ -150,9 +150,11 @@ describe('EmailTemplateComponent (Jest)', () => {
   });
 
   it('should call updateEmailTemplateStatus and show success', () => {
+    const loadSpy = jest.spyOn(component, 'loadEmailTemplates').mockImplementation(() => {});
     emailService.updateEmailTemplateByAction.mockReturnValue(
       of({ statusCode: 200, result: true, message: 'Updated' } as any),
     );
+
     component.updateEmailTemplateStatus(1, EmailTemplateAction.UpdateStatus);
 
     expect(emailService.updateEmailTemplateByAction).toHaveBeenCalledWith({
@@ -160,6 +162,7 @@ describe('EmailTemplateComponent (Jest)', () => {
       action: EmailTemplateAction.UpdateStatus,
     });
     expect(snackbar.showSuccess).toHaveBeenCalled();
+    expect(loadSpy).toHaveBeenCalled();
   });
 
   it('should handle updateEmailTemplateStatus failure', () => {
@@ -196,14 +199,39 @@ describe('EmailTemplateComponent (Jest)', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  it('should not execute onConfirm when dialog is cancelled', () => {
+    const spy = jest.fn();
+    dialog.open.mockReturnValue({ afterClosed: () => observableOf(false) } as any);
+    component.openConfirmationDialog(
+      {
+        title: 'Confirm',
+        message: 'Do it?',
+        confirmButtonConfig: { label: 'Yes' },
+        cancelButtonConfig: { label: 'No' },
+      },
+      spy,
+    );
+
+    expect(spy).not.toHaveBeenCalled();
+  });
+
   it('should open preview dialog on success', () => {
     emailService.getEmailTemplateById.mockReturnValue(
-      of({ result: true, statusCode: 200, data: { id: 1 } } as any),
+      of({ result: true, statusCode: 200, data: mockTemplates[0] } as any),
     );
     component.openPreviewDialog(1);
 
     expect(emailService.getEmailTemplateById).toHaveBeenCalledWith(1);
     expect(dialog.open).toHaveBeenCalled();
+  });
+
+  it('should show error if preview API returns non-200 status', () => {
+    emailService.getEmailTemplateById.mockReturnValue(
+      of({ result: false, statusCode: 404, message: 'Not found' } as any),
+    );
+    component.openPreviewDialog(1);
+
+    expect(snackbar.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'Not found');
   });
 
   it('should show error if preview API fails', () => {
@@ -215,81 +243,148 @@ describe('EmailTemplateComponent (Jest)', () => {
     expect(snackbar.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'Fail');
   });
 
-  it('should handle error in preview dialog', () => {
-    emailService.getEmailTemplateById.mockReturnValue(
-      throwError(() => ({ error: { message: 'Server unavailable' } })),
-    );
-    component.openPreviewDialog(1);
-
-    expect(snackbar.showError).toHaveBeenCalledWith(
-      platformMessages.errorTitle,
-      'Server unavailable',
-    );
-  });
-
-  it('should handle all email actions', () => {
+  it('should handle DELETE action with confirmation', () => {
     const updateSpy = jest
       .spyOn(component, 'updateEmailTemplateStatus')
       .mockImplementation(() => {});
-    const editSpy = jest.spyOn(component, 'openEmailTemplateDialgue').mockImplementation(() => {});
-    const previewSpy = jest.spyOn(component, 'openPreviewDialog').mockImplementation(() => {});
+    const confirmSpy = jest.spyOn(component, 'openConfirmationDialog');
+    dialog.open.mockReturnValue({ afterClosed: () => observableOf(true) } as any);
+
+    const row = { id: 1 } as any;
+    component.handleEmailAction({ action: emailActions.DELETE, row });
+
+    expect(confirmSpy).toHaveBeenCalled();
+    expect(updateSpy).toHaveBeenCalledWith(1, EmailTemplateAction.Delete);
+  });
+
+  it('should handle EDIT action', () => {
+    const editSpy = jest.spyOn(component, 'loadEmailTemplateForEdit').mockImplementation(() => {});
     const row = { id: 1 } as any;
 
-    component.handleEmailAction({ action: emailActions.DELETE, row });
     component.handleEmailAction({ action: emailActions.EDIT, row });
+
+    expect(editSpy).toHaveBeenCalledWith(1);
+  });
+
+  it('should handle ACTIVATE action with confirmation', () => {
+    const updateSpy = jest
+      .spyOn(component, 'updateEmailTemplateStatus')
+      .mockImplementation(() => {});
+    dialog.open.mockReturnValue({ afterClosed: () => observableOf(true) } as any);
+
+    const row = { id: 1 } as any;
     component.handleEmailAction({ action: emailActions.ACTIVATE, row });
-    component.handleEmailAction({ action: emailActions.INACTIVATE, row });
-    component.handleEmailAction({ action: emailActions.PREVIEW, row });
 
-    // DELETE is first call
-    expect(updateSpy).toHaveBeenNthCalledWith(1, 1, EmailTemplateAction.Delete);
-
-    // ACTIVATE is second call
-    expect(updateSpy).toHaveBeenNthCalledWith(
-      2,
+    expect(updateSpy).toHaveBeenCalledWith(
       1,
       EmailTemplateAction.UpdateStatus,
       EmailTemplateStatus.Active,
     );
+  });
 
-    // INACTIVATE is third call
-    expect(updateSpy).toHaveBeenNthCalledWith(
-      3,
+  it('should handle INACTIVATE action with confirmation', () => {
+    const updateSpy = jest
+      .spyOn(component, 'updateEmailTemplateStatus')
+      .mockImplementation(() => {});
+    dialog.open.mockReturnValue({ afterClosed: () => observableOf(true) } as any);
+
+    const row = { id: 1 } as any;
+    component.handleEmailAction({ action: emailActions.INACTIVATE, row });
+
+    expect(updateSpy).toHaveBeenCalledWith(
       1,
       EmailTemplateAction.UpdateStatus,
       EmailTemplateStatus.Inactive,
     );
+  });
 
-    // EDIT and PREVIEW
-    expect(editSpy).toHaveBeenCalledWith('edit', 1);
+  it('should handle PREVIEW action', () => {
+    const previewSpy = jest.spyOn(component, 'openPreviewDialog').mockImplementation(() => {});
+    const row = { id: 1 } as any;
+
+    component.handleEmailAction({ action: emailActions.PREVIEW, row });
+
     expect(previewSpy).toHaveBeenCalledWith(1);
   });
 
-  it('should open the email template dialog with correct mode and template id', () => {
-    const dialogRefMock = { afterClosed: () => observableOf(true) } as any;
-    const openSpy = jest.spyOn(dialog, 'open').mockReturnValue(dialogRefMock);
+  it('should load email template for edit successfully', () => {
+    const dialogSpy = jest
+      .spyOn(component, 'openEmailTemplateDialgue')
+      .mockImplementation(() => {});
+    emailService.getEmailTemplateById.mockReturnValue(
+      of({ result: true, statusCode: 200, data: mockTemplates[0] } as any),
+    );
 
-    // Call with default 'create' mode
+    component.loadEmailTemplateForEdit(1);
+
+    expect(emailService.getEmailTemplateById).toHaveBeenCalledWith(1);
+    expect(dialogSpy).toHaveBeenCalledWith(mockTemplates[0]);
+  });
+
+  it('should show error when loadEmailTemplateForEdit fails', () => {
+    emailService.getEmailTemplateById.mockReturnValue(
+      of({ result: false, statusCode: 404, message: 'Not found' } as any),
+    );
+
+    component.loadEmailTemplateForEdit(1);
+
+    expect(snackbar.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'Not found');
+  });
+
+  it('should handle error in loadEmailTemplateForEdit', () => {
+    emailService.getEmailTemplateById.mockReturnValue(
+      throwError(() => ({ error: { message: 'Server error' } })),
+    );
+
+    component.loadEmailTemplateForEdit(1);
+
+    expect(snackbar.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'Server error');
+  });
+
+  it('should open the email template dialog in create mode', () => {
+    const loadSpy = jest.spyOn(component, 'loadEmailTemplates').mockImplementation(() => {});
+    const dialogRefMock = { afterClosed: () => observableOf(true) } as any;
+    dialog.open.mockReturnValue(dialogRefMock);
+
     component.openEmailTemplateDialgue();
-    expect(openSpy).toHaveBeenCalledWith(
+
+    expect(dialog.open).toHaveBeenCalledWith(
       EmailTemplateFormComponent,
       expect.objectContaining({
         minWidth: '50vw',
         maxWidth: '100vw',
         maxHeight: '95vh',
         autoFocus: false,
-        data: { mode: 'create', id: undefined },
+        data: { mode: 'create', templateData: null },
       }),
     );
+    expect(loadSpy).toHaveBeenCalled();
+  });
 
-    // Call with 'edit' mode and template id
-    component.openEmailTemplateDialgue('edit', 123);
-    expect(openSpy).toHaveBeenCalledWith(
+  it('should open the email template dialog in edit mode', () => {
+    const loadSpy = jest.spyOn(component, 'loadEmailTemplates').mockImplementation(() => {});
+    const dialogRefMock = { afterClosed: () => observableOf(true) } as any;
+    dialog.open.mockReturnValue(dialogRefMock);
+
+    component.openEmailTemplateDialgue(mockTemplates[0]);
+
+    expect(dialog.open).toHaveBeenCalledWith(
       EmailTemplateFormComponent,
       expect.objectContaining({
-        data: { mode: 'edit', id: 123 },
+        data: { mode: 'edit', templateData: mockTemplates[0] },
       }),
     );
+    expect(loadSpy).toHaveBeenCalled();
+  });
+
+  it('should not reload templates when dialog is closed without changes', () => {
+    const loadSpy = jest.spyOn(component, 'loadEmailTemplates').mockImplementation(() => {});
+    const dialogRefMock = { afterClosed: () => observableOf(false) } as any;
+    dialog.open.mockReturnValue(dialogRefMock);
+
+    component.openEmailTemplateDialgue();
+
+    expect(loadSpy).not.toHaveBeenCalled();
   });
 
   it('should return correct action message for Delete', () => {
