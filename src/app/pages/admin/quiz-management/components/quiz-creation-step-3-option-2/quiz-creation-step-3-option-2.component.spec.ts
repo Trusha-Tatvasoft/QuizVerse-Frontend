@@ -456,4 +456,47 @@ describe('QuizCreationStep3Option2Component', () => {
     expect(difficultyEntry).toBeUndefined();
     expect(difficultyLimit).toBeNull();
   });
+
+  it('should allow adding question if difficultyEntry is undefined', () => {
+    const question: QuestionPoolList = {
+      id: 5,
+      categoryId: 1,
+      categoryName: 'Science',
+      queDifficultyId: 99,
+      queDifficultyName: 'NonExisting',
+      queText: 'New Q',
+      queTypeId: 1,
+      queTypeName: 'MCQ',
+      queOptionsAns: [],
+    };
+
+    component.dataSource.set([question]);
+    component.selectedQuestions = [];
+
+    const emitSpy = jest.spyOn(component.selectedQuestionsChangeFromInnerStep3Option3, 'emit');
+    component.questionSelect(5, true);
+
+    expect(component.selectedQuestions.length).toBe(1);
+    expect(component.selectedQuestions[0].id).toBe(5);
+    expect(emitSpy).toHaveBeenCalled();
+  });
+
+  it('should return false if limit reached but question is already selected', () => {
+    const question: QuestionPoolList = {
+      id: 1,
+      categoryId: 1,
+      categoryName: 'Math',
+      queDifficultyId: 1,
+      queDifficultyName: 'Easy',
+      queText: 'Q1',
+      queTypeId: 1,
+      queTypeName: 'MCQ',
+      queOptionsAns: [],
+    };
+
+    component.quizStep1Data.difficultyDistribution = [{ key: 'Easy', value: 2 }];
+    component.selectedQuestions = [{ ...question }, { ...question, id: 2 }];
+
+    expect(component.isQuestionDisabled(question)).toBe(false);
+  });
 });

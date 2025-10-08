@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { UserBattleLeaderboardData } from '../interface/user-battles.interface';
-import { Subject, takeUntil } from 'rxjs';
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { ApiResponse } from '../../../../shared/interfaces/api-response.interface';
 import { CommonModule } from '@angular/common';
 import { platformMessages } from '../../../../utils/constants';
@@ -20,14 +20,30 @@ import { ScrollWindowComponent } from '../../../../shared/components/scroll-wind
 })
 export class BattlesLeaderboardComponent {
   leaderboard: UserBattleLeaderboardData[] = [];
+  runFirstTime: boolean = true;
 
   private readonly snackbar = inject(SnackbarService);
   private readonly userBattlesService = inject(UserBattlesService);
+  private readonly updateBattleResults$ = this.userBattlesService.updateBattleResultsObservable$;
 
   private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
     this.fetchUsersBattleLeaderboard();
+
+    this.updateBattleResults$
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+      .subscribe((update) => {
+        if (!this.runFirstTime) {
+          if (update) {
+            setTimeout(() => {
+              this.fetchUsersBattleLeaderboard();
+              this.userBattlesService.updateBattleResults$.next(false);
+            }, 100);
+          }
+        }
+        this.runFirstTime = false;
+      });
   }
 
   fetchUsersBattleLeaderboard(): void {

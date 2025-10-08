@@ -1,5 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { of, Subject, throwError } from 'rxjs';
 import { BattlesLeaderboardComponent } from './battles-leaderboard.component';
 import { UserBattlesService } from '../../../../services/user/user-battles/user-battles.service';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
@@ -14,8 +14,12 @@ describe('BattlesLeaderboardComponent', () => {
   let snackbar: jest.Mocked<SnackbarService>;
 
   beforeEach(async () => {
+    const updateBattleResultsSubject = new Subject<boolean>();
+
     const userBattlesServiceMock = {
       getBattleLeaderboardList: jest.fn(),
+      updateBattleResults$: updateBattleResultsSubject,
+      updateBattleResultsObservable$: updateBattleResultsSubject.asObservable(),
     } as unknown as jest.Mocked<UserBattlesService>;
 
     const snackbarMock = {
@@ -101,4 +105,68 @@ describe('BattlesLeaderboardComponent', () => {
       platformMessages.errorMessage,
     );
   });
+
+  it('should call fetchUsersBattleLeaderboard() and reset updateBattleResults$ when not first run and update=true', fakeAsync(() => {
+    // Arrange
+    const mockResponse: ApiResponse<UserBattleLeaderboardData[]> = {
+      result: true,
+      message: 'ok',
+      data: [
+        {
+          userName: 'User1',
+          totalWins: 1,
+          winPercentage: 100,
+          totalXp: 50,
+          rank: 1,
+          isLoggedInUser: false,
+        },
+      ],
+      statusCode: 200,
+    };
+
+    const fetchSpy = jest
+      .spyOn(component as any, 'fetchUsersBattleLeaderboard')
+      .mockImplementation(() => {});
+    const nextSpy = jest.spyOn(userBattlesService.updateBattleResults$, 'next');
+    userBattlesService.getBattleLeaderboardList.mockReturnValue(of(mockResponse));
+
+    // Act: trigger ngOnInit (first run)
+    fixture.detectChanges();
+    // Emit again with update=true after first run
+    component['runFirstTime'] = false;
+    (userBattlesService.updateBattleResults$ as any).next(true);
+
+    tick(150); // advance time for setTimeout(100)
+
+    // Assert
+    expect(fetchSpy).toHaveBeenCalledTimes(2); // one for ngOnInit + one after update=true
+    expect(nextSpy).toHaveBeenCalledWith(false); // ensures reset to false
+  }));
+
+  it('should NOT call fetchUsersBattleLeaderboard() again when update=false and not first run', fakeAsync(() => {
+    // Arrange
+    const mockResponse: ApiResponse<UserBattleLeaderboardData[]> = {
+      result: true,
+      message: 'ok',
+      data: [],
+      statusCode: 200,
+    };
+
+    const fetchSpy = jest
+      .spyOn(component as any, 'fetchUsersBattleLeaderboard')
+      .mockImplementation(() => {});
+    const nextSpy = jest.spyOn(userBattlesService.updateBattleResults$, 'next');
+    userBattlesService.getBattleLeaderboardList.mockReturnValue(of(mockResponse));
+
+    // Act: trigger ngOnInit (first run)
+    fixture.detectChanges();
+    // Emit again with update=false after first run
+    component['runFirstTime'] = false;
+    (userBattlesService.updateBattleResults$ as any).next(false);
+
+    tick(150);
+
+    // Assert
+    expect(fetchSpy).toHaveBeenCalledTimes(1); // only called once on init
+  }));
 });

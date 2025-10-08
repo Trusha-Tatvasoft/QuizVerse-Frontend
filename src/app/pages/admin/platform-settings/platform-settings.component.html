@@ -87,6 +87,7 @@
                   [src]="previewUrl"
                   alt="Preview"
                   class="min-h-40 min-w-40 max-h-40 rounded shadow border border-gray-300 object-contain"
+                  (error)="previewUrl = null"
                 />
 
                 <!-- Remove Icon Button -->

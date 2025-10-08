@@ -68,9 +68,6 @@ export class WaitingBattleResultComponent implements OnInit, OnDestroy {
     if (this.battleHubService.cleanupBattleSubjects) {
       this.battleHubService.cleanupBattleSubjects();
     }
-    if (this.battleHubService.stopConnection) {
-      this.battleHubService.stopConnection();
-    }
   }
 
   private subscribeToBattleEnded(): void {
