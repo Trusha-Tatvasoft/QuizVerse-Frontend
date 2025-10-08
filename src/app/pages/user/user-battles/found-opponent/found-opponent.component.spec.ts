@@ -204,7 +204,7 @@ describe('FoundOpponentComponent', () => {
 
       expect(component.battleId).toBe(123);
       expect(component.battleStartDetails).toEqual(mockBattleStartDetails);
-      expect(component.opponent).toEqual(mockOpponent); // ✅ now passes
+      expect(component.opponent).toEqual(mockOpponent);
       expect(component.battleAttemptId).toBe(456);
       expect(localStorage.setItem).toHaveBeenCalledWith(
         battleIdStorageKey,

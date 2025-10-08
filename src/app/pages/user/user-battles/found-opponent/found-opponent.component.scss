@@ -61,13 +61,17 @@
     border-radius: 50%;
   }
 
-  mat-icon.icon-success {
+  .icon-success {
+    font-size: 50px;
+    padding-bottom: 3px;
     height: 70px;
     width: 70px;
-    font-size: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-weight: 100;
     border-radius: 50%;
-    color: var(--global-secondary-color);
-    border: 5px solid var(--global-secondary-color);
+    color: white;
+    background: var(--global-secondary-color);
   }
 }

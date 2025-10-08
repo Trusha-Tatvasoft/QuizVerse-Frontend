@@ -115,7 +115,7 @@ export const battleCreationFormFields: DynamicFormField[] = [
     validationMessages: {
       required: 'End Date is required.',
       noPastDate: 'End Date cannot be in the past.',
-      afterStartDate: 'End Date must be after Start Date.',
+      afterStartDate: 'End Date must be same or after Start Date.',
     },
     gridClass: 'col-span-1 sm:col-span-1',
   },
