@@ -12,22 +12,30 @@
     <div class="quiz-list">
       @for (quiz of quizzesWithTags; track quiz.quizName) {
         <div class="quiz-item">
-          <div class="quiz-details">
-            <div class="quiz-info">
-              <h3>{{ quiz.quizName }}</h3>
-              <p>{{ quiz.categoryName }}</p>
+          <div class="quiz-item-header">
+            <div class="quiz-details">
+              <div class="quiz-info">
+                <h3>{{ quiz.quizName }}</h3>
+                <p>{{ quiz.categoryName }}</p>
+              </div>
+
+              <div class="user-dashboard-tag">
+                <app-tag [tagConfig]="quiz.tag"></app-tag>
+              </div>
             </div>
 
-            <div class="user-dashboard-tag">
-              <app-tag [tagConfig]="quiz.tag"></app-tag>
+            <div class="quiz-meta">
+              <div class="quiz-score">
+                <strong>{{ quiz.score }}%</strong>
+                <strong>Score</strong>
+              </div>
             </div>
           </div>
-
-          <div class="quiz-meta">
-            <div class="quiz-score">
-              <strong>{{ quiz.score }}%</strong>
-              <strong>Score</strong>
-            </div>
+          <div class="featured-quiz-actions user-dashboard-primary-button">
+            <app-filled-button
+              [filledButtonConfig]="quizResultConfig"
+              (buttonClicked)="showQuizResult(quiz.quizId)"
+            ></app-filled-button>
           </div>
         </div>
       }
@@ -38,11 +46,13 @@
       <p>No recent quiz results found.</p>
     </div>
   }
-
-  <div class="footer user-dashboard-text-button">
-    <app-text-button
-      [textButtonConfig]="viewAllButtonConfig"
-      (buttonClicked)="viewAll()"
-    ></app-text-button>
-  </div>
+  <!-- Footer -->
+  @if (quizzesWithTags.length > 0) {
+    <div class="footer user-dashboard-text-button">
+      <app-text-button
+        [textButtonConfig]="viewAllButtonConfig"
+        (buttonClicked)="viewAll()"
+      ></app-text-button>
+    </div>
+  }
 </div>

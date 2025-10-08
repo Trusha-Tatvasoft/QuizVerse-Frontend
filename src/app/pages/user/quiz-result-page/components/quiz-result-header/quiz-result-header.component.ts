@@ -4,10 +4,9 @@ import { ProgressBarComponent } from '../../../../../shared/components/progress-
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
 import { QuizCompletedSummary } from '../../interfaces/quiz-completed-summary.interface';
 import { ApiResponse } from '../../../../../shared/interfaces/api-response.interface';
-
 import { platformMessages } from '../../../../../utils/constants';
 import { defaultQuizCompletedSummary } from '../../configs/default-quiz-completed-summary.configs';
-import { QuizResultService } from '../../../../../services/user/quiz-result.service';
+import { QuizResultService } from '../../../../../services/user/quiz-result/quiz-result.service';
 import { Subject, takeUntil } from 'rxjs';
 import { TagInputConfig } from '../../../../../shared/interfaces/tag-component.interface';
 import { getTagConfigWithCustomization } from '../../../../../utils/quiz-crud-common-functions.utils';

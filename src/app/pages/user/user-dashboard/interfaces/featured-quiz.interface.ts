@@ -7,6 +7,7 @@ export interface FeaturedQuiz {
   difficultyLevel: string;
   totalAttempts: number;
   rating: string;
+  isAttempted: boolean;
 }
 
 export interface FeaturedQuizList {
@@ -21,5 +22,6 @@ export interface FeaturedQuizWithTag {
   difficultyLevel: string;
   totalAttempts: number;
   rating: string;
+  isAttempted: boolean;
   tag: TagInputConfig;
 }

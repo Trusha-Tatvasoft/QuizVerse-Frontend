@@ -2,7 +2,10 @@ import { Component, inject, OnInit } from '@angular/core';
 import { TagComponent } from '../../../../../shared/components/tag/tag.component';
 import { MatIconModule } from '@angular/material/icon';
 import { TextButtonComponent } from '../../../../../shared/components/text-button/text-button.component';
-import { viewAllButtonConfig } from '../../configs/dashboard-buttons.config';
+import {
+  quizResultButtonConfig,
+  viewAllButtonConfig,
+} from '../../configs/dashboard-buttons.config';
 import { ApiResponse } from '../../../../../shared/interfaces/api-response.interface';
 import { UserDashboardService } from '../../../../../services/user/user-dashboard/user-dashboard.service';
 import { Navigations } from '../../../../../shared/enums/navigation';
@@ -12,17 +15,19 @@ import { platformMessages } from '../../../../../utils/constants';
 import { QuizResult, QuizResultWithTag } from '../../interfaces/quiz-result.interface';
 import { createDifficultyTag } from '../../../../../utils/types/difficulty-tag.type';
 import { Subject, takeUntil } from 'rxjs';
+import { FilledButtonComponent } from '../../../../../shared/components/filled-button/filled-button.component';
 
 @Component({
   selector: 'app-recent-quiz-result',
   standalone: true,
-  imports: [TagComponent, MatIconModule, TextButtonComponent],
+  imports: [TagComponent, MatIconModule, TextButtonComponent, FilledButtonComponent],
   templateUrl: './recent-quiz-result.component.html',
   styleUrl: './recent-quiz-result.component.scss',
 })
 export class RecentQuizResultComponent implements OnInit {
   quizzesWithTags: QuizResultWithTag[] = [];
   viewAllButtonConfig = viewAllButtonConfig;
+  quizResultConfig = quizResultButtonConfig;
 
   private readonly snackBarService = inject(SnackbarService);
   private readonly dashboardService = inject(UserDashboardService);
@@ -58,6 +63,13 @@ export class RecentQuizResultComponent implements OnInit {
           );
         },
       });
+  }
+
+  showQuizResult(quizId: number): void {
+    const encodedId = btoa(encodeURIComponent(quizId));
+    this.router.navigate([
+      `${Navigations.User}/${Navigations.QuizList}/${Navigations.BrowseQuizzes}/${Navigations.QuizResult}/${encodedId}`,
+    ]);
   }
 
   viewAll(): void {

@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { QuizRatingComponent } from './quiz-rating.component';
-import { QuizResultService } from '../../../../../services/user/quiz-result.service';
+import { QuizResultService } from '../../../../../services/user/quiz-result/quiz-result.service';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
 import { FilledButtonComponent } from '../../../../../shared/components/filled-button/filled-button.component';
 import { OutlineButtonComponent } from '../../../../../shared/components/outline-button/outline-button.component';

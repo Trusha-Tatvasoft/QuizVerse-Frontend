@@ -36,6 +36,13 @@ export const playButtonConfig: ButtonConfig = {
   imagePosition: 'left',
 };
 
+export const quizResultButtonConfig: ButtonConfig = {
+  label: 'Result',
+  variant: 'secondary',
+  matIcon: 'visibility',
+  imagePosition: 'left',
+};
+
 export const loadMoreButtonConfig: ButtonConfig = {
   label: 'Load More',
   variant: 'secondary',
