@@ -44,6 +44,10 @@ import { environment } from '../../../../environments/environment.dev';
 import { TimeAgoPipe } from '../../../shared/pipes/time-ago/time-ago.pipe';
 import { UserProfileService } from '../../../services/user/user-profile/user-profile.service';
 import { selectedTabIndexSignal } from '../../../core/auth/components/login-signup/login-signup.component';
+import {
+  globalGetInitials,
+  globalGetInitialsColorClass,
+} from '../../../utils/get-profile-initials.utils';
 
 @Component({
   selector: 'app-navbar',
@@ -85,6 +89,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   plateformName = plateformName;
   showNotifications = false;
   menuOpen = false;
+  isImageError: boolean = false;
   logoPath: string | null;
   currentXp = 0;
   progressPercentage: number = 0;
@@ -220,6 +225,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.logoPath = null;
   }
 
+  profileImageError() {
+    this.profileImageUrl = 'assets/images/profile-1.png';
+  }
+
   //NOTE: Uncomment and use after backend API is implemented to fetch and display notifications
   markAsRead(id: string) {
     // this.notificationCenterService.markAsRead(id).pipe(takeUntil(this.destroy$)).subscribe({
@@ -282,6 +291,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
   viewDetails(category: number) {
     const { path, queryParams } = getNotificationRoute(this.role === roles.admin, category);
     this.router.navigate([path], { queryParams });
+  }
+
+  getInitials(name: string): string {
+    return globalGetInitials(name);
   }
 
   //NOTE: Uncomment and use after backend API is implemented to fetch and display notifications

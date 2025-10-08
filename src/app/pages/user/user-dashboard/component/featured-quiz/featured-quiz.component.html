@@ -29,10 +29,21 @@
             <app-tag [tagConfig]="quiz.tag"></app-tag>
           </div>
         </div>
-
-        <div class="featured-quiz-actions user-dashboard-primary-button">
-          <app-filled-button [filledButtonConfig]="playButtonConfig"></app-filled-button>
-        </div>
+        @if (!quiz.isAttempted) {
+          <div class="featured-quiz-actions user-dashboard-primary-button">
+            <app-filled-button
+              [filledButtonConfig]="playButtonConfig"
+              (buttonClicked)="playQuiz(quiz.quizId)"
+            ></app-filled-button>
+          </div>
+        } @else {
+          <div class="featured-quiz-actions user-dashboard-primary-button">
+            <app-filled-button
+              [filledButtonConfig]="quizResultConfig"
+              (buttonClicked)="showQuizResult(quiz.quizId)"
+            ></app-filled-button>
+          </div>
+        }
       </div>
     </div>
 

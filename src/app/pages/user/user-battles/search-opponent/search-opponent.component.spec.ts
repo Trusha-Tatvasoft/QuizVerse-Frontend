@@ -224,6 +224,7 @@ describe('SearchOpponentComponent', () => {
         {
           state: {
             battleStartDetails: mockBattleStartDetails,
+            opponent: { ...mockOpponent, profilePic: `${environment.imageBaseUrl}/profile.png` },
           },
         },
       );

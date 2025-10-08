@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { platformMessages } from '../utils/constants';
 import { Navigations } from '../shared/enums/navigation';
 import { EndPoints } from '../shared/enums/end-point.enum';
+import { MatDialog } from '@angular/material/dialog';
 
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
@@ -26,6 +27,7 @@ export const authInterceptor: HttpInterceptorFn = (
   const authService = inject(AuthService);
   const snackbar = inject(SnackbarService);
   const router = inject(Router);
+  const dialog = inject(MatDialog);
 
   if (req.url.includes(EndPoints.RefreshToken)) {
     return next(req);
@@ -35,7 +37,7 @@ export const authInterceptor: HttpInterceptorFn = (
   const accessToken = authService.getAccessToken();
 
   if (accessToken && authService.isTokenExpired(accessToken)) {
-    return refreshAndRetry(req, next, authService);
+    return refreshAndRetry(req, next, authService, dialog);
   }
 
   if (accessToken) {
@@ -53,7 +55,7 @@ export const authInterceptor: HttpInterceptorFn = (
           return throwError(() => error);
 
         case 401:
-          return refreshAndRetry(authReq, next, authService);
+          return refreshAndRetry(authReq, next, authService, dialog);
 
         case 403:
           router.navigate([Navigations.Unauthorized]);
@@ -82,6 +84,7 @@ function refreshAndRetry(
   request: HttpRequest<unknown>,
   next: HttpHandlerFn,
   authService: AuthService,
+  dialog: MatDialog,
 ): Observable<HttpEvent<unknown>> {
   if (!isRefreshing) {
     isRefreshing = true;
@@ -105,6 +108,7 @@ function refreshAndRetry(
       }),
       catchError(() => {
         isRefreshing = false;
+        dialog.closeAll();
         authService.logout(false);
         return EMPTY;
       }),

@@ -389,11 +389,11 @@ export class QuizCreationStep1Component {
               label: `${item.name} Questions`,
               type: 'number',
               placeholder: `No of ${item.name.toLowerCase()} questions`,
-              validators: [Validators.required, Validators.maxLength(255), Validators.min(0)],
+              validators: [Validators.required, Validators.max(100), Validators.min(0)],
               validationMessages: {
-                required: `No of ${item.name} Questions is required.`,
+                required: `${item.name} Questions is required.`,
                 min: `No of ${item.name} Questions cannot be less than 0.`,
-                max: `No of ${item.name} Questions cannot be more than 255.`,
+                max: `No of ${item.name} Questions cannot be more than 100.`,
               },
 
               gridClass: 'col-span-3 sm:col-span-1',

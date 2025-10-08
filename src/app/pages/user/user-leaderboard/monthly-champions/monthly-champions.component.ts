@@ -10,6 +10,10 @@ import { LeaderboardService } from '../../../../services/user/leaderboard/leader
 import { of, Subject, switchMap, takeUntil } from 'rxjs';
 import { ApiResponse } from '../../../../shared/interfaces/api-response.interface';
 import { platformMessages } from '../../../../utils/constants';
+import {
+  globalGetInitials,
+  globalGetInitialsColorClass,
+} from '../../../../utils/get-profile-initials.utils';
 
 @Component({
   selector: 'app-monthly-champions',
@@ -89,24 +93,11 @@ export class MonthlyChampionsComponent {
   }
 
   getInitials(name: string): string {
-    if (!name) return '';
-    const words = name.trim().split(' ');
-    if (words.length === 1) {
-      return words[0].charAt(0).toUpperCase();
-    } else {
-      return words[0].charAt(0).toUpperCase() + words[1].charAt(0).toUpperCase();
-    }
+    return globalGetInitials(name);
   }
 
   getInitialsColorClass(name: string): string {
-    if (!name) return 'bg-avatar-0';
-    const colorsCount = 12;
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const index = Math.abs(hash) % colorsCount;
-    return `bg-avatar-${index}`;
+    return globalGetInitialsColorClass(name);
   }
 
   ngOnDestroy(): void {

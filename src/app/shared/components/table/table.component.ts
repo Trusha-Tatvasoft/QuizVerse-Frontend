@@ -21,6 +21,10 @@ import { MatCardModule } from '@angular/material/card';
 import { tablePaginationConfig } from '../../../utils/constants';
 import { TagComponent } from '../tag/tag.component';
 import { TextButtonComponent } from '../text-button/text-button.component';
+import {
+  globalGetInitials,
+  globalGetInitialsColorClass,
+} from '../../../utils/get-profile-initials.utils';
 
 @Component({
   selector: 'app-data-table',
@@ -113,7 +117,7 @@ export class TableComponent implements OnInit, OnChanges {
     this.sortChange.emit({ active: sort.active, direction: sort.direction });
   }
 
-  onActionClick(action: { icon: string; tooltip?: string }, row: TableData) {
+  onActionClick(action: { icon: string; tooltip?: string; isDisabled?: boolean }, row: TableData) {
     this.actionClick.emit({ action: action.icon, row });
   }
 
@@ -156,26 +160,13 @@ export class TableComponent implements OnInit, OnChanges {
    * Gets the initials of the profiles names for the avatar
    */
   getInitials(name: string): string {
-    if (!name) return '';
-    const words = name.trim().split(' ');
-    if (words.length === 1) {
-      return words[0].charAt(0).toUpperCase();
-    } else {
-      return words[0].charAt(0).toUpperCase() + words[1].charAt(0).toUpperCase();
-    }
+    return globalGetInitials(name);
   }
 
   /**
    * Gets randoms profile color for the initials of the avatar
    */
   getInitialsColorClass(name: string): string {
-    if (!name) return 'bg-avatar-0';
-    const colorsCount = 12;
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const index = Math.abs(hash) % colorsCount;
-    return `bg-avatar-${index}`;
+    return globalGetInitialsColorClass(name);
   }
 }

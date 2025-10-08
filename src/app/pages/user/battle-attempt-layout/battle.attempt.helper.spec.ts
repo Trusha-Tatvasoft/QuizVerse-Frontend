@@ -99,14 +99,14 @@ describe('Battle Utils', () => {
     it('should resolve current user as player1', () => {
       const result = BattlePlayerHelper.resolvePlayers(mockDetails, 1);
       expect(result.mySide).toBe('player1');
-      expect(result.player1.name).toBe('You');
+      expect(result.player1.name).toBe('Player One');
       expect(result.player2.name).toBe('Player Two');
     });
 
     it('should resolve current user as player2', () => {
       const result = BattlePlayerHelper.resolvePlayers(mockDetails, 2);
       expect(result.mySide).toBe('player2');
-      expect(result.player2.name).toBe('You');
+      expect(result.player2.name).toBe('Player Two');
       expect(result.player1.name).toBe('Player One');
     });
 

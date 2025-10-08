@@ -29,6 +29,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { loadMoreButtonConfig } from '../../browse-quizzes/configs/browse-quizzes.config';
 import { OutlineButtonComponent } from '../../../../shared/components/outline-button/outline-button.component';
+import {
+  globalGetInitials,
+  globalGetInitialsColorClass,
+} from '../../../../utils/get-profile-initials.utils';
 
 @Component({
   selector: 'app-recent-battles',
@@ -239,25 +243,12 @@ export class RecentBattlesComponent {
 
   // Return initials for a given name
   getInitials(name: string): string {
-    if (!name) return '';
-    const words = name.trim().split(' ');
-    if (words.length === 1) {
-      return words[0].charAt(0).toUpperCase();
-    } else {
-      return words[0].charAt(0).toUpperCase() + words[1].charAt(0).toUpperCase();
-    }
+    return globalGetInitials(name);
   }
 
   // Return color class for user avatar based on name hash
   getInitialsColorClass(name: string): string {
-    if (!name) return 'bg-avatar-0';
-    const colorsCount = 12;
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const index = Math.abs(hash) % colorsCount;
-    return `bg-avatar-${index}`;
+    return globalGetInitialsColorClass(name);
   }
 
   // Handle mouse wheel scrolling

@@ -184,6 +184,10 @@ export class BattleCreationStep3LayoutComponent {
           );
         },
       });
+
+    setTimeout(() => {
+      this.updateSelectedQuestionsTable();
+    }, 100);
   }
 
   // Check if a question is already selected
@@ -203,7 +207,11 @@ export class BattleCreationStep3LayoutComponent {
     this.questionsTableData = this.selectedQuestions.slice(start, end).map((q, index) => ({
       queText: q.queText,
       queTypeName: { tagConfig: this.getTypeTagConfigWithLabelInCS(q.queTypeName) },
-      queDifficultyName: { tagConfig: this.getTagConfigWithDifficultyInCS(q.queDifficultyName) },
+      queDifficultyName: {
+        tagConfig: this.getTagConfigWithDifficultyInCS(
+          this.getDifficultyLabel(q.queDifficultyId ?? 0),
+        ),
+      },
       action: [{ icon: 'delete', tooltip: 'Delete Question' }],
       index: start + index,
     }));

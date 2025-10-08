@@ -17,6 +17,7 @@ export class DisableQuizShortcutsDirective {
       ['alt'].includes(key) ||
       key === 'f5' ||
       (event.altKey && key === 'f4') ||
+      ['tab'].includes(key) ||
       (event.altKey && ['arrowleft', 'arrowright', 'arrowup', 'arrowdown'].includes(key));
 
     if (isBlocked) {

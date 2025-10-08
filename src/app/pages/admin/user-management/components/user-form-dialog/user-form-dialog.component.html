@@ -1,43 +1,30 @@
-<div class="dialog-overlay" (click)="handleBackdropClick($event)">
-  <div
-    class="dialog-content"
-    role="dialog"
-    aria-labelledby="dialog-title"
-    aria-describedby="dialog-description"
-  >
-    <!-- Close Button -->
-    <button
-      mat-icon-button
-      type="button"
-      class="close-btn-dialog-all"
-      (click)="handleCancel()"
-      aria-label="Close"
+<div class="main-dialog-content">
+  <!-- Header -->
+  <div class="dialog-header px-5 py-3">
+    <h2 mat-dialog-title>{{ isEditMode ? 'Edit User' : 'Add New User' }}</h2>
+    <span class="dialog-sub-header">
+      {{
+        isEditMode
+          ? 'Update the user details below.'
+          : 'Create a new user account. Fill in the details below.'
+      }}
+    </span>
+  </div>
+
+  <!-- Close Button -->
+  <button mat-icon-button class="close-btn-dialog-all" (click)="handleCancel()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <!-- Body -->
+  <div class="p-5 custom-form-field-override">
+    <app-register
+      [isLogin]="true"
+      [user]="userData"
+      [isEditMode]="isEditMode"
+      (saveUser)="onRegisterSaveUser($event)"
+      (formCancelled)="handleCancel()"
     >
-      <mat-icon>close</mat-icon>
-    </button>
-
-    <!-- Dialog Header -->
-    <div class="dialog-header">
-      <h2 id="dialog-title">{{ isEditMode ? 'Edit User' : 'Add New User' }}</h2>
-      <p id="dialog-description">
-        {{
-          isEditMode
-            ? 'Update the user details below.'
-            : 'Create a new user account. Fill in the details below.'
-        }}
-      </p>
-    </div>
-
-    <!-- Dialog Body -->
-    <div class="dialog-body custom-form-field-override">
-      <app-register
-        [isLogin]="true"
-        [user]="user"
-        [isEditMode]="isEditMode"
-        (saveUser)="onRegisterSaveUser($event)"
-        (formCancelled)="handleCancel()"
-      >
-      </app-register>
-    </div>
+    </app-register>
   </div>
 </div>
