@@ -4,7 +4,7 @@ import { QuizAttemptService } from '../../../services/user/quiz-attempt/quiz-att
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import {
   QuizQuestions,
   QuizStartResponse,
@@ -35,6 +35,7 @@ import {
 } from './configs/quiz-attempt.config';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationDialogData } from '../../../shared/interfaces/confirmation-dialog.interface';
+import { UserProfileService } from '../../../services/user/user-profile/user-profile.service';
 
 // Mock services and dependencies
 const mockQuizAttemptService = {
@@ -63,6 +64,10 @@ const mockActivatedRoute = {
 
 const mockRouter = {
   navigate: jest.fn(),
+};
+
+const mockUserProfileService = {
+  profileUpdatedSource: new Subject<any>(),
 };
 
 describe('QuizAttemptLayoutComponent', () => {
@@ -139,6 +144,7 @@ describe('QuizAttemptLayoutComponent', () => {
         { provide: MatDialog, useValue: mockDialog },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: Router, useValue: mockRouter },
+        { provide: UserProfileService, useValue: mockUserProfileService },
       ],
     }).compileComponents();
 
