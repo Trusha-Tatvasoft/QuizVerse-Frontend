@@ -1,5 +1,5 @@
-<main class="quiz-creation px-4 lg:px-8 red-bordered-form-field">
-  <div class="quiz-creation-page-header">
+<main class="admin-management-page quiz-creation red-bordered-form-field">
+  <div class="admin-page-header quiz-creation-page-header">
     <app-page-header
       [icon]="quizCreationHeaderConfiguration.icon"
       [title]="quizCreationHeaderConfiguration.title"
@@ -63,23 +63,24 @@
     }
   </div>
 
-  <div class="grid grid-cols-2">
+  <div class="quiz-creation-btn">
     <!-- Back button on the left -->
-    <div class="justify-self-start">
+    <div class="previous-btn min-width-btns">
       @if (activeStep > 1) {
         <app-filled-button
           [filledButtonConfig]="backButton"
           (buttonClicked)="goToPreviousStep()"
+          class="min-width-btn"
         ></app-filled-button>
       }
-      <!-- Empty placeholder to maintain grid layout -->
+      <!-- Empty placeholder to maintain layout -->
       @if (activeStep === 1) {
         <div></div>
       }
     </div>
 
     <!-- Save Draft + Next/Publish on the right -->
-    <div class="justify-self-end min-width-btns flex flex-col sm:flex-row gap-3 col-span-1">
+    <div class="min-width-btns next-btns">
       <app-outline-button
         [outlineButtonConfig]="saveDraftButton"
         (buttonClicked)="draftQuiz()"
