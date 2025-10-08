@@ -50,15 +50,11 @@ import { ConfirmationDialogData } from '../../../shared/interfaces/confirmation-
     MatSelectModule,
     OutlineButtonComponent,
     FilledButtonComponent,
-    UserFormDialogComponent,
   ],
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.scss',
 })
 export class UserManagementComponent implements OnInit, OnDestroy {
-  showUserDialog = signal(false);
-  selectedUser = signal<UserFormData | null>(null); // Null for add, object for edit
-
   // Inject services
   userService = inject(UserManagementService);
   snackbar = inject(SnackbarService);
@@ -234,17 +230,20 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
 
   openUserDialog(user: UserFormData | null = null): void {
-    this.selectedUser.set(user);
-    this.showUserDialog.set(true);
-  }
+    const dialogRef = this.dialog.open(UserFormDialogComponent, {
+      width: '600px',
+      maxHeight: '95vh',
+      disableClose: false,
+      panelClass: 'custom-dialog-container',
+      autoFocus: false,
+      data: user,
+    });
 
-  closeUserDialog(): void {
-    this.showUserDialog.set(false);
-    this.selectedUser.set(null);
-  }
-
-  onSaveUser(event: { formData: FormData; isEdit: boolean }): void {
-    this.handleUserSave(event.formData, event.isEdit);
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.handleUserSave(result.formData, result.isEdit);
+      }
+    });
   }
 
   handleUserSave(userFormData: FormData, isEdit = false): void {
@@ -261,6 +260,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
               userSaveMessages.successMessage(action),
               userSaveMessages.success,
             );
+            this.fetchUsers();
           } else {
             this.snackbar.showError(
               res.message || userSaveMessages.errorMessage(action),
@@ -270,7 +270,6 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
           if (isSuccess) {
             this.fetchUsers();
-            this.closeUserDialog();
           }
         },
         error: (err) => {
