@@ -6,12 +6,12 @@ import { Navigations } from '../../enums/navigation';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-unauthorized',
-  templateUrl: './unauthorized.component.html',
-  styleUrl: './unauthorized.component.scss',
+  selector: 'app-not-found',
+  templateUrl: './not-found.component.html',
+  styleUrl: './not-found.component.scss',
   imports: [MatIcon, CommonModule],
 })
-export class UnauthorizedComponent implements OnInit {
+export class NotFoundComponent implements OnInit {
   userRole: string | null = null;
 
   private readonly router = inject(Router);

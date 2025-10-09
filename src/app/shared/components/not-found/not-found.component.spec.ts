@@ -1,14 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UnauthorizedComponent } from './unauthorized.component';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../core/auth/services/auth.service';
+
+import { NotFoundComponent } from './not-found.component';
 import { BehaviorSubject } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../core/auth/services/auth.service';
 
 describe('UnauthorizedComponent', () => {
-  let component: UnauthorizedComponent;
-  let fixture: ComponentFixture<UnauthorizedComponent>;
+  let component: NotFoundComponent;
+  let fixture: ComponentFixture<NotFoundComponent>;
   let routerMock: { navigate: jest.Mock };
   let authServiceMock: { currentRole$: BehaviorSubject<string | null> };
 
@@ -17,14 +18,14 @@ describe('UnauthorizedComponent', () => {
     authServiceMock = { currentRole$: new BehaviorSubject<string | null>(null) };
 
     await TestBed.configureTestingModule({
-      imports: [UnauthorizedComponent, MatIconModule, CommonModule],
+      imports: [NotFoundComponent, MatIconModule, CommonModule],
       providers: [
         { provide: Router, useValue: routerMock },
         { provide: AuthService, useValue: authServiceMock },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(UnauthorizedComponent);
+    fixture = TestBed.createComponent(NotFoundComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
