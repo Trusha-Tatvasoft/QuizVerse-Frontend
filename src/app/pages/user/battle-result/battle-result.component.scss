@@ -217,20 +217,40 @@
   border: 1px solid var(--global-primary-border-color);
 
   h2 {
-    font-size: 20px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 8px;
+    font-size: 24px;
     font-weight: 600;
     margin-bottom: 8px;
+
+    mat-icon {
+      color: var(--global-secondary-color);
+    }
+  }
+
+  .rewards-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 15px 5px;
+    gap: 15px;
+    margin-top: 8px;
+    background-color: #f3e8ff9e;
+    color: #a537ff;
+    border-radius: 8px;
   }
 
   .points {
-    color: var(--global-secondary-color);
     font-weight: 700;
-    font-size: 24px;
+    font-size: 27px;
   }
 
   .exp {
     color: #6b7280;
-    font-size: 14px;
+    font-size: 15px;
   }
 }
 
@@ -319,9 +339,6 @@
     }
 
     .battle-summary .summary-content {
-      flex-direction: column;
-      gap: 16px;
-
       .player .avatar {
         width: 48px;
         height: 48px;
