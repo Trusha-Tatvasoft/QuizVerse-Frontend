@@ -25,6 +25,8 @@
   }
 
   @if (mode === 'edit') {
-    <app-create-edit-question-form [questionId]="data.id"></app-create-edit-question-form>
+    <app-create-edit-question-form
+      [questionData]="data.questionData"
+    ></app-create-edit-question-form>
   }
 </div>

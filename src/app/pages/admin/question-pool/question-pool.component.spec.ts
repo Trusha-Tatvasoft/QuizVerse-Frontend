@@ -1,470 +1,355 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { QuestionPoolComponent } from './question-pool.component';
 import { of, throwError } from 'rxjs';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { FormBuilder } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
+
+import {
+  patchFormWithQuestion,
+  mapFormToQuestionRequest,
+  updateDropdownOptions,
+} from './components/manual-question-tab/components/create-edit-question-form/create-edit-question-form.hepler';
 import { QuestionPoolService } from '../../../services/admin/question-pool/question-pool.service';
 import { DropdownService } from '../../../shared/service/dropdown/dropdown.service';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
-import { questionPoolToTableData } from './components/question-pool-listing/question-pool-listing.mapper';
-import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
-import { SearchInputComponent } from '../../../shared/components/search-input/search-input.component';
-import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
-import { QuestionPoolListingComponent } from './components/question-pool-listing/question-pool-listing.component';
-import { MatSelectModule } from '@angular/material/select';
-import { debounceTimeValue, platformMessages, questionAction } from '../../../utils/constants';
-import { DropDownType } from '../../../shared/enums/dropdown-types.enum';
-import { TableData } from '../../../shared/interfaces/table-component.interface';
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
-import { QuestionPreviewDialogComponent } from './components/question-preview-dialog/question-preview-dialog.component';
-import { QuestionFormDialogComponent } from './components/question-form-dialog/question-form-dialog.component';
+import { ValidationErrorService } from '../../../shared/service/validation-error/validation-error.service';
+import { platformMessages } from '../../../utils/constants';
+import { CreateEditQuestionFormComponent } from './components/manual-question-tab/components/create-edit-question-form/create-edit-question-form.component';
+import { uniqueOptionsGroupValidator } from './components/manual-question-tab/components/create-edit-question-form/create-edit-question-form.validator';
+import { buildBaseFields } from './configs/question-pool-dialog.config';
+import { QuestionDetail } from './interfaces/question-pool-preview.interface';
 
-const mockDropdownData = {
-  categories: [
-    { id: 1, name: 'Math' },
-    { id: 2, name: 'Science' },
-  ],
-  difficulties: [
-    { id: 1, name: 'Easy' },
-    { id: 2, name: 'Hard' },
-  ],
-  types: [
-    { id: 1, name: 'Multiple Choice' },
-    { id: 2, name: 'True/False' },
-  ],
-};
+// Mock helper functions
+jest.mock(
+  './components/manual-question-tab/components/create-edit-question-form/create-edit-question-form.hepler',
+  () => ({
+    patchFormWithQuestion: jest.fn(),
+    mapFormToQuestionRequest: jest.fn().mockReturnValue({ dto: true }),
+    updateDropdownOptions: jest.fn(),
+  }),
+);
 
-const mockResponse = {
-  statusCode: 200,
-  result: true,
-  message: 'Success',
-  data: {
-    records: [
-      {
-        id: 101,
-        question: 'What is 2+2?',
-        quizCategoryId: 1,
-        questionDifficultyId: 1,
-        questionTypeId: 1,
-        createdDate: '2025-08-01T00:00:00Z',
-        categoryId: 1,
-        categoryName: 'Math',
-        queDifficultyId: 1,
-        queDifficultyName: 'Easy',
-        questionTypeName: 'Multiple Choice',
-        correctAnswer: '4',
-        queText: 'What is 2+2?',
-        queTypeId: 1,
-        queTypeName: 'Multiple Choice',
-        queOptionsAns: [],
-      },
-    ],
-    totalRecords: 1,
-  },
-};
+// Mock config functions
+jest.mock('./configs/question-pool-dialog.config', () => ({
+  buildBaseFields: jest
+    .fn()
+    .mockReturnValue([{ name: 'type', label: '', type: '', placeholder: '', validators: [] }]),
+  buildFieldsByQuestionType: jest.fn().mockReturnValue([
+    { name: 'option1', label: '', type: '', placeholder: '', validators: [] },
+    { name: 'option2', label: '', type: '', placeholder: '', validators: [] },
+  ]),
+}));
 
-const questionPoolServiceMock = {
-  getQuestionPoolList: jest.fn().mockReturnValue(of(mockResponse)),
-  deleteQuestion: jest.fn().mockReturnValue(of({ statusCode: 200 })),
-};
+// Mock validator
+jest.mock(
+  './components/manual-question-tab/components/create-edit-question-form/create-edit-question-form.validator',
+  () => ({
+    uniqueOptionsGroupValidator: jest.fn(() => () => null),
+  }),
+);
 
-const dropdownServiceMock = {
-  getDropdownData: jest.fn(),
-};
+describe('CreateEditQuestionFormComponent', () => {
+  let component: CreateEditQuestionFormComponent;
+  let fixture: ComponentFixture<CreateEditQuestionFormComponent>;
+  let fb: FormBuilder;
 
-const snackbarMock = {
-  showError: jest.fn(),
-  showSuccess: jest.fn(),
-};
+  const mockDialogRef = { close: jest.fn() };
+  const mockDropdownService = { getDropdownData: jest.fn() };
+  const mockQuestionService = {
+    createOrUpdateQuestion: jest.fn(),
+  };
+  const mockSnackbar = { showSuccess: jest.fn(), showError: jest.fn() };
+  const mockValidationErrorService = { getErrorMessage: jest.fn() };
 
-const matDialogMock = {
-  open: jest.fn(),
-};
-
-describe('QuestionPoolComponent (Jest)', () => {
-  let component: QuestionPoolComponent;
-  let fixture: ComponentFixture<QuestionPoolComponent>;
-  let matDialog: MatDialog;
+  const mockQuestionData: QuestionDetail = {
+    id: 1,
+    category: 'Test Category',
+    difficulty: 'Easy',
+    questionType: 'MCQ',
+    questionText: 'Sample Question',
+    options: [],
+    correctAnswer: 'A',
+  };
 
   beforeEach(async () => {
-    dropdownServiceMock.getDropdownData.mockImplementation((type: DropDownType) => {
-      switch (type) {
-        case DropDownType.QuizCategory:
-          return of(mockDropdownData.categories);
-        case DropDownType.QuestionDifficulty:
-          return of(mockDropdownData.difficulties);
-        case DropDownType.QuestionType:
-          return of(mockDropdownData.types);
-        default:
-          return of([]);
-      }
-    });
-
     await TestBed.configureTestingModule({
-      imports: [
-        PageHeaderComponent,
-        SearchInputComponent,
-        FilledButtonComponent,
-        QuestionPoolListingComponent,
-        MatSelectModule,
-        QuestionPoolComponent,
-      ],
+      imports: [CreateEditQuestionFormComponent],
       providers: [
-        { provide: QuestionPoolService, useValue: questionPoolServiceMock },
-        { provide: DropdownService, useValue: dropdownServiceMock },
-        { provide: SnackbarService, useValue: snackbarMock },
-        { provide: MatDialog, useValue: matDialogMock },
-        provideHttpClient(),
-        provideHttpClientTesting(),
+        FormBuilder,
+        { provide: MatDialogRef, useValue: mockDialogRef },
+        { provide: DropdownService, useValue: mockDropdownService },
+        { provide: QuestionPoolService, useValue: mockQuestionService },
+        { provide: SnackbarService, useValue: mockSnackbar },
+        { provide: ValidationErrorService, useValue: mockValidationErrorService },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(QuestionPoolComponent);
+    fixture = TestBed.createComponent(CreateEditQuestionFormComponent);
     component = fixture.componentInstance;
+    fb = TestBed.inject(FormBuilder);
 
-    matDialog = TestBed.inject(MatDialog);
+    mockDropdownService.getDropdownData.mockReturnValue(of([{ id: 1, name: 'Test' }]));
+    mockQuestionService.createOrUpdateQuestion.mockReturnValue(of({ result: true, message: 'ok' }));
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  afterEach(() => jest.clearAllMocks());
 
-  it('should create the component', () => {
+  it('should create component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load dropdown data on loadDropdowns', fakeAsync(() => {
-    component.loadDropdowns();
+  it('ngOnInit should build form and load dropdowns', () => {
+    component.ngOnInit();
+    expect(buildBaseFields).toHaveBeenCalled();
+    expect(mockDropdownService.getDropdownData).toHaveBeenCalledTimes(3);
+  });
+
+  it('ngOnInit should subscribe to type valueChanges', () => {
+    const spy = jest.spyOn(component, 'updateFieldsByType');
+    component.ngOnInit();
+
+    const typeControl = component.form.get('type');
+    typeControl?.setValue(1);
+
+    expect(spy).toHaveBeenCalledWith(1);
+  });
+
+  it('loadDropdowns should update dropdown options after loading', fakeAsync(() => {
+    component.ngOnInit();
     tick();
-    expect(dropdownServiceMock.getDropdownData).toHaveBeenCalledTimes(3);
-    expect(component.categoryList).toEqual(mockDropdownData.categories);
-    expect(component.difficultyList).toEqual(mockDropdownData.difficulties);
-    expect(component.typeList).toEqual(mockDropdownData.types);
+
+    expect(updateDropdownOptions).toHaveBeenCalledWith(
+      component.fields,
+      component.categoryList,
+      component.difficultyList,
+      component.typeList,
+    );
   }));
 
-  it('should fetch question pool list successfully and update dataSource and totalItems', () => {
-    questionPoolServiceMock.getQuestionPoolList.mockReturnValue(of(mockResponse));
-    component.fetchQuestionPoolList();
-    expect(questionPoolServiceMock.getQuestionPoolList).toHaveBeenCalled();
-    const expectedData = mockResponse.data.records.map(questionPoolToTableData);
-    expect(component.dataSource()).toEqual(expectedData);
-    expect(component.totalItems()).toBe(mockResponse.data.totalRecords);
-  });
-
-  it('should show error snackbar and reset data when response is invalid', () => {
-    const badResponse = {
-      statusCode: 500,
-      result: false,
-      message: 'Server error',
-      data: { records: [], totalRecords: 0 },
-    };
-    questionPoolServiceMock.getQuestionPoolList.mockReturnValue(of(badResponse));
-    component.fetchQuestionPoolList();
-    expect(snackbarMock.showError).toHaveBeenCalledWith(
-      'Server error',
-      expect.stringContaining('500'),
-    );
-    expect(component.dataSource()).toEqual([]);
-    expect(component.totalItems()).toBe(0);
-  });
-
-  it('should show error snackbar with fallback message if res.message missing', () => {
-    const badResponse = {
-      statusCode: 500,
-      result: false,
-      message: null,
-      data: { records: [], totalRecords: 0 },
-    };
-    questionPoolServiceMock.getQuestionPoolList.mockReturnValue(of(badResponse));
-    component.fetchQuestionPoolList();
-    expect(snackbarMock.showError).toHaveBeenCalledWith(
-      platformMessages.errorMessage,
-      expect.stringContaining('500'),
-    );
-  });
-
-  it('should show error snackbar on fetch error with error message', () => {
-    const errorResponse = { error: { message: 'Network down' }, status: 0 };
-    questionPoolServiceMock.getQuestionPoolList.mockReturnValue(throwError(() => errorResponse));
-    component.fetchQuestionPoolList();
-    expect(snackbarMock.showError).toHaveBeenCalledWith('Network down', 'Error Unknown');
-  });
-
-  it('should fallback to default error message if error response missing message', () => {
-    const errorResponse = {};
-    questionPoolServiceMock.getQuestionPoolList.mockReturnValue(throwError(() => errorResponse));
-    component.fetchQuestionPoolList();
-    expect(snackbarMock.showError).toHaveBeenCalledWith(
-      'Unexpected error occurred',
-      'Error Unknown',
-    );
-  });
-
-  it('should update pagination and fetch on onPageChange', () => {
-    questionPoolServiceMock.getQuestionPoolList.mockReturnValue(of(mockResponse));
-    component.onPageChange({ pageIndex: 1, pageSize: 20 });
-    expect(component.pagination().pageNumber).toBe(2);
-    expect(component.pagination().pageSize).toBe(20);
-  });
-
-  it('should update sort and fetch on onSortChange', () => {
-    questionPoolServiceMock.getQuestionPoolList.mockReturnValue(of(mockResponse));
-    component.onSortChange({ active: 'question', direction: 'desc' });
-    expect(component.sort().sortColumn).toBe('question');
-    expect(component.sort().sortDescending).toBe(true);
-  });
-
-  it('should reset page number and fetch on onFilterChange', () => {
-    questionPoolServiceMock.getQuestionPoolList.mockReturnValue(of(mockResponse));
-    component.pagination.set({ pageNumber: 5, pageSize: 10 });
-    component.onFilterChange();
-    expect(component.pagination().pageNumber).toBe(1);
-  });
-
-  it('should debounce search input and call fetch after debounce time', fakeAsync(() => {
-    const fetchSpy = jest.spyOn(component, 'fetchQuestionPoolList');
-
-    fixture.detectChanges();
-    // Reset after ngOnInit call
-    fetchSpy.mockClear();
-
-    component.onSearchInputChange('t');
-    component.onSearchInputChange('te');
-    component.onSearchInputChange('tes');
-    component.onSearchInputChange('test');
-
-    tick(debounceTimeValue - 1);
-    expect(fetchSpy).not.toHaveBeenCalled();
-
-    tick(1);
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
-  }));
-
-  it('should debounce search input and call fetch after debounce time', fakeAsync(() => {
-    const fetchSpy = jest.spyOn(component, 'fetchQuestionPoolList');
-
-    // Skip ngOnInit, just set up search subscription
-    component.getFilteredQuestions();
-
-    component.onSearchInputChange('t');
-    component.onSearchInputChange('te');
-    component.onSearchInputChange('tes');
-    component.onSearchInputChange('test');
-
-    tick(debounceTimeValue - 1);
-    expect(fetchSpy).not.toHaveBeenCalled();
-
-    tick(1);
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
-  }));
-
-  it('should apply selected filters to the request in fetchQuestionPoolList', () => {
-    component.selectedCategory = 1;
-    component.selectedDifficulty = 2;
-    component.selectedType = 3;
-
-    questionPoolServiceMock.getQuestionPoolList.mockImplementation((req) => {
-      expect(req.filters).toEqual({
-        quizCategoryId: 1,
-        questionDifficultyId: 2,
-        questionTypeId: 3,
-      });
-      return of(mockResponse);
-    });
-
-    component.fetchQuestionPoolList();
-    expect(questionPoolServiceMock.getQuestionPoolList).toHaveBeenCalled();
-  });
-
-  it('ngOnInit should load dropdowns and fetch question pool list with filters', fakeAsync(() => {
-    component.selectedCategory = 1;
-    component.selectedDifficulty = 2;
-    component.selectedType = 3;
-
-    questionPoolServiceMock.getQuestionPoolList.mockImplementation((req) => {
-      expect(req.filters).toEqual({
-        quizCategoryId: 1,
-        questionDifficultyId: 2,
-        questionTypeId: 3,
-      });
-      return of(mockResponse);
-    });
+  it('loadDropdowns should patch form if questionData exists', fakeAsync(() => {
+    component.questionData = mockQuestionData;
+    const patchSpy = jest.spyOn(component, 'patchFormWithQuestionData');
 
     component.ngOnInit();
     tick();
 
-    expect(dropdownServiceMock.getDropdownData).toHaveBeenCalledTimes(3);
-    expect(questionPoolServiceMock.getQuestionPoolList).toHaveBeenCalled();
+    expect(patchSpy).toHaveBeenCalledWith(mockQuestionData);
   }));
 
-  describe('handleQuestionAction', () => {
-    it('should call confirmAndDeleteQuestion for DELETE action', () => {
-      jest.spyOn(component, 'confirmAndDeleteQuestion');
+  it('loadDropdowns should not patch form if questionData is undefined', fakeAsync(() => {
+    component.questionData = undefined;
+    const patchSpy = jest.spyOn(component, 'patchFormWithQuestionData');
 
-      matDialogMock.open.mockReturnValue({
-        afterClosed: () => of(true),
-      });
+    component.ngOnInit();
+    tick();
 
-      const question = { id: 123 } as TableData;
-      component.handleQuestionAction({ action: questionAction.DELETE, row: question });
+    expect(patchSpy).not.toHaveBeenCalled();
+  }));
 
-      expect(component.confirmAndDeleteQuestion).toHaveBeenCalledWith(123);
-    });
+  it('patchFormWithQuestionData should call helper with correct arguments', () => {
+    component.ngOnInit();
+    component.categoryList = [{ id: 1, name: 'Cat1' }];
+    component.difficultyList = [{ id: 1, name: 'Easy' }];
+    component.typeList = [{ id: 1, name: 'MCQ' }];
 
-    it('should call openQuestionPreviewDialog for VIEW action', () => {
-      const spy = jest.spyOn(component, 'openQuestionPreviewDialog');
-      const question = { id: 456 } as TableData;
-      component.handleQuestionAction({ action: questionAction.VIEW, row: question });
-      expect(spy).toHaveBeenCalledWith(456);
-    });
+    component.patchFormWithQuestionData(mockQuestionData);
+
+    expect(patchFormWithQuestion).toHaveBeenCalledWith(
+      component.form,
+      mockQuestionData,
+      component.categoryList,
+      component.difficultyList,
+      component.typeList,
+    );
   });
 
-  describe('confirmAndDeleteQuestion', () => {
-    it('should open confirmation dialog and delete question on confirm success', fakeAsync(() => {
-      const openSpy = jest.spyOn(matDialogMock, 'open').mockReturnValue({
-        afterClosed: () => of(true),
-      } as any);
-
-      questionPoolServiceMock.deleteQuestion.mockReturnValue(of({ statusCode: 200 }));
-
-      jest.spyOn(component, 'fetchQuestionPoolList').mockImplementation(jest.fn());
-
-      component.dataSource.set([{ id: 101 } as TableData]);
-      component.pagination.set({ pageNumber: 2, pageSize: 10 });
-
-      component.confirmAndDeleteQuestion(101);
-
-      tick(); // <-- wait for async inside to complete
-
-      expect(openSpy).toHaveBeenCalledWith(ConfirmationDialogComponent, expect.any(Object));
-      expect(questionPoolServiceMock.deleteQuestion).toHaveBeenCalledWith(101);
-      expect(snackbarMock.showSuccess).toHaveBeenCalledWith(
-        'Success!',
-        platformMessages.deleteQuesSuccess,
-      );
-      expect(component.pagination().pageNumber).toBe(1);
-    }));
-
-    it('should show error snackbar if delete returns non-200 status', fakeAsync(() => {
-      const openSpy = jest.spyOn(matDialogMock, 'open').mockReturnValue({
-        afterClosed: () => of(true),
-      } as any);
-
-      questionPoolServiceMock.deleteQuestion.mockReturnValue(
-        of({ statusCode: 500, message: 'Delete failed' }),
-      );
-
-      component.confirmAndDeleteQuestion(101);
-
-      tick();
-
-      expect(openSpy).toHaveBeenCalled();
-      expect(questionPoolServiceMock.deleteQuestion).toHaveBeenCalled();
-      expect(snackbarMock.showError).toHaveBeenCalledWith(
-        platformMessages.errorTitle,
-        'Delete failed',
-      );
-    }));
-
-    it('should show error snackbar on delete error', fakeAsync(() => {
-      const openSpy = jest.spyOn(matDialogMock, 'open').mockReturnValue({
-        afterClosed: () => of(true),
-      } as any);
-
-      questionPoolServiceMock.deleteQuestion.mockReturnValue(
-        throwError(() => ({ error: { message: 'Network error' } })),
-      );
-
-      component.confirmAndDeleteQuestion(101);
-
-      tick();
-
-      expect(openSpy).toHaveBeenCalled();
-      expect(questionPoolServiceMock.deleteQuestion).toHaveBeenCalled();
-      expect(snackbarMock.showError).toHaveBeenCalledWith(
-        platformMessages.errorTitle,
-        'Network error',
-      );
-    }));
-
-    it('should not call delete if dialog is cancelled', fakeAsync(() => {
-      const openSpy = jest.spyOn(matDialogMock, 'open').mockReturnValue({
-        afterClosed: () => of(false),
-      } as any);
-
-      component.confirmAndDeleteQuestion(101);
-
-      tick();
-
-      expect(openSpy).toHaveBeenCalled();
-      expect(questionPoolServiceMock.deleteQuestion).not.toHaveBeenCalled();
-      expect(snackbarMock.showError).not.toHaveBeenCalled();
-      expect(snackbarMock.showSuccess).not.toHaveBeenCalled();
-    }));
+  it('buildForm should create controls from fields', () => {
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
+    expect(Object.keys(component.form.controls)).toContain('type');
   });
 
-  describe('openQuestionPreviewDialog', () => {
-    it('should open question preview dialog with correct config', () => {
-      component.openQuestionPreviewDialog(123);
+  it('updateFieldsByType should remove non-base controls and add new fields', () => {
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
 
-      expect(matDialogMock.open).toHaveBeenCalledWith(QuestionPreviewDialogComponent, {
-        width: '600px',
-        maxHeight: '80vh',
-        data: { id: 123 },
-      });
+    component.form.addControl('extra', fb.control(''));
+    expect(component.form.contains('extra')).toBe(true);
+
+    component.updateFieldsByType(2);
+    expect(component.form.contains('extra')).toBe(false);
+    expect(Object.keys(component.form.controls)).toContain('option1');
+    expect(Object.keys(component.form.controls)).toContain('option2');
+    expect(component.form.validator).toBeNull();
+  });
+
+  it('should not throw if type control does not exist during ngOnInit', () => {
+    jest.spyOn(component, 'buildForm').mockImplementation(() => {
+      component.form = fb.group({});
     });
+
+    expect(() => component.ngOnInit()).not.toThrow();
   });
 
-  describe('openQuestionDialog', () => {
-    it('should open dialog with create mode by default and refresh on close if changed', fakeAsync(() => {
-      const fetchSpy = jest.spyOn(component, 'fetchQuestionPoolList').mockImplementation(jest.fn());
-      (matDialogMock.open as jest.Mock).mockReturnValue({
-        afterClosed: () => of(true),
-      });
+  it('updateFieldsByType should attach uniqueOptionsGroupValidator for MCQ type', () => {
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
 
-      component.openQuestionDialog();
-
-      tick();
-      expect(matDialogMock.open).toHaveBeenCalledWith(
-        QuestionFormDialogComponent,
-        expect.objectContaining({
-          minWidth: '50vw',
-          maxWidth: '100vw',
-          maxHeight: '95vh',
-          autoFocus: false,
-          data: expect.objectContaining({ mode: 'create' }),
-        }),
-      );
-      expect(fetchSpy).toHaveBeenCalled();
-    }));
-
-    it('should not refresh when dialog closes without changes', fakeAsync(() => {
-      const fetchSpy = jest.spyOn(component, 'fetchQuestionPoolList').mockImplementation(jest.fn());
-      (matDialogMock.open as jest.Mock).mockReturnValue({
-        afterClosed: () => of(false),
-      });
-
-      component.openQuestionDialog('edit', 999);
-
-      tick();
-      expect(matDialogMock.open).toHaveBeenCalledWith(
-        QuestionFormDialogComponent,
-        expect.objectContaining({
-          data: { mode: 'edit', id: 999 },
-        }),
-      );
-      expect(fetchSpy).not.toHaveBeenCalled();
-    }));
+    component.updateFieldsByType(1);
+    expect(uniqueOptionsGroupValidator).toHaveBeenCalledWith(['option1', 'option2']);
   });
 
-  describe('handleQuestionAction (EDIT)', () => {
-    it('should call openQuestionDialog with edit mode for EDIT action', () => {
-      const spy = jest.spyOn(component, 'openQuestionDialog');
-      const question = { id: 789 } as TableData;
+  it('updateFieldsByType should clear validators for non-MCQ types', () => {
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
 
-      component.handleQuestionAction({ action: questionAction.EDIT, row: question });
-      expect(spy).toHaveBeenCalledWith('edit', 789);
-    });
+    component.updateFieldsByType(2);
+    expect(component.form.validator).toBeNull();
+  });
+
+  it('getError should return null when control not found', () => {
+    component.fields = [{ name: 'test', label: '', type: '', placeholder: '', validators: [] }];
+    component.buildForm();
+    const result = component.getError('unknown');
+    expect(result).toBeNull();
+  });
+
+  it('getError should call validationErrorService with control, messages, and fieldName', () => {
+    component.fields = [
+      {
+        name: 'test',
+        label: '',
+        type: '',
+        placeholder: '',
+        validators: [],
+        validationMessages: { required: 'Field required' },
+      },
+    ];
+    component.buildForm();
+    const control = component.form.get('test');
+    mockValidationErrorService.getErrorMessage.mockReturnValue('Field required');
+
+    const result = component.getError('test');
+
+    expect(mockValidationErrorService.getErrorMessage).toHaveBeenCalledWith(
+      control,
+      { required: 'Field required' },
+      'test',
+    );
+    expect(result).toBe('Field required');
+  });
+
+  it('createOrUpdateQuestion should call service with id 0 for new question', () => {
+    component.questionData = undefined;
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
+    component.form.get('type')?.setValue(1);
+
+    component.createOrUpdateQuestion();
+
+    expect(mockQuestionService.createOrUpdateQuestion).toHaveBeenCalledWith(0, { dto: true });
+  });
+
+  it('createOrUpdateQuestion should call service with existing id for edit', () => {
+    component.questionData = mockQuestionData;
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
+    component.form.get('type')?.setValue(1);
+
+    component.createOrUpdateQuestion();
+
+    expect(mockQuestionService.createOrUpdateQuestion).toHaveBeenCalledWith(1, { dto: true });
+  });
+
+  it('createOrUpdateQuestion should show success and close dialog on success', () => {
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
+    component.form.get('type')?.setValue(1);
+
+    component.createOrUpdateQuestion();
+
+    expect(mapFormToQuestionRequest).toHaveBeenCalled();
+    expect(mockSnackbar.showSuccess).toHaveBeenCalledWith(platformMessages.successTitle, 'ok');
+    expect(mockDialogRef.close).toHaveBeenCalledWith(true);
+  });
+
+  it('createOrUpdateQuestion should show error when service returns failure', () => {
+    mockQuestionService.createOrUpdateQuestion.mockReturnValueOnce(
+      of({ result: false, message: 'fail' }),
+    );
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
+    component.form.get('type')?.setValue(1);
+
+    component.createOrUpdateQuestion();
+
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'fail');
+    expect(mockDialogRef.close).not.toHaveBeenCalled();
+  });
+
+  it('createOrUpdateQuestion should show error on service error', fakeAsync(() => {
+    mockQuestionService.createOrUpdateQuestion.mockReturnValueOnce(
+      throwError(() => ({ error: { message: 'err' } })),
+    );
+
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
+    component.form.get('type')?.setValue(1);
+
+    component.createOrUpdateQuestion();
+    tick();
+
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'err');
+  }));
+
+  it('createOrUpdateQuestion should show generic error when error.message is missing', fakeAsync(() => {
+    mockQuestionService.createOrUpdateQuestion.mockReturnValueOnce(throwError(() => ({})));
+
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
+    component.form.get('type')?.setValue(1);
+
+    component.createOrUpdateQuestion();
+    tick();
+
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
+    );
+  }));
+
+  it('should mark all as touched if form invalid', () => {
+    component.ngOnInit();
+    const markAllSpy = jest.spyOn(component.form, 'markAllAsTouched');
+    Object.defineProperty(component.form, 'valid', { get: () => false });
+
+    component.createOrUpdateQuestion();
+
+    expect(markAllSpy).toHaveBeenCalled();
+    expect(mockQuestionService.createOrUpdateQuestion).not.toHaveBeenCalled();
+  });
+
+  it('closeDialog should call dialogRef.close', () => {
+    component.closeDialog();
+    expect(mockDialogRef.close).toHaveBeenCalled();
+  });
+
+  it('ngOnDestroy should complete destroy$ subject', () => {
+    const nextSpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

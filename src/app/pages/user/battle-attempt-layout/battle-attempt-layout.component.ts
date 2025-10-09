@@ -280,9 +280,11 @@ export class BattleAttemptLayoutComponent implements OnInit, OnDestroy {
   private async handleLocalTimeout(): Promise<void> {
     if (!this.questions.length) return;
 
-    this.snackbar.showInfo(platformMessages.timeoutNextQuestion);
     if (this.currentQuestionIndex === this.totalQuestion) {
+      this.snackbar.showInfo(platformMessages.timeUp);
       this.redirectToBattleResult();
+    } else {
+      this.snackbar.showInfo(platformMessages.timeoutNextQuestion);
     }
   }
 
@@ -298,7 +300,9 @@ export class BattleAttemptLayoutComponent implements OnInit, OnDestroy {
         Navigations.WaitingBattleResult,
         state.battleId,
       ]); // put result route here
-      closeFullscreen();
+      if (document.fullscreenElement) {
+        closeFullscreen();
+      }
     }, 3000);
   }
 

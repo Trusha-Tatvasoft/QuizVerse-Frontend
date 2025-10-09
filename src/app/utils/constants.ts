@@ -343,11 +343,13 @@ export const platformMessages = {
   battleHubBattleResumed: 'BattleResumed',
   battleHubContinueBattle: 'ContinueBattle',
   battleHubReceiveQuestion: 'ReceiveQuestion',
+  battleHubSubmitAnswer: 'SubmitAnswer',
   battleHubReceiveScoreUpdate: 'ReceiveScoreUpdate',
   battleHubLastAnsweredDetail: 'LastAnsweredDetail',
   battleHubPlayerInterrupted: 'PlayerInterrupted',
   battleHubBattleEndedForPlayer: 'BattleEndedForParticularPlayerDueToInterrupt',
   battleEnded: 'battleEnded',
+  battleHubSkipInstruction: 'SkipInstructions',
 
   // Battle flow messages
   battleStart: 'Battle started! All the best!',
@@ -361,6 +363,8 @@ export const platformMessages = {
   battleResumeSuccess: 'Battle resumed successfully',
   battleHubError: 'Error',
   questionLoadFail: 'Falied to load Question',
+  failedToSkipInstruction: 'Failed to skip instructions',
+  failToIntrrupteBattle: 'Failed to interrupt battle',
   failedLoadUserBattles: 'Failed to fatch user battles',
   // #endregion
 };
@@ -665,7 +669,7 @@ export function autoSubmitBattleMessage(reason: string): string {
   return `Battle will end automatically due to: ${reason}`;
 }
 
-export const battleInstructionsShowTime = 30; // seconds
+export const battleInstructionsShowTime = 60; // seconds
 
 export const battleIdStorageKey = 'battleAttemptId';
 

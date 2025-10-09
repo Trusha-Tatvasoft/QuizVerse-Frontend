@@ -455,10 +455,24 @@ describe('BattleAttemptLayoutComponent', () => {
     component.attemptedId = 42;
 
     (component as any).handleLocalTimeout();
+    tick(3000);
+
+    expect(snackbarInfoSpy).toHaveBeenCalledWith(platformMessages.timeUp);
+    expect(routerSpy.navigate).toHaveBeenCalled();
+  }));
+
+  it('handleLocalTimeout should show timeoutNextQuestion if not last question', fakeAsync(() => {
+    const snackbarInfoSpy = jest.spyOn(snackbarSpy, 'showInfo');
+    component.questions = [{} as any];
+    component.currentQuestionIndex = 2;
+    component.totalQuestion = 5;
+    component.attemptedId = 42;
+
+    (component as any).handleLocalTimeout();
+    tick(3000);
 
     expect(snackbarInfoSpy).toHaveBeenCalledWith(platformMessages.timeoutNextQuestion);
-    tick(3000);
-    expect(routerSpy.navigate).toHaveBeenCalled();
+    expect(routerSpy.navigate).not.toHaveBeenCalled();
   }));
 
   it('handleLocalTimeout should do nothing when no questions', async () => {

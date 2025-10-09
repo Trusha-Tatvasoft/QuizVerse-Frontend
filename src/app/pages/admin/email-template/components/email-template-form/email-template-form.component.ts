@@ -85,8 +85,8 @@ export class EmailTemplateFormComponent implements OnInit, OnDestroy {
         this.form.get('body')?.updateValueAndValidity();
       });
 
-    if (this.mode === 'edit' && this.data?.id) {
-      this.loadEmailTemplate(this.data.id);
+    if (this.mode === 'edit' && this.data?.templateData) {
+      this.patchFormWithTemplate(this.data.templateData);
     }
   }
 
@@ -109,29 +109,12 @@ export class EmailTemplateFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadEmailTemplate(id: number) {
-    this.emailTemplateService
-      .getEmailTemplateById(id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (res) => {
-          if (res.result && res.data) {
-            if ('status' in res.data) {
-              res.data.status = Boolean(res.data.status);
-            }
-            this.form.patchValue(res.data);
-            this.form.get('body')?.updateValueAndValidity();
-          } else {
-            this.snackbar.showError(platformMessages.errorTitle, platformMessages.errorMessage);
-          }
-        },
-        error: () => {
-          this.snackbar.showError(
-            platformMessages.errorTitle,
-            platformMessages.failedToFetchTemplate,
-          );
-        },
-      });
+  patchFormWithTemplate(data: EmailTemplatesRequest): void {
+    if ('status' in data) {
+      data.status = Boolean(data.status);
+    }
+    this.form.patchValue(data);
+    this.form.get('body')?.updateValueAndValidity();
   }
 
   getError(fieldName: string): string | null {
@@ -152,8 +135,8 @@ export class EmailTemplateFormComponent implements OnInit, OnDestroy {
     if (this.form.valid) {
       const template: EmailTemplatesRequest = this.form.value as EmailTemplatesRequest;
 
-      if (this.mode === 'edit' && this.data?.id) {
-        template.id = this.data.id;
+      if (this.mode === 'edit' && this.data?.templateData.id) {
+        template.id = this.data.templateData.id;
       } else {
         template.status = true; // active
       }

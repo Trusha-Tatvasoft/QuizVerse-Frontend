@@ -31,6 +31,7 @@ import { ConfirmationDialogComponent } from '../../../shared/components/confirma
 import { MatDialog } from '@angular/material/dialog';
 import { QuestionPreviewDialogComponent } from './components/question-preview-dialog/question-preview-dialog.component';
 import { QuestionFormDialogComponent } from './components/question-form-dialog/question-form-dialog.component';
+import { QuestionDetail } from './interfaces/question-pool-preview.interface';
 
 @Component({
   selector: 'app-question-pool',
@@ -196,7 +197,7 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
         this.openQuestionPreviewDialog(question['id'] as number);
         break;
       case questionAction.EDIT:
-        this.openQuestionDialog('edit', question['id'] as number);
+        this.loadQuestionForEdit(question['id'] as number);
         break;
     }
   }
@@ -257,7 +258,7 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
 
   //#region create/edit dialog
   // dialog for manual question add/edit
-  openQuestionDialog(mode: 'create' | 'edit' = 'create', question?: number) {
+  openQuestionDialog(mode: 'create' | 'edit' = 'create', questionData?: QuestionDetail): void {
     const dialogRef = this.dialog.open(QuestionFormDialogComponent, {
       minWidth: '50vw',
       maxWidth: '100vw',
@@ -266,26 +267,75 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
       disableClose: false,
       data: {
         mode,
-        ...{ id: question },
+        questionData: questionData ?? null,
       },
     });
 
     dialogRef.afterClosed().subscribe((changed) => {
       if (changed) {
-        this.fetchQuestionPoolList();
+        this.fetchQuestionPoolList(); // refresh table or list
       }
     });
   }
   //#endregion
 
+  //#region Edit Question Load
+  loadQuestionForEdit(questionId: number): void {
+    this.questionPoolService
+      .getQuestionPreviewById(questionId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res && res.result && res.data) {
+            this.openQuestionDialog('edit', res.data);
+          } else {
+            this.snackbar.showError(
+              platformMessages.errorTitle,
+              res.message || 'Failed to load question.',
+            );
+          }
+        },
+        error: (err) => {
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || 'Something went wrong while loading the question.',
+          );
+        },
+      });
+  }
+  //#endregion
+
   //#region preview dialog
   // question perview dialog
-  openQuestionPreviewDialog(questionId: number) {
-    this.dialog.open(QuestionPreviewDialogComponent, {
-      width: '600px',
-      maxHeight: '80vh',
-      data: { id: questionId },
-    });
+  openQuestionPreviewDialog(questionId: number): void {
+    this.questionPoolService
+      .getQuestionPreviewById(questionId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res && res.data) {
+            const question: QuestionDetail = res.data;
+
+            this.dialog.open(QuestionPreviewDialogComponent, {
+              width: '600px',
+              maxHeight: '80vh',
+              data: question,
+            });
+          } else {
+            this.snackbar.showError(
+              platformMessages.errorTitle,
+              platformMessages.failedLoadQuesPreview,
+            );
+          }
+        },
+        error: (err) => {
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.failedLoadQuesPreview,
+          );
+        },
+      });
   }
+
   //#endregion
 }

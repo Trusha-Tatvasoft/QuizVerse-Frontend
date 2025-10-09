@@ -17,6 +17,11 @@ export const resumeDialogButtonConfig: ButtonConfig = {
   variant: 'secondary',
 };
 
+export const skipButtonConfig: ButtonConfig = {
+  label: 'Skip & Start Now',
+  variant: 'secondary',
+};
+
 export const battleTag: TagInputConfig = {
   id: 'difficulty-easy',
   label: 'Science Battle',

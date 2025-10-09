@@ -33,7 +33,7 @@ export class BattleHubService {
   // Matchmaking events
   private readonly searching$ = new Subject<void>();
   private readonly matchFound$ = new Subject<PlayerProfileDTO>();
-  private readonly battleEnded$ = new ReplaySubject<BattleCompletionResult>(1);
+  private battleEnded$ = new ReplaySubject<BattleCompletionResult>(1);
 
   // Battle events
   private battleStarted$ = new ReplaySubject<BattleStartDetails>(1);
@@ -189,25 +189,48 @@ export class BattleHubService {
   /** Resume battle */
   async resumeBattle(attemptId: number): Promise<void> {
     if (!this.connected) {
-      throw new Error('Cannot resume battle: connection lost. Please refresh and try again.');
+      throw new Error(platformMessages.serverNotConnected);
     }
 
     try {
-      return await this.hubConnection!.invoke('ResumeBattle', attemptId);
+      return await this.hubConnection!.invoke(platformMessages.battleHubResumeBattle, attemptId);
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to resume battle';
+      const errorMessage =
+        error instanceof Error ? error.message : platformMessages.failedtoResumeBattle;
       this._errorSubject.next(errorMessage);
       throw new Error(errorMessage);
     }
   }
 
-  submitAnswer(battleId: number, index: number, answer: string): void {
-    if (!this.connected) {
-      this._errorSubject.next('Connection lost. Please check your internet and try again.');
+  skipInstructions(battleAttemptId: number): void {
+    if (!this.isConnected || !this.hubConnection) {
+      this._errorSubject.next(platformMessages.serverNotConnected);
       return;
     }
 
-    this.hubConnection!.invoke('SubmitAnswer', battleId, index, answer).catch((error: unknown) => {
+    this.hubConnection!.invoke(platformMessages.battleHubSkipInstruction, battleAttemptId).catch(
+      (error: unknown) => {
+        this.snackbar.showError(
+          error instanceof Error && error.message
+            ? error.message
+            : platformMessages.failedToSkipInstruction,
+        );
+      },
+    );
+  }
+
+  submitAnswer(battleId: number, index: number, answer: string): void {
+    if (!this.connected) {
+      this._errorSubject.next(platformMessages.serverNotConnected);
+      return;
+    }
+
+    this.hubConnection!.invoke(
+      platformMessages.battleHubSubmitAnswer,
+      battleId,
+      index,
+      answer,
+    ).catch((error: unknown) => {
       const errorMessage =
         error instanceof Error ? error.message : platformMessages.answerSubmitFailed;
       this._errorSubject.next(errorMessage);
@@ -220,10 +243,13 @@ export class BattleHubService {
       return;
     }
 
-    this.hubConnection!.invoke('IntruptByPlayer', battleAttemptId).catch((error: unknown) => {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to interrupt battle';
-      this.snackbar.showError(errorMessage);
-    });
+    this.hubConnection!.invoke(platformMessages.battleHubBattleIntrupted, battleAttemptId).catch(
+      (error: unknown) => {
+        const errorMessage =
+          error instanceof Error ? error.message : platformMessages.failToIntrrupteBattle;
+        this.snackbar.showError(errorMessage);
+      },
+    );
   }
 
   getCurrentBattleAttemptId(): number | null {
@@ -254,6 +280,11 @@ export class BattleHubService {
 
     // Reset state
     this.battleAttemptId = null;
+  }
+
+  cleanupBattleEndSubject(): void {
+    this.battleEnded$.complete();
+    this.battleEnded$ = new ReplaySubject<BattleCompletionResult>(1);
   }
 
   async stopConnection(): Promise<void> {
@@ -350,7 +381,6 @@ export class BattleHubService {
     this.hubConnection.on(platformMessages.battleEnded, (result: BattleCompletionResult) => {
       this.battleEnded$.next(result);
       if (result) {
-        this.snackbar.showSuccess(platformMessages.successTitle, 'Battle ended!');
         this.userBattlesService.updateBattleResults$.next(true);
         this.stopConnection();
       }

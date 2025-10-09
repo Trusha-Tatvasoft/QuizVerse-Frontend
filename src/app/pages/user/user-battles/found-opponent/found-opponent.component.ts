@@ -52,6 +52,7 @@ export class FoundOpponentComponent {
     window.addEventListener('pageshow', this.pageShowHandler);
     this.decodeRouteId();
     this.redirectToBattle();
+    this.battleHub.cleanupBattleEndSubject();
 
     this.cheatPrevention.startMonitoring();
     this.cheatPrevention.violations$.pipe(takeUntil(this.destroy$)).subscribe((reason) => {

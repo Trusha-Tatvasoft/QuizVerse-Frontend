@@ -3,9 +3,7 @@ import { QuestionPreviewDialogComponent } from './question-preview-dialog.compon
 import { QuestionPoolService } from '../../../../../services/admin/question-pool/question-pool.service';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { of, throwError } from 'rxjs';
 import { QuestionDetail } from '../../interfaces/question-pool-preview.interface';
-import { platformMessages } from '../../../../../utils/constants';
 
 describe('QuestionPreviewDialogComponent', () => {
   let component: QuestionPreviewDialogComponent;
@@ -25,9 +23,7 @@ describe('QuestionPreviewDialogComponent', () => {
     correctAnswer: '4',
   };
 
-  const questionPoolServiceMock = {
-    getQuestionPreviewById: jest.fn(),
-  };
+  const questionPoolServiceMock = {};
 
   const snackbarMock = {
     showError: jest.fn(),
@@ -44,7 +40,7 @@ describe('QuestionPreviewDialogComponent', () => {
         { provide: QuestionPoolService, useValue: questionPoolServiceMock },
         { provide: SnackbarService, useValue: snackbarMock },
         { provide: MatDialogRef, useValue: dialogRefMock },
-        { provide: MAT_DIALOG_DATA, useValue: { id: 1 } },
+        { provide: MAT_DIALOG_DATA, useValue: mockQuestion },
       ],
     }).compileComponents();
 
@@ -52,39 +48,88 @@ describe('QuestionPreviewDialogComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should fetch question on init (success case)', () => {
-    questionPoolServiceMock.getQuestionPreviewById.mockReturnValue(of({ data: mockQuestion }));
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
 
+  it('should set questionData from injected MAT_DIALOG_DATA on init', () => {
     component.ngOnInit();
 
-    expect(questionPoolServiceMock.getQuestionPreviewById).toHaveBeenCalledWith(1);
     expect(component.questionData).toEqual(mockQuestion);
   });
 
-  it('should show default error message when error response has no message', () => {
-    const errorResponse = { error: {} };
-    questionPoolServiceMock.getQuestionPreviewById.mockReturnValue(throwError(() => errorResponse));
-
-    component.ngOnInit();
-
-    expect(snackbarMock.showError).toHaveBeenCalledWith(
-      platformMessages.errorTitle,
-      platformMessages.failedLoadQuesPreview,
-    );
-    expect(dialogRefMock.close).toHaveBeenCalled();
-  });
-
-  it('should return correct tag config for difficulty', () => {
+  it('should return correct tag config for Easy difficulty', () => {
     const config = component.getDifficultyTagConfig('Easy');
+
     expect(config.label).toBe('Easy');
-    expect(config.backgroundColor).toBe('lightGreen');
-    expect(config.textColor).toBe('green');
+    expect(config.id).toBe('tag-easy');
     expect(config.type).toBe('static');
     expect(config.isSelected).toBe(false);
+    expect(config.hasBorder).toBe(false);
+    expect(config.backgroundColor).toBe('lightGreen');
+    expect(config.textColor).toBe('green');
+  });
+
+  it('should return correct tag config for Medium difficulty', () => {
+    const config = component.getDifficultyTagConfig('Medium');
+
+    expect(config.label).toBe('Medium');
+    expect(config.id).toBe('tag-medium');
+    expect(config.backgroundColor).toBe('lightYellow');
+    expect(config.textColor).toBe('yellow');
+  });
+
+  it('should return correct tag config for Hard difficulty', () => {
+    const config = component.getDifficultyTagConfig('Hard');
+
+    expect(config.label).toBe('Hard');
+    expect(config.id).toBe('tag-hard');
+    expect(config.backgroundColor).toBe('lightRed');
+    expect(config.textColor).toBe('red');
   });
 
   it('should close dialog when closeDialog is called', () => {
     component.closeDialog();
     expect(dialogRefMock.close).toHaveBeenCalled();
+  });
+
+  it('should complete destroy$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroy$'], 'next');
+    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+
+    component.ngOnDestroy();
+
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should handle question data with no options', () => {
+    const questionWithoutOptions: QuestionDetail = {
+      id: 2,
+      questionText: 'True or False question?',
+      questionType: 'True/False',
+      difficulty: 'Easy',
+      category: 'General',
+      options: [],
+      correctAnswer: 'True',
+    };
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [QuestionPreviewDialogComponent],
+      providers: [
+        { provide: QuestionPoolService, useValue: questionPoolServiceMock },
+        { provide: SnackbarService, useValue: snackbarMock },
+        { provide: MatDialogRef, useValue: dialogRefMock },
+        { provide: MAT_DIALOG_DATA, useValue: questionWithoutOptions },
+      ],
+    });
+
+    fixture = TestBed.createComponent(QuestionPreviewDialogComponent);
+    component = fixture.componentInstance;
+    component.ngOnInit();
+
+    expect(component.questionData).toEqual(questionWithoutOptions);
+    expect(component.questionData.options).toEqual([]);
   });
 });

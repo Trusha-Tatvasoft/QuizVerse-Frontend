@@ -22,7 +22,6 @@ describe('EmailTemplateFormComponent', () => {
 
   beforeEach(async () => {
     mockEmailTemplateService = {
-      getEmailTemplateById: jest.fn(),
       addOrEditEmailTemplate: jest.fn(),
     };
     mockSnackbar = {
@@ -39,8 +38,8 @@ describe('EmailTemplateFormComponent', () => {
         { provide: EmailTemplateService, useValue: mockEmailTemplateService },
         { provide: SnackbarService, useValue: mockSnackbar },
         { provide: MatDialog, useValue: mockMatDialog },
-        { provide: MatDialogRef, useValue: { close: jest.fn() } }, // ✅ stub
-        { provide: MAT_DIALOG_DATA, useValue: { id: 123 } },
+        { provide: MatDialogRef, useValue: { close: jest.fn() } },
+        { provide: MAT_DIALOG_DATA, useValue: { mode: 'create' } },
       ],
     }).compileComponents();
 
@@ -58,25 +57,18 @@ describe('EmailTemplateFormComponent', () => {
     expect(component.form.contains('status')).toBe(true);
   });
 
-  it('should load email template in edit mode', () => {
-    const mockResponse = {
-      result: true,
-      data: {
-        id: 1,
-        title: 'Welcome',
-        subject: 'Hello!',
-        templateType: 1,
-        body: 'Email Body',
-        status: true,
-      },
+  it('should patch form with template data', () => {
+    const mockData = {
+      id: 1,
+      title: 'Welcome',
+      subject: 'Hello!',
+      templateType: 1,
+      body: 'Email Body',
+      status: true,
     };
 
-    mockEmailTemplateService.getEmailTemplateById.mockReturnValue(of(mockResponse));
+    component.patchFormWithTemplate(mockData);
 
-    component['mode'] = 'edit';
-    component.loadEmailTemplate(1);
-
-    expect(mockEmailTemplateService.getEmailTemplateById).toHaveBeenCalledWith(1);
     expect(component.form.get('title')?.value).toBe('Welcome');
     expect(component.form.get('subject')?.value).toBe('Hello!');
   });
@@ -136,8 +128,10 @@ describe('EmailTemplateFormComponent', () => {
   });
 
   it('should complete destroy$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
 
@@ -147,7 +141,6 @@ describe('EmailTemplateFormComponent', () => {
       title: 'Test Title',
       subject: 'Test Subject',
       body: '{{user}} {{email}} {{registrationDate}} {{loginUrl}} {{year}} {{companyName}}',
-      status: true,
     });
     component.form.updateValueAndValidity();
 
@@ -163,7 +156,6 @@ describe('EmailTemplateFormComponent', () => {
         templateType: EmailTemplateType.WelcomeEmail,
         title: 'Test Title',
         subject: 'Test Subject',
-        body: '{{user}} {{email}} {{registrationDate}} {{loginUrl}} {{year}} {{companyName}}',
         status: true,
       }),
     );
@@ -179,7 +171,7 @@ describe('EmailTemplateFormComponent', () => {
       templateType: EmailTemplateType.AccountSuspension,
       title: 'Invalid Test',
       subject: 'Invalid Subject',
-      body: "{{user}}', '{{email}} </div>",
+      body: '{{user}} {{email}} {{suspensionReason}} {{suspensionDate}} {{supportEmail}} {{year}} {{companyName}}',
       status: true,
     });
     component.form.updateValueAndValidity();
@@ -204,52 +196,27 @@ describe('EmailTemplateFormComponent', () => {
     expect(result).toBeNull();
   });
 
-  it('should show error snackbar when loadEmailTemplate API fails', () => {
-    mockEmailTemplateService.getEmailTemplateById.mockReturnValue(
-      throwError(() => new Error('API error')),
-    );
-
-    component.loadEmailTemplate(99);
-
-    expect(mockSnackbar.showError).toHaveBeenCalledWith(
-      platformMessages.errorTitle,
-      platformMessages.failedToFetchTemplate,
-    );
-  });
-
-  it('should show generic error if email template response is invalid', () => {
-    const response = { result: false, data: null };
-    mockEmailTemplateService.getEmailTemplateById.mockReturnValue(of(response));
-
-    component.loadEmailTemplate(123);
-
-    expect(mockSnackbar.showError).toHaveBeenCalledWith(
-      platformMessages.errorTitle,
-      platformMessages.errorMessage,
-    );
-  });
-
-  it('should cast status to boolean when loading template', () => {
-    const response = {
-      result: true,
-      data: {
-        id: 1,
-        title: 'Test',
-        subject: 'Subject',
-        templateType: 1,
-        body: 'Body',
-        status: 1,
-      },
+  it('should cast status to boolean when patching template', () => {
+    const mockData = {
+      id: 1,
+      title: 'Test',
+      subject: 'Subject',
+      templateType: 1,
+      body: 'Body',
+      status: 1,
     };
 
-    mockEmailTemplateService.getEmailTemplateById.mockReturnValue(of(response));
-    component.loadEmailTemplate(1);
+    component.patchFormWithTemplate(mockData);
 
     expect(component.form.get('status')?.value).toBe(true);
   });
 
   it('should save email template in edit mode and include id', () => {
     component['mode'] = 'edit';
+    Object.defineProperty(component, 'data', {
+      get: () => ({ mode: 'edit', templateData: { id: 123 } }),
+      configurable: true,
+    });
 
     component.form.patchValue({
       templateType: EmailTemplateType.WelcomeEmail,
@@ -298,13 +265,67 @@ describe('EmailTemplateFormComponent', () => {
     );
   }));
 
-  it('should call loadEmailTemplate on ngOnInit if mode is edit and id is provided', () => {
-    const loadSpy = jest.spyOn(component, 'loadEmailTemplate').mockImplementation();
-    (component as any).mode = 'edit';
-    (component as any)['data'] = { id: 456 };
+  it('should call patchFormWithTemplate on ngOnInit if mode is edit and templateData is provided', () => {
+    const mockTemplateData = {
+      id: 456,
+      title: 'Test',
+      subject: 'Subject',
+      templateType: EmailTemplateType.WelcomeEmail,
+      body: 'Body',
+      status: true,
+    };
+
+    const patchSpy = jest.spyOn(component, 'patchFormWithTemplate');
+    component['mode'] = 'edit';
+    Object.defineProperty(component, 'data', {
+      get: () => ({ mode: 'edit', templateData: mockTemplateData }),
+      configurable: true,
+    });
 
     component.ngOnInit();
 
-    expect(loadSpy).toHaveBeenCalledWith(456);
+    expect(patchSpy).toHaveBeenCalledWith(mockTemplateData);
+  });
+
+  it('should open preview dialog with valid form', () => {
+    component.form.patchValue({
+      templateType: EmailTemplateType.WelcomeEmail,
+      title: 'Test Title',
+      subject: 'Test Subject',
+      body: '{{user}} {{email}} {{registrationDate}} {{loginUrl}} {{year}} {{companyName}}',
+      status: true,
+    });
+    component.form.updateValueAndValidity();
+
+    // Spy on the component's matDialog.open method directly
+    const openSpy = jest.spyOn(component['matDialog'], 'open').mockReturnValue({
+      afterClosed: () => of(true),
+    } as any);
+
+    jest.spyOn(wrapperUtils, 'hasEmailTemplateWrapper').mockReturnValue(false);
+    jest.spyOn(wrapperUtils, 'getEmailTemplateHtml').mockReturnValue('<div>wrapped</div>');
+
+    component.openPreviewDialog();
+
+    expect(openSpy).toHaveBeenCalled();
+  });
+
+  it('should update body validity when templateType changes', fakeAsync(() => {
+    const bodySpy = jest.spyOn(component.form.get('body')!, 'updateValueAndValidity');
+
+    component.form.patchValue({ templateType: EmailTemplateType.WelcomeEmail });
+    tick();
+
+    expect(bodySpy).toHaveBeenCalled();
+  }));
+
+  it('should build form with all field controls', () => {
+    component.buildForm();
+
+    expect(component.form.get('title')).toBeDefined();
+    expect(component.form.get('subject')).toBeDefined();
+    expect(component.form.get('body')).toBeDefined();
+    expect(component.form.get('templateType')).toBeDefined();
+    expect(component.form.get('status')).toBeDefined();
   });
 });

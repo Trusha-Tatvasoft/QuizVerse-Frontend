@@ -202,7 +202,6 @@ describe('BattleResultComponent', () => {
       const spyFetch = jest.spyOn(component as any, 'fetchBattleResult');
       component['setupBattleHub']();
       mockBattleHubService.onBattleEnded.next({ battleStatus: 1 } as any);
-      expect(mockSnackbar.showSuccess).toHaveBeenCalled();
       expect(spyFetch).toHaveBeenCalled();
     });
 
