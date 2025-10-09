@@ -1,6 +1,7 @@
 export enum UserRoles {
   Admin = 1,
   Player = 2,
+  SuperAdmin = 3,
 }
 
 export enum UserStatus {

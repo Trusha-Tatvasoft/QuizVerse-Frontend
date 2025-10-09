@@ -87,7 +87,7 @@ export const routes: Routes = [
     path: Navigations.Admin,
     component: MasterLayoutComponent,
     canActivate: [authGuard],
-    data: { roles: ['admin'] },
+    data: { roles: ['admin', 'superadmin'] },
     children: [
       {
         path: Navigations.Dashboard,

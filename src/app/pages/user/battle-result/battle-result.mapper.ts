@@ -10,10 +10,7 @@ export function mapUserBattleResultToBattleResult(data: BattleResultResponse): B
       result = data.isWin ? BattleOutcome.Victory : BattleOutcome.Defeat;
       break;
     case BattleStatus.Draw: // draw
-      result = BattleOutcome.Draw;
-      break;
-    case BattleStatus.Running: // running
-      result = BattleOutcome.Defeat; // or maybe a `Running` state if your enum supports it
+      result = data.isWin ? BattleOutcome.Draw : BattleOutcome.Defeat;
       break;
     default:
       result = BattleOutcome.Defeat; // fallback
@@ -34,11 +31,11 @@ export function mapUserBattleResultToBattleResult(data: BattleResultResponse): B
       fullName: data.opponentFullName,
       profileImageUrl: data.opponentProfile ?? null,
       score: data.opponentAttemptedQuestions,
-      isWinner: !data.isWin && data.battleStatus !== BattleStatus.Draw,
+      isWinner: result === BattleOutcome.Defeat && data.battleStatus === BattleStatus.Completed,
     },
     rewards: {
       points: data.playerEarnedXP,
-      description: 'XP earned for this battle',
+      description: 'Experience Points Earned',
     },
   };
 }
