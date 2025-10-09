@@ -358,6 +358,7 @@ export const platformMessages = {
   invalidBattleId: 'Invalid battle id',
   answerSubmitFailed: 'Failed to submit answer',
   resumeBattleFailed: 'Failed to resume battle',
+  alreadyAnsQuestion: 'Already answered this question.',
   opponentLeft: 'Your opponent has left the battle.',
   opponentBattleEnded: 'The battle has ended for your opponent.',
   battleComplted: 'Battle Completed!! Redirecting to result',

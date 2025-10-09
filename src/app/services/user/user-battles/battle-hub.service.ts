@@ -391,7 +391,8 @@ export class BattleHubService {
       const errorMsg = message || 'An unexpected error occurred.';
       this._errorSubject.next(errorMsg);
       this.snackbar.showError(errorMsg);
-      this.router.navigate([Navigations.Battles, Navigations.BattleList]);
+      if (errorMsg != platformMessages.alreadyAnsQuestion)
+        this.router.navigate([Navigations.User, Navigations.Battles, Navigations.BattleList]);
     });
 
     // Connection events

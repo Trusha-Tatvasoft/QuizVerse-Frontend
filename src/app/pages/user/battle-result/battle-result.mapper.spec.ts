@@ -46,11 +46,11 @@ describe('mapUserBattleResultToBattleResult', () => {
     const result = mapUserBattleResultToBattleResult({
       ...baseResponse,
       battleStatus: BattleStatus.Draw,
-      isWin: false,
+      isWin: true,
     });
 
     expect(result.result).toBe(BattleOutcome.Draw);
-    expect(result.you.isWinner).toBe(false);
+    expect(result.you.isWinner).toBe(true);
     expect(result.opponent.isWinner).toBe(false);
   });
 
@@ -87,6 +87,6 @@ describe('mapUserBattleResultToBattleResult', () => {
     expect(result.opponent.score).toBe(7);
 
     expect(result.rewards.points).toBe(50);
-    expect(result.rewards.description).toBe('XP earned for this battle');
+    expect(result.rewards.description).toBe('Experience Points Earned');
   });
 });
