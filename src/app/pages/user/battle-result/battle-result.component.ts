@@ -110,11 +110,6 @@ export class BattleResultComponent {
         if (!battleCompletion) return;
 
         if (battleCompletion.battleStatus > 0) {
-          // Battle ended → reload result in this component
-          this.snackbar.showSuccess(
-            platformMessages.successTitle,
-            platformMessages.battleEndedMessage,
-          );
           this.fetchBattleResult();
         } else {
           // Battle not completed → redirect to waiting page

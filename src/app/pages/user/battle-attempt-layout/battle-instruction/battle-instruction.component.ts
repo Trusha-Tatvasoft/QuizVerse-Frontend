@@ -159,6 +159,7 @@ export class BattleInstructionComponent implements OnInit, OnDestroy {
   skipToBattle(): void {
     this.battleHubService.skipInstructions(this.attemptedId);
     this.navigateToBattle(this.attemptedId);
+    this.clearCountdown();
   }
 
   navigateToBattle(attemptId: number) {

@@ -300,7 +300,9 @@ export class BattleAttemptLayoutComponent implements OnInit, OnDestroy {
         Navigations.WaitingBattleResult,
         state.battleId,
       ]); // put result route here
-      closeFullscreen();
+      if (document.fullscreenElement) {
+        closeFullscreen();
+      }
     }, 3000);
   }
 

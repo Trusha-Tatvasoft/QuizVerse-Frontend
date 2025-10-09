@@ -51,7 +51,6 @@ describe('FoundOpponentComponent', () => {
     battleName: 'Math Battle',
     playerProfile: mockOpponent,
     totalQuestions: 10,
-    // Add other required properties from BattleStartDetails interface
   };
 
   beforeEach(async () => {
@@ -94,6 +93,7 @@ describe('FoundOpponentComponent', () => {
       connect: jest.fn().mockResolvedValue(undefined),
       interruptBattle: jest.fn(),
       resumeBattle: jest.fn(),
+      cleanupBattleEndSubject: jest.fn(),
       onPlayerInterrupted: onPlayerInterruptedSubject.asObservable(),
       onBattleEndedForParticularPlayer: onBattleEndedSubject.asObservable(),
       onBattleResumed: onBattleResumedSubject.asObservable(),
@@ -108,6 +108,7 @@ describe('FoundOpponentComponent', () => {
     Object.defineProperty(window.history, 'state', {
       value: { battleStartDetails: mockBattleStartDetails },
       writable: true,
+      configurable: true,
     });
 
     // Mock localStorage
@@ -118,17 +119,22 @@ describe('FoundOpponentComponent', () => {
         removeItem: jest.fn(),
       },
       writable: true,
+      configurable: true,
     });
 
     // Mock document fullscreen APIs
-    Object.defineProperty(document, 'fullscreenElement', { value: null, writable: true });
+    Object.defineProperty(document, 'fullscreenElement', {
+      value: null,
+      writable: true,
+      configurable: true,
+    });
     (document as any).exitFullscreen = jest.fn(() => Promise.resolve());
     (document as any).webkitExitFullscreen = jest.fn();
     (document as any).msExitFullscreen = jest.fn();
 
     // Mock window events
     window.addEventListener = jest.fn();
-    window.removeEventListener = jest.fn((event, handler) => {});
+    window.removeEventListener = jest.fn();
 
     await TestBed.configureTestingModule({
       imports: [CommonModule, MatIcon, DisableQuizShortcutsDirective, FoundOpponentComponent],
@@ -160,10 +166,11 @@ describe('FoundOpponentComponent', () => {
   });
 
   describe('ngOnInit', () => {
-    it('should set up event listeners, decode route, redirect to battle, and start monitoring', () => {
+    it('should set up event listeners, decode route, redirect to battle, cleanup, and start monitoring', () => {
       const decodeRouteIdSpy = jest.spyOn(component as any, 'decodeRouteId');
       const redirectToBattleSpy = jest.spyOn(component, 'redirectToBattle');
       const startMonitoringSpy = jest.spyOn(mockCheatPreventionService, 'startMonitoring');
+      const cleanupSpy = jest.spyOn(mockBattleHubService, 'cleanupBattleEndSubject');
 
       component.ngOnInit();
 
@@ -171,6 +178,7 @@ describe('FoundOpponentComponent', () => {
       expect(window.addEventListener).toHaveBeenCalledWith('pageshow', expect.any(Function));
       expect(decodeRouteIdSpy).toHaveBeenCalled();
       expect(redirectToBattleSpy).toHaveBeenCalled();
+      expect(cleanupSpy).toHaveBeenCalled();
       expect(startMonitoringSpy).toHaveBeenCalled();
     });
 
@@ -189,7 +197,6 @@ describe('FoundOpponentComponent', () => {
     it('should decode valid battle ID and set battleStartDetails from history.state', () => {
       mockActivatedRoute.snapshot.paramMap.get.mockReturnValue(encodeURIComponent(btoa('123')));
 
-      // Mock history.state with both opponent and battleStartDetails
       Object.defineProperty(window, 'history', {
         value: {
           state: {
@@ -198,6 +205,7 @@ describe('FoundOpponentComponent', () => {
           },
         },
         writable: true,
+        configurable: true,
       });
 
       component['decodeRouteId']();
@@ -216,10 +224,15 @@ describe('FoundOpponentComponent', () => {
 
     it('should handle missing encodedId and navigate to battle list', () => {
       mockActivatedRoute.snapshot.paramMap.get.mockReturnValue(null);
-      Object.defineProperty(window.history, 'state', { value: {} });
+      Object.defineProperty(window.history, 'state', {
+        value: {},
+        writable: true,
+        configurable: true,
+      });
 
       component['decodeRouteId']();
 
+      // battleId remains null when early return happens
       expect(component.battleId).toBeNull();
       expect(component.battleStartDetails).toBeNull();
       expect(mockSnackbarService.showError).toHaveBeenCalledWith(platformMessages.invalideBattleId);
@@ -246,7 +259,11 @@ describe('FoundOpponentComponent', () => {
 
     it('should handle case when battleStartDetails is not in state', () => {
       mockActivatedRoute.snapshot.paramMap.get.mockReturnValue(encodeURIComponent(btoa('123')));
-      Object.defineProperty(window.history, 'state', { value: {} });
+      Object.defineProperty(window.history, 'state', {
+        value: {},
+        writable: true,
+        configurable: true,
+      });
 
       component['decodeRouteId']();
 
@@ -273,7 +290,7 @@ describe('FoundOpponentComponent', () => {
           Navigations.BattleInstruction,
           btoa(encodeURIComponent('123')),
         ],
-        { state: { battleId: 'MTIz' } },
+        { state: { battleId: btoa(encodeURIComponent('123')) } },
       );
     }));
 
@@ -292,11 +309,11 @@ describe('FoundOpponentComponent', () => {
           Navigations.BattleAttempt,
           btoa(encodeURIComponent('456')),
         ],
-        { state: { battleId: 'MTIz' } },
+        { state: { battleId: btoa(encodeURIComponent('123')) } },
       );
     }));
 
-    it('should show error and navigate when reloaded without battleAttemptId', () => {
+    it('should show error and navigate to waiting result when reloaded without battleAttemptId', () => {
       component.reloadAttempted = true;
       component.battleId = 123;
       component.battleAttemptId = null;
@@ -312,9 +329,9 @@ describe('FoundOpponentComponent', () => {
           Navigations.Battles,
           Navigations.BattleList,
           Navigations.WaitingBattleResult,
-          btoa(encodeURIComponent(component.battleId)),
+          btoa(encodeURIComponent('123')),
         ],
-        { state: { battleId: 'MTIz' } },
+        { state: { battleId: btoa(encodeURIComponent('123')) } },
       );
     });
 
@@ -334,35 +351,55 @@ describe('FoundOpponentComponent', () => {
   });
 
   describe('completeBattle', () => {
-    it('should show error message, close fullscreen, and interrupt battle', async () => {
+    it('should show error message, close fullscreen, interrupt battle, and navigate to waiting result', () => {
       component.battleId = 456;
-      Object.defineProperty(document, 'fullscreenElement', { value: {}, writable: true });
+      component.battleAttemptId = 789;
+      Object.defineProperty(document, 'fullscreenElement', {
+        value: {},
+        writable: true,
+        configurable: true,
+      });
 
-      await component.completeBattle('Cheating detected');
+      component.completeBattle('Cheating detected');
 
       expect(mockSnackbarService.showError).toHaveBeenCalledWith(
         autoSubmitBattleMessage('Cheating detected'),
       );
       expect(document.exitFullscreen).toHaveBeenCalled();
+      expect(mockBattleHubService.interruptBattle).toHaveBeenCalledWith(789);
+      expect(mockRouter.navigate).toHaveBeenCalledWith([
+        Navigations.User,
+        Navigations.Battles,
+        Navigations.BattleList,
+        Navigations.WaitingBattleResult,
+        btoa(encodeURIComponent('456')),
+      ]);
     });
 
     it('should connect and then interrupt battle if not connected', async () => {
-      component.battleId = 456; // use the correct property
-      Object.defineProperty(mockBattleHubService, 'connected', { value: false });
+      component.battleId = 456;
+      component.battleAttemptId = 789;
+      Object.defineProperty(mockBattleHubService, 'connected', {
+        value: false,
+        writable: true,
+        configurable: true,
+      });
 
-      await component.completeBattle('Cheating detected');
+      component.completeBattle('Cheating detected');
+
+      await Promise.resolve();
 
       expect(mockBattleHubService.connect).toHaveBeenCalled();
     });
 
     it('should handle opponent interruption events', fakeAsync(() => {
-      component.ngOnInit(); // Set up subscriptions
-      component.battleAttemptId = 456;
+      component.battleId = 456;
+      component.battleAttemptId = 789;
+      component.ngOnInit();
 
       component.completeBattle('Cheating detected');
       tick();
 
-      // Simulate opponent interruption
       onPlayerInterruptedSubject.next({ userId: 999 });
       tick();
 
@@ -370,19 +407,33 @@ describe('FoundOpponentComponent', () => {
     }));
 
     it('should handle battle ended events for other players', fakeAsync(() => {
-      component.ngOnInit(); // Set up subscriptions
-      component.battleAttemptId = 456;
+      component.battleId = 456;
+      component.battleAttemptId = 789;
+      component.ngOnInit();
 
       component.completeBattle('Cheating detected');
       tick();
 
-      // Simulate battle ended for other player
       onBattleEndedSubject.next({ userId: 999 });
       tick(1500);
 
       expect(mockSnackbarService.showInfo).toHaveBeenCalledWith(
         platformMessages.opponentBattleEnded,
       );
+    }));
+
+    it('should not show info when current user interrupts', fakeAsync(() => {
+      component.battleId = 456;
+      component.battleAttemptId = 789;
+      component.ngOnInit();
+
+      component.completeBattle('Cheating detected');
+      tick();
+
+      onPlayerInterruptedSubject.next({ userId: 789 });
+      tick();
+
+      expect(mockSnackbarService.showInfo).not.toHaveBeenCalledWith(platformMessages.opponentLeft);
     }));
   });
 
@@ -418,6 +469,37 @@ describe('FoundOpponentComponent', () => {
 
       expect(mockSnackbarService.showError).toHaveBeenCalledWith('Connection failed');
     });
+
+    it('should handle onBattleResumed event and update state', async () => {
+      const mockStoredData = { attemptedId: 456, expiry: Date.now() + 600000 };
+      (localStorage.getItem as jest.Mock).mockReturnValue(JSON.stringify(mockStoredData));
+      const redirectSpy = jest.spyOn(component, 'redirectToBattle');
+
+      // Call reconnectToHub and wait for the promise to resolve
+      await component['reconnectToHub']();
+
+      // Now emit the battle resumed event
+      onBattleResumedSubject.next(mockBattleStartDetails);
+
+      // Wait for async operations
+      await Promise.resolve();
+
+      expect(component.battleStartDetails).toEqual(mockBattleStartDetails);
+      expect(component.battleAttemptId).toBe(456);
+      expect(localStorage.setItem).toHaveBeenCalled();
+      expect(mockSnackbarService.showSuccess).toHaveBeenCalledWith(platformMessages.battleResumed);
+      expect(redirectSpy).toHaveBeenCalled();
+    });
+
+    it('should show matchmaking failed error for non-Error exceptions', async () => {
+      mockBattleHubService.connect.mockRejectedValue('Some error');
+
+      await component['reconnectToHub']();
+
+      expect(mockSnackbarService.showError).toHaveBeenCalledWith(
+        platformMessages.matchMakingFailed,
+      );
+    });
   });
 
   describe('openFullscreen and closeFullscreen', () => {
@@ -434,12 +516,68 @@ describe('FoundOpponentComponent', () => {
       expect(mockElem.requestFullscreen).toHaveBeenCalled();
     });
 
+    it('should open fullscreen using webkit method if standard not available', () => {
+      const mockElem = {
+        webkitRequestFullscreen: jest.fn(),
+        msRequestFullscreen: jest.fn(),
+      };
+      jest.spyOn(document, 'documentElement', 'get').mockReturnValue(mockElem as any);
+
+      component.openFullscreen();
+
+      expect(mockElem.webkitRequestFullscreen).toHaveBeenCalled();
+    });
+
+    it('should open fullscreen using ms method if others not available', () => {
+      const mockElem = {
+        msRequestFullscreen: jest.fn(),
+      };
+      jest.spyOn(document, 'documentElement', 'get').mockReturnValue(mockElem as any);
+
+      component.openFullscreen();
+
+      expect(mockElem.msRequestFullscreen).toHaveBeenCalled();
+    });
+
     it('should close fullscreen when active', async () => {
-      Object.defineProperty(document, 'fullscreenElement', { value: {}, writable: true });
+      Object.defineProperty(document, 'fullscreenElement', {
+        value: {},
+        writable: true,
+        configurable: true,
+      });
 
       await component.closeFullscreen();
 
       expect(document.exitFullscreen).toHaveBeenCalled();
+    });
+
+    it('should not attempt to close fullscreen when not active', () => {
+      Object.defineProperty(document, 'fullscreenElement', {
+        value: null,
+        writable: true,
+        configurable: true,
+      });
+
+      component.closeFullscreen();
+
+      expect(document.exitFullscreen).not.toHaveBeenCalled();
+    });
+
+    it('should handle exitFullscreen errors gracefully', async () => {
+      Object.defineProperty(document, 'fullscreenElement', {
+        value: {},
+        writable: true,
+        configurable: true,
+      });
+      const mockError = new Error('Exit failed');
+      (document as any).exitFullscreen = jest.fn(() => Promise.reject(mockError));
+
+      await component.closeFullscreen();
+
+      expect(mockSnackbarService.showError).toHaveBeenCalledWith(
+        platformMessages.failedToExitFullScreen,
+        mockError,
+      );
     });
   });
 
@@ -451,7 +589,6 @@ describe('FoundOpponentComponent', () => {
       component['showResumeDialog']();
 
       expect(mockDialog.open).toHaveBeenCalled();
-      // Since we mocked the dialog to return true, resumeBattle should be called
       expect(resumeBattleSpy).toHaveBeenCalled();
       expect(completeBattleSpy).not.toHaveBeenCalled();
     });
@@ -504,6 +641,42 @@ describe('FoundOpponentComponent', () => {
         panelClass: 'custom-dialog-radius',
       });
     });
+
+    it('should call onConfirm when dialog returns true', () => {
+      const dialogData: ConfirmationDialogData = {
+        title: 'Test Title',
+        message: 'Test Message',
+        cancelButtonConfig: cancelButtonConfig,
+        confirmButtonConfig: saveButtonConfig,
+      };
+      const onConfirm = jest.fn();
+      const onCancelClick = jest.fn();
+
+      component.openConfirmationDialog(dialogData, onConfirm, onCancelClick);
+
+      expect(onConfirm).toHaveBeenCalled();
+      expect(onCancelClick).not.toHaveBeenCalled();
+    });
+
+    it('should call onCancelClick when dialog returns false', () => {
+      mockDialog.open.mockReturnValue({
+        afterClosed: jest.fn().mockReturnValue(of(false)),
+      } as any);
+
+      const dialogData: ConfirmationDialogData = {
+        title: 'Test Title',
+        message: 'Test Message',
+        cancelButtonConfig: cancelButtonConfig,
+        confirmButtonConfig: saveButtonConfig,
+      };
+      const onConfirm = jest.fn();
+      const onCancelClick = jest.fn();
+
+      component.openConfirmationDialog(dialogData, onConfirm, onCancelClick);
+
+      expect(onCancelClick).toHaveBeenCalled();
+      expect(onConfirm).not.toHaveBeenCalled();
+    });
   });
 
   describe('imageError', () => {
@@ -513,6 +686,27 @@ describe('FoundOpponentComponent', () => {
       component.imageError();
 
       expect(component.isImageError).toBe(true);
+    });
+  });
+
+  describe('getInitials', () => {
+    it('should call globalGetInitials utility', () => {
+      const result = component.getInitials('John Doe');
+      expect(result).toBeDefined();
+    });
+  });
+
+  describe('ngOnDestroy', () => {
+    it('should complete destroy$ subject and stop monitoring', () => {
+      const destroyNextSpy = jest.spyOn(component['destroy$'], 'next');
+      const destroyCompleteSpy = jest.spyOn(component['destroy$'], 'complete');
+      const stopMonitoringSpy = jest.spyOn(mockCheatPreventionService, 'stopMonitoring');
+
+      component.ngOnDestroy();
+
+      expect(destroyNextSpy).toHaveBeenCalled();
+      expect(destroyCompleteSpy).toHaveBeenCalled();
+      expect(stopMonitoringSpy).toHaveBeenCalled();
     });
   });
 });

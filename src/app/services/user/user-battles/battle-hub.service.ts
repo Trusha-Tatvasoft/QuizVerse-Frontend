@@ -33,7 +33,7 @@ export class BattleHubService {
   // Matchmaking events
   private readonly searching$ = new Subject<void>();
   private readonly matchFound$ = new Subject<PlayerProfileDTO>();
-  private readonly battleEnded$ = new ReplaySubject<BattleCompletionResult>(1);
+  private battleEnded$ = new ReplaySubject<BattleCompletionResult>(1);
 
   // Battle events
   private battleStarted$ = new ReplaySubject<BattleStartDetails>(1);
@@ -208,15 +208,15 @@ export class BattleHubService {
       return;
     }
 
-    this.hubConnection
-      ?.invoke(platformMessages.battleHubSkipInstruction, battleAttemptId)
-      .catch((error: unknown) => {
+    this.hubConnection!.invoke(platformMessages.battleHubSkipInstruction, battleAttemptId).catch(
+      (error: unknown) => {
         this.snackbar.showError(
           error instanceof Error && error.message
             ? error.message
             : platformMessages.failedToSkipInstruction,
         );
-      });
+      },
+    );
   }
 
   submitAnswer(battleId: number, index: number, answer: string): void {
@@ -280,6 +280,11 @@ export class BattleHubService {
 
     // Reset state
     this.battleAttemptId = null;
+  }
+
+  cleanupBattleEndSubject(): void {
+    this.battleEnded$.complete();
+    this.battleEnded$ = new ReplaySubject<BattleCompletionResult>(1);
   }
 
   async stopConnection(): Promise<void> {
@@ -376,7 +381,6 @@ export class BattleHubService {
     this.hubConnection.on(platformMessages.battleEnded, (result: BattleCompletionResult) => {
       this.battleEnded$.next(result);
       if (result) {
-        this.snackbar.showSuccess(platformMessages.successTitle, 'Battle ended!');
         this.userBattlesService.updateBattleResults$.next(true);
         this.stopConnection();
       }
