@@ -66,6 +66,10 @@ export const authInterceptor: HttpInterceptorFn = (
           snackbar.showError(platformMessages.notFoundTitle, error.error.message);
           break;
 
+        case 409:
+          snackbar.showInfo(platformMessages.infoTitle, error.error.message);
+          break;
+
         case 500:
           snackbar.showError(platformMessages.serverErrorTitle, backendMessage);
           break;
