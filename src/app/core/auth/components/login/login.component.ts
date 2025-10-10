@@ -16,6 +16,7 @@ import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.se
 import { Subject, takeUntil } from 'rxjs';
 import { LoginCredentials } from '../../interfaces/login.interface';
 import { platformMessages } from '../../../../utils/constants';
+import { Role } from '../../../../shared/enums/role';
 
 @Component({
   selector: 'app-login',
@@ -89,7 +90,7 @@ export class LoginComponent implements OnDestroy {
           const token = res.data.accessToken;
           const role = token ? this.authService.getRoleFromToken(token) : null;
 
-          if (role === 'admin') {
+          if (role === Role.Admin || role === Role.SuperAdmin) {
             this.router.navigate([`${Navigations.Admin}/${Navigations.Dashboard}`]);
           } else {
             this.router.navigate([`${Navigations.User}/${Navigations.Dashboard}`]);

@@ -12,7 +12,7 @@ import {
   userHeaderConfig,
 } from './configs/user-management.config';
 import { FormControl } from '@angular/forms';
-import { debounceTime, Subject, takeUntil } from 'rxjs';
+import { debounceTime, EMPTY, map, Subject, switchMap, take, takeUntil } from 'rxjs';
 import { UserAction, UserRoles, UserStatus } from '../../../shared/enums/user-management.enum';
 import { PaginationRequest } from '../../../shared/interfaces/pagination-request.interface';
 import { TableData } from '../../../shared/interfaces/table-component.interface';
@@ -40,6 +40,8 @@ import {
   suspendUserDialog,
 } from './configs/user-confirmation-dialog.config';
 import { ConfirmationDialogData } from '../../../shared/interfaces/confirmation-dialog.interface';
+import { AuthService } from '../../../core/auth/services/auth.service';
+import { Role } from '../../../shared/enums/role';
 
 @Component({
   selector: 'app-user-management',
@@ -59,6 +61,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   userService = inject(UserManagementService);
   snackbar = inject(SnackbarService);
   dialog = inject(MatDialog);
+  authService = inject(AuthService);
 
   // Header and button configs
   userConfig = userHeaderConfig;
@@ -156,9 +159,9 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
     this.userService
       .getUsers(request)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (res) => {
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((res) => {
           if (!res.result || res.statusCode !== 200) {
             this.snackbar.showError(
               res.message || platformMessages.errorMessage,
@@ -166,11 +169,30 @@ export class UserManagementComponent implements OnInit, OnDestroy {
             );
             this.dataSource.set([]);
             this.totalItems.set(0);
-            return;
+            return EMPTY;
           }
-          this.dataSource.set(res.data.records.map(userToUserListingTableData));
-          this.totalItems.set(res.data.totalRecords);
-        },
+
+          // role of the logged-in user
+          return this.authService.currentRole$.pipe(
+            take(1),
+            map((role) => {
+              if (role === Role.Admin || role === Role.SuperAdmin || role === Role.Player) {
+                const mappedData = res.data.records.map((user) =>
+                  userToUserListingTableData(user, role),
+                );
+                this.dataSource.set(mappedData);
+                this.totalItems.set(res.data.totalRecords);
+              } else {
+                this.snackbar.showError(
+                  platformMessages.errorTitle,
+                  platformMessages.unauthorizedAccess,
+                );
+              }
+            }),
+          );
+        }),
+      )
+      .subscribe({
         error: (error) => {
           const message = error?.error?.message || error?.message || 'Unexpected error occurred';
           const status = error?.status || 'Unknown';
@@ -236,7 +258,10 @@ export class UserManagementComponent implements OnInit, OnDestroy {
       disableClose: false,
       panelClass: 'custom-dialog-container',
       autoFocus: false,
-      data: user,
+      data: {
+        user,
+        role: this.authService.currentRole$.value,
+      },
     });
 
     dialogRef.afterClosed().subscribe((result) => {

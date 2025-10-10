@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NotificationCenterComponent } from './notification-center.component';
 import { AuthService } from '../../../core/auth/services/auth.service';
-import { roles } from '../../../utils/constants';
+import { Role } from '../../../shared/enums/role';
 
 describe('NotificationCenterComponent', () => {
   let component: NotificationCenterComponent;
@@ -31,7 +31,7 @@ describe('NotificationCenterComponent', () => {
   describe('ngOnInit', () => {
     it('should set isAdmin = true if role is admin', () => {
       (mockAuth.getAccessToken as jest.Mock).mockReturnValue('token');
-      (mockAuth.getRoleFromToken as jest.Mock).mockReturnValue(roles.admin);
+      (mockAuth.getRoleFromToken as jest.Mock).mockReturnValue(Role.Admin);
 
       component.ngOnInit();
 

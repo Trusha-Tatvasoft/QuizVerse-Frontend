@@ -10,7 +10,7 @@
       >
         <mat-label>{{ field.label }}</mat-label>
 
-        @if (field.type !== 'file') {
+        @if (field.type !== 'file' && field.type !== 'select') {
           <mat-form-field
             [ngClass]="[
               field.type === 'textarea' ? 'custom-form-field-text' : 'custom-form-field',
@@ -96,6 +96,27 @@
               {{ getError(field.name) }}
             </div>
           </div>
+        }
+
+        @if (field.type === 'select') {
+          <mat-form-field appearance="outline" class="full-width custom-form-field">
+            <mat-icon fontSet="material-icons-outlined" matPrefix>
+              {{ field.icon || 'list' }}
+            </mat-icon>
+            <mat-select
+              [id]="field.name"
+              [formControlName]="field.name"
+              [placeholder]="field.placeholder"
+            >
+              @for (option of field.options; track option.value) {
+                <mat-option [value]="option.value">{{ option.label | titlecase }}</mat-option>
+              }
+            </mat-select>
+
+            <mat-error>
+              {{ getError(field.name) }}
+            </mat-error>
+          </mat-form-field>
         }
       </div>
     }

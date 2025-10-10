@@ -34,7 +34,7 @@ import { OutlineButtonComponent } from '../../../shared/components/outline-butto
 import { Notifications } from '../interfaces/navbar.component.interface';
 import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
-import { plateformName, platformMessages, roles } from '../../../utils/constants';
+import { plateformName, platformMessages } from '../../../utils/constants';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
 import { NavbarDataService } from '../../../services/common/navbar/navbar-data.service';
@@ -45,6 +45,7 @@ import { TimeAgoPipe } from '../../../shared/pipes/time-ago/time-ago.pipe';
 import { UserProfileService } from '../../../services/user/user-profile/user-profile.service';
 import { selectedTabIndexSignal } from '../../../core/auth/components/login-signup/login-signup.component';
 import { globalGetInitials } from '../../../utils/get-profile-initials.utils';
+import { Role } from '../../../shared/enums/role';
 
 @Component({
   selector: 'app-navbar',
@@ -178,7 +179,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   goToProfile() {
     const route =
-      this.role === roles.admin
+      this.role === Role.Admin || this.role === Role.SuperAdmin
         ? `/${Navigations.Admin}/${Navigations.Profile}`
         : `/${Navigations.User}/${Navigations.Profile}`;
 
@@ -187,7 +188,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   goToSetting() {
     const route =
-      this.role === roles.admin
+      this.role === Role.Admin || this.role === Role.SuperAdmin
         ? `/${Navigations.Admin}/${Navigations.Profile}/`
         : `/${Navigations.User}/${Navigations.Profile}`;
 
@@ -206,10 +207,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
 
     switch (this.role) {
-      case roles.admin:
+      case Role.SuperAdmin:
+      case Role.Admin:
         this.router.navigate([`/${Navigations.Admin}/${Navigations.Dashboard}`]);
         break;
-      case roles.player:
+      case Role.Player:
         this.router.navigate([`/${Navigations.User}/${Navigations.Dashboard}`]);
         break;
       default:
@@ -280,14 +282,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
   viewAllNotifications() {
     this.showNotifications = false;
     const route =
-      this.role === roles.admin
+      this.role === Role.Admin || this.role === Role.SuperAdmin
         ? `/${Navigations.Admin}/${Navigations.Notifications}/`
         : `/${Navigations.User}/${Navigations.Notifications}`;
     this.router.navigate([route]);
   }
 
   viewDetails(category: number) {
-    const { path, queryParams } = getNotificationRoute(this.role === roles.admin, category);
+    const { path, queryParams } = getNotificationRoute(
+      this.role === Role.Admin || this.role === Role.SuperAdmin,
+      category,
+    );
     this.router.navigate([path], { queryParams });
   }
 

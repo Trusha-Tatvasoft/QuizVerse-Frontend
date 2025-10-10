@@ -1,5 +1,6 @@
 import { environment } from '../../../../../../environments/environment.dev';
-import { UserStatus } from '../../../../../shared/enums/user-management.enum';
+import { Role } from '../../../../../shared/enums/role';
+import { UserRoles, UserStatus } from '../../../../../shared/enums/user-management.enum';
 import { TableData } from '../../../../../shared/interfaces/table-component.interface';
 import { colors, defaultLastLoginDate } from '../../../../../utils/constants';
 import { UserListData } from '../../interfaces/user-list-data.interface';
@@ -8,7 +9,18 @@ import { UserListData } from '../../interfaces/user-list-data.interface';
  * Maps a `UserListData` object from the API to a `TableData` format used by the UI table component.
  * Handles formatting of user role, status, quiz attempts, and user profile.
  */
-export function userToUserListingTableData(user: UserListData): TableData {
+export function userToUserListingTableData(user: UserListData, currentUserRole: Role): TableData {
+  const isCurrentUserAdmin = currentUserRole === Role.Admin;
+  const isCurrentUserSuperAdmin = currentUserRole === Role.SuperAdmin;
+  const isTargetUserAdmin = user.roleId === UserRoles.Admin;
+  const isTargetUserSuperAdmin = user.roleId === UserRoles.SuperAdmin;
+
+  const shouldDisableEditActions =
+    isCurrentUserAdmin && (isTargetUserSuperAdmin || isTargetUserAdmin);
+  const shouldDisableDeleteAction =
+    (isCurrentUserAdmin && (isTargetUserSuperAdmin || isTargetUserAdmin)) ||
+    (isCurrentUserSuperAdmin && (isTargetUserAdmin || isTargetUserSuperAdmin));
+
   return {
     id: user.id,
     fullname: {
@@ -19,10 +31,10 @@ export function userToUserListingTableData(user: UserListData): TableData {
     role: {
       tagConfig: {
         id: user.roleId.toString(),
-        label: user.roleId === 1 ? 'Admin' : 'Player',
+        label: getRoleLabel(user.roleId),
         type: 'static',
-        backgroundColor: user.roleId === 1 ? 'lightPurple' : 'lightOrange',
-        textColor: user.roleId === 1 ? 'purple' : 'orange',
+        backgroundColor: getRoleColor(user.roleId).bg,
+        textColor: getRoleColor(user.roleId).text,
       },
     },
     status: {
@@ -35,7 +47,7 @@ export function userToUserListingTableData(user: UserListData): TableData {
       },
     },
     createdDate: user.createdDate,
-    lastLogin: user.lastLogin !== defaultLastLoginDate ? user.lastLogin : null, // Fallback to createdDate if lastLogin is uninitialized
+    lastLogin: user.lastLogin !== defaultLastLoginDate ? user.lastLogin : null,
     quizattempt: {
       tagConfig: {
         id: `quizzes-${user.id}`,
@@ -47,15 +59,64 @@ export function userToUserListingTableData(user: UserListData): TableData {
       extraText: 'quizzes',
     },
     actions: [
-      { icon: 'edit', tooltip: 'Edit User' },
-      { icon: 'delete', tooltip: 'Delete User' },
-      ...(user.status !== UserStatus.Suspended ? [{ icon: 'block', tooltip: 'Suspend User' }] : []), // Add "block" only if not suspended
+      {
+        icon: 'edit',
+        tooltip: shouldDisableEditActions ? 'Action not allowed' : 'Edit User',
+        isDisabled: shouldDisableEditActions,
+      },
+      {
+        icon: 'delete',
+        tooltip: shouldDisableDeleteAction ? 'Action not allowed' : 'Delete User',
+        isDisabled: shouldDisableDeleteAction,
+      },
+      ...(user.status !== UserStatus.Suspended
+        ? [
+            {
+              icon: 'block',
+              tooltip: shouldDisableEditActions ? 'Action not allowed' : 'Suspend User',
+              isDisabled: shouldDisableEditActions,
+            },
+          ]
+        : []),
       {
         icon: user.status === UserStatus.Active ? 'remove_circle_outline' : 'check_circle_outline',
-        tooltip: user.status === UserStatus.Active ? 'Deactivate User' : 'Activate User',
-      }, // Toggle action based on status
+        tooltip: shouldDisableEditActions
+          ? 'Action not allowed'
+          : user.status === UserStatus.Active
+            ? 'Deactivate User'
+            : 'Activate User',
+        isDisabled: shouldDisableEditActions,
+      },
     ],
   };
+}
+
+/**
+ * Maps a numeric role ID to its corresponding label.
+ */
+function getRoleLabel(roleId: number): string {
+  switch (roleId) {
+    case UserRoles.SuperAdmin:
+      return 'Super Admin';
+    case UserRoles.Admin:
+      return 'Admin';
+    default:
+      return 'Player';
+  }
+}
+
+/**
+ * Maps a numeric role ID to corresponding UI tag colors.
+ */
+function getRoleColor(roleId: number): { bg: string; text: string } {
+  switch (roleId) {
+    case UserRoles.SuperAdmin:
+      return { bg: 'lightBlue', text: 'blue' };
+    case UserRoles.Admin:
+      return { bg: 'lightPurple', text: 'purple' };
+    default:
+      return { bg: 'lightOrange', text: 'orange' };
+  }
 }
 
 /**

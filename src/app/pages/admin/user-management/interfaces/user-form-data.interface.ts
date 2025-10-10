@@ -6,4 +6,5 @@ export interface UserFormData {
   password: string;
   bio: string;
   profilePic: string;
+  roleId: number;
 }

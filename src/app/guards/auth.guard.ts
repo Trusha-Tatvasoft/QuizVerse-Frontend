@@ -5,11 +5,14 @@ import { AuthService } from '../core/auth/services/auth.service';
 import { SnackbarService } from '../shared/service/snackbar/snackbar.service';
 import { platformMessages } from '../utils/constants';
 import { Navigations } from '../shared/enums/navigation';
+import { MatDialog } from '@angular/material/dialog';
+import { Role } from '../shared/enums/role';
 
 export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot): Promise<boolean> => {
   const authService = inject(AuthService);
   const router = inject(Router);
   const snackbar = inject(SnackbarService);
+  const dialog = inject(MatDialog);
 
   const publicOnly = route.data?.['publicOnly'] || false;
   const allowedRoles: string[] = route.data?.['roles'] || [];
@@ -23,6 +26,7 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot): P
       token = await firstValueFrom(authService.refreshAccessToken());
       isValid = !!token;
     } catch {
+      dialog.closeAll();
       authService.logout(false);
       isValid = false;
     }
@@ -30,15 +34,13 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot): P
 
   if (publicOnly && isValid) {
     const roleString = authService.getRoleFromToken(token || '')?.toLowerCase();
-    const target =
-      roleString === 'admin'
-        ? `/${Navigations.Admin}/${Navigations.Dashboard}`
-        : `/${Navigations.User}/${Navigations.Dashboard}`;
+    const target = getRedirectPath(roleString);
     router.navigate([target]);
     return false;
   }
 
   if (!publicOnly && !isValid) {
+    dialog.closeAll();
     router.navigate([Navigations.Login]);
     return false;
   }
@@ -54,3 +56,15 @@ export const authGuard: CanActivateFn = async (route: ActivatedRouteSnapshot): P
 
   return true;
 };
+
+function getRedirectPath(role: string | undefined): string {
+  switch (role) {
+    case Role.SuperAdmin:
+    case Role.Admin:
+      return `/${Navigations.Admin}/${Navigations.Dashboard}`;
+    case Role.Player:
+      return `/${Navigations.User}/${Navigations.Dashboard}`;
+    default:
+      return `/${Navigations.Login}`;
+  }
+}
