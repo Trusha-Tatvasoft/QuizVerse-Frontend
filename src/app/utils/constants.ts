@@ -551,13 +551,6 @@ export const quizCRUDMessages = {
 };
 //#endregion
 
-//#region Role Constants
-export const roles = {
-  admin: 'admin',
-  player: 'player',
-};
-//#endregion
-
 //#region Email Template
 export const emailTemplateTypeLabels: Record<number, string> = {
   [EmailTemplateType.AccountSuspension]: 'Account Suspension',

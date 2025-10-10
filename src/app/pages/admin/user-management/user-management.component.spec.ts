@@ -7,7 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { OutlineButtonComponent } from '../../../shared/components/outline-button/outline-button.component';
 import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
 import { By } from '@angular/platform-browser';
-import { of, throwError } from 'rxjs';
+import { BehaviorSubject, of, throwError } from 'rxjs';
 import { UserManagementService } from '../../../services/admin/user-management/user-management.service';
 import { UserListData } from './interfaces/user-list-data.interface';
 import { userToUserListingTableData } from './components/user-table/user-listing-data.mapper';
@@ -23,6 +23,8 @@ import { UserAction, UserStatus } from '../../../shared/enums/user-management.en
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogData } from '../../../shared/interfaces/confirmation-dialog.interface';
 import { ButtonConfig } from '../../../shared/interfaces/button-config.interface';
+import { Role } from '../../../shared/enums/role';
+import { AuthService } from '../../../core/auth/services/auth.service';
 import { UserFormDialogComponent } from './components/user-form-dialog/user-form-dialog.component';
 
 jest.mock('../../../services/admin/user-management/user-management.service');
@@ -74,6 +76,7 @@ describe('UserManagementComponent', () => {
     bio: 'Team lead',
     profilePic: 'https://example.com/john.jpg',
     password: '',
+    roleId: 2,
   };
 
   const mockUserByIdResponse: ApiResponse<UserFormData> = {
@@ -92,6 +95,7 @@ describe('UserManagementComponent', () => {
       bio: 'Team Lead',
       profilePic: 'https://example.com/john.jpg',
       password: '',
+      roleId: 2,
     },
     {
       id: 2,
@@ -101,13 +105,17 @@ describe('UserManagementComponent', () => {
       bio: 'Developer',
       profilePic: 'https://example.com/jane.jpg',
       password: '',
+      roleId: 2,
     },
   ];
 
   let dialogMock: { open: jest.Mock };
   let dialog: MatDialog;
+  let mockCurrentRole$: BehaviorSubject<Role>;
 
   beforeEach(async () => {
+    mockCurrentRole$ = new BehaviorSubject<Role>(Role.SuperAdmin);
+
     dialogMock = {
       open: jest.fn().mockReturnValue({
         afterClosed: () => of(true),
@@ -153,6 +161,12 @@ describe('UserManagementComponent', () => {
           provide: MatDialog,
           useValue: dialogMock,
         },
+        {
+          provide: AuthService,
+          useValue: {
+            currentRole$: mockCurrentRole$, // Use BehaviorSubject instead of of()
+          },
+        },
       ],
     }).compileComponents();
 
@@ -178,9 +192,34 @@ describe('UserManagementComponent', () => {
   });
 
   it('should call fetchUsers on init', () => {
-    // checks API is called on component init
+    const mockResponse = {
+      result: true,
+      statusCode: 200,
+      message: 'Fetched successfully',
+      data: {
+        totalRecords: 1,
+        records: [
+          {
+            id: 1,
+            fullName: 'John Doe',
+            email: 'john@example.com',
+            userName: 'john',
+            roleId: 1,
+            status: 1,
+            createdDate: '2023-01-01',
+            lastLogin: '2023-01-05',
+            attemptedQuizzes: 3,
+          },
+        ],
+      },
+    };
+
+    jest.spyOn(userService, 'getUsers').mockReturnValue(of(mockResponse));
+
+    component.ngOnInit();
+
     expect(userService.getUsers).toHaveBeenCalled();
-    expect(component.dataSource().length).toBeGreaterThan(0);
+    expect(component.dataSource().length).toBe(1);
     expect(component.totalItems()).toBe(1);
   });
 
@@ -282,7 +321,6 @@ describe('UserManagementComponent', () => {
   });
 
   it('should map UserListData to correct TableData', () => {
-    // verifies user data is correctly mapped for the table
     const input: UserListData = {
       id: 1,
       fullName: 'John Doe',
@@ -294,7 +332,9 @@ describe('UserManagementComponent', () => {
       lastLogin: '2023-01-05',
       attemptedQuizzes: 3,
     };
-    const output = userToUserListingTableData(input);
+
+    const output = userToUserListingTableData(input, Role.SuperAdmin);
+
     expect((output as Record<string, any>)['fullname'].name).toBe('John Doe');
     expect((output['role'] as { tagConfig: { label: string } }).tagConfig.label).toBe('Admin');
     expect((output['status'] as { tagConfig: { label: string } }).tagConfig.label).toBe('Active');
@@ -541,7 +581,10 @@ describe('UserManagementComponent', () => {
       disableClose: false,
       panelClass: 'custom-dialog-container',
       autoFocus: false,
-      data: mockUserRow,
+      data: {
+        user: mockUserRow,
+        role: mockCurrentRole$.value,
+      },
     });
 
     expect(saveSpy).toHaveBeenCalledWith(result.formData, result.isEdit);
@@ -755,6 +798,7 @@ describe('UserManagementComponent', () => {
       password: 'securepass123',
       bio: 'Test bio',
       profilePic: '',
+      roleId: 2,
     };
 
     const mockResponse: ApiResponse<typeof user> = {

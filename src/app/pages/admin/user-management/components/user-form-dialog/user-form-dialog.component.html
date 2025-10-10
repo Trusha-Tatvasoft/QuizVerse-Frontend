@@ -24,6 +24,7 @@
       [isEditMode]="isEditMode"
       (saveUser)="onRegisterSaveUser($event)"
       (formCancelled)="handleCancel()"
+      [isSuperAdmin]="isSuperAdmin()"
     >
     </app-register>
   </div>

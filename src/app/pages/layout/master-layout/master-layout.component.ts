@@ -6,6 +6,7 @@ import { UserType } from '../../../utils/types/sidebar-component.type';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { Subject, takeUntil } from 'rxjs';
+import { Role } from '../../../shared/enums/role';
 
 @Component({
   selector: 'app-master-layout',
@@ -20,18 +21,20 @@ export class MasterLayoutComponent implements OnInit, OnDestroy {
   @ViewChild(SidebarComponent) sidebar!: SidebarComponent;
   @ViewChild(NavbarComponent) navbar!: NavbarComponent;
 
-  role: UserType = 'player';
+  role: UserType = Role.Player;
   isLogin: boolean = true;
   isAdmin: boolean = false;
   sidebarItems = navigationItems.UserRoutes.filter((item) => item.label !== 'Profile');
 
   ngOnInit(): void {
     this.authService.currentRole$.pipe(takeUntil(this.destroy$)).subscribe((role) => {
-      if (role === 'admin' || role === 'player') {
+      if (role === Role.Admin || role === Role.SuperAdmin || role === Role.Player) {
         this.role = role as UserType;
-        this.isAdmin = role === 'admin';
+
+        this.isAdmin = role === Role.Admin || role === Role.SuperAdmin;
+
         this.sidebarItems =
-          role === 'admin'
+          role === Role.Admin || role === Role.SuperAdmin
             ? navigationItems.AdminRoutes
             : navigationItems.UserRoutes.filter((item) => item.label !== 'Profile');
       }

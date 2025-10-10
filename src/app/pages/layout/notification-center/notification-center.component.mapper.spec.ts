@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NotificationCenterComponent } from './notification-center.component';
 import { AuthService } from '../../../core/auth/services/auth.service';
-import { colors, roles } from '../../../utils/constants';
+import { colors } from '../../../utils/constants';
 import {
   AdminNotificationCategory,
   NotificationType,
@@ -15,6 +15,7 @@ import {
   typeList,
 } from './notification-center.comonent.mapper';
 import { NotificationCenterResponse } from '../interfaces/notification-center.response.interfaces';
+import { Role } from '../../../shared/enums/role';
 
 describe('NotificationCenterComponent', () => {
   let component: NotificationCenterComponent;
@@ -44,7 +45,7 @@ describe('NotificationCenterComponent', () => {
   describe('ngOnInit', () => {
     it('should set isAdmin = true if role is admin', () => {
       (mockAuth.getAccessToken as jest.Mock).mockReturnValue('token');
-      (mockAuth.getRoleFromToken as jest.Mock).mockReturnValue(roles.admin);
+      (mockAuth.getRoleFromToken as jest.Mock).mockReturnValue(Role.Admin);
 
       component.ngOnInit();
 

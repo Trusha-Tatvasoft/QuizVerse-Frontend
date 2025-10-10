@@ -7,9 +7,9 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { MatFormField, MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -37,6 +37,10 @@ import { OutlineButtonComponent } from '../../../../shared/components/outline-bu
 import { selectedTabIndexSignal } from '../login-signup/login-signup.component';
 import { UserFormData } from '../../../../pages/admin/user-management/interfaces/user-form-data.interface';
 import { FilenameTruncatePipe } from '../../../../shared/pipes/filename-truncate/filename-truncate.pipe';
+import { MatSelectModule } from '@angular/material/select';
+import { UserRoles } from '../../../../shared/enums/user-management.enum';
+import { AuthService } from '../../services/auth.service';
+import { Role } from '../../../../shared/enums/role';
 
 @Component({
   selector: 'app-register',
@@ -51,6 +55,8 @@ import { FilenameTruncatePipe } from '../../../../shared/pipes/filename-truncate
     MatFormField,
     OutlineButtonComponent,
     FilenameTruncatePipe,
+    MatSelectModule,
+    TitleCasePipe,
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss', '../login-signup/login-signup.component.scss'],
@@ -59,6 +65,7 @@ export class RegisterComponent implements OnDestroy {
   @Input() user: UserFormData | null = null;
   @Input() isLogin = false;
   @Input() isEditMode = false;
+  @Input() isSuperAdmin: boolean = false;
 
   @Output() saveUser = new EventEmitter<{ formData: FormData; isEdit: boolean }>();
   @Output() formCancelled = new EventEmitter<void>();
@@ -95,15 +102,7 @@ export class RegisterComponent implements OnDestroy {
       validators: this.passwordMatchValidator,
     });
 
-    this.userForm = this.fb.group(
-      this.userFields.reduce(
-        (acc, field) => {
-          acc[field.name] = ['', field.validators];
-          return acc;
-        },
-        {} as Record<string, unknown>,
-      ),
-    );
+    this.buildUserForm();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -124,6 +123,11 @@ export class RegisterComponent implements OnDestroy {
       );
     }
 
+    if (changes['isSuperAdmin'] && this.isSuperAdmin && !this.isEditMode) {
+      this.addSuperAdminFields();
+      this.buildUserForm();
+    }
+
     if (changes['user'] && this.user) {
       this.userForm.patchValue({
         fullName: this.user.fullName || '',
@@ -131,6 +135,7 @@ export class RegisterComponent implements OnDestroy {
         email: this.user.email || '',
         bio: this.user.bio || '',
         profilePicture: this.user.profilePic || '',
+        roleId: this.user.roleId || '',
       });
     }
   }
@@ -381,5 +386,52 @@ export class RegisterComponent implements OnDestroy {
   // Return active form based on login mode
   private getActiveForm(): FormGroup {
     return this.isLogin ? this.userForm : this.registerForm;
+  }
+
+  private addSuperAdminFields(): void {
+    let updatedFields = [...this.userFields];
+
+    const bioIndex = updatedFields.findIndex((f) => f.name === 'bio');
+
+    // Define your dynamic "role" field
+    const roleField = {
+      name: 'roleId',
+      label: 'Role*',
+      type: 'select',
+      placeholder: 'Select Role',
+      icon: 'supervised_user_circle',
+      options: [
+        { value: UserRoles.Admin, label: Role.Admin },
+        { value: UserRoles.Player, label: Role.Player },
+      ],
+      validators: [Validators.required],
+      validationMessages: { required: 'Role is required.' },
+    };
+
+    // Insert the "role" field right before 'bio'
+    if (bioIndex !== -1) {
+      updatedFields.splice(bioIndex, 0, roleField);
+    } else {
+      updatedFields.push(roleField);
+    }
+
+    // Update gridClass for email if not in edit mode
+    updatedFields = updatedFields.map((field) =>
+      field.name === 'email' ? { ...field, gridClass: 'col-span-1 sm:col-span-2' } : field,
+    );
+
+    this.userFields = updatedFields;
+  }
+
+  private buildUserForm(): void {
+    this.userForm = this.fb.group(
+      this.userFields.reduce(
+        (acc, field) => {
+          acc[field.name] = ['', field.validators];
+          return acc;
+        },
+        {} as Record<string, unknown>,
+      ),
+    );
   }
 }
