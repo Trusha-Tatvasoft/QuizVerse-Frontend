@@ -49,7 +49,7 @@ export class BattleRequestComponent implements OnInit {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    this.battleHubService.cleanupBattleSubjects();
+    this.battleHubService.cleanupIncomingRequests();
   }
 
   loadBattleRequests(): void {

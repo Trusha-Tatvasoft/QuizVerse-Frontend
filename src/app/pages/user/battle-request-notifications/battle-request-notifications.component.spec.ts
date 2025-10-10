@@ -35,7 +35,7 @@ describe('BattleRequestNotificationsComponent', () => {
       acceptRequest: jest.fn(),
       declineRequest: jest.fn(),
       removeIncomingRequest: jest.fn(),
-      cleanupBattleSubjects: jest.fn(),
+      cleanupIncomingRequests: jest.fn(),
     };
 
     await TestBed.configureTestingModule({

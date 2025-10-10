@@ -19,6 +19,10 @@ export class BattleRequestNotificationsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Connect to the SignalR hub
+    this.connectToHub();
+  }
+
+  connectToHub() {
     this.battleHubService.connect();
 
     // Subscribe to incoming battle requests
@@ -59,6 +63,6 @@ export class BattleRequestNotificationsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    this.battleHubService.cleanupBattleSubjects();
+    this.battleHubService.cleanupIncomingRequests();
   }
 }

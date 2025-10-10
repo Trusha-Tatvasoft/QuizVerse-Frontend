@@ -46,7 +46,7 @@ describe('MasterLayoutComponent', () => {
       onBattleRequest: {
         pipe: jest.fn().mockReturnValue({ subscribe: jest.fn() }), // ✅ prevents rxjs undefined errors too
       },
-      cleanupBattleSubjects: jest.fn(),
+      cleanupIncomingRequests: jest.fn(),
     };
 
     await TestBed.configureTestingModule({

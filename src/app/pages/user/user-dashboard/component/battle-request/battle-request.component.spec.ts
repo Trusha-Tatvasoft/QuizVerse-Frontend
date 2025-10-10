@@ -52,7 +52,7 @@ describe('BattleRequestComponent (Jest)', () => {
     mockBattleHubService = {
       ensureConnection: jest.fn().mockResolvedValue(void 0),
       onBattleRequest: onBattleRequestSubject,
-      cleanupBattleSubjects: jest.fn(),
+      cleanupIncomingRequests: jest.fn(),
     } as unknown as jest.Mocked<BattleHubService>;
 
     await TestBed.configureTestingModule({
