@@ -1,0 +1,75 @@
+<div class="notification-container">
+  <div
+    class="notification-card"
+    [ngClass]="{
+      show: isVisible,
+      hide: !isVisible,
+    }"
+  >
+    <!-- Header -->
+    <div class="notification-header">
+      <div class="title-group">
+        <div class="icon-bg">
+          <mat-icon>military_tech</mat-icon>
+        </div>
+        <h3>New Battle Request!</h3>
+      </div>
+      <button
+        type="button"
+        class="close-btn-dialog-all"
+        aria-label="Close dialog"
+        (click)="onDismiss()"
+        tabindex="0"
+        disableRipple
+        mat-icon-button
+      >
+        <mat-icon class="close-icon">close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Request Details -->
+    <div class="request-details">
+      @if (request.senderProfilePic && !isImageError) {
+        <img
+          [src]="request.senderProfilePic"
+          alt="{{ request.senderUserName }}"
+          (error)="onImageError()"
+        />
+      }
+
+      @if (!request.senderProfilePic || isImageError) {
+        <span class="avatar" [ngClass]="getInitialsColorClass(request.senderFullName)">
+          {{ getInitials(request.senderFullName) }}
+        </span>
+      }
+
+      <div class="details">
+        <p class="name">{{ request.senderUserName }}</p>
+        <p class="battle-name">Battle: {{ request.battleName }}</p>
+        <div class="meta">
+          <span class="category">{{ request.battleCategory }}</span>
+          <span class="separator">•</span>
+          <span class="difficulty">
+            <app-tag [tagConfig]="difficultyTag"></app-tag>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="incoming-request-actions">
+      <div>
+        <app-filled-button
+          [filledButtonConfig]="acceptButtonConfig"
+          (buttonClicked)="onAccept()"
+        ></app-filled-button>
+      </div>
+      <div>
+        <app-outline-button
+          [outlineButtonConfig]="declineButtonConfig"
+          (buttonClicked)="onDecline()"
+        ></app-outline-button>
+      </div>
+    </div>
+  </div>
+</div>

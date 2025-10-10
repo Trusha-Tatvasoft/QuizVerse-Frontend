@@ -7,7 +7,7 @@ import {
   BattleStartDetails,
   PlayerProfileDTO,
 } from '../../../pages/user/user-battles/interface/search-opponent.interface';
-import { ReplaySubject, Subject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import {
   BattleQuestion,
@@ -16,6 +16,7 @@ import {
 } from '../../../pages/user/battle-attempt-layout/interfaces/battle-attempt.interface';
 import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
+import { IncomingBattleRequest } from '../../../shared/interfaces/incoming-battle-request.interface';
 import { BattleCompletionResult } from '../../../pages/user/battle-result/interfaces/battle-completion.interface';
 import { UserProfileService } from '../user-profile/user-profile.service';
 import { UserBattlesService } from './user-battles.service';
@@ -46,7 +47,7 @@ export class BattleHubService {
   private lastAnsweredDetail$ = new Subject<LastAnswerdQuestionDetail>();
   private _errorSubject = new Subject<string>();
   private readonly useprofileUpdatedSource = inject(UserProfileService).profileUpdatedSource;
-
+  private readonly incomingRequest$ = new BehaviorSubject<IncomingBattleRequest[]>([]);
   private battleAttemptId: number | null = null;
   private isConnected = false;
   private connectionPromise: Promise<void> | null = null;
@@ -98,6 +99,23 @@ export class BattleHubService {
 
   get onBattleEnded() {
     return this.battleEnded$.asObservable();
+  }
+
+  get onBattleRequest() {
+    return this.incomingRequest$.asObservable();
+  }
+
+  addIncomingRequest(request: IncomingBattleRequest) {
+    const current = this.incomingRequest$.value;
+    // avoid duplicates
+    if (!current.some((r) => r.requestId === request.requestId)) {
+      this.incomingRequest$.next([request, ...current]);
+    }
+  }
+
+  removeIncomingRequest(requestId: number) {
+    const updated = this.incomingRequest$.value.filter((r) => r.requestId !== requestId);
+    this.incomingRequest$.next(updated);
   }
 
   /** Establish SignalR connection */
@@ -219,6 +237,18 @@ export class BattleHubService {
     );
   }
 
+  acceptRequest(requestId: number) {
+    this.hubConnection!.invoke('AcceptRequest', requestId).catch((err) =>
+      this.snackbar.showError(err),
+    );
+  }
+
+  declineRequest(requestId: number) {
+    this.hubConnection!.invoke('DeclineRequest', requestId).catch((err) =>
+      this.snackbar.showError(err),
+    );
+  }
+
   submitAnswer(battleId: number, index: number, answer: string): void {
     if (!this.connected) {
       this._errorSubject.next(platformMessages.serverNotConnected);
@@ -287,6 +317,10 @@ export class BattleHubService {
     this.battleEnded$ = new ReplaySubject<BattleCompletionResult>(1);
   }
 
+  cleanupIncomingRequests(): void {
+    this.incomingRequest$.next([]);
+  }
+
   async stopConnection(): Promise<void> {
     if (this.hubConnection) {
       try {
@@ -329,6 +363,18 @@ export class BattleHubService {
       platformMessages.battleHubContinueBattle,
       (data: { battleAttemptId: number; message: string }) => {
         this.continueBattle$.next(data);
+      },
+    );
+
+    this.hubConnection?.on(
+      platformMessages.recieveBattleRequest,
+      (request: IncomingBattleRequest) => {
+        if (!this.connected) return;
+
+        const current = this.incomingRequest$.value;
+        if (!current.some((r) => r.requestId === request.requestId)) {
+          this.incomingRequest$.next([request, ...current]);
+        }
       },
     );
 

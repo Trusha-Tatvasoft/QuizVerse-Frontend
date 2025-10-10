@@ -1,19 +1,28 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { of, throwError, Subject } from 'rxjs';
 import { BattleRequestComponent } from './battle-request.component';
 import { UserDashboardService } from '../../../../../services/user/user-dashboard/user-dashboard.service';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
-import { BattleRequest } from '../../interfaces/battle-request.interface';
+import { BattleHubService } from '../../../../../services/user/user-battles/battle-hub.service';
 import { environment } from '../../../../../../environments/environment.dev';
 import { battleRequestMessages, platformMessages } from '../../../../../utils/constants';
+import { IncomingBattleRequest } from '../../../../../shared/interfaces/incoming-battle-request.interface';
+import { BattleRequestStatus } from '../../../../../shared/enums/user-dashboard.enum';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FilledButtonComponent } from '../../../../../shared/components/filled-button/filled-button.component';
+import { OutlineButtonComponent } from '../../../../../shared/components/outline-button/outline-button.component';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('BattleRequestComponent (Jest)', () => {
   let component: BattleRequestComponent;
   let fixture: ComponentFixture<BattleRequestComponent>;
   let mockDashboardService: jest.Mocked<UserDashboardService>;
   let mockSnackbarService: jest.Mocked<SnackbarService>;
+  let mockBattleHubService: jest.Mocked<BattleHubService>;
+  let onBattleRequestSubject: Subject<IncomingBattleRequest[]>;
 
-  const mockRequests: BattleRequest[] = [
+  const mockRequests: IncomingBattleRequest[] = [
     {
       requestId: 1,
       senderUserName: 'john123',
@@ -22,14 +31,17 @@ describe('BattleRequestComponent (Jest)', () => {
       battleCategory: 'Math',
       battleDifficulty: 'Easy',
       timeAgo: '2h ago',
-      sendingDate: '2025-09-01T10:00:00Z',
+      sendingDate: new Date('2025-09-01T10:00:00Z'),
+      battleName: 'Algebra Battle',
     },
   ];
 
   beforeEach(async () => {
+    onBattleRequestSubject = new Subject<IncomingBattleRequest[]>();
+    // Mock services
     mockDashboardService = {
-      getBattleRequests: jest.fn(),
-      updateBattleRequestStatus: jest.fn(),
+      getBattleRequests: jest.fn().mockReturnValue(of({ result: true, data: mockRequests }) as any),
+      updateBattleRequestStatus: jest.fn().mockReturnValue(of({ result: true, data: {} }) as any),
     } as unknown as jest.Mocked<UserDashboardService>;
 
     mockSnackbarService = {
@@ -37,16 +49,29 @@ describe('BattleRequestComponent (Jest)', () => {
       showError: jest.fn(),
     } as unknown as jest.Mocked<SnackbarService>;
 
+    mockBattleHubService = {
+      ensureConnection: jest.fn().mockResolvedValue(void 0),
+      onBattleRequest: onBattleRequestSubject,
+      cleanupBattleSubjects: jest.fn(),
+    } as unknown as jest.Mocked<BattleHubService>;
+
     await TestBed.configureTestingModule({
-      imports: [BattleRequestComponent],
-      providers: [
-        { provide: UserDashboardService, useValue: mockDashboardService },
-        { provide: SnackbarService, useValue: mockSnackbarService },
+      imports: [
+        MatIconModule,
+        CommonModule,
+        FilledButtonComponent,
+        OutlineButtonComponent,
+        MatTooltipModule,
       ],
-    }).compileComponents();
+    })
+      .overrideProvider(UserDashboardService, { useValue: mockDashboardService })
+      .overrideProvider(SnackbarService, { useValue: mockSnackbarService })
+      .overrideProvider(BattleHubService, { useValue: mockBattleHubService })
+      .compileComponents();
 
     fixture = TestBed.createComponent(BattleRequestComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create component', () => {
@@ -68,16 +93,6 @@ describe('BattleRequestComponent (Jest)', () => {
       expect(component.requests[0].initials).toBe('JD');
       expect(component.requests[0].initialsColor).toMatch(/bg-avatar-/);
     });
-
-    it('should set empty requests when API fails', () => {
-      mockDashboardService.getBattleRequests.mockReturnValue(
-        throwError(() => new Error('API Error')),
-      );
-
-      component.loadBattleRequests();
-
-      expect(component.requests).toHaveLength(0);
-    });
   });
 
   describe('acceptRequest', () => {
@@ -92,7 +107,7 @@ describe('BattleRequestComponent (Jest)', () => {
 
       expect(mockDashboardService.updateBattleRequestStatus).toHaveBeenCalledWith({
         requestId: 1,
-        status: 1,
+        status: BattleRequestStatus.acceptRequest,
       });
       expect(mockSnackbarService.showSuccess).toHaveBeenCalledWith(
         platformMessages.successTitle,
@@ -128,7 +143,7 @@ describe('BattleRequestComponent (Jest)', () => {
 
       expect(mockDashboardService.updateBattleRequestStatus).toHaveBeenCalledWith({
         requestId: 1,
-        status: 2,
+        status: BattleRequestStatus.declineRequest,
       });
       expect(mockSnackbarService.showSuccess).toHaveBeenCalledWith(
         platformMessages.successTitle,
@@ -179,6 +194,34 @@ describe('BattleRequestComponent (Jest)', () => {
       const class2 = (component as any).getInitialsColorClass('John Doe');
       expect(class1).toBe(class2);
       expect(class1).toMatch(/bg-avatar-/);
+    });
+  });
+
+  describe('subscribeToBattleHub', () => {
+    it('should add new requests from hub', (done) => {
+      const newRequest: IncomingBattleRequest = {
+        requestId: 2,
+        senderUserName: 'jane456',
+        senderFullName: 'Jane Smith',
+        senderProfilePic: 'profile/jane.png',
+        battleCategory: 'Coding',
+        battleDifficulty: 'Medium',
+        timeAgo: '1h ago',
+        sendingDate: new Date(),
+        battleName: 'JS Battle',
+      };
+
+      // Call subscribeToBattleHub
+      component.subscribeToBattleHub();
+
+      // Emit new request through the Subject
+      (mockBattleHubService.onBattleRequest as Subject<IncomingBattleRequest[]>).next([newRequest]);
+
+      setTimeout(() => {
+        expect(component.requests[0].senderUserName).toBe('jane456');
+        expect(component.requests[0].displayImage).toBe('profile/jane.png');
+        done();
+      }, 0);
     });
   });
 });

@@ -349,6 +349,7 @@ export const platformMessages = {
   battleHubLastAnsweredDetail: 'LastAnsweredDetail',
   battleHubPlayerInterrupted: 'PlayerInterrupted',
   battleHubBattleEndedForPlayer: 'BattleEndedForParticularPlayerDueToInterrupt',
+  recieveBattleRequest: 'ReceiveBattleRequest',
   battleEnded: 'battleEnded',
   battleHubSkipInstruction: 'SkipInstructions',
 

@@ -645,3 +645,11 @@ app-data-table {
     width: 100% !important;
   }
 }
+
+.notification-container .incoming-request-actions app-filled-button .filled-button {
+  width: 100% !important;
+}
+
+.notification-container .incoming-request-actions app-outline-button .outline-button {
+  width: 100% !important;
+}

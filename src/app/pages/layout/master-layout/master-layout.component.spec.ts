@@ -7,6 +7,7 @@ import { Subject } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Component } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { BattleHubService } from '../../../services/user/user-battles/battle-hub.service';
 
 // Dummy sidebar and navbar for ViewChild interaction
 @Component({ selector: 'app-sidebar', template: '' })
@@ -21,6 +22,9 @@ class MockNavbarComponent {
   sidebarClosedByBackdrop = jest.fn();
 }
 
+@Component({ selector: 'app-battle-request-notifications', template: '' })
+class MockBattleRequestNotificationsComponent {}
+
 describe('MasterLayoutComponent', () => {
   let component: MasterLayoutComponent;
   let fixture: ComponentFixture<MasterLayoutComponent>;
@@ -32,6 +36,17 @@ describe('MasterLayoutComponent', () => {
 
     authServiceMock = {
       currentRole$: roleSubject.asObservable(),
+      getAccessToken: jest.fn().mockResolvedValue('fake-access-token'),
+    };
+
+    const mockBattleHubService = {
+      connect: jest.fn(),
+      startConnection: jest.fn(),
+      stopConnection: jest.fn(),
+      onBattleRequest: {
+        pipe: jest.fn().mockReturnValue({ subscribe: jest.fn() }), // ✅ prevents rxjs undefined errors too
+      },
+      cleanupBattleSubjects: jest.fn(),
     };
 
     await TestBed.configureTestingModule({
@@ -41,8 +56,12 @@ describe('MasterLayoutComponent', () => {
         MockNavbarComponent,
         RouterTestingModule,
         HttpClientTestingModule,
+        MockBattleRequestNotificationsComponent,
       ],
-      providers: [{ provide: AuthService, useValue: authServiceMock }],
+      providers: [
+        { provide: AuthService, useValue: authServiceMock },
+        { provide: BattleHubService, useValue: mockBattleHubService },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MasterLayoutComponent);

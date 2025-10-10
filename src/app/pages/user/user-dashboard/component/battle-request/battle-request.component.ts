@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { BattleRequest, BattleRequestWithProfile } from '../../interfaces/battle-request.interface';
+import { BattleRequestWithProfile } from '../../interfaces/battle-request.interface';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FilledButtonComponent } from '../../../../../shared/components/filled-button/filled-button.component';
@@ -17,6 +17,8 @@ import {
   globalGetInitials,
   globalGetInitialsColorClass,
 } from '../../../../../utils/get-profile-initials.utils';
+import { IncomingBattleRequest } from '../../../../../shared/interfaces/incoming-battle-request.interface';
+import { BattleHubService } from '../../../../../services/user/user-battles/battle-hub.service';
 
 @Component({
   selector: 'app-battle-request',
@@ -37,14 +39,17 @@ export class BattleRequestComponent implements OnInit {
   private readonly dashboardService = inject(UserDashboardService);
   private readonly snackBarService = inject(SnackbarService);
   private readonly destroy$ = new Subject<void>();
+  private readonly battleHubService = inject(BattleHubService);
 
   ngOnInit(): void {
     this.loadBattleRequests();
+    this.subscribeToBattleHub();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.battleHubService.cleanupBattleSubjects();
   }
 
   loadBattleRequests(): void {
@@ -52,7 +57,7 @@ export class BattleRequestComponent implements OnInit {
       .getBattleRequests()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (res: ApiResponse<BattleRequest[]>) => {
+        next: (res: ApiResponse<IncomingBattleRequest[]>) => {
           if (res.result && res.data) {
             this.requests = res.data.map((req) => ({
               ...req,
@@ -70,6 +75,29 @@ export class BattleRequestComponent implements OnInit {
             err?.error?.message || platformMessages.errorMessage,
           );
         },
+      });
+  }
+
+  subscribeToBattleHub(): void {
+    this.battleHubService
+      .ensureConnection()
+      .then(() => {
+        this.battleHubService.onBattleRequest
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((requests: IncomingBattleRequest[]) => {
+            requests.forEach((request) => {
+              const requestWithProfile = {
+                ...request,
+                displayImage: request.senderProfilePic ?? '',
+                initials: this.getInitials(request.senderFullName),
+                initialsColor: this.getInitialsColorClass(request.senderFullName),
+              };
+              this.requests.unshift(requestWithProfile);
+            });
+          });
+      })
+      .catch(() => {
+        this.snackBarService.showError('Failed to connect to battle notifications.');
       });
   }
 

@@ -6,10 +6,11 @@ import { UserType } from '../../../utils/types/sidebar-component.type';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { Subject, takeUntil } from 'rxjs';
+import { BattleRequestNotificationsComponent } from '../../user/battle-request-notifications/battle-request-notifications.component';
 
 @Component({
   selector: 'app-master-layout',
-  imports: [SidebarComponent, NavbarComponent, RouterModule],
+  imports: [SidebarComponent, NavbarComponent, RouterModule, BattleRequestNotificationsComponent],
   templateUrl: './master-layout.component.html',
   styleUrl: './master-layout.component.scss',
 })
