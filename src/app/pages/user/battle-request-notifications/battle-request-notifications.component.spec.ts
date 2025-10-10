@@ -6,7 +6,7 @@ import { of, Subject } from 'rxjs';
 import { IncomingRequestNotificationComponent } from '../../../shared/components/incoming-request-notification/incoming-request-notification.component';
 import { CommonModule } from '@angular/common';
 
-jest.useFakeTimers(); // handle setTimeout for auto-remove
+jest.useFakeTimers();
 
 describe('BattleRequestNotificationsComponent', () => {
   let component: BattleRequestNotificationsComponent;

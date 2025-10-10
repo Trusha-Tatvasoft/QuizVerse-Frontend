@@ -46,12 +46,6 @@ export class BattleRequestComponent implements OnInit {
     this.subscribeToBattleHub();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.battleHubService.cleanupIncomingRequests();
-  }
-
   loadBattleRequests(): void {
     this.dashboardService
       .getBattleRequests()
@@ -156,6 +150,12 @@ export class BattleRequestComponent implements OnInit {
   handleImageError(event: Event, request: BattleRequestWithProfile) {
     (event.target as HTMLImageElement).style.display = 'none';
     request.displayImage = null;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.battleHubService.cleanupIncomingRequests();
   }
 
   private getInitials(name: string): string {

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 import { IncomingRequestNotificationComponent } from '../../../shared/components/incoming-request-notification/incoming-request-notification.component';
 import { BattleHubService } from '../../../services/user/user-battles/battle-hub.service';
+import { notificationTimeout } from '../../../utils/constants';
 
 @Component({
   selector: 'app-battle-request-notifications',
@@ -33,20 +34,16 @@ export class BattleRequestNotificationsComponent implements OnInit, OnDestroy {
     });
   }
 
-  /** Add notification only if it doesn't already exist */
   addNotification(request: IncomingBattleRequest) {
     const exists = this.notifications.some((n) => n.requestId === request.requestId);
     if (!exists) {
       this.notifications.unshift(request); // latest on top
-      // Auto-remove after 30s
-      setTimeout(() => this.removeNotification(request), 30000);
+      setTimeout(() => this.removeNotification(request), notificationTimeout);
     }
   }
 
-  /** Remove notification by requestId */
   removeNotification(request: IncomingBattleRequest) {
     this.notifications = this.notifications.filter((n) => n.requestId !== request.requestId);
-    // Optional: notify service if you want to update BehaviorSubject
     this.battleHubService.removeIncomingRequest(request.requestId);
   }
 

@@ -677,4 +677,6 @@ export const battleIdStorageKey = 'battleAttemptId';
 
 export const userIdClaimKey = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata';
 
+export const notificationTimeout = 30000;
+
 // #endregion

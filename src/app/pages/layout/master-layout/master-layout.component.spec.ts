@@ -44,7 +44,7 @@ describe('MasterLayoutComponent', () => {
       startConnection: jest.fn(),
       stopConnection: jest.fn(),
       onBattleRequest: {
-        pipe: jest.fn().mockReturnValue({ subscribe: jest.fn() }), // ✅ prevents rxjs undefined errors too
+        pipe: jest.fn().mockReturnValue({ subscribe: jest.fn() }),
       },
       cleanupIncomingRequests: jest.fn(),
     };

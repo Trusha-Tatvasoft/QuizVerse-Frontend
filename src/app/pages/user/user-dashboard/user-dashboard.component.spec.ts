@@ -7,7 +7,6 @@ import { UserDashboardComponent } from './user-dashboard.component';
 import { UserDashboardService } from '../../../services/user/user-dashboard/user-dashboard.service';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 
-// 🧩 Mock standalone components used in the template
 @Component({ selector: 'app-welcome-banner', template: '' })
 class MockWelcomeBannerComponent {}
 
@@ -32,7 +31,6 @@ class MockBattleRequestComponent {}
 @Component({ selector: 'app-page-header', template: '' })
 class MockPageHeaderComponent {}
 
-// 🧠 Mock services
 const mockUserDashboardService = {
   getDashboardData: jest.fn(),
 };
@@ -47,8 +45,8 @@ describe('UserDashboardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        UserDashboardComponent, // Standalone component
-        HttpClientTestingModule, // ✅ Fix for HttpClient injector error
+        UserDashboardComponent,
+        HttpClientTestingModule,
         MockWelcomeBannerComponent,
         MockCardComponent,
         MockRankProgressCardComponent,
@@ -71,19 +69,16 @@ describe('UserDashboardComponent', () => {
     jest.clearAllMocks();
   });
 
-  // ✅ 1. Component creation
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  // ✅ 2. Should call loadDashboardData on initialization
   it('should call loadDashboardData on ngOnInit', () => {
     const mockData = {
       banner: { userName: 'John', currentRank: 3 },
       card: { quizzesCompleted: 5, totalXp: 200, winRate: 80, currentRank: 3 },
     };
 
-    // ✅ Ensure service method returns observable BEFORE calling ngOnInit
     mockUserDashboardService.getDashboardData.mockReturnValue(of(mockData));
 
     const loadSpy = jest.spyOn<any, any>(component, 'loadDashboardData');
@@ -94,7 +89,6 @@ describe('UserDashboardComponent', () => {
     expect(mockUserDashboardService.getDashboardData).toHaveBeenCalled();
   });
 
-  // ✅ 3. Should successfully load dashboard data
   it('should load dashboard data successfully', () => {
     const mockData = {
       banner: { userName: 'John', currentRank: 3 },
@@ -115,7 +109,6 @@ describe('UserDashboardComponent', () => {
     expect(component.quizStatsConfigs.length).toBe(Object.keys(mockData.card).length);
   });
 
-  // ✅ 4. Should handle error when fetching dashboard data
   it('should show error message when dashboard data fails to load', () => {
     mockUserDashboardService.getDashboardData.mockReturnValue(
       throwError(() => new Error('Network error')),
@@ -130,7 +123,6 @@ describe('UserDashboardComponent', () => {
     );
   });
 
-  // ✅ 5. Should correctly map summary data to cards
   it('should map summary data to cards correctly', () => {
     const summary = {
       quizzesCompleted: 10,
@@ -147,7 +139,6 @@ describe('UserDashboardComponent', () => {
     expect(result[0]).toHaveProperty('icon');
   });
 
-  // ✅ 6. Should complete destroy$ on component destroy
   it('should clean up subscriptions on destroy', () => {
     const nextSpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
