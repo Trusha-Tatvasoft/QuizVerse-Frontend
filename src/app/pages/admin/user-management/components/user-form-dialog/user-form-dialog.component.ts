@@ -5,6 +5,7 @@ import { RegisterComponent } from '../../../../../core/auth/components/register/
 import { UserFormData } from '../../interfaces/user-form-data.interface';
 import { MatIconModule } from '@angular/material/icon';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { Role } from '../../../../../shared/enums/role';
 
 @Component({
   selector: 'app-user-form-dialog',
@@ -17,7 +18,15 @@ export class UserFormDialogComponent {
   isSubmitting = false;
 
   private readonly dialogRef = inject(MatDialogRef<UserFormDialogComponent>);
-  readonly userData = inject<UserFormData | null>(MAT_DIALOG_DATA);
+  readonly dialogData = inject<{ user: UserFormData | null; role: string | null }>(MAT_DIALOG_DATA);
+
+  get userData(): UserFormData | null {
+    return this.dialogData.user;
+  }
+
+  get role(): string | null {
+    return this.dialogData.role;
+  }
 
   get isEditMode(): boolean {
     return !!this.userData;
@@ -29,5 +38,9 @@ export class UserFormDialogComponent {
 
   onRegisterSaveUser(event: { formData: FormData; isEdit: boolean }) {
     this.dialogRef.close(event);
+  }
+
+  isSuperAdmin(): boolean {
+    return this.role === Role.SuperAdmin;
   }
 }

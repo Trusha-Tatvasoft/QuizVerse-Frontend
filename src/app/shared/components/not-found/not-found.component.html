@@ -8,19 +8,18 @@
           <div class="icon-wrapper">
             <mat-icon
               style="color: #fff; font-size: 50px; height: 50px; width: 50px; padding-left: 1px"
-              >lock</mat-icon
+              >warning</mat-icon
             >
           </div>
-          <h1>403</h1>
-          <p>Access Denied</p>
+          <h1>404</h1>
         </div>
       </div>
 
       <!-- Content Section -->
       <div class="card-content">
-        <h2>Unauthorized Access</h2>
-        <p class="subtitle">You don't have permission to access this resource.</p>
-        <p class="note">If you believe this is a mistake, please contact your administrator.</p>
+        <h2>Page Not Found</h2>
+        <p class="subtitle">The page you are looking for doesn’t exist or has been moved.</p>
+        <p class="note">Please check the URL or return to your dashboard.</p>
 
         <!-- Role-based Dashboard Buttons -->
         @if (userRole === 'admin') {

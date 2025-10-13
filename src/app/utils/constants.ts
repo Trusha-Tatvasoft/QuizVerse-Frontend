@@ -359,6 +359,7 @@ export const platformMessages = {
   invalidBattleId: 'Invalid battle id',
   answerSubmitFailed: 'Failed to submit answer',
   resumeBattleFailed: 'Failed to resume battle',
+  alreadyAnsQuestion: 'Already answered this question.',
   opponentLeft: 'Your opponent has left the battle.',
   opponentBattleEnded: 'The battle has ended for your opponent.',
   battleComplted: 'Battle Completed!! Redirecting to result',
@@ -548,13 +549,6 @@ export const quizCRUDMessages = {
   maximumTotalTimeError: 'Total time must be between 2 and 180 minutes.',
   fillInTheBlankFormatError:
     'Question text must contain at least one "{{}}" placeholder for the blank.',
-};
-//#endregion
-
-//#region Role Constants
-export const roles = {
-  admin: 'admin',
-  player: 'player',
 };
 //#endregion
 

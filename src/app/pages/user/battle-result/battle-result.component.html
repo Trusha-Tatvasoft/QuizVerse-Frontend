@@ -11,15 +11,7 @@
           <mat-icon class="result-icon">handshake</mat-icon>
         }
 
-        <h1>
-          {{
-            battleResult.result === 'Victory'
-              ? 'Victory!'
-              : battleResult.result === 'Defeat'
-                ? 'Defeat'
-                : 'Draw'
-          }}
-        </h1>
+        <h1>{{ battleResult.result }}!</h1>
         <p>{{ battleResult.title }}</p>
       </div>
 
@@ -48,8 +40,8 @@
             <p
               class="score"
               [ngClass]="{
-                win: battleResult.you.isWinner && battleResult.result !== 'Draw',
-                lose: !battleResult.you.isWinner && battleResult.result !== 'Draw',
+                win: battleResult.result === 'Victory',
+                lose: battleResult.result === 'Defeat',
                 draw: battleResult.result === 'Draw',
               }"
             >
@@ -86,14 +78,14 @@
             <p
               class="score"
               [ngClass]="{
-                win: battleResult.you.isWinner && battleResult.result !== 'Draw',
-                lose: !battleResult.you.isWinner && battleResult.result !== 'Draw',
                 draw: battleResult.result === 'Draw',
+                lose: !battleResult.opponent.isWinner,
+                win: battleResult.opponent.isWinner,
               }"
             >
               {{ battleResult.opponent.score }}
             </p>
-            @if (battleResult.opponent.isWinner && battleResult.result !== 'Draw') {
+            @if (battleResult.opponent.isWinner) {
               <div class="result-badge victory">
                 <mat-icon fontSet="material-icons-outlined">emoji_events</mat-icon>
                 <span>Winner</span>
@@ -105,9 +97,11 @@
 
       <!-- Rewards -->
       <div class="rewards">
-        <h2>Rewards Earned</h2>
-        <p class="points">+{{ battleResult.rewards.points }}</p>
-        <p class="exp">{{ battleResult.rewards.description }}</p>
+        <h2><mat-icon class="material-icons-outlined" class="">bolt</mat-icon>Rewards Earned</h2>
+        <div class="rewards-content">
+          <p class="points">+{{ battleResult.rewards.points }}</p>
+          <p class="exp">{{ battleResult.rewards.description }}</p>
+        </div>
       </div>
 
       <!-- Timer -->

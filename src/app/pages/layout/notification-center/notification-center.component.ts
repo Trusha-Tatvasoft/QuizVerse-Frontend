@@ -24,9 +24,10 @@ import { MatFormField, MatSelectModule } from '@angular/material/select';
 import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
 import { enumToCategoryList, typeList } from './notification-center.comonent.mapper';
 import { AuthService } from '../../../core/auth/services/auth.service';
-import { debounceTimeValue, roles } from '../../../utils/constants';
+import { debounceTimeValue } from '../../../utils/constants';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { Notifications } from '../interfaces/navbar.component.interface';
+import { Role } from '../../../shared/enums/role';
 
 @Component({
   selector: 'app-notification-center',
@@ -92,7 +93,7 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
     const token = this.authService.getAccessToken();
     if (token) {
       const role = this.authService.getRoleFromToken(token);
-      if (role === roles.admin) {
+      if (role === Role.Admin || role === Role.SuperAdmin) {
         this.isAdmin = true;
       }
     }

@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NavbarComponent } from './navbar.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { roles } from '../../../utils/constants';
 import { mockDataNotifications } from './navbar-mock-data';
 import { Navigations } from '../../../shared/enums/navigation';
 import { AuthService } from '../../../core/auth/services/auth.service';
@@ -12,6 +11,7 @@ import { PlatformSettingsService } from '../../../services/admin/platform-settin
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment.dev';
 import { UserProfileService } from '../../../services/user/user-profile/user-profile.service';
+import { Role } from '../../../shared/enums/role';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -36,7 +36,7 @@ describe('NavbarComponent', () => {
     // Mock AuthService
     authServiceMock = {
       logout: jest.fn(),
-      currentRole$: of('user'), // observable role
+      currentRole$: of(Role.Player), // observable role
     };
 
     // Mock Router
@@ -311,23 +311,28 @@ describe('NavbarComponent', () => {
     expect(navSpy).toHaveBeenCalledWith([Navigations.Login]);
   });
 
-  it('should navigate to admin dashboard for admin role (case-insensitive)', () => {
+  it('should navigate to admin dashboard for admin role', () => {
     component.isLogin = true;
-    component['authService'].currentRole$ = of(roles.admin) as any;
+    component.role = Role.Admin;
     const navSpy = jest.spyOn(component['router'], 'navigate');
-
-    component.ngOnInit();
 
     component.navigateToDashboard();
     expect(navSpy).toHaveBeenCalledWith([`/${Navigations.Admin}/${Navigations.Dashboard}`]);
   });
 
-  it('should navigate to player dashboard for player role (case-insensitive)', () => {
+  it('should navigate to admin dashboard for superadmin role', () => {
     component.isLogin = true;
-    component['authService'].currentRole$ = of(roles.player) as any;
+    component.role = Role.SuperAdmin;
     const navSpy = jest.spyOn(component['router'], 'navigate');
 
-    component.ngOnInit();
+    component.navigateToDashboard();
+    expect(navSpy).toHaveBeenCalledWith([`/${Navigations.Admin}/${Navigations.Dashboard}`]);
+  });
+
+  it('should navigate to player dashboard for player role', () => {
+    component.isLogin = true;
+    component.role = Role.Player;
+    const navSpy = jest.spyOn(component['router'], 'navigate');
 
     component.navigateToDashboard();
     expect(navSpy).toHaveBeenCalledWith([`/${Navigations.User}/${Navigations.Dashboard}`]);
@@ -337,15 +342,15 @@ describe('NavbarComponent', () => {
     const navSpy = jest.spyOn(component['router'], 'navigate');
 
     component.isLogin = true;
-    component['authService'].currentRole$ = { value: 'unknown' } as any;
+    component.role = 'unknown';
     component.navigateToDashboard();
     expect(navSpy).toHaveBeenCalledWith(['/']);
 
-    component['authService'].currentRole$ = { value: null } as any;
+    component.role = null;
     component.navigateToDashboard();
     expect(navSpy).toHaveBeenCalledWith(['/']);
 
-    component['authService'].currentRole$ = { value: undefined } as any;
+    component.role = undefined as any;
     component.navigateToDashboard();
     expect(navSpy).toHaveBeenCalledWith(['/']);
   });
@@ -358,15 +363,23 @@ describe('NavbarComponent', () => {
 
   describe('goToProfile', () => {
     it('should navigate to admin profile when role is admin', () => {
-      component.role = 'admin';
+      component.role = Role.Admin;
       component.goToProfile();
       expect(routerMock.navigate).toHaveBeenCalledWith([
         `/${Navigations.Admin}/${Navigations.Profile}`,
       ]);
     });
 
-    it('should navigate to user profile when role is not admin', () => {
-      component.role = 'user';
+    it('should navigate to admin profile when role is superadmin', () => {
+      component.role = Role.SuperAdmin;
+      component.goToProfile();
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.Admin}/${Navigations.Profile}`,
+      ]);
+    });
+
+    it('should navigate to user profile when role is player', () => {
+      component.role = Role.Player;
       component.goToProfile();
       expect(routerMock.navigate).toHaveBeenCalledWith([
         `/${Navigations.User}/${Navigations.Profile}`,
@@ -375,8 +388,17 @@ describe('NavbarComponent', () => {
   });
 
   describe('goToSetting', () => {
-    it('should navigate to admin settings with tab query param', () => {
-      component.role = 'admin';
+    it('should navigate to admin settings with tab query param for admin', () => {
+      component.role = Role.Admin;
+      component.goToSetting();
+      expect(routerMock.navigate).toHaveBeenCalledWith(
+        [`/${Navigations.Admin}/${Navigations.Profile}/`],
+        { queryParams: { tab: 2 } },
+      );
+    });
+
+    it('should navigate to admin settings with tab query param for superadmin', () => {
+      component.role = Role.SuperAdmin;
       component.goToSetting();
       expect(routerMock.navigate).toHaveBeenCalledWith(
         [`/${Navigations.Admin}/${Navigations.Profile}/`],
@@ -385,7 +407,7 @@ describe('NavbarComponent', () => {
     });
 
     it('should navigate to user settings with tab query param', () => {
-      component.role = 'user';
+      component.role = Role.Player;
       component.goToSetting();
       expect(routerMock.navigate).toHaveBeenCalledWith(
         [`/${Navigations.User}/${Navigations.Profile}`],
@@ -395,8 +417,8 @@ describe('NavbarComponent', () => {
   });
 
   describe('viewAllNotifications', () => {
-    it('should navigate to admin notifications and close panel', () => {
-      component.role = roles.admin;
+    it('should navigate to admin notifications and close panel for admin', () => {
+      component.role = Role.Admin;
       component.showNotifications = true;
 
       component.viewAllNotifications();
@@ -407,8 +429,20 @@ describe('NavbarComponent', () => {
       ]);
     });
 
-    it('should navigate to user notifications and close panel', () => {
-      component.role = roles.player;
+    it('should navigate to admin notifications and close panel for superadmin', () => {
+      component.role = Role.SuperAdmin;
+      component.showNotifications = true;
+
+      component.viewAllNotifications();
+
+      expect(component.showNotifications).toBe(false);
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.Admin}/${Navigations.Notifications}/`,
+      ]);
+    });
+
+    it('should navigate to user notifications and close panel for player', () => {
+      component.role = Role.Player;
       component.showNotifications = true;
 
       component.viewAllNotifications();
@@ -427,7 +461,7 @@ describe('NavbarComponent', () => {
         .spyOn(require('../configs/navbar.component.config'), 'getNotificationRoute')
         .mockReturnValue(mockRoute);
 
-      component.role = roles.admin;
+      component.role = Role.Admin;
       component.viewDetails(1);
 
       expect(spy).toHaveBeenCalledWith(true, 1);
