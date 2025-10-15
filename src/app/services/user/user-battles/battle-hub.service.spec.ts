@@ -89,11 +89,17 @@ describe('BattleHubService', () => {
   });
 
   afterEach(() => {
-    // Clean up any connection state
     service['isConnected'] = false;
     service['connectionPromise'] = null;
     service['hubConnection'] = null;
+
+    if (service.cleanupBattleSubjects) {
+      service.cleanupBattleSubjects();
+    }
+    TestBed.resetTestingModule();
     jest.clearAllMocks();
+    jest.clearAllTimers();
+    jest.useRealTimers();
   });
 
   it('should be created', () => {
@@ -973,6 +979,104 @@ describe('BattleHubService', () => {
       await Promise.resolve(); // Wait for the .catch to execute
 
       expect(mockSnackbarService.showError).toHaveBeenCalledWith('Failed to skip instructions');
+    });
+  });
+
+  describe('incomingRequest$', () => {
+    const mockRequest1 = {
+      requestId: 1,
+      senderId: 10,
+      senderUserName: 'userA',
+      senderFullName: 'Alice Anderson',
+      senderProfilePic: 'https://cdn/img1.jpg',
+      battleId: 100,
+      battleName: 'Math Challenge',
+      battleCategory: 'Mathematics',
+      battleDifficulty: 'Easy',
+      sendingDate: new Date(),
+      timeAgo: '2m ago',
+    };
+
+    const mockRequest2 = {
+      requestId: 2,
+      senderId: 20,
+      senderUserName: 'userB',
+      senderFullName: 'Bob Brown',
+      senderProfilePic: 'https://cdn/img2.jpg',
+      battleId: 101,
+      battleName: 'Code Clash',
+      battleCategory: 'Programming',
+      battleDifficulty: 'Hard',
+      sendingDate: new Date(),
+      timeAgo: '1m ago',
+    };
+
+    beforeEach(() => {
+      service['incomingRequest$'].next([]);
+    });
+
+    it('should initialize with an empty array', (done) => {
+      service.onBattleRequest.subscribe((requests) => {
+        expect(requests).toEqual([]);
+        done();
+      });
+    });
+
+    it('should add a new incoming request', (done) => {
+      service.addIncomingRequest(mockRequest1);
+
+      service.onBattleRequest.subscribe((requests) => {
+        expect(requests).toHaveLength(1);
+        expect(requests[0]).toEqual(mockRequest1);
+        done();
+      });
+    });
+
+    it('should not add duplicate requests', (done) => {
+      service.addIncomingRequest(mockRequest1);
+      service.addIncomingRequest(mockRequest1); // duplicate
+
+      service.onBattleRequest.subscribe((requests) => {
+        expect(requests).toHaveLength(1);
+        expect(requests[0]).toEqual(mockRequest1);
+        done();
+      });
+    });
+
+    it('should add multiple distinct requests', (done) => {
+      service.addIncomingRequest(mockRequest1);
+      service.addIncomingRequest(mockRequest2);
+
+      service.onBattleRequest.subscribe((requests) => {
+        expect(requests).toHaveLength(2);
+        expect(requests).toContainEqual(mockRequest1);
+        expect(requests).toContainEqual(mockRequest2);
+        done();
+      });
+    });
+
+    it('should remove a specific request by requestId', (done) => {
+      service.addIncomingRequest(mockRequest1);
+      service.addIncomingRequest(mockRequest2);
+
+      service.removeIncomingRequest(mockRequest1.requestId);
+
+      service.onBattleRequest.subscribe((requests) => {
+        expect(requests).toHaveLength(1);
+        expect(requests[0]).toEqual(mockRequest2);
+        done();
+      });
+    });
+
+    it('should handle removeIncomingRequest with nonexistent requestId gracefully', (done) => {
+      service.addIncomingRequest(mockRequest1);
+      service.removeIncomingRequest(999); // nonexistent
+
+      service.onBattleRequest.subscribe((requests) => {
+        expect(requests).toHaveLength(1);
+        expect(requests[0]).toEqual(mockRequest1);
+        done();
+      });
     });
   });
 });
