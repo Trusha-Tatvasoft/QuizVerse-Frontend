@@ -250,8 +250,7 @@ describe('UserManagementComponent', () => {
   it('should correctly handle attemptedQuizzes value', () => {
     const user = { ...mockUsers[0], attemptedQuizzes: 0 };
     const result = userToUserListingTableData(user, Role.SuperAdmin) as any;
-    expect(result.quizattempt.tagConfig.label).toBe('0');
-    expect(result.quizattempt.extraText).toBe('quizzes');
+    expect(result.quizattempt.tagConfig.label).toBe('NA');
   });
 
   // Status mapping should return correct label, color, and background

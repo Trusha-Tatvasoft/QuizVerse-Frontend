@@ -12,16 +12,18 @@ import { ValidationErrorService } from '../../../../../../../shared/service/vali
 import { SnackbarService } from '../../../../../../../shared/service/snackbar/snackbar.service';
 import {
   changeQuestionMethodButtonConfig,
+  changeQuestionMethodSmallButtonConfig,
   questionFormFieldForAddQuestionManually,
 } from '../../../../../quiz-management/configs/quiz-creation.config';
 import {
   addQuestionButtonConfig,
   searchInputConfig,
 } from '../../../../../question-pool/configs/question-pool.config';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { DynamicFormField } from '../../../../../../../shared/interfaces/dynamic-form-field.interface';
 import { QuestionType } from '../../../../../../../shared/enums/quiz-management.enum';
 import { questionTypes, quizCRUDMessages } from '../../../../../../../utils/constants';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-battle-creation-step-3-option-1',
@@ -51,23 +53,33 @@ export class BattleCreationStep3Option1Component {
 
   // ---- UI Configurations ----
   changeMethodButton = changeQuestionMethodButtonConfig;
+  changeMethodSmallButton = changeQuestionMethodSmallButtonConfig;
   searchInputConfig = searchInputConfig;
   questionFormFieldForAddQuestionManuallyStep3 = questionFormFieldForAddQuestionManually;
   addQuestionButton = addQuestionButtonConfig;
 
   // ---- Form ----
   questionForm: FormGroup;
+  isSmallScreen = false;
 
   // ---- Services ----
   private readonly fb = inject(FormBuilder);
   private readonly validationErrorService = inject(ValidationErrorService);
   private readonly snackbar = inject(SnackbarService);
+  private readonly breakpointObserver = inject(BreakpointObserver);
 
   private readonly destroy$ = new Subject<void>();
 
   ngOnInit() {
     this.buildQuestionForm();
     this.getDropDownsData();
+
+    this.breakpointObserver
+      .observe([Breakpoints.XSmall])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((result) => {
+        this.isSmallScreen = result.matches;
+      });
   }
 
   // Close option panel (emit to parent)

@@ -2,20 +2,21 @@
   <div class="flex items-center justify-between mb-4">
     <h4 class="form-heading">Import Questions from CSV/Excel</h4>
     <app-outline-button
-      [outlineButtonConfig]="changeMethodButton"
+      [outlineButtonConfig]="isSmallScreen ? changeMethodSmallButton : changeMethodButton"
       class="min-width-btn"
       (buttonClicked)="closeOption()"
     ></app-outline-button>
   </div>
 
-  <div class="flex gap-2">
+  <div class="flex flex-wrap gap-2">
     <app-outline-button
-      [outlineButtonConfig]="downloadCsvButton"
+      [outlineButtonConfig]="isSmallScreen ? downloadCsvSmallButton : downloadCsvButton"
       (buttonClicked)="onDownloadCsv()"
       class="min-width-btn"
-    ></app-outline-button
-    ><app-outline-button
-      [outlineButtonConfig]="downloadExelButton"
+    ></app-outline-button>
+
+    <app-outline-button
+      [outlineButtonConfig]="isSmallScreen ? downloadExelSmallButton : downloadExelButton"
       (buttonClicked)="onDownloadExcel()"
       class="min-width-btn"
     ></app-outline-button>
