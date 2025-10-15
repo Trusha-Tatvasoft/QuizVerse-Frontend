@@ -743,4 +743,11 @@ describe('BattleCreationLayoutComponent', () => {
       );
     }));
   });
+
+  describe('goBack', () => {
+    it('Go Back To Battle Management', () => {
+      component.goBack();
+      expect(router.navigate).toHaveBeenCalledWith([Navigations.Admin, Navigations.BattlesAdmin]);
+    });
+  });
 });

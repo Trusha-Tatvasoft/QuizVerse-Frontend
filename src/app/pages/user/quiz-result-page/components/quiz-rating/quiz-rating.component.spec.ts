@@ -10,6 +10,7 @@ import { QuizResultService } from '../../../../../services/user/quiz-result/quiz
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
 import { FilledButtonComponent } from '../../../../../shared/components/filled-button/filled-button.component';
 import { OutlineButtonComponent } from '../../../../../shared/components/outline-button/outline-button.component';
+import { Navigations } from '../../../../../shared/enums/navigation';
 
 describe('QuizRatingComponent', () => {
   let component: QuizRatingComponent;
@@ -156,6 +157,16 @@ describe('QuizRatingComponent', () => {
     it('should navigate to dashboard', () => {
       component.navigateToDashboard();
       expect(routerMock.navigate).toHaveBeenCalledWith(['user/dashboard']);
+    });
+  });
+  describe('navigateToBrowseQuiz()', () => {
+    it('should navigate to browse quiz', () => {
+      component.navigateToBrowseQuiz();
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        Navigations.User,
+        Navigations.QuizList,
+        Navigations.BrowseQuizzes,
+      ]);
     });
   });
 });

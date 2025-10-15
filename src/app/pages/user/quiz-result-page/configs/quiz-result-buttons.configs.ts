@@ -14,6 +14,13 @@ export const backToDashboardButtonConfig: ButtonConfig = {
   imagePosition: 'left',
 };
 
+export const backToQuizButtonConfig: ButtonConfig = {
+  label: 'Back to Browse Quizzes',
+  variant: 'secondary',
+  matIcon: 'dashboard',
+  imagePosition: 'left',
+};
+
 export const cancelButton: ButtonConfig = {
   label: 'Cancel',
   variant: 'secondary',

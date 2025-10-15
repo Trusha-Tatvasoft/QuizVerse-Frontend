@@ -669,4 +669,11 @@ describe('QuizCreationLayoutComponent', () => {
       expect(component.steps[0].heading).toBe(quizCRUDMessages.editQuizTitle);
     }));
   });
+
+  describe('goBack', () => {
+    it('Go Back To Quiz Management', () => {
+      component.goBack();
+      expect(router.navigate).toHaveBeenCalledWith([Navigations.Admin, Navigations.Quizzes]);
+    });
+  });
 });

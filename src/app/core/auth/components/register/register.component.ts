@@ -39,7 +39,6 @@ import { UserFormData } from '../../../../pages/admin/user-management/interfaces
 import { FilenameTruncatePipe } from '../../../../shared/pipes/filename-truncate/filename-truncate.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { UserRoles } from '../../../../shared/enums/user-management.enum';
-import { AuthService } from '../../services/auth.service';
 import { Role } from '../../../../shared/enums/role';
 
 @Component({

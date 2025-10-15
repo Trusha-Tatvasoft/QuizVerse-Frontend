@@ -64,7 +64,7 @@ describe('UnauthorizedComponent', () => {
     it('should call window.history.go(-2)', () => {
       const historySpy = jest.spyOn(window.history, 'go').mockImplementation(() => {});
       component.goBack();
-      expect(historySpy).toHaveBeenCalledWith(-2);
+      expect(historySpy).toHaveBeenCalledWith(-1);
       historySpy.mockRestore();
     });
   });

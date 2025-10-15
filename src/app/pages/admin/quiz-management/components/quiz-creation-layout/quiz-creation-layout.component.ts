@@ -385,4 +385,9 @@ export class QuizCreationLayoutComponent {
   categoryChanged() {
     this.selectedQuestions = [];
   }
+
+  /** Go back to the previous page */
+  goBack(): void {
+    this.router.navigate([Navigations.Admin, Navigations.Quizzes]);
+  }
 }

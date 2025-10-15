@@ -1,4 +1,14 @@
 <main class="admin-management-page quiz-creation red-bordered-form-field">
+  <div class="back-link-container">
+    <a class="back-link" (click)="goBack()">
+      <img
+        src="../../../../../../assets/images/back-arrow.svg"
+        alt="Back"
+        class="back-arrow-icon"
+      />
+      Back to Quiz Management
+    </a>
+  </div>
   <div class="admin-page-header quiz-creation-page-header">
     <app-page-header
       [icon]="quizCreationHeaderConfiguration.icon"
