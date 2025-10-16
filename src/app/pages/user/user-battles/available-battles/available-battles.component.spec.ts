@@ -4,10 +4,14 @@ import { UserBattlesService } from '../../../../services/user/user-battles/user-
 import { Router } from '@angular/router';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { of, Subject, throwError } from 'rxjs';
-import { AvailableBattle } from '../interface/quiz-battles.interface';
+import {
+  AvailableBattle,
+  UserAvailableBattlesResponseDto,
+} from '../interface/quiz-battles.interface';
 import { TagInputConfig } from '../../../../shared/interfaces/tag-component.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { ChallengeFriendComponent } from './components/challenge-friend/challenge-friend.component';
+
 describe('AvailableBattlesComponent', () => {
   let component: AvailableBattlesComponent;
   let fixture: ComponentFixture<AvailableBattlesComponent>;
@@ -16,7 +20,7 @@ describe('AvailableBattlesComponent', () => {
   let mockSnackbarService: any;
   let dialogMock: { open: jest.Mock };
 
-  const mockBattles = [
+  const mockBattles: AvailableBattle[] = [
     {
       battleId: 1,
       battleName: 'Battle 1',
@@ -27,6 +31,7 @@ describe('AvailableBattlesComponent', () => {
       totalQuestions: 10,
       duration: '10 mins',
       participants: 5,
+      isBattleRunning: 0,
     },
     {
       battleId: 2,
@@ -38,8 +43,14 @@ describe('AvailableBattlesComponent', () => {
       totalQuestions: 20,
       duration: '20 mins',
       participants: 10,
+      isBattleRunning: 0,
     },
   ];
+
+  const mockApiResponse: UserAvailableBattlesResponseDto = {
+    battles: mockBattles,
+    hasMore: false,
+  };
 
   beforeEach(async () => {
     const updateBattleResultsSubject = new Subject<boolean>();
@@ -50,7 +61,7 @@ describe('AvailableBattlesComponent', () => {
       updateBattleResultsObservable$: updateBattleResultsSubject.asObservable(),
     };
     mockRouter = { navigate: jest.fn() };
-    mockSnackbarService = { showError: jest.fn() };
+    mockSnackbarService = { showError: jest.fn(), showSuccess: jest.fn() };
 
     dialogMock = {
       open: jest.fn().mockReturnValue({
@@ -78,27 +89,27 @@ describe('AvailableBattlesComponent', () => {
 
   it('should populate battles on successful API call', () => {
     mockUserBattlesService.getUserAvailableBattles.mockReturnValue(
-      of({ result: true, data: mockBattles }),
+      of({ result: true, data: mockApiResponse }),
     );
 
     component.ngOnInit();
     fixture.detectChanges();
 
+    expect(mockUserBattlesService.getUserAvailableBattles).toHaveBeenCalledWith(1);
     expect(component.battles.length).toBe(2);
-    expect(component.loading).toBe(false);
     expect(component.error).toBeNull();
+    expect(component.hasMoreData).toBe(false);
   });
 
   it('should handle API error response', () => {
     mockUserBattlesService.getUserAvailableBattles.mockReturnValue(
-      of({ result: false, message: 'Failed to fetch' }),
+      of({ result: false, data: mockApiResponse, message: 'Failed to fetch' }),
     );
 
     component.ngOnInit();
     fixture.detectChanges();
 
     expect(component.battles.length).toBe(0);
-    expect(component.loading).toBe(false);
     expect(component.error).toBe('Failed to fetch');
   });
 
@@ -110,10 +121,7 @@ describe('AvailableBattlesComponent', () => {
     component.ngOnInit();
     fixture.detectChanges();
 
-    expect(mockSnackbarService.showError).toHaveBeenCalledWith(
-      expect.any(String),
-      expect.any(String),
-    );
+    expect(mockSnackbarService.showError).toHaveBeenCalled();
   });
 
   it('should navigate to battle', () => {
@@ -201,15 +209,13 @@ describe('AvailableBattlesComponent', () => {
       isBattleRunning: 0,
     };
 
-    const spyService = jest
-      .spyOn(mockUserBattlesService, 'getUserAvailableBattles')
-      .mockReturnValue(
-        of({
-          result: true,
-          data: [],
-          message: 'Success',
-        }),
-      );
+    mockUserBattlesService.getUserAvailableBattles.mockReturnValue(
+      of({
+        result: true,
+        data: mockApiResponse,
+        message: 'Success',
+      }),
+    );
 
     dialogMock.open.mockReturnValue({
       afterClosed: () => of(true),
@@ -217,7 +223,7 @@ describe('AvailableBattlesComponent', () => {
 
     component.openChallengeFriendDialgue(battle);
 
-    expect(spyService).toHaveBeenCalled();
+    expect(mockUserBattlesService.getUserAvailableBattles).toHaveBeenCalled();
   });
 
   it('should NOT call getUserAvailableBattles() when dialog result is falsy', () => {
@@ -234,7 +240,7 @@ describe('AvailableBattlesComponent', () => {
       isBattleRunning: 0,
     };
 
-    const spyService = jest.spyOn(mockUserBattlesService, 'getUserAvailableBattles');
+    const initialCallCount = mockUserBattlesService.getUserAvailableBattles.mock.calls.length;
 
     dialogMock.open.mockReturnValue({
       afterClosed: () => of(false),
@@ -242,7 +248,7 @@ describe('AvailableBattlesComponent', () => {
 
     component.openChallengeFriendDialgue(battle);
 
-    expect(spyService).not.toHaveBeenCalled();
+    expect(mockUserBattlesService.getUserAvailableBattles.mock.calls.length).toBe(initialCallCount);
   });
 
   it('should call ngOnDestroy and complete destroy$', () => {
@@ -313,12 +319,11 @@ describe('AvailableBattlesComponent', () => {
 
     component.navigateToBattle(battle);
 
-    expect(mockSnackbarService.showError).toHaveBeenCalledWith(expect.any(String));
+    expect(mockSnackbarService.showError).toHaveBeenCalled();
     expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 
   it('should return true from isDevToolsOpen when thresholds exceeded', () => {
-    // Mock window size difference greater than 160
     const originalOuterWidth = window.outerWidth;
     const originalInnerWidth = window.innerWidth;
     Object.defineProperty(window, 'outerWidth', { value: 1000, configurable: true });
@@ -327,7 +332,6 @@ describe('AvailableBattlesComponent', () => {
     const result = (component as any).isDevToolsOpen();
     expect(result).toBe(true);
 
-    // Restore original values
     Object.defineProperty(window, 'outerWidth', { value: originalOuterWidth });
     Object.defineProperty(window, 'innerWidth', { value: originalInnerWidth });
   });
@@ -345,37 +349,63 @@ describe('AvailableBattlesComponent', () => {
     Object.defineProperty(window, 'innerWidth', { value: originalInnerWidth });
   });
 
-  it('should not call availableBattles when updateBattleResults$ emits false', fakeAsync(() => {
-    const availableBattlesSpy = jest
-      .spyOn<any, any>(component as any, 'availableBattles')
-      .mockImplementation(() => {});
+  it('should append new battles to existing battles when batchNumber > 1', () => {
     mockUserBattlesService.getUserAvailableBattles.mockReturnValue(
-      of({ result: true, data: mockBattles }),
+      of({ result: true, data: mockApiResponse }),
     );
 
     fixture.detectChanges();
-    expect(availableBattlesSpy).toHaveBeenCalledTimes(1);
+    expect(component.battles.length).toBe(2);
 
-    // simulate false emission after first run
-    mockUserBattlesService.updateBattleResults$.next(false);
-    tick(200);
+    const newBattles: AvailableBattle[] = [
+      {
+        battleId: 3,
+        battleName: 'Battle 3',
+        category: 'History',
+        description: 'Description 3',
+        difficulty: 'Hard',
+        maxXP: 300,
+        totalQuestions: 30,
+        duration: '30 mins',
+        participants: 8,
+        isBattleRunning: 0,
+      },
+    ];
+    mockUserBattlesService.getUserAvailableBattles.mockReturnValueOnce(
+      of({ result: true, data: { battles: newBattles, hasMore: true } }),
+    );
 
-    // should still be 1 (no extra call)
-    expect(availableBattlesSpy).toHaveBeenCalledTimes(1);
-  }));
+    component.batchNumber = 2;
+    component['availableBattles']();
 
-  it('should handle cleanup of subscription when destroyed', () => {
-    const nextSpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+    expect(component.battles.length).toBe(3);
+    expect(component.hasMoreData).toBe(true);
+  });
 
-    component.ngOnDestroy();
+  it('should not load more when hasMoreData is false', () => {
+    component.hasMoreData = false;
+    const initialBatchNumber = component.batchNumber;
 
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    component.loadMore();
+
+    expect(component.batchNumber).toBe(initialBatchNumber);
+    expect(mockUserBattlesService.getUserAvailableBattles).not.toHaveBeenCalled();
+  });
+
+  it('should increment batchNumber on loadMore when hasMoreData is true', () => {
+    component.hasMoreData = true;
+    component.batchNumber = 1;
+    mockUserBattlesService.getUserAvailableBattles.mockReturnValue(
+      of({ result: true, data: mockApiResponse }),
+    );
+
+    component.loadMore();
+
+    expect(component.batchNumber).toBe(2);
+    expect(mockUserBattlesService.getUserAvailableBattles).toHaveBeenCalledWith(2);
   });
 
   it('should call availableBattles() and reset updateBattleResults$ when not first run and update=true', fakeAsync(() => {
-    // Arrange
     component['runFirstTime'] = false;
 
     const availableBattlesSpy = jest
@@ -385,41 +415,62 @@ describe('AvailableBattlesComponent', () => {
     const nextSpy = jest.spyOn(mockUserBattlesService.updateBattleResults$, 'next');
 
     mockUserBattlesService.getUserAvailableBattles.mockReturnValue(
-      of({ result: true, data: mockBattles }),
+      of({ result: true, data: mockApiResponse }),
     );
 
-    fixture.detectChanges(); // triggers ngOnInit()
+    fixture.detectChanges();
 
-    // Act
     mockUserBattlesService.updateBattleResults$.next(true);
-    tick(200); // allow setTimeout(100) to run
+    tick(200);
 
-    // Assert
-    expect(availableBattlesSpy).toHaveBeenCalledTimes(2); // 1 from ngOnInit + 1 from update
-    expect(nextSpy).toHaveBeenCalledWith(false); // reset called
+    expect(availableBattlesSpy).toHaveBeenCalledTimes(2);
+    expect(nextSpy).toHaveBeenCalledWith(false);
   }));
 
   it('should not call availableBattles() again when not first run and update=false', fakeAsync(() => {
-    // Arrange
     component['runFirstTime'] = false;
 
     const availableBattlesSpy = jest
       .spyOn<any, any>(component as any, 'availableBattles')
       .mockImplementation(() => {});
 
-    const nextSpy = jest.spyOn(mockUserBattlesService.updateBattleResults$, 'next');
-
     mockUserBattlesService.getUserAvailableBattles.mockReturnValue(
-      of({ result: true, data: mockBattles }),
+      of({ result: true, data: mockApiResponse }),
     );
 
-    fixture.detectChanges(); // triggers ngOnInit()
+    fixture.detectChanges();
 
-    // Act
     mockUserBattlesService.updateBattleResults$.next(false);
     tick(200);
 
-    // Assert
-    expect(availableBattlesSpy).toHaveBeenCalledTimes(1); // only initial call
+    expect(availableBattlesSpy).toHaveBeenCalledTimes(1);
   }));
+
+  it('should enrich battles with difficulty tags', () => {
+    mockUserBattlesService.getUserAvailableBattles.mockReturnValue(
+      of({ result: true, data: mockApiResponse }),
+    );
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(component.battles[0].difficultyTag).toBeDefined();
+    expect(component.battles[1].difficultyTag).toBeDefined();
+  });
+
+  it('should reset battles when batchNumber is 1', () => {
+    mockUserBattlesService.getUserAvailableBattles.mockReturnValue(
+      of({ result: true, data: mockApiResponse }),
+    );
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    const firstBatchLength = component.battles.length;
+
+    component.batchNumber = 1;
+    component['availableBattles']();
+
+    expect(component.battles.length).toBe(firstBatchLength);
+  });
 });

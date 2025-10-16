@@ -12,7 +12,11 @@
   @switch (currentQuestionData?.questionType) {
     @case ('True/False') {
       <mat-form-field appearance="outline" class="w-full custom-form-field">
-        <mat-select [value]="currentAnswer" (selectionChange)="onAnswerChange($event)">
+        <mat-select
+          [value]="currentAnswer"
+          (selectionChange)="onAnswerChange($event)"
+          [disabled]="isAnswerSubmitted || showCorrectAnswer"
+        >
           <mat-option value="" disabled>Select True or False</mat-option>
           <mat-option value="true">True</mat-option>
           <mat-option value="false">False</mat-option>
@@ -27,12 +31,13 @@
           placeholder="Enter your answer"
           rows="5"
           [(ngModel)]="typedAnswer"
-          [readonly]="showCorrectAnswer"
+          [readonly]="isAnswerSubmitted || showCorrectAnswer"
+          [disabled]="isAnswerSubmitted || showCorrectAnswer"
           class="custom-input-field min-h-[50px] resize-y overflow-auto text-base sm:text-lg lg:text-xl"
         ></textarea>
       </mat-form-field>
 
-      @if (!showCorrectAnswer) {
+      @if (!showCorrectAnswer && !isAnswerSubmitted) {
         <div class="mt-5 flex justify-end">
           <app-filled-button
             [filledButtonConfig]="nextQuesBtnConfig"
@@ -50,12 +55,13 @@
           placeholder="Enter your answer"
           autocomplete="off"
           [(ngModel)]="typedAnswer"
-          [readonly]="showCorrectAnswer"
+          [readonly]="isAnswerSubmitted || showCorrectAnswer"
+          [disabled]="isAnswerSubmitted || showCorrectAnswer"
           class="p-0 text-base sm:text-lg lg:text-xl"
         />
       </mat-form-field>
 
-      @if (!showCorrectAnswer) {
+      @if (!showCorrectAnswer && !isAnswerSubmitted) {
         <div class="mt-5 flex justify-end">
           <app-filled-button
             [filledButtonConfig]="nextQuesBtnConfig"
@@ -69,10 +75,15 @@
       <mat-radio-group
         [value]="currentAnswer"
         (change)="onAnswerChange($event)"
+        [disabled]="isAnswerSubmitted || showCorrectAnswer"
         class="grid grid-cols-1 sm:grid-cols-2 gap-4"
       >
         @for (opt of currentQuestionData?.options; track $index) {
-          <mat-radio-button [value]="opt.value" class="flex items-center option-text">
+          <mat-radio-button
+            [value]="opt.value"
+            [disabled]="isAnswerSubmitted || showCorrectAnswer"
+            class="flex items-center option-text"
+          >
             {{ opt.value }}
           </mat-radio-button>
         }

@@ -64,4 +64,12 @@
       }
     }
   </div>
+  @if (hasMoreData) {
+    <div class="flex justify-center mt-4">
+      <app-outline-button
+        [outlineButtonConfig]="loadMoreButtonConfig"
+        (buttonClicked)="loadMore()"
+      ></app-outline-button>
+    </div>
+  }
 </div>
