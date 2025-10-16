@@ -10,8 +10,3 @@ export interface AvailableBattle {
   participants: number;
   isBattleRunning: number;
 }
-
-export interface UserAvailableBattlesResponseDto {
-  battles: AvailableBattle[];
-  hasMore: boolean;
-}

@@ -30,9 +30,3 @@ export const editButtonConfig: ButtonConfig = {
   matIcon: 'edit',
   iconFontSet: 'material-icons-outlined',
 };
-
-export const loadMoreButtonConfig: ButtonConfig = {
-  label: 'Load More',
-  variant: 'primary',
-  fontWeight: 500,
-};

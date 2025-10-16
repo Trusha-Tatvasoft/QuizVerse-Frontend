@@ -1,12 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { environment } from '../../../../environments/environment.dev';
 import { UserBattleLeaderboardData } from '../../../pages/user/user-battles/interface/user-battles.interface';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { BattleResultResponse } from '../../../pages/user/battle-result/interfaces/battle-result.interface';
-import { UserAvailableBattlesResponseDto } from '../../../pages/user/user-battles/interface/quiz-battles.interface';
+import { AvailableBattle } from '../../../pages/user/user-battles/interface/quiz-battles.interface';
 import { skipLoader } from '../../../utils/constants';
 import { BattleUserSearchResult } from '../../../pages/user/user-battles/available-battles/interfaces/challenge-friend.interface';
 import {
@@ -19,7 +19,7 @@ import { BattleInstruction } from '../../../pages/user/battle-attempt-layout/int
   providedIn: 'root',
 })
 export class UserBattlesService {
-  private readonly http = inject(HttpClient);
+  constructor(private readonly http: HttpClient) {}
 
   public updateBattleResults$ = new BehaviorSubject<boolean>(false);
   updateBattleResultsObservable$ = this.updateBattleResults$.asObservable();
@@ -35,15 +35,11 @@ export class UserBattlesService {
     );
   }
 
-  getUserAvailableBattles(
-    batchNumber: number = 1,
-  ): Observable<ApiResponse<UserAvailableBattlesResponseDto>> {
-    return this.http.post<ApiResponse<UserAvailableBattlesResponseDto>>(
+  getUserAvailableBattles(): Observable<ApiResponse<AvailableBattle[]>> {
+    return this.http.get<ApiResponse<AvailableBattle[]>>(
       `${environment.baseUrl}/${EndPoints.GetUserAvailableBattles}`,
-      { batchNumber },
     );
   }
-
   /**
    * Fetch the list of recent battles for the currently logged-in user.
    * @returns Observable that emits an ApiResponse containing

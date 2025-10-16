@@ -41,29 +41,12 @@ describe('BattleQuestionComponent', () => {
   describe('ngOnChanges', () => {
     it('should reset typedAnswer when currentQuestionIndex changes', () => {
       component.typedAnswer = 'old';
-      component.isAnswerSubmitted = true;
-
       component.ngOnChanges({
         currentQuestionIndex: {
           previousValue: 0,
           currentValue: 1,
           firstChange: false,
           isFirstChange: () => false,
-        },
-      });
-
-      expect(component.typedAnswer).toBe('');
-      expect(component.isAnswerSubmitted).toBe(false);
-    });
-
-    it('should not reset when currentQuestionIndex changes on firstChange', () => {
-      component.typedAnswer = '';
-      component.ngOnChanges({
-        currentQuestionIndex: {
-          previousValue: undefined,
-          currentValue: 0,
-          firstChange: true,
-          isFirstChange: () => true,
         },
       });
       expect(component.typedAnswer).toBe('');
@@ -94,7 +77,6 @@ describe('BattleQuestionComponent', () => {
     it('should clear typedAnswer when showCorrectAnswer changes from true to false', () => {
       component.typedAnswer = 'B';
       component.showCorrectAnswer = false;
-      component.isAnswerSubmitted = true;
 
       component.ngOnChanges({
         showCorrectAnswer: {
@@ -106,7 +88,6 @@ describe('BattleQuestionComponent', () => {
       });
 
       expect(component.typedAnswer).toBe('');
-      expect(component.isAnswerSubmitted).toBe(false);
     });
   });
 
@@ -114,64 +95,51 @@ describe('BattleQuestionComponent', () => {
     it('should emit trimmed typedAnswer and reset typedAnswer & currentAnswer', () => {
       const spy = jest.spyOn(component.answerChanged, 'emit');
       component.typedAnswer = '  B ';
+      component.currentAnswer = 'dummy';
 
       component.submitAnswer();
 
       expect(spy).toHaveBeenCalledWith('B');
-      expect(component.isAnswerSubmitted).toBe(true);
-      expect(component.typedAnswer).toBe('  B ');
+      expect(component.typedAnswer).toBe('');
+      expect(component.currentAnswer).toBe('');
     });
 
     it('should emit empty string if typedAnswer is empty', () => {
       const spy = jest.spyOn(component.answerChanged, 'emit');
-      component.typedAnswer = '   ';
+      component.typedAnswer = '   '; // only spaces
+      component.currentAnswer = 'X';
 
       component.submitAnswer();
 
       expect(spy).toHaveBeenCalledWith('');
-      expect(component.isAnswerSubmitted).toBe(true);
+      expect(component.typedAnswer).toBe('');
+      expect(component.currentAnswer).toBe('');
     });
   });
 
   describe('onAnswerChange', () => {
-    it('should not process answer change if isAnswerSubmitted is true', () => {
+    it('should handle MatRadioChange', () => {
       const spy = jest.spyOn(component.answerChanged, 'emit');
-      component.isAnswerSubmitted = true;
-      const event = { value: 'A' } as MatRadioChange;
-
-      component.onAnswerChange(event);
-
-      expect(spy).not.toHaveBeenCalled();
-      expect(component.currentAnswer).toBe('');
-    });
-
-    it('should handle MatRadioChange and set isAnswerSubmitted', () => {
-      const spy = jest.spyOn(component.answerChanged, 'emit');
-      component.isAnswerSubmitted = false;
       const event = { value: 'A' } as MatRadioChange;
 
       component.onAnswerChange(event);
 
       expect(component.currentAnswer).toBe('A');
-      expect(component.isAnswerSubmitted).toBe(true);
       expect(spy).toHaveBeenCalledWith('A');
     });
 
-    it('should handle MatSelectChange and set isAnswerSubmitted', () => {
+    it('should handle MatSelectChange', () => {
       const spy = jest.spyOn(component.answerChanged, 'emit');
-      component.isAnswerSubmitted = false;
       const event = { value: 'B' } as MatSelectChange;
 
       component.onAnswerChange(event);
 
       expect(component.currentAnswer).toBe('B');
-      expect(component.isAnswerSubmitted).toBe(true);
       expect(spy).toHaveBeenCalledWith('B');
     });
 
-    it('should handle native input Event and set isAnswerSubmitted', () => {
+    it('should handle native input Event', () => {
       const spy = jest.spyOn(component.answerChanged, 'emit');
-      component.isAnswerSubmitted = false;
       const inputEl = document.createElement('input');
       inputEl.value = 'C';
       const event = new Event('input');
@@ -180,18 +148,7 @@ describe('BattleQuestionComponent', () => {
       component.onAnswerChange(event);
 
       expect(component.currentAnswer).toBe('C');
-      expect(component.isAnswerSubmitted).toBe(true);
       expect(spy).toHaveBeenCalledWith('C');
-    });
-
-    it('should extract value from MatRadioChange with value property', () => {
-      const spy = jest.spyOn(component.answerChanged, 'emit');
-      component.isAnswerSubmitted = false;
-      const event = { value: 'D' } as MatRadioChange;
-
-      component.onAnswerChange(event);
-
-      expect(spy).toHaveBeenCalledWith('D');
     });
   });
 });

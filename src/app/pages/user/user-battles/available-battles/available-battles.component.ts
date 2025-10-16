@@ -6,7 +6,6 @@ import { OutlineButtonComponent } from '../../../../shared/components/outline-bu
 import { ButtonConfig } from '../../../../shared/interfaces/button-config.interface';
 import {
   challengeFriendButtonConfig,
-  loadMoreButtonConfig,
   quickBattleButtonConfig,
   waitingResultButtonConfig,
 } from '../configs/quiz-battles-button.configs';
@@ -42,11 +41,9 @@ export class AvailableBattlesComponent implements OnInit, OnDestroy {
   challengeFriend: ButtonConfig = challengeFriendButtonConfig;
   waitingResultButtonConfig: ButtonConfig = waitingResultButtonConfig;
   battles: (AvailableBattle & { difficultyTag: TagInputConfig })[] = [];
+  loading = true;
   error: string | null = null;
   runFirstTime: boolean = true;
-  loadMoreButtonConfig = loadMoreButtonConfig;
-  batchNumber = 1;
-  hasMoreData = false;
 
   private readonly userBattlesService = inject(UserBattlesService);
   private readonly snakbarService = inject(SnackbarService);
@@ -130,12 +127,6 @@ export class AvailableBattlesComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadMore(): void {
-    if (!this.hasMoreData) return;
-    this.batchNumber++;
-    this.availableBattles();
-  }
-
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -143,27 +134,20 @@ export class AvailableBattlesComponent implements OnInit, OnDestroy {
 
   private availableBattles() {
     this.userBattlesService
-      .getUserAvailableBattles(this.batchNumber)
+      .getUserAvailableBattles()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           if (response.result) {
             // enrich each battle with tags
-            const mappedBattles = response.data.battles.map((battle) => ({
+            this.battles = response.data.map((battle) => ({
               ...battle,
               difficultyTag: getTagConfigWithCustomization(battle.difficulty, false),
             }));
-
-            if (this.batchNumber === 1) {
-              this.battles = mappedBattles;
-            } else {
-              this.battles = [...this.battles, ...mappedBattles];
-            }
-
-            this.hasMoreData = response.data.hasMore;
           } else {
             this.error = response.message;
           }
+          this.loading = false;
         },
         error: () => {
           this.snakbarService.showError(

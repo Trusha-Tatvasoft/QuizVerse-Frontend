@@ -6,7 +6,6 @@ import {
   createNewBattleConfig,
   deleteButtonConfig,
   editButtonConfig,
-  loadMoreButtonConfig,
 } from './configs/battle-managment.config';
 import { TagComponent } from '../../../shared/components/tag/tag.component';
 import { MatIcon } from '@angular/material/icon';
@@ -47,9 +46,6 @@ export class BattleManagementComponent implements OnInit, OnDestroy {
   createBattleButtonConfig = createNewBattleConfig;
   deleteButtonConfig = deleteButtonConfig;
   editButtonConfig = editButtonConfig;
-  loadMoreButtonConfig = loadMoreButtonConfig;
-  batchNumber = 1;
-  hasMoreData = false;
 
   // Holds mapped battle data for display
   battleData: ReturnType<typeof battleToBattleCardData>[] = [];
@@ -69,24 +65,13 @@ export class BattleManagementComponent implements OnInit, OnDestroy {
   }
 
   // Fetch battles from backend
-  loadBattles(): void {
+  loadBattles() {
     this.battleService
-      .getBattles(this.batchNumber)
+      .getBattles()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (res) => {
-          if (res.result && res.data) {
-            const records = res.data.battles ?? [];
-            const mappedBattles = records.map(battleToBattleCardData);
-
-            if (this.batchNumber === 1) {
-              this.battleData = mappedBattles;
-            } else {
-              this.battleData = [...this.battleData, ...mappedBattles];
-            }
-
-            this.hasMoreData = res.data.hasMore;
-          }
+        next: (battles) => {
+          this.battleData = battles;
         },
         error: (err) => {
           this.snackbar.showError(
@@ -130,12 +115,6 @@ export class BattleManagementComponent implements OnInit, OnDestroy {
   // Open delete battle confirmation dialog
   deleteBattleDialog(battleId: number): void {
     this.openConfirmationDialog(deleteBattleDialog, () => this.deleteQuiz(battleId as number));
-  }
-
-  loadMore(): void {
-    if (!this.hasMoreData) return;
-    this.batchNumber++;
-    this.loadBattles();
   }
 
   ngOnDestroy(): void {

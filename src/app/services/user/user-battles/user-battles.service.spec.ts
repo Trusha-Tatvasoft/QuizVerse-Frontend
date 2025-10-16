@@ -5,17 +5,14 @@ import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { UserBattleLeaderboardData } from '../../../pages/user/user-battles/interface/user-battles.interface';
-import {
-  AvailableBattle,
-  UserAvailableBattlesResponseDto,
-} from '../../../pages/user/user-battles/interface/quiz-battles.interface';
+import { AvailableBattle } from '../../../pages/user/user-battles/interface/quiz-battles.interface';
 import { BattleUserSearchResult } from '../../../pages/user/user-battles/available-battles/interfaces/challenge-friend.interface';
 import {
   UserRecentBattlesRequestDto,
   UserRecentBattlesResponseDto,
 } from '../../../pages/user/user-battles/interface/recent-battles.interface';
 
-describe('UserBattlesService', () => {
+describe('UserBattlesService (Jest)', () => {
   let service: UserBattlesService;
   let httpMock: HttpTestingController;
 
@@ -36,7 +33,7 @@ describe('UserBattlesService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch battle leaderboard list', (done) => {
+  it('should fetch battle leaderboard list', () => {
     const mockResponse: ApiResponse<UserBattleLeaderboardData[]> = {
       result: true,
       message: 'success',
@@ -49,7 +46,6 @@ describe('UserBattlesService', () => {
     service.getBattleLeaderboardList().subscribe((res) => {
       expect(res).toEqual(mockResponse);
       expect(res.data[0].userName).toBe('testUser');
-      done();
     });
 
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetBattleLeaderboardList}`);
@@ -57,81 +53,50 @@ describe('UserBattlesService', () => {
     req.flush(mockResponse);
   });
 
-  it('should call getUserAvailableBattles with default batch number', (done) => {
-    const mockBattles: AvailableBattle[] = [
-      {
-        battleId: 1,
-        battleName: 'Math Quiz Battle',
-        category: 'Math',
-        difficulty: 'Medium',
-        description: 'A fun math challenge!',
-        maxXP: 100,
-        totalQuestions: 10,
-        duration: '15m',
-        participants: 25,
-        isBattleRunning: 0,
-      },
-      {
-        battleId: 2,
-        battleName: 'Science Trivia',
-        category: 'Science',
-        difficulty: 'Hard',
-        description: 'Test your science knowledge!',
-        maxXP: 150,
-        totalQuestions: 15,
-        duration: '20m',
-        participants: 12,
-        isBattleRunning: 0,
-      },
-    ];
-
-    const mockResponse: ApiResponse<UserAvailableBattlesResponseDto> = {
+  it('should call getUserAvailableBattles and return data', () => {
+    const mockResponse: ApiResponse<AvailableBattle[]> = {
       result: true,
       message: 'Fetched battles successfully',
-      data: {
-        battles: mockBattles,
-        hasMore: true,
-      },
+      data: [
+        {
+          battleId: 1,
+          battleName: 'Math Quiz Battle',
+          category: 'Math',
+          difficulty: 'Medium',
+          description: 'A fun math challenge!',
+          maxXP: 100,
+          totalQuestions: 10,
+          duration: '15m',
+          participants: 25,
+        },
+        {
+          battleId: 2,
+          battleName: 'Science Trivia',
+          category: 'Science',
+          difficulty: 'Hard',
+          description: 'Test your science knowledge!',
+          maxXP: 150,
+          totalQuestions: 15,
+          duration: '20m',
+          participants: 12,
+        },
+      ] as AvailableBattle[],
       statusCode: 200,
     };
 
     service.getUserAvailableBattles().subscribe((res) => {
+      expect(res).toEqual(mockResponse);
       expect(res.result).toBe(true);
-      expect(res.data.battles.length).toBe(2);
-      expect(res.data.hasMore).toBe(true);
-      done();
+      expect(res.data.length).toBe(2);
     });
 
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetUserAvailableBattles}`);
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual({ batchNumber: 1 });
+
+    expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
 
-  it('should call getUserAvailableBattles with custom batch number', (done) => {
-    const batchNumber = 3;
-    const mockResponse: ApiResponse<UserAvailableBattlesResponseDto> = {
-      result: true,
-      message: 'Fetched battles successfully',
-      data: {
-        battles: [],
-        hasMore: false,
-      },
-      statusCode: 200,
-    };
-
-    service.getUserAvailableBattles(batchNumber).subscribe((res) => {
-      expect(res.data.hasMore).toBe(false);
-      done();
-    });
-
-    const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetUserAvailableBattles}`);
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual({ batchNumber });
-    req.flush(mockResponse);
-  });
-
-  it('should handle error response when fetching available battles', (done) => {
+  it('should handle error response', () => {
     const errorMessage = 'Failed to fetch battles';
 
     service.getUserAvailableBattles().subscribe({
@@ -139,16 +104,16 @@ describe('UserBattlesService', () => {
       error: (error) => {
         expect(error.status).toBe(500);
         expect(error.statusText).toBe('Internal Server Error');
-        done();
       },
     });
 
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetUserAvailableBattles}`);
-    expect(req.request.method).toBe('POST');
+
+    expect(req.request.method).toBe('GET');
     req.flush(errorMessage, { status: 500, statusText: 'Internal Server Error' });
   });
 
-  it('should fetch battle instruction by ID', (done) => {
+  it('should fetch battle instruction by ID', () => {
     const battleAttemptId = 123;
     const mockResponse: ApiResponse<any> = {
       result: true,
@@ -178,7 +143,6 @@ describe('UserBattlesService', () => {
       expect(res).toEqual(mockResponse);
       expect(res.data.battleAttemptId).toBe(battleAttemptId);
       expect(res.data.battleName).toBe('Sample Battle');
-      done();
     });
 
     const req = httpMock.expectOne(
@@ -188,7 +152,7 @@ describe('UserBattlesService', () => {
     req.flush(mockResponse);
   });
 
-  it('should send a battle request correctly', (done) => {
+  it('should send a battle request correctly', () => {
     const receiverUsername = 'johnDoe';
     const battleId = 5;
 
@@ -201,19 +165,20 @@ describe('UserBattlesService', () => {
 
     service.sendBattleRequest(receiverUsername, battleId).subscribe((res) => {
       expect(res).toEqual(mockResponse);
-      done();
     });
 
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.SendBattleRequest}`);
+
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({
       receiverUsername,
       battleId,
     });
+
     req.flush(mockResponse);
   });
 
-  it('should check if a user exists by username', (done) => {
+  it('should check if a user exists by username', () => {
     const username = 'johnDoe';
 
     const mockResponse: ApiResponse<null> = {
@@ -225,18 +190,19 @@ describe('UserBattlesService', () => {
 
     service.checkUserExistence(username).subscribe((res) => {
       expect(res).toEqual(mockResponse);
-      done();
     });
 
     const req = httpMock.expectOne(
       `${environment.baseUrl}/${EndPoints.CheckUserExistence}/${username}`,
     );
+
     expect(req.request.method).toBe('GET');
     expect(req.request.headers.get('X-Skip-Loader')).toBe('true');
+
     req.flush(mockResponse);
   });
 
-  it('should search users by username and battleId', (done) => {
+  it('should search users by username and battleId', () => {
     const userName = 'john';
     const battleId = 3;
 
@@ -259,7 +225,6 @@ describe('UserBattlesService', () => {
       expect(res).toEqual(mockResponse);
       expect(res.data.length).toBe(1);
       expect(res.data[0].userName).toBe('john123');
-      done();
     });
 
     const req = httpMock.expectOne((request) => {
@@ -269,12 +234,14 @@ describe('UserBattlesService', () => {
         request.params.get('battleId') === battleId.toString()
       );
     });
+
     expect(req.request.method).toBe('GET');
     expect(req.request.headers.get('X-Skip-Loader')).toBe('true');
+
     req.flush(mockResponse);
   });
 
-  it('should fetch user recent battles', (done) => {
+  it('should fetch user recent battles', () => {
     const requestDto: UserRecentBattlesRequestDto = {
       batchNumber: 1,
       filterBy: null,
@@ -321,49 +288,12 @@ describe('UserBattlesService', () => {
       expect(res.data?.battles.length).toBe(2);
       expect(res.data?.battles[0].opponentFullName).toBe('John Doe');
       expect(res.data?.hasMore).toBe(false);
-      done();
     });
 
     const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.GetUserRecentBattles}`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(requestDto);
-    req.flush(mockResponse);
-  });
 
-  it('should fetch battle result by ID', (done) => {
-    const battleId = 456;
-    const mockResponse: ApiResponse<any> = {
-      result: true,
-      message: 'Battle result fetched successfully',
-      data: {
-        battleName: 'Math Quiz Battle',
-        opponentUserName: 'player2',
-        playerProfile: 'http://example.com/player1.jpg',
-        playerFullName: 'Player One',
-        opponentFullName: 'Player Two',
-        opponentProfile: 'http://example.com/player2.jpg',
-        battleStatus: 1,
-        isWin: true,
-        playerAttemptedQuestions: 10,
-        opponentAttemptedQuestions: 8,
-        playerEarnedXP: 100,
-      },
-      statusCode: 200,
-    };
-
-    service.getBattleResult(battleId).subscribe((res) => {
-      expect(res.result).toBe(true);
-      expect(res.data.battleName).toBe('Math Quiz Battle');
-      expect(res.data.isWin).toBe(true);
-      expect(res.data.playerEarnedXP).toBe(100);
-      expect(res.data.opponentUserName).toBe('player2');
-      done();
-    });
-
-    const req = httpMock.expectOne(
-      `${environment.baseUrl}/${EndPoints.GetBattleResult}/${battleId}`,
-    );
-    expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
 });

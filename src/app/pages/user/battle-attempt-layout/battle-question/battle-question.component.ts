@@ -37,15 +37,12 @@ export class BattleQuestionComponent {
   @Input() isUserAnswerCorrect: boolean = false;
   @Input() userAnswer: string = '';
   @Output() answerChanged = new EventEmitter<string>();
-
   typedAnswer: string = '';
   nextQuesBtnConfig = nextQuestionButtonConfig;
-  isAnswerSubmitted: boolean = false;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['currentQuestionIndex'] && !changes['currentQuestionIndex'].firstChange) {
       this.typedAnswer = '';
-      this.isAnswerSubmitted = false;
     }
 
     if (changes['showCorrectAnswer'] || changes['userAnswer']) {
@@ -56,21 +53,17 @@ export class BattleQuestionComponent {
 
     if (!this.showCorrectAnswer && changes['showCorrectAnswer']?.previousValue === true) {
       this.typedAnswer = '';
-      this.isAnswerSubmitted = false;
     }
   }
 
   submitAnswer() {
     const answer: string = this.typedAnswer?.trim() || '';
-    this.isAnswerSubmitted = true;
     this.answerChanged.emit(answer);
+    this.typedAnswer = '';
+    this.currentAnswer = '';
   }
 
   onAnswerChange(event: MatRadioChange | MatSelectChange | Event): void {
-    if (this.isAnswerSubmitted) {
-      return;
-    }
-
     let value = '';
 
     if ('value' in event) {
@@ -80,7 +73,6 @@ export class BattleQuestionComponent {
     }
 
     this.currentAnswer = value;
-    this.isAnswerSubmitted = true;
     this.answerChanged.emit(value);
   }
 }

@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { platformMessages } from '../../../utils/constants';
 import { Navigations } from '../../../shared/enums/navigation';
+import { BattleCardData } from './interfaces/battle-management.interface';
 import { TagColor, TagType } from '../../../utils/types/tag-component.type';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -32,31 +33,22 @@ describe('BattleManagementComponent', () => {
     textColor: 'green' as TagColor,
   };
 
-  const mockBattleResponse = {
-    statusCode: 200,
-    result: true,
-    message: 'Success',
-    data: {
-      batchNumber: 1,
-      battles: [
-        {
-          id: 1,
-          battleName: 'Test Battle',
-          categoryName: 'General',
-          description: 'A mock battle',
-          totalParticipants: 10,
-          totalXp: 100,
-          battleTime: 1,
-          startDate: new Date('2025-08-19'),
-          endDate: new Date('2025-08-20'),
-          battleDifficulty: 'Easy',
-          totalQuestion: 10,
-          battleStatus: 1,
-        },
-      ],
-      hasMore: false,
+  const mockBattles: BattleCardData[] = [
+    {
+      id: 1,
+      battleName: 'Test Battle',
+      category: 'General',
+      description: 'A mock battle',
+      participants: 10,
+      totalXp: 100,
+      battleTime: 1,
+      dateRange: { start: new Date('2025-08-19'), end: new Date('2025-08-20') },
+      statusTag: { ...mockTag, id: 'status-1' },
+      difficultyTag: { ...mockTag, id: 'difficulty-1', label: 'Easy' },
+      questionTag: { ...mockTag, id: 'question-1', label: '10 Qs' },
+      timeTag: { ...mockTag, id: 'time-1', label: 'Permanent' },
     },
-  };
+  ];
 
   beforeEach(async () => {
     const battleServiceMock = {
@@ -83,7 +75,7 @@ describe('BattleManagementComponent', () => {
         { provide: SnackbarService, useValue: snackbarServiceMock },
         { provide: MatDialog, useValue: dialogMock },
       ],
-      schemas: [NO_ERRORS_SCHEMA],
+      schemas: [NO_ERRORS_SCHEMA], // Ignore unknown components for simplicity
     }).compileComponents();
 
     fixture = TestBed.createComponent(BattleManagementComponent);
@@ -93,6 +85,7 @@ describe('BattleManagementComponent', () => {
     router = TestBed.inject(Router);
     dialog = TestBed.inject(MatDialog) as jest.Mocked<MatDialog>;
 
+    // Spy on router.navigate
     jest.spyOn(router, 'navigate').mockResolvedValue(true);
   });
 
@@ -100,60 +93,39 @@ describe('BattleManagementComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load battles on init with success', () => {
-    battleService.getBattles.mockReturnValue(of(mockBattleResponse));
+  it('should load battles on init (success case)', () => {
+    battleService.getBattles.mockReturnValue(of(mockBattles));
 
-    fixture.detectChanges();
+    fixture.detectChanges(); // Triggers ngOnInit
 
-    expect(battleService.getBattles).toHaveBeenCalledWith(1);
-    expect(component.batchNumber).toBe(1);
-    expect(component.hasMoreData).toBe(false);
+    expect(battleService.getBattles).toHaveBeenCalled();
+    expect(component.battleData).toEqual(mockBattles);
   });
 
-  it('should show error snackbar when loading battles fails', () => {
-    const mockError = { error: { message: 'API error' } };
+  it('should handle error when loading battles and show snackbar', () => {
+    const mockError = { statusCode: 500, error: { message: 'API error' } };
     battleService.getBattles.mockReturnValue(throwError(() => mockError));
 
     fixture.detectChanges();
 
+    expect(battleService.getBattles).toHaveBeenCalled();
     expect(snackbarService.showError).toHaveBeenCalledWith(
-      platformMessages.errorTitle,
+      `${platformMessages.errorTitle}`,
       mockError.error.message,
     );
   });
 
-  it('should show default error message when error lacks message property', () => {
-    const mockError = { error: {} };
+  it('should handle error when loading battles with missing error message', () => {
+    const mockError = { statusCode: 400, error: {} };
     battleService.getBattles.mockReturnValue(throwError(() => mockError));
 
     fixture.detectChanges();
 
+    expect(battleService.getBattles).toHaveBeenCalled();
     expect(snackbarService.showError).toHaveBeenCalledWith(
-      platformMessages.errorTitle,
+      `${platformMessages.errorTitle}`,
       platformMessages.errorMessage,
     );
-  });
-
-  it('should append new battles when batchNumber is greater than 1', () => {
-    battleService.getBattles.mockReturnValue(of(mockBattleResponse));
-    fixture.detectChanges();
-
-    component.batchNumber = 2;
-    battleService.getBattles.mockReturnValue(of(mockBattleResponse));
-    component.loadBattles();
-
-    expect(battleService.getBattles).toHaveBeenCalledWith(2);
-  });
-
-  it('should reset battles when batchNumber is 1', () => {
-    const firstResponse = mockBattleResponse;
-    battleService.getBattles.mockReturnValue(of(firstResponse));
-    fixture.detectChanges();
-
-    component.batchNumber = 1;
-    component.loadBattles();
-
-    expect(battleService.getBattles).toHaveBeenCalledWith(1);
   });
 
   it('should clean up subscriptions on destroy', () => {
@@ -166,7 +138,7 @@ describe('BattleManagementComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should navigate to battle creation page', () => {
+  it('should navigate to battle creation page on openAddBattleDialgue', () => {
     component.openAddBattleDialgue();
 
     expect(router.navigate).toHaveBeenCalledWith([
@@ -174,7 +146,7 @@ describe('BattleManagementComponent', () => {
     ]);
   });
 
-  it('should navigate to battle update page with encoded ID', () => {
+  it('should navigate to battle update page on editBattle', () => {
     const battleId = 1;
     const encodedId = btoa(battleId.toString());
 
@@ -205,15 +177,16 @@ describe('BattleManagementComponent', () => {
       data: expect.any(Object),
       panelClass: 'custom-dialog-radius',
     });
+    expect(mockDialogRef.afterClosed).toHaveBeenCalled();
     expect(battleService.deleteBattle).toHaveBeenCalledWith(battleId);
     expect(snackbarService.showSuccess).toHaveBeenCalledWith(
-      platformMessages.successTitle,
+      'Success!',
       platformMessages.deleteBattleSuccess,
     );
     expect(loadBattlesSpy).toHaveBeenCalled();
   });
 
-  it('should not delete battle when confirmation dialog is canceled', () => {
+  it('should not delete battle if confirmation dialog is canceled', () => {
     const battleId = 1;
     const mockDialogRef = {
       afterClosed: jest.fn().mockReturnValue(of(false)),
@@ -223,10 +196,11 @@ describe('BattleManagementComponent', () => {
     component.deleteBattleDialog(battleId);
 
     expect(dialog.open).toHaveBeenCalled();
+    expect(mockDialogRef.afterClosed).toHaveBeenCalled();
     expect(battleService.deleteBattle).not.toHaveBeenCalled();
   });
 
-  it('should show error when deleting battle fails', () => {
+  it('should handle error when deleting battle and show snackbar', () => {
     const battleId = 1;
     const mockDialogRef = {
       afterClosed: jest.fn().mockReturnValue(of(true)),
@@ -237,29 +211,14 @@ describe('BattleManagementComponent', () => {
 
     component.deleteBattleDialog(battleId);
 
+    expect(battleService.deleteBattle).toHaveBeenCalledWith(battleId);
     expect(snackbarService.showError).toHaveBeenCalledWith(
       platformMessages.errorTitle,
-      mockError.error.message,
+      mockError.error.message || platformMessages.deleteBattleFailure,
     );
   });
 
-  it('should show error with default message when delete error lacks message', () => {
-    const battleId = 1;
-    const mockDialogRef = {
-      afterClosed: jest.fn().mockReturnValue(of(true)),
-    };
-    const mockError = { error: {} };
-    dialog.open.mockReturnValue(mockDialogRef as any);
-    battleService.deleteBattle.mockReturnValue(throwError(() => mockError));
-
-    component.deleteBattleDialog(battleId);
-
-    expect(snackbarService.showError).toHaveBeenCalledWith(
-      platformMessages.errorTitle,
-      platformMessages.errorMessage,
-    );
-  });
-
+  // New test case to cover the uncovered line
   it('should handle non-200 status code when deleting battle and show snackbar', () => {
     const battleId = 1;
     const mockDialogRef = {
@@ -277,32 +236,61 @@ describe('BattleManagementComponent', () => {
 
     component.deleteBattleDialog(battleId);
 
-    expect(snackbarService.showError).toHaveBeenCalledWith(
-      platformMessages.errorTitle,
-      mockResponse.message,
-    );
+    expect(battleService.deleteBattle).toHaveBeenCalledWith(battleId);
+    expect(snackbarService.showError).toHaveBeenCalledWith('Error!', mockResponse.message);
     expect(loadBattlesSpy).not.toHaveBeenCalled();
   });
 
-  it('should increment batch number on loadMore', () => {
-    component.hasMoreData = true;
-    component.batchNumber = 1;
-    battleService.getBattles.mockReturnValue(of(mockBattleResponse));
+  it('should handle error when deleting battle with missing error message', () => {
+    const battleId = 1;
+    const mockDialogRef = {
+      afterClosed: jest.fn().mockReturnValue(of(true)),
+    };
+    const mockError = { error: {} };
+    dialog.open.mockReturnValue(mockDialogRef as any);
+    battleService.deleteBattle.mockReturnValue(throwError(() => mockError));
 
-    component.loadMore();
+    component.deleteBattleDialog(battleId);
 
-    expect(component.batchNumber).toBe(2);
-    expect(battleService.getBattles).toHaveBeenCalledWith(2);
+    expect(battleService.deleteBattle).toHaveBeenCalledWith(battleId);
+    expect(snackbarService.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      platformMessages.errorMessage,
+    );
   });
 
-  it('should not load more when hasMoreData is false', () => {
-    component.hasMoreData = false;
-    component.batchNumber = 1;
-    const initialBatchNumber = component.batchNumber;
+  it('should display "No battles available" when battleData is empty', () => {
+    battleService.getBattles.mockReturnValue(of([]));
+    fixture.detectChanges();
 
-    component.loadMore();
+    const noDataElement = fixture.nativeElement.querySelector('.no-data-message');
+    expect(noDataElement.textContent).toBe('No battles available.');
+  });
 
-    expect(component.batchNumber).toBe(initialBatchNumber);
-    expect(battleService.getBattles).not.toHaveBeenCalled();
+  it('should render battle cards when battleData is not empty', () => {
+    battleService.getBattles.mockReturnValue(of(mockBattles));
+    fixture.detectChanges();
+
+    const battleCards = fixture.nativeElement.querySelectorAll('.battle-card');
+    expect(battleCards.length).toBe(1);
+    expect(battleCards[0].querySelector('h2').textContent).toContain('Test Battle');
+    expect(battleCards[0].querySelector('.battle-data span').textContent).toContain(
+      'A mock battle',
+    );
+  });
+
+  it('should display date range when battleType is TimeLimited', () => {
+    const mockBattleWithDateRange: BattleCardData[] = [
+      {
+        ...mockBattles[0],
+        battleTime: 2,
+        dateRange: { start: new Date('2025-08-31'), end: new Date('2025-09-01') },
+      },
+    ];
+    battleService.getBattles.mockReturnValue(of(mockBattleWithDateRange));
+    fixture.detectChanges();
+
+    const dateRangeElement = fixture.nativeElement.querySelector('.battle-card span.date-range');
+    expect(dateRangeElement.textContent).toContain('31-08-2025 to 01-09-2025');
   });
 });
