@@ -2,7 +2,7 @@
   <div class="flex items-center justify-between mb-4">
     <h4 class="form-heading">Create New Question</h4>
     <app-outline-button
-      [outlineButtonConfig]="changeMethodButton"
+      [outlineButtonConfig]="isSmallScreen ? changeMethodSmallButton : changeMethodButton"
       class="min-width-btn"
       (buttonClicked)="closeOption()"
     ></app-outline-button>

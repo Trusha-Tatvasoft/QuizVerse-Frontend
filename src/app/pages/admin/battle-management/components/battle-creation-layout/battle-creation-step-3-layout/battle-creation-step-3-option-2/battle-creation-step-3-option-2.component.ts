@@ -24,7 +24,10 @@ import {
 } from '../../../../interfaces/battle-creation.interface';
 import { BattleManagementService } from '../../../../../../../services/admin/battle-management/battle-management.service';
 import { SnackbarService } from '../../../../../../../shared/service/snackbar/snackbar.service';
-import { changeQuestionMethodButtonConfig } from '../../../../../quiz-management/configs/quiz-creation.config';
+import {
+  changeQuestionMethodButtonConfig,
+  changeQuestionMethodSmallButtonConfig,
+} from '../../../../../quiz-management/configs/quiz-creation.config';
 import {
   debounceTimeValue,
   quizCRUDMessages,
@@ -39,6 +42,7 @@ import {
 } from '../../../../../../../utils/quiz-crud-common-functions.utils';
 import { TagInputConfig } from '../../../../../../../shared/interfaces/tag-component.interface';
 import { FormControl } from '@angular/forms';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-battle-creation-step-3-option-2',
@@ -68,6 +72,7 @@ export class BattleCreationStep3Option2Component implements OnInit, OnDestroy {
 
   // Configurations
   changeMethodButton = changeQuestionMethodButtonConfig;
+  changeMethodSmallButton = changeQuestionMethodSmallButtonConfig;
   pageSizeOptions: number[] = tablePaginationConfig.PageSizeOptions;
   searchInputConfig = searchInputConfig;
 
@@ -76,6 +81,7 @@ export class BattleCreationStep3Option2Component implements OnInit, OnDestroy {
   sort = signal({ sortColumn: '', sortDescending: false });
   dataSource = signal<QuestionPoolList[]>([]);
   totalItems = signal(0);
+  isSmallScreen = false;
 
   // Form controls
   searchControl = new FormControl<string | null>(null);
@@ -84,6 +90,7 @@ export class BattleCreationStep3Option2Component implements OnInit, OnDestroy {
   // Services
   private readonly battleManagementService = inject(BattleManagementService);
   private readonly snackbar = inject(SnackbarService);
+  private readonly breakpointObserver = inject(BreakpointObserver);
 
   // RxJS subjects for cleanup and search debounce
   private readonly destroy$ = new Subject<void>();
@@ -92,6 +99,13 @@ export class BattleCreationStep3Option2Component implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getSearchedQuestions();
     this.fetchQuestions();
+
+    this.breakpointObserver
+      .observe([Breakpoints.XSmall])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((result) => {
+        this.isSmallScreen = result.matches;
+      });
   }
 
   // Emits close event to parent

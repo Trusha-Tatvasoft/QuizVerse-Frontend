@@ -280,8 +280,25 @@ export const downloadCsvButtonConfig: ButtonConfig = {
   matIcon: 'download',
   imagePosition: 'left',
 };
+
+export const downloadCsvSmallButtonConfig: ButtonConfig = {
+  label: 'CSV',
+  type: 'button',
+  variant: 'secondary',
+  matIcon: 'download',
+  imagePosition: 'left',
+};
+
 export const downloadExelButtonConfig: ButtonConfig = {
   label: 'Download Excel Template',
+  type: 'button',
+  variant: 'secondary',
+  matIcon: 'download',
+  imagePosition: 'left',
+};
+
+export const downloadExelSmallButtonConfig: ButtonConfig = {
+  label: 'Excel',
   type: 'button',
   variant: 'secondary',
   matIcon: 'download',
@@ -293,6 +310,12 @@ export const changeQuestionMethodButtonConfig: ButtonConfig = {
   fontWeight: 500,
   type: 'button',
   variant: 'secondary',
+};
+
+export const changeQuestionMethodSmallButtonConfig: ButtonConfig = {
+  variant: 'secondary',
+  matIcon: 'swap_horiz',
+  label: '',
 };
 
 export const exportCsvButtonConfig: ButtonConfig = {
