@@ -48,7 +48,7 @@
             [value]="getAnswer(question)"
             class="mt-2 flex flex-col gap-1 pointer-events-none"
           >
-            @for (opt of getOptions(question); track opt.key) {
+            @for (opt of getOptions(question); track opt.id) {
               <mat-radio-button [value]="opt.value">
                 {{ opt.value }}
               </mat-radio-button>

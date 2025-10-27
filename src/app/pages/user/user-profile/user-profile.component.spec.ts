@@ -8,6 +8,7 @@ import * as mapper from './user-profile.mapper';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { throwError } from 'rxjs';
 import { UserProfileComponent } from './user-profile.component';
+import { defaultProfilePic, platformMessages } from '../../../utils/constants';
 
 // Mock UserProfileService
 class MockUserProfileService {
@@ -82,12 +83,41 @@ describe('ProfileComponent', () => {
       expect(component.selectedTab()).toBe(0);
     });
 
+    it('should default to 0 if query param is NaN', () => {
+      mockActivatedRoute.queryParams = of({ tab: 'invalid' });
+      mockService.getUserBasicProfile.mockReturnValue(of({ result: false }));
+      fixture = TestBed.createComponent(UserProfileComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      expect(component.selectedTab()).toBe(0);
+    });
+
+    it('should default to 0 if query param is negative', () => {
+      mockActivatedRoute.queryParams = of({ tab: '-1' });
+      mockService.getUserBasicProfile.mockReturnValue(of({ result: false }));
+      fixture = TestBed.createComponent(UserProfileComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      expect(component.selectedTab()).toBe(0);
+    });
+
     it('should call loadUserProfile when profileUpdated$ emits true', () => {
       const spy = jest.spyOn(component as any, 'loadUserProfile');
       mockService.getUserBasicProfile.mockReturnValue(of({ result: false }));
       fixture.detectChanges();
       mockService.profileUpdated$.next(true);
       expect(spy).toHaveBeenCalled();
+    });
+
+    it('should not call loadUserProfile when profileUpdated$ emits false', () => {
+      const spy = jest.spyOn(component as any, 'loadUserProfile');
+      mockService.getUserBasicProfile.mockReturnValue(of({ result: false }));
+      fixture.detectChanges();
+      spy.mockClear(); // Clear the initial call from ngOnInit
+      mockService.profileUpdated$.next(false);
+      expect(spy).not.toHaveBeenCalled();
     });
   });
 
@@ -118,9 +148,7 @@ describe('ProfileComponent', () => {
 
       component.profileUpload(invalidEvent);
 
-      expect(mockSnackbar.showError).toHaveBeenCalledWith(
-        'Only JPG, PNG, and GIF image files are supported!',
-      );
+      expect(mockSnackbar.showError).toHaveBeenCalledWith(platformMessages.invalidImageType);
     });
 
     it('should upload profile picture when valid file is selected', fakeAsync(() => {
@@ -143,7 +171,7 @@ describe('ProfileComponent', () => {
 
       expect(mockService.updateProfilePic).toHaveBeenCalled();
       expect(mockService.getUserBasicProfile).toHaveBeenCalled();
-      expect(mockSnackbar.showSuccess).toHaveBeenCalledWith('Profile photo updated successfully!');
+      expect(mockSnackbar.showSuccess).toHaveBeenCalledWith(platformMessages.uploadSuccess);
       expect(component.profilePicUrl).toBe('data:image/png;base64,newpic');
     }));
 
@@ -153,9 +181,7 @@ describe('ProfileComponent', () => {
       component.profileUpload(event);
       tick();
 
-      expect(mockSnackbar.showError).toHaveBeenCalledWith(
-        'Profile upload failed. Please try again.',
-      );
+      expect(mockSnackbar.showError).toHaveBeenCalledWith(platformMessages.uploadFailed);
     }));
 
     it('should not do anything if no file is selected', () => {
@@ -167,6 +193,125 @@ describe('ProfileComponent', () => {
       expect(mockSnackbar.showError).not.toHaveBeenCalled();
       expect(mockSnackbar.showSuccess).not.toHaveBeenCalled();
     });
+
+    it('should not do anything if files is null', () => {
+      const nullFilesEvent = { target: { files: null } } as unknown as Event;
+
+      component.profileUpload(nullFilesEvent);
+
+      expect(mockService.updateProfilePic).not.toHaveBeenCalled();
+      expect(mockSnackbar.showError).not.toHaveBeenCalled();
+      expect(mockSnackbar.showSuccess).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('profileImageError', () => {
+    it('should set profilePicUrl to default and mark isImageError as true', () => {
+      component.profilePicUrl = 'some-url.png';
+      component.isImageError = false;
+
+      component.profileImageError();
+
+      expect(component.profilePicUrl).toBe(defaultProfilePic);
+      expect(component.isImageError).toBe(true);
+    });
+  });
+
+  describe('deleteProfilePic', () => {
+    it('should delete profile picture successfully', fakeAsync(() => {
+      mockService.updateProfilePic.mockReturnValue(of({ result: true }));
+
+      component.profilePicUrl = 'custom-pic.png';
+      component.isImageError = true;
+
+      component.deleteProfilePic();
+      tick();
+
+      const formData = new FormData();
+      formData.append('ProfilePic', '');
+
+      expect(mockService.updateProfilePic).toHaveBeenCalled();
+      expect(component.profilePicUrl).toBe(defaultProfilePic);
+      expect(component.isImageError).toBe(false);
+      expect(mockSnackbar.showSuccess).toHaveBeenCalledWith(
+        platformMessages.successTitle,
+        platformMessages.profileDeleteSuccess,
+      );
+    }));
+
+    it('should show error if delete fails', fakeAsync(() => {
+      mockService.updateProfilePic.mockReturnValue(throwError(() => new Error('Delete failed')));
+
+      component.deleteProfilePic();
+      tick();
+
+      expect(mockSnackbar.showError).toHaveBeenCalledWith(
+        platformMessages.errorTitle,
+        platformMessages.profileDeleteFailure,
+      );
+    }));
+
+    it('should send empty string as ProfilePic in FormData', fakeAsync(() => {
+      mockService.updateProfilePic.mockReturnValue(of({ result: true }));
+
+      component.deleteProfilePic();
+      tick();
+
+      expect(mockService.updateProfilePic).toHaveBeenCalledWith(expect.any(FormData));
+    }));
+  });
+
+  describe('hasCustomProfilePic', () => {
+    it('should return false if profilePicUrl is default', () => {
+      component.profilePicUrl = defaultProfilePic;
+      component.isImageError = false;
+
+      expect(component.hasCustomProfilePic()).toBe(false);
+    });
+
+    it('should return false if isImageError is true', () => {
+      component.profilePicUrl = 'custom-pic.png';
+      component.isImageError = true;
+
+      expect(component.hasCustomProfilePic()).toBe(false);
+    });
+
+    it('should return true if profilePicUrl is custom and no error', () => {
+      component.profilePicUrl = 'custom-pic.png';
+      component.isImageError = false;
+
+      expect(component.hasCustomProfilePic()).toBe(true);
+    });
+
+    it('should return false if both default pic and image error', () => {
+      component.profilePicUrl = defaultProfilePic;
+      component.isImageError = true;
+
+      expect(component.hasCustomProfilePic()).toBe(false);
+    });
+  });
+
+  describe('ngOnDestroy', () => {
+    it('should complete destroy$ subject', () => {
+      const nextSpy = jest.spyOn(component['destroy$'], 'next');
+      const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+
+      component.ngOnDestroy();
+
+      expect(nextSpy).toHaveBeenCalled();
+      expect(completeSpy).toHaveBeenCalled();
+    });
+
+    it('should unsubscribe from all subscriptions', () => {
+      mockService.getUserBasicProfile.mockReturnValue(of({ result: false }));
+      fixture.detectChanges();
+
+      const nextSpy = jest.spyOn(component['destroy$'], 'next');
+
+      component.ngOnDestroy();
+
+      expect(nextSpy).toHaveBeenCalled();
+    });
   });
 
   describe('loadUserProfile', () => {
@@ -175,7 +320,14 @@ describe('ProfileComponent', () => {
       fixture.detectChanges();
       expect(component.user).toBeNull();
       expect(component.profileCardConfig).toEqual([]);
-      expect(component.profilePicUrl).toBe('assets/images/profile.png');
+      expect(component.profilePicUrl).toBe(defaultProfilePic);
+    });
+
+    it('should not update user if data is null', () => {
+      mockService.getUserBasicProfile.mockReturnValue(of({ result: true, data: null }));
+      fixture.detectChanges();
+      expect(component.user).toBeNull();
+      expect(component.profileCardConfig).toEqual([]);
     });
 
     it('should update user, profilePicUrl and profileCardConfig if result=true', () => {

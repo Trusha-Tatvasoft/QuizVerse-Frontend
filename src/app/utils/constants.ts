@@ -254,6 +254,8 @@ export const platformMessages = {
   profileUpdateSuccess: 'Profile updated successfully.',
   profileUpdateFailed: 'Update failed.',
   verifyEmailBeforeSave: 'Please verify your new email before saving.',
+  profileDeleteSuccess: 'Profile picture deleted successfully',
+  profileDeleteFailure: 'Failed to delete profile picture',
   //#endregion
 
   //#region BattleManagement Messages

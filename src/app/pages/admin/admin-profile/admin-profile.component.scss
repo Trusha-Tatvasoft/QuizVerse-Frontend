@@ -108,3 +108,54 @@ form {
 textarea {
   min-height: 50px !important;
 }
+
+.profile-avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+
+  .profile-avatar {
+    position: relative;
+    width: 7rem;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+
+    .avatar-img {
+      height: 90px;
+      width: 90px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 1px solid #838282;
+    }
+
+    #profile-upload {
+      display: none;
+    }
+  }
+
+  .upload-profile-btn {
+    cursor: pointer;
+
+    .button {
+      pointer-events: none;
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  .profile-avatar-container {
+    gap: 10px;
+  }
+
+  .profile-avatar {
+    width: 6rem;
+
+    .avatar-img {
+      height: 80px;
+      width: 80px;
+    }
+  }
+}

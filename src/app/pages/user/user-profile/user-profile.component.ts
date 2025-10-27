@@ -13,10 +13,24 @@ import { CardComponent } from '../../../shared/components/card/card.component';
 import { ProgressBarComponent } from '../../../shared/components/progress-bar/progress-bar.component';
 import { TabComponent } from '../../../shared/components/tab/tab.component';
 import { Subject, takeUntil } from 'rxjs';
+import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
+import { OutlineButtonComponent } from '../../../shared/components/outline-button/outline-button.component';
+import {
+  deleteProfilePicBtnConfig,
+  uploadProfilePicBtnConfig,
+} from '../../admin/admin-profile/configs/admin-profile.component.config';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [ProgressBarComponent, CardComponent, TabComponent, CommonModule, MatIconModule],
+  imports: [
+    ProgressBarComponent,
+    CardComponent,
+    TabComponent,
+    CommonModule,
+    MatIconModule,
+    FilledButtonComponent,
+    OutlineButtonComponent,
+  ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
 })
@@ -27,6 +41,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   user: UserBasicProfile | null = null;
   totalTabs = this.tabs.length;
   isImageError: boolean = false;
+  uploadProfilePicButton = uploadProfilePicBtnConfig;
+  deleteProfilePicButton = deleteProfilePicBtnConfig;
 
   selectedTab = signal(0);
 
@@ -110,6 +126,39 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   profileImageError() {
     this.profilePicUrl = defaultProfilePic;
     this.isImageError = true;
+  }
+
+  //#region Delete Profile Pic
+  deleteProfilePic() {
+    const formData = new FormData();
+    formData.append('ProfilePic', '');
+
+    this.userProfileService
+      .updateProfilePic(formData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.result) {
+            this.profilePicUrl = defaultProfilePic;
+            this.isImageError = false;
+            this.snackbar.showSuccess(
+              platformMessages.successTitle,
+              platformMessages.profileDeleteSuccess,
+            );
+          }
+        },
+        error: () => {
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            platformMessages.profileDeleteFailure,
+          );
+        },
+      });
+  }
+
+  // if user has a custom profile picture
+  hasCustomProfilePic(): boolean {
+    return this.profilePicUrl !== defaultProfilePic && !this.isImageError;
   }
 
   ngOnDestroy() {

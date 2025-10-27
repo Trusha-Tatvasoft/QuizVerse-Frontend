@@ -13,7 +13,9 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 import {
   adminProfileFormFields,
   adminProfilePageHeader,
+  deleteProfilePicBtnConfig,
   updateAdminProfileButtonConfig,
+  uploadProfilePicBtnConfig,
 } from './configs/admin-profile.component.config';
 import { cancelButtonConfig } from '../../../core/auth/configs/register.component.config';
 import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
@@ -60,6 +62,8 @@ export class AdminProfileComponent implements OnInit, OnDestroy {
   verifyOtpBtn = verifyOtpButtonConfig;
   cancelButton = cancelButtonConfig;
   updateProfileButton = updateAdminProfileButtonConfig;
+  uploadProfilePicButton = uploadProfilePicBtnConfig;
+  deleteProfilePicButton = deleteProfilePicBtnConfig;
   sendOtpBtn = sendOtpButtonConfig;
   resendOtpBtn = resendOtpButtonConfig;
   maxOtpAttempts = maxOtpAttempts;
@@ -396,6 +400,40 @@ export class AdminProfileComponent implements OnInit, OnDestroy {
     this.countdownSub?.unsubscribe();
     this.emailOtpAttempts.clear();
     this.updateOtpButtonConfig();
+  }
+  //#endregion
+
+  //#region Delete Profile Pic
+  deleteProfilePic() {
+    const formData = new FormData();
+    formData.append('ProfilePic', '');
+
+    this.userProfileService
+      .updateProfilePic(formData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.result) {
+            this.profilePicUrl = defaultProfilePic;
+            this.isImageError = false;
+            this.snackbar.showSuccess(
+              platformMessages.successTitle,
+              platformMessages.profileDeleteSuccess,
+            );
+          }
+        },
+        error: () => {
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            platformMessages.profileDeleteFailure,
+          );
+        },
+      });
+  }
+
+  // if user has a custom profile picture
+  hasCustomProfilePic(): boolean {
+    return this.profilePicUrl !== defaultProfilePic && !this.isImageError;
   }
   //#endregion
 
