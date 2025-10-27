@@ -7,7 +7,7 @@ import {
   saveDraftButtonConfig,
   stepsToCreateQuiz,
 } from '../../configs/quiz-creation.config';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 import { QuizCreationStep1Component } from '../quiz-creation-step-1/quiz-creation-step-1.component';
 import { FilledButtonComponent } from '../../../../../shared/components/filled-button/filled-button.component';
@@ -56,6 +56,7 @@ export class QuizCreationLayoutComponent {
   private readonly snackbar = inject(SnackbarService);
   private readonly quizCreationService = inject(QuizCreationService);
   private readonly router = inject(Router);
+  private readonly location = inject(Location);
   private readonly route = inject(ActivatedRoute);
 
   // Header configs
@@ -139,7 +140,7 @@ export class QuizCreationLayoutComponent {
 
   /** Go back to the previous page */
   goBack(): void {
-    this.router.navigate([Navigations.Admin, Navigations.Quizzes]);
+    this.location.back();
   }
 
   //used by step 1 child component to update data

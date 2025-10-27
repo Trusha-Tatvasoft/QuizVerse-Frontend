@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { MatIcon } from '@angular/material/icon';
 import { Navigations } from '../../enums/navigation';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 
 @Component({
   selector: 'app-not-found',
@@ -16,6 +16,7 @@ export class NotFoundComponent implements OnInit {
 
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
+  private readonly location = inject(Location);
 
   ngOnInit(): void {
     this.userRole = this.authService.currentRole$.value;
@@ -38,6 +39,6 @@ export class NotFoundComponent implements OnInit {
 
   /** Go back to the previous page */
   goBack(): void {
-    window.history.go(-1);
+    this.location.back();
   }
 }
