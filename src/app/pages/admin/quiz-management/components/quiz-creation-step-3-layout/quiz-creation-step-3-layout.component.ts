@@ -181,10 +181,10 @@ export class QuizCreationStep3LayoutComponent {
     if (!correctAnswerControl) return;
 
     if (typeLabel === 'true/false') {
-      correctAnswerControl.setValidators([Validators.required]);
+      correctAnswerControl.setValidators([Validators.required, Validators.pattern(/^\S[\s\S]*$/)]);
       correctAnswerControl.setValue(null); // reset
     } else {
-      correctAnswerControl.setValidators([Validators.required]);
+      correctAnswerControl.setValidators([Validators.required, Validators.pattern(/^\S[\s\S]*$/)]);
     }
 
     ['option1', 'option2', 'option3', 'option4'].forEach((opt) => {
@@ -192,7 +192,7 @@ export class QuizCreationStep3LayoutComponent {
       if (!control) return;
 
       if (typeLabel === 'multiple choice') {
-        control.setValidators([Validators.required]);
+        control.setValidators([Validators.required, Validators.pattern(/^\S[\s\S]*$/)]);
       } else {
         control.clearValidators();
         control.setValue('');

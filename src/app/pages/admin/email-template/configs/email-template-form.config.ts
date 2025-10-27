@@ -28,9 +28,15 @@ export const emailTemplateFormFields: DynamicFormField[] = [
     type: 'text',
     placeholder: 'Internal title for this template',
     icon: 'title',
-    validators: [Validators.required],
+    validators: [
+      Validators.required,
+      Validators.maxLength(255),
+      Validators.pattern(/^[A-Za-z0-9][A-Za-z0-9 .,!?\-_@#]*$/),
+    ],
     validationMessages: {
       required: 'Template title is required.',
+      maxlength: 'Must not exceed 255 characters.',
+      pattern: 'Must start with a letter or number.',
     },
   },
   {
@@ -39,9 +45,10 @@ export const emailTemplateFormFields: DynamicFormField[] = [
     type: 'text',
     placeholder: 'Email subject line',
     icon: 'subject',
-    validators: [Validators.required],
+    validators: [Validators.required, Validators.pattern(/^[A-Za-z0-9][A-Za-z0-9 .,!?\-_@#]*$/)],
     validationMessages: {
       required: 'Email subject is required.',
+      pattern: 'Must start with a letter or number.',
     },
   },
   {
@@ -50,10 +57,15 @@ export const emailTemplateFormFields: DynamicFormField[] = [
     type: 'textarea',
     placeholder: 'Email content (use {{variable}} for dynamic content)',
     icon: 'description',
-    validators: [Validators.required, Validators.maxLength(20000)],
+    validators: [
+      Validators.required,
+      Validators.maxLength(20000),
+      Validators.pattern(/^(?!\s).*$/),
+    ],
     validationMessages: {
       required: 'Email body is required.',
       maxlength: 'Email body must not exceed 20000 characters.',
+      pattern: 'Email body cannot start with a space.',
     },
   },
   {

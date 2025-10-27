@@ -49,9 +49,10 @@ export const quizCategoryFormFeild: DynamicFormField[] = [
     type: 'text',
     placeholder: 'Name',
     icon: 'account_circle',
-    validators: [Validators.required],
+    validators: [Validators.required, Validators.pattern(/^[A-Za-z][A-Za-z ]*$/)],
     validationMessages: {
       required: 'Category Name is required.',
+      pattern: 'Must contain only alphabets.',
     },
   },
   {
@@ -60,10 +61,15 @@ export const quizCategoryFormFeild: DynamicFormField[] = [
     type: 'textarea',
     placeholder: 'Tell us about quiz categories',
     icon: 'info',
-    validators: [Validators.required, Validators.maxLength(255)],
+    validators: [
+      Validators.required,
+      Validators.maxLength(255),
+      Validators.pattern(/^[A-Za-z0-9][A-Za-z0-9 .,!?\-_@#]*$/),
+    ],
     validationMessages: {
       required: 'Description is required.',
       maxlength: 'Description must not exceed 255 characters.',
+      pattern: 'Must start with letter or number.',
     },
   },
   {

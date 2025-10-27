@@ -101,10 +101,10 @@ export class BattleCreationStep3Option1Component {
     // Correct answer always required
     correctAnswerControl.setValidators([Validators.required]);
     if (typeLabel === questionTypes.TRUE_FALSE.toLowerCase()) {
-      correctAnswerControl.setValidators([Validators.required]);
+      correctAnswerControl.setValidators([Validators.required, Validators.pattern(/^\S[\s\S]*$/)]);
       correctAnswerControl.setValue(null); // reset
     } else {
-      correctAnswerControl.setValidators([Validators.required]);
+      correctAnswerControl.setValidators([Validators.required, Validators.pattern(/^\S[\s\S]*$/)]);
     }
 
     // Toggle option fields for multiple-choice
@@ -113,7 +113,7 @@ export class BattleCreationStep3Option1Component {
       if (!control) return;
 
       if (typeLabel === questionTypes.MULTIPLE_CHOICE.toLowerCase()) {
-        control.setValidators([Validators.required]);
+        control.setValidators([Validators.required, Validators.pattern(/^\S[\s\S]*$/)]);
       } else {
         control.clearValidators();
         control.setValue('');
