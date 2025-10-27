@@ -346,6 +346,7 @@ export class QuizManagementComponent implements OnInit {
             }
 
             this.fetchQuizzes();
+            this.getQuizManagementStats();
           } else {
             this.snackbar.showError(
               platformMessages.errorTitle,
