@@ -7,6 +7,7 @@ import {
 } from '../../../../../shared/interfaces/quiz-creation.interface';
 import {
   changeQuestionMethodButtonConfig,
+  changeQuestionMethodSmallButtonConfig,
   searchInputConfig,
 } from '../../configs/quiz-creation.config';
 import {
@@ -32,6 +33,7 @@ import { TagComponent } from '../../../../../shared/components/tag/tag.component
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-quiz-creation-step-3-option-2',
@@ -57,15 +59,12 @@ export class QuizCreationStep3Option2Component {
   @Output() selectedQuestionsChangeFromInnerStep3Option3 = new EventEmitter<QuestionsList[]>();
   @Output() closeQuestionAdditionOption = new EventEmitter();
 
-  private readonly quizCreationService = inject(QuizCreationService);
-  private readonly snackbar = inject(SnackbarService);
-
   changeMethodButton = changeQuestionMethodButtonConfig;
+  changeMethodSmallButton = changeQuestionMethodSmallButtonConfig;
+  isSmallScreen = false;
+
   pageSizeOptions: number[] = tablePaginationConfig.PageSizeOptions;
   searchInputConfig = searchInputConfig;
-
-  private readonly destroy$ = new Subject<void>();
-  private readonly searchSubject = new Subject<string>();
 
   pagination = signal({ pageNumber: 1, pageSize: tablePaginationConfig.PageSize });
   sort = signal({ sortColumn: '', sortDescending: false });
@@ -75,28 +74,27 @@ export class QuizCreationStep3Option2Component {
   searchValue: string = '';
   selectedDifficulty?: number;
 
+  private readonly quizCreationService = inject(QuizCreationService);
+  private readonly snackbar = inject(SnackbarService);
+  private readonly breakpointObserver = inject(BreakpointObserver);
+
+  private readonly destroy$ = new Subject<void>();
+  private readonly searchSubject = new Subject<string>();
+
   ngOnInit(): void {
     this.setupSearchSubscription();
     this.fetchQuestions();
-  }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.breakpointObserver
+      .observe([Breakpoints.XSmall])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((result) => {
+        this.isSmallScreen = result.matches;
+      });
   }
 
   closeOption() {
     this.closeQuestionAdditionOption.emit();
-  }
-
-  private setupSearchSubscription(): void {
-    this.searchSubject
-      .pipe(debounceTime(debounceTimeValue), distinctUntilChanged(), takeUntil(this.destroy$))
-      .subscribe((value) => {
-        this.searchValue = value;
-        this.pagination.update((p) => ({ ...p, pageNumber: 1 }));
-        this.fetchQuestions();
-      });
   }
 
   // Called when search input changes
@@ -228,5 +226,20 @@ export class QuizCreationStep3Option2Component {
 
   isQuestionSelected(id: number): boolean {
     return this.selectedQuestions.some((q) => q.id === id);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private setupSearchSubscription(): void {
+    this.searchSubject
+      .pipe(debounceTime(debounceTimeValue), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe((value) => {
+        this.searchValue = value;
+        this.pagination.update((p) => ({ ...p, pageNumber: 1 }));
+        this.fetchQuestions();
+      });
   }
 }

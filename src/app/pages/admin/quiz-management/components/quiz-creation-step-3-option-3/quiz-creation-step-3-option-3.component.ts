@@ -1,9 +1,12 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import {
   changeQuestionMethodButtonConfig,
+  changeQuestionMethodSmallButtonConfig,
   chooseFileButtonConfig,
   downloadCsvButtonConfig,
+  downloadCsvSmallButtonConfig,
   downloadExelButtonConfig,
+  downloadExelSmallButtonConfig,
 } from '../../configs/quiz-creation.config';
 import { QuizCreationService } from '../../../../../services/admin/quiz-management/quiz-creation/quiz-creation.service';
 import {
@@ -17,6 +20,7 @@ import { MatIcon } from '@angular/material/icon';
 import { platformMessages, quizCRUDMessages } from '../../../../../utils/constants';
 import { Subject, takeUntil } from 'rxjs';
 import { EndPoints } from '../../../../../shared/enums/end-point.enum';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-quiz-creation-step-3-option-3',
@@ -29,49 +33,28 @@ export class QuizCreationStep3Option3Component {
   @Output() selectedQuestionsChangeFromInnerStep3Option3 = new EventEmitter<QuestionsList[]>();
   @Output() closeQuestionAdditionOption = new EventEmitter();
 
+  changeMethodButton = changeQuestionMethodButtonConfig;
+  changeMethodSmallButton = changeQuestionMethodSmallButtonConfig;
+  downloadCsvButton = downloadCsvButtonConfig;
+  downloadCsvSmallButton = downloadCsvSmallButtonConfig;
+  downloadExelButton = downloadExelButtonConfig;
+  downloadExelSmallButton = downloadExelSmallButtonConfig;
+  chooseFileButton = chooseFileButtonConfig;
+  isSmallScreen = false;
+
   private readonly quizCreationService = inject(QuizCreationService);
   private readonly snackbar = inject(SnackbarService);
 
-  changeMethodButton = changeQuestionMethodButtonConfig;
-  downloadCsvButton = downloadCsvButtonConfig;
-  downloadExelButton = downloadExelButtonConfig;
-  chooseFileButton = chooseFileButtonConfig;
-
   private readonly destroy$ = new Subject<void>();
+  private readonly breakpointObserver = inject(BreakpointObserver);
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  private downloadFile(fileUrl: string) {
-    const link = document.createElement('a');
-    link.href = fileUrl;
-    link.download = fileUrl.split('/').pop() || 'file';
-    link.click();
-  }
-
-  private handleSuccess(data: QuestionResponseDto[]) {
-    const newSelectedQuestions = this.mapQuestions(data);
-    this.selectedQuestions = [...this.selectedQuestions, ...newSelectedQuestions];
-    this.selectedQuestionsChangeFromInnerStep3Option3.emit([...this.selectedQuestions]);
-    this.snackbar.showSuccess(`${newSelectedQuestions.length} questions added!!`);
-  }
-
-  private mapQuestions(data: QuestionResponseDto[]): QuestionsList[] {
-    return (data ?? []).map((q: QuestionResponseDto) => ({
-      id: q.id,
-      categoryId: q.categoryId,
-      queDifficultyId: q.queDifficultyId,
-      queText: q.queText,
-      queTypeId: q.queTypeId,
-      queOptionsAns: q.queOptionsAns.map((opt: QuestionOptionResponseDto) => ({
-        id: opt.id,
-        questionId: opt.questionId,
-        key: opt.key,
-        value: opt.value,
-      })),
-    }));
+  ngOnInit(): void {
+    this.breakpointObserver
+      .observe([Breakpoints.XSmall])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((result) => {
+        this.isSmallScreen = result.matches;
+      });
   }
 
   closeOption() {
@@ -141,5 +124,40 @@ export class QuizCreationStep3Option3Component {
 
   onDownloadExcel() {
     this.downloadFile(`${EndPoints.DownloardSampleExcel}`);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private downloadFile(fileUrl: string) {
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = fileUrl.split('/').pop() || 'file';
+    link.click();
+  }
+
+  private handleSuccess(data: QuestionResponseDto[]) {
+    const newSelectedQuestions = this.mapQuestions(data);
+    this.selectedQuestions = [...this.selectedQuestions, ...newSelectedQuestions];
+    this.selectedQuestionsChangeFromInnerStep3Option3.emit([...this.selectedQuestions]);
+    this.snackbar.showSuccess(`${newSelectedQuestions.length} questions added!!`);
+  }
+
+  private mapQuestions(data: QuestionResponseDto[]): QuestionsList[] {
+    return (data ?? []).map((q: QuestionResponseDto) => ({
+      id: q.id,
+      categoryId: q.categoryId,
+      queDifficultyId: q.queDifficultyId,
+      queText: q.queText,
+      queTypeId: q.queTypeId,
+      queOptionsAns: q.queOptionsAns.map((opt: QuestionOptionResponseDto) => ({
+        id: opt.id,
+        questionId: opt.questionId,
+        key: opt.key,
+        value: opt.value,
+      })),
+    }));
   }
 }
