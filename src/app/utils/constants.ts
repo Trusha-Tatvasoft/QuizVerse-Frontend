@@ -522,6 +522,8 @@ export const quizActions = {
   VISIBILITY: 'visibility',
   EDIT: 'edit',
   DELETE: 'delete',
+  ACTIVATE: 'check_circle_outline',
+  INACTIVATE: 'remove_circle_outline',
 };
 //#endregion
 

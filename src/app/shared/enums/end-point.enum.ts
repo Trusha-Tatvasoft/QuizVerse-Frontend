@@ -66,7 +66,7 @@ export enum EndPoints {
   CreateOrUpdateQuiz = 'QuizManagement/create-update-quiz',
   GetQuizById = 'QuizManagement/get-quiz-by-id',
   ExportQuestions = 'QuizManagement/export-questions-to-csv',
-  DeleteQuiz = 'QuizManagement/delete-quiz',
+  UpdateQuizAction = 'QuizManagement/update-quiz-action',
   // #endregion
 
   // #region BattleManagement

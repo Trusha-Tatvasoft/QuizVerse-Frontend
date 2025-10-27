@@ -11,6 +11,7 @@ import { PaginatedDataResponse } from '../../../shared/interfaces/paginated-data
 import { QuizListData } from '../../../pages/admin/quiz-management/interfaces/quiz-table-data.interface';
 import { PaginationRequest } from '../../../shared/interfaces/pagination-request.interface';
 import { platformMessages } from '../../../utils/constants';
+import { UserAction } from '../../../shared/enums/user-management.enum';
 
 describe('QuizManagementService', () => {
   let service: QuizManagementService;
@@ -155,33 +156,38 @@ describe('QuizManagementService', () => {
     });
   });
 
-  describe('deleteQuiz', () => {
-    const quizId = 123;
+  describe('updateQuizAction', () => {
+    const mockPayload = {
+      id: 123,
+      action: UserAction.Delete,
+      newStatus: undefined,
+    };
 
-    const mockDeleteResponse: ApiResponse<object> = {
+    const mockSuccessResponse: ApiResponse<object> = {
       result: true,
       statusCode: 200,
       message: platformMessages.deleteQuizSuccess,
       data: {},
     };
 
-    it('should call DELETE on the correct endpoint and return success response', () => {
-      service.deleteQuiz(quizId).subscribe((res) => {
-        expect(res).toEqual(mockDeleteResponse);
+    it('should call PUT on the correct endpoint with correct payload and return success response', () => {
+      service.updateQuizAction(mockPayload).subscribe((res) => {
+        expect(res).toEqual(mockSuccessResponse);
         expect(res.result).toBe(true);
         expect(res.statusCode).toBe(200);
         expect(res.message).toBe(platformMessages.deleteQuizSuccess);
       });
 
-      const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.DeleteQuiz}/${quizId}`);
-      expect(req.request.method).toBe('DELETE');
-      req.flush(mockDeleteResponse);
+      const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.UpdateQuizAction}`);
+      expect(req.request.method).toBe('PUT');
+      expect(req.request.body).toEqual(mockPayload);
+      req.flush(mockSuccessResponse);
     });
 
-    it('should propagate error when backend deletion fails', () => {
+    it('should propagate error when backend update fails', () => {
       const errorMsg = 'Quiz not found';
 
-      service.deleteQuiz(quizId).subscribe({
+      service.updateQuizAction(mockPayload).subscribe({
         next: () => fail('Expected error, not success'),
         error: (error) => {
           expect(error.status).toBe(404);
@@ -189,8 +195,9 @@ describe('QuizManagementService', () => {
         },
       });
 
-      const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.DeleteQuiz}/${quizId}`);
-      expect(req.request.method).toBe('DELETE');
+      const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.UpdateQuizAction}`);
+      expect(req.request.method).toBe('PUT');
+      expect(req.request.body).toEqual(mockPayload);
 
       req.flush(errorMsg, { status: 404, statusText: 'Not Found' });
     });
