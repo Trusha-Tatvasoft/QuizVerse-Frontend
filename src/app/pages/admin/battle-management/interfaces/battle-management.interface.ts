@@ -33,3 +33,8 @@ export interface BattleCardData {
   questionTag: TagInputConfig;
   timeTag: TagInputConfig;
 }
+
+export interface BattleManagementDataResponseDto {
+  battles: BattleManagementData[];
+  hasMore: boolean;
+}

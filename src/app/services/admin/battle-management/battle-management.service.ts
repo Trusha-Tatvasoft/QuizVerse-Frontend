@@ -2,10 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
-import { BattleManagementData } from '../../../pages/admin/battle-management/interfaces/battle-management.interface';
+import { BattleManagementDataResponseDto } from '../../../pages/admin/battle-management/interfaces/battle-management.interface';
 import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
-import { battleToBattleCardData } from '../../../pages/admin/battle-management/battle-management-list.mapper';
 import { DropDownData } from '../../../shared/interfaces/drop-down-data.interface';
 import {
   BattleResponse,
@@ -28,17 +27,11 @@ export class BattleManagementService {
    * Fetch the list of battles and map them into battle card data.
    * Returns an empty array if the response is invalid.
    */
-  getBattles(): Observable<ReturnType<typeof battleToBattleCardData>[]> {
-    return this.http
-      .get<
-        ApiResponse<BattleManagementData[]>
-      >(`${environment.baseUrl}/${EndPoints.BattleManagementList}`)
-      .pipe(
-        map((res) => {
-          if (!res.result || res.statusCode !== 200) return [];
-          return res.data.map(battleToBattleCardData);
-        }),
-      );
+  getBattles(batchNumber: number = 1): Observable<ApiResponse<BattleManagementDataResponseDto>> {
+    return this.http.post<ApiResponse<BattleManagementDataResponseDto>>(
+      `${environment.baseUrl}/${EndPoints.BattleManagementList}`,
+      { batchNumber },
+    );
   }
 
   /**

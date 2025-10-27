@@ -20,3 +20,9 @@ export const waitingResultButtonConfig: ButtonConfig = {
   matIcon: 'hourglass_empty',
   imagePosition: 'left',
 };
+
+export const loadMoreButtonConfig: ButtonConfig = {
+  label: 'Load More',
+  variant: 'primary',
+  fontWeight: 500,
+};
