@@ -1,3 +1,4 @@
+import { QuizStatus } from '../../../../../shared/enums/quiz-management.enum';
 import { TableData } from '../../../../../shared/interfaces/table-component.interface';
 import { colors } from '../../../../../utils/constants';
 import { QuizListData } from '../../interfaces/quiz-table-data.interface';
@@ -32,6 +33,17 @@ export function quizToQuizListingTableData(quiz: QuizListData): TableData {
       { icon: 'visibility', tooltip: 'Preview Quiz' },
       { icon: 'edit', tooltip: 'Edit Quiz' },
       { icon: 'delete', tooltip: 'Delete Quiz' },
+      ...(quiz.status !== QuizStatus.Draft
+        ? [
+            {
+              icon:
+                quiz.status === QuizStatus.Active
+                  ? 'remove_circle_outline'
+                  : 'check_circle_outline',
+              tooltip: quiz.status === QuizStatus.Active ? 'Deactivate Quiz' : 'Activate Quiz',
+            },
+          ]
+        : []),
     ],
   };
 }

@@ -23,6 +23,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { QuizCreationService } from '../../../services/admin/quiz-management/quiz-creation/quiz-creation.service';
 import { QuizPreviewComponent } from './components/quiz-preview/quiz-preview.component';
 import { QuizResponse } from '../../../shared/interfaces/quiz-creation.interface';
+import { UserAction } from '../../../shared/enums/user-management.enum';
+import { QuizStatus } from '../../../shared/enums/quiz-management.enum';
 
 const mockSummary: QuizManagementSummary = {
   totalQuiz: 10,
@@ -84,7 +86,7 @@ const mockQuizResponse = {
 const quizManagementService = {
   getQuizManagementStats: jest.fn(),
   getQuizzes: jest.fn(),
-  deleteQuiz: jest.fn(),
+  updateQuizAction: jest.fn(),
 };
 
 const dropdownServiceMock = {
@@ -336,14 +338,28 @@ describe('QuizManagementComponent', () => {
   });
 
   describe('handleQuizAction', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
     it('should navigate with encoded id for EDIT action', () => {
       const quiz = { id: 123 };
       component.handleQuizAction({ action: quizActions.EDIT, row: quiz as any });
       const encodedId = btoa('123');
+
       expect(routerMock.navigate).toHaveBeenCalledWith([
         `/${Navigations.Admin}/${Navigations.Quizzes}/${Navigations.QuizCreation}`,
         encodedId,
       ]);
+    });
+
+    it('should call previewQuiz for VISIBILITY action', () => {
+      const quiz = { id: 42 };
+      const previewSpy = jest.spyOn(component, 'previewQuiz').mockImplementation();
+
+      component.handleQuizAction({ action: quizActions.VISIBILITY, row: quiz as any });
+
+      expect(previewSpy).toHaveBeenCalledWith(42);
     });
 
     it('should open confirmation dialog and delete quiz on DELETE action (confirmed)', () => {
@@ -355,10 +371,10 @@ describe('QuizManagementComponent', () => {
       component.handleQuizAction({ action: quizActions.DELETE, row: quiz as any });
 
       expect(dialogMock.open).toHaveBeenCalledWith(ConfirmationDialogComponent, expect.any(Object));
-      expect(deleteSpy).toHaveBeenCalledWith(99);
+      expect(deleteSpy).toHaveBeenCalledWith(99, UserAction.Delete);
     });
 
-    it('should not call deleteQuestion if dialog is cancelled', () => {
+    it('should not call deleteQuiz if dialog is cancelled', () => {
       const quiz = { id: 55 };
       dialogMock.open.mockReturnValue({ afterClosed: () => of(false) });
       const deleteSpy = jest.spyOn(component, 'deleteQuiz').mockImplementation();
@@ -368,13 +384,36 @@ describe('QuizManagementComponent', () => {
       expect(deleteSpy).not.toHaveBeenCalled();
     });
 
-    // test cases for quiz visibility
-    // it('should handle VISIBILITY action gracefully', () => {
-    // });
-  });
+    it('should handle ACTIVATE action and call deleteQuiz with correct params', () => {
+      const quiz = { id: 7 };
+      const afterClosed$ = of(true);
+      dialogMock.open.mockReturnValue({ afterClosed: () => afterClosed$ });
+      const deleteSpy = jest.spyOn(component, 'deleteQuiz').mockImplementation();
 
-  describe('deleteQuestion', () => {
+      component.handleQuizAction({ action: quizActions.ACTIVATE, row: quiz as any });
+
+      expect(dialogMock.open).toHaveBeenCalledWith(ConfirmationDialogComponent, expect.any(Object));
+      expect(deleteSpy).toHaveBeenCalledWith(7, UserAction.UpdateStatus, QuizStatus.Active);
+    });
+
+    it('should handle INACTIVATE action and call deleteQuiz with correct params', () => {
+      const quiz = { id: 8 };
+      const afterClosed$ = of(true);
+      dialogMock.open.mockReturnValue({ afterClosed: () => afterClosed$ });
+      const deleteSpy = jest.spyOn(component, 'deleteQuiz').mockImplementation();
+
+      component.handleQuizAction({ action: quizActions.INACTIVATE, row: quiz as any });
+
+      expect(dialogMock.open).toHaveBeenCalledWith(ConfirmationDialogComponent, expect.any(Object));
+      expect(deleteSpy).toHaveBeenCalledWith(8, UserAction.UpdateStatus, QuizStatus.Inactive);
+    });
+  });
+  describe('deleteQuiz', () => {
     const quizId = 5;
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
 
     it('should show success snackbar and refetch quizzes on statusCode=200', () => {
       const fetchSpy = jest.spyOn(component, 'fetchQuizzes').mockImplementation();
@@ -384,9 +423,11 @@ describe('QuizManagementComponent', () => {
         pageSize: 5,
       });
 
-      quizManagementService.deleteQuiz.mockReturnValue(of({ statusCode: 200 }));
+      quizManagementService.updateQuizAction.mockReturnValue(
+        of({ statusCode: 200, message: platformMessages.deleteQuizSuccess }),
+      );
 
-      component.deleteQuiz(quizId);
+      component.deleteQuiz(quizId, UserAction.Delete);
 
       expect(snackbarMock.showSuccess).toHaveBeenCalledWith(
         platformMessages.successTitle,
@@ -398,14 +439,14 @@ describe('QuizManagementComponent', () => {
     it('should adjust pagination when last item on non-first page is deleted', () => {
       const fetchSpy = jest.spyOn(component, 'fetchQuizzes').mockImplementation();
       jest.spyOn(component, 'dataSource').mockReturnValue([{}]); // only one item left
-
       component.pagination.set({ pageNumber: 2, pageSize: 5 });
-
       const paginationSetSpy = jest.spyOn(component.pagination, 'set');
 
-      quizManagementService.deleteQuiz.mockReturnValue(of({ statusCode: 200 }));
+      quizManagementService.updateQuizAction.mockReturnValue(
+        of({ statusCode: 200, message: platformMessages.deleteQuizSuccess }),
+      );
 
-      component.deleteQuiz(quizId);
+      component.deleteQuiz(quizId, UserAction.Delete);
 
       expect(paginationSetSpy).toHaveBeenCalledWith(
         expect.objectContaining({ pageNumber: 1, pageSize: 5 }),
@@ -414,21 +455,26 @@ describe('QuizManagementComponent', () => {
     });
 
     it('should show error snackbar when statusCode !== 200', () => {
-      quizManagementService.deleteQuiz.mockReturnValue(of({ statusCode: 400, message: 'fail' }));
+      quizManagementService.updateQuizAction.mockReturnValue(
+        of({ statusCode: 400, message: 'fail' }),
+      );
 
-      component.deleteQuiz(quizId);
+      component.deleteQuiz(quizId, UserAction.Delete);
 
-      expect(snackbarMock.showError).toHaveBeenCalledWith('Error!', 'fail');
+      expect(snackbarMock.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'fail');
     });
 
     it('should show error snackbar on API error', () => {
-      quizManagementService.deleteQuiz.mockReturnValue(
+      quizManagementService.updateQuizAction.mockReturnValue(
         throwError(() => ({ error: { message: 'network error' } })),
       );
 
-      component.deleteQuiz(quizId);
+      component.deleteQuiz(quizId, UserAction.Delete);
 
-      expect(snackbarMock.showError).toHaveBeenCalledWith('Error!', 'network error');
+      expect(snackbarMock.showError).toHaveBeenCalledWith(
+        platformMessages.errorTitle,
+        'network error',
+      );
     });
   });
 

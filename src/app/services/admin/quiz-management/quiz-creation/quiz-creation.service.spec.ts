@@ -386,275 +386,241 @@ describe('QuizCreationService', () => {
       });
     });
 
-    describe('deleteQuiz', () => {
-      it('should delete a quiz by ID', () => {
-        const quizId = 1;
-        const mockResponse: ApiResponse<null> = {
-          result: true,
-          statusCode: 200,
-          message: 'Quiz deleted successfully',
-          data: null,
+    describe('Quiz Creation Interfaces', () => {
+      let mockOption: QueOptionsAndAnswers;
+      let mockQuestion: QuestionsList;
+      let mockQuestionRequest: QuestionsListRequest;
+      let mockSaveQuizRequest: SaveQuizRequest;
+      let mockQuizResponse: QuizResponse;
+      let mockQuizStep1Data: QuizStep1Data;
+      let mockQuizPreviewData: QuizPreviewData;
+      let mockExportRequest: ExportQuizQuestionsRequestDto;
+
+      beforeEach(() => {
+        mockOption = {
+          key: 'A',
+          value: 'Option A',
         };
 
-        service.deleteQuiz(quizId).subscribe((response) => {
-          expect(response).toEqual(mockResponse);
-          expect(response.data).toBeNull();
-          expect(response.result).toBe(true);
-        });
+        mockQuestion = {
+          queText: 'What is 2 + 2?',
+          queOptionsAns: [mockOption],
+        };
 
-        const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.DeleteQuiz}/${quizId}`);
-        expect(req.request.method).toBe('DELETE');
-        req.flush(mockResponse);
+        mockQuestionRequest = {
+          categoryId: 10,
+          queDifficultyId: 2,
+          queText: 'What is 5 + 5?',
+          queTypeId: 1,
+          queOptionsAns: [mockOption],
+        };
+
+        mockSaveQuizRequest = {
+          name: 'Math Quiz',
+          categoryId: 5,
+          description: 'Basic Math Quiz',
+          totalTime: 30,
+          difficultyLevelId: 2,
+          totalQuestion: 10,
+          isPaid: false,
+          noOfQuestionsPerDifficulty: [
+            { queDifficultyName: 'Easy', noOfQuestions: 3 },
+            { queDifficultyName: 'Medium', noOfQuestions: 4 },
+            { queDifficultyName: 'Hard', noOfQuestions: 3 },
+          ],
+          tags: [{ name: 'math' }],
+          questions: [mockQuestionRequest],
+        };
+
+        mockQuizResponse = {
+          name: 'Math Quiz',
+          categoryId: 5,
+          description: 'Basic Math Quiz',
+          totalTime: 30,
+          difficultyLevelId: 2,
+          totalQuestion: 10,
+          isPaid: false,
+          status: 1,
+          tags: [{ name: 'math' }],
+          questions: [
+            {
+              id: 1,
+              categoryId: 5,
+              queDifficultyId: 2,
+              queText: 'What is 10 + 10?',
+              queTypeId: 1,
+              queOptionsAns: [{ id: 1, questionId: 1, key: 'A', value: '20' }],
+            },
+          ],
+          noOfQuestionsPerDifficulty: [
+            { queDifficultyName: 'Easy', noOfQuestions: 3 },
+            { queDifficultyName: 'Medium', noOfQuestions: 4 },
+            { queDifficultyName: 'Hard', noOfQuestions: 3 },
+          ],
+        };
+
+        mockQuizStep1Data = {
+          quizTitle: 'Algebra Quiz',
+          quizCategory: 2,
+          description: 'Test your algebra skills',
+          quizTiming: 20,
+          difficultyLevel: 1,
+          isPaid: true,
+          totalQuestions: 5,
+          tags: ['math', 'algebra'],
+          difficultyDistribution: [
+            { key: 'easy', value: 2 },
+            { key: 'medium', value: 2 },
+            { key: 'hard', value: 1 },
+          ],
+        };
+
+        mockQuizPreviewData = {
+          quizName: 'Preview Quiz',
+          description: 'Preview description',
+          tags: [
+            {
+              id: '1',
+              label: 'math',
+              type: 'static',
+              isSelected: false,
+              hasBorder: true,
+              backgroundColor: 'white',
+              textColor: 'black',
+            },
+          ],
+          questions: [mockQuestion],
+        };
+
+        mockExportRequest = {
+          quizName: 'Export Quiz',
+          questions: [mockQuestionRequest],
+        };
       });
 
-      it('should handle error for deleteQuiz', () => {
-        const quizId = 1;
-        service.deleteQuiz(quizId).subscribe({
-          error: (error: HttpErrorResponse) => {
-            expect(error.status).toBe(404);
-          },
-        });
-
-        const req = httpMock.expectOne(`${environment.baseUrl}/${EndPoints.DeleteQuiz}/${quizId}`);
-        req.flush('Not Found', { status: 404, statusText: 'Not Found' });
+      it('should create a valid SaveQuizRequest', () => {
+        expect(mockSaveQuizRequest.name).toBe('Math Quiz');
+        expect(mockSaveQuizRequest.noOfQuestionsPerDifficulty.length).toBe(3);
+        expect(mockSaveQuizRequest.questions?.length).toBe(1);
+        expect(mockSaveQuizRequest.tags?.length).toBe(1);
+        expect(mockSaveQuizRequest.price).toBeUndefined();
+        expect(mockSaveQuizRequest.status).toBeUndefined();
       });
-    });
-  });
 
-  describe('Quiz Creation Interfaces', () => {
-    let mockOption: QueOptionsAndAnswers;
-    let mockQuestion: QuestionsList;
-    let mockQuestionRequest: QuestionsListRequest;
-    let mockSaveQuizRequest: SaveQuizRequest;
-    let mockQuizResponse: QuizResponse;
-    let mockQuizStep1Data: QuizStep1Data;
-    let mockQuizPreviewData: QuizPreviewData;
-    let mockExportRequest: ExportQuizQuestionsRequestDto;
+      it('should handle minimal SaveQuizRequest', () => {
+        const minimalSaveQuizRequest: SaveQuizRequest = {
+          name: 'Minimal Quiz',
+          categoryId: 1,
+          description: '',
+          totalTime: 0,
+          difficultyLevelId: 1,
+          totalQuestion: 0,
+          isPaid: false,
+          noOfQuestionsPerDifficulty: [],
+        };
+        expect(minimalSaveQuizRequest.name).toBe('Minimal Quiz');
+        expect(minimalSaveQuizRequest.tags).toBeUndefined();
+        expect(minimalSaveQuizRequest.questions).toBeUndefined();
+        expect(minimalSaveQuizRequest.noOfQuestionsPerDifficulty.length).toBe(0);
+      });
 
-    beforeEach(() => {
-      mockOption = {
-        key: 'A',
-        value: 'Option A',
-      };
+      it('should map QuizResponse correctly', () => {
+        expect(mockQuizResponse.questions?.[0].queText).toBe('What is 10 + 10?');
+        expect(mockQuizResponse.tags?.[0].name).toBe('math');
+        expect(mockQuizResponse.status).toBe(1);
+      });
 
-      mockQuestion = {
-        queText: 'What is 2 + 2?',
-        queOptionsAns: [mockOption],
-      };
+      it('should handle minimal QuizResponse', () => {
+        const minimalQuizResponse: QuizResponse = {
+          name: 'Minimal Quiz',
+          categoryId: 1,
+          description: '',
+          totalTime: 0,
+          difficultyLevelId: 1,
+          totalQuestion: 0,
+          isPaid: false,
+          status: 0,
+          noOfQuestionsPerDifficulty: [],
+        };
+        expect(minimalQuizResponse.name).toBe('Minimal Quiz');
+        expect(minimalQuizResponse.questions).toBeUndefined();
+        expect(minimalQuizResponse.tags).toBeUndefined();
+        expect(minimalQuizResponse.price).toBeUndefined();
+      });
 
-      mockQuestionRequest = {
-        categoryId: 10,
-        queDifficultyId: 2,
-        queText: 'What is 5 + 5?',
-        queTypeId: 1,
-        queOptionsAns: [mockOption],
-      };
+      it('should handle QuizStep1Data correctly', () => {
+        expect(mockQuizStep1Data.quizTitle).toBe('Algebra Quiz');
+        expect(mockQuizStep1Data.difficultyDistribution?.[0].key).toBe('easy');
+        expect(mockQuizStep1Data.tags.length).toBe(2);
+        expect(mockQuizStep1Data.quizCategoryName).toBeUndefined();
+      });
 
-      mockSaveQuizRequest = {
-        name: 'Math Quiz',
-        categoryId: 5,
-        description: 'Basic Math Quiz',
-        totalTime: 30,
-        difficultyLevelId: 2,
-        totalQuestion: 10,
-        isPaid: false,
-        noOfQuestionsPerDifficulty: [
-          { queDifficultyName: 'Easy', noOfQuestions: 3 },
-          { queDifficultyName: 'Medium', noOfQuestions: 4 },
-          { queDifficultyName: 'Hard', noOfQuestions: 3 },
-        ],
-        tags: [{ name: 'math' }],
-        questions: [mockQuestionRequest],
-      };
+      it('should handle minimal QuizStep1Data', () => {
+        const minimalQuizStep1Data: QuizStep1Data = {
+          quizTitle: 'Minimal Quiz',
+          quizCategory: 1,
+          description: '',
+          quizTiming: 0,
+          difficultyLevel: 1,
+          isPaid: false,
+          totalQuestions: 0,
+          tags: [],
+        };
+        expect(minimalQuizStep1Data.quizTitle).toBe('Minimal Quiz');
+        expect(minimalQuizStep1Data.difficultyDistribution).toBeUndefined();
+        expect(minimalQuizStep1Data.price).toBeUndefined();
+        expect(minimalQuizStep1Data.quizCategoryName).toBeUndefined();
+      });
 
-      mockQuizResponse = {
-        name: 'Math Quiz',
-        categoryId: 5,
-        description: 'Basic Math Quiz',
-        totalTime: 30,
-        difficultyLevelId: 2,
-        totalQuestion: 10,
-        isPaid: false,
-        status: 1,
-        tags: [{ name: 'math' }],
-        questions: [
-          {
-            id: 1,
-            categoryId: 5,
-            queDifficultyId: 2,
-            queText: 'What is 10 + 10?',
-            queTypeId: 1,
-            queOptionsAns: [{ id: 1, questionId: 1, key: 'A', value: '20' }],
-          },
-        ],
-        noOfQuestionsPerDifficulty: [
-          { queDifficultyName: 'Easy', noOfQuestions: 3 },
-          { queDifficultyName: 'Medium', noOfQuestions: 4 },
-          { queDifficultyName: 'Hard', noOfQuestions: 3 },
-        ],
-      };
+      it('should create valid QuizPreviewData', () => {
+        expect(mockQuizPreviewData.questions[0].queText).toBe('What is 2 + 2?');
+        expect(mockQuizPreviewData.tags[0].label).toBe('math');
+      });
 
-      mockQuizStep1Data = {
-        quizTitle: 'Algebra Quiz',
-        quizCategory: 2,
-        description: 'Test your algebra skills',
-        quizTiming: 20,
-        difficultyLevel: 1,
-        isPaid: true,
-        totalQuestions: 5,
-        tags: ['math', 'algebra'],
-        difficultyDistribution: [
-          { key: 'easy', value: 2 },
-          { key: 'medium', value: 2 },
-          { key: 'hard', value: 1 },
-        ],
-      };
+      it('should handle minimal QuizPreviewData', () => {
+        const minimalQuizPreviewData: QuizPreviewData = {
+          quizName: 'Empty Quiz',
+          description: '',
+          tags: [],
+          questions: [],
+        };
+        expect(minimalQuizPreviewData.tags.length).toBe(0);
+        expect(minimalQuizPreviewData.questions.length).toBe(0);
+      });
 
-      mockQuizPreviewData = {
-        quizName: 'Preview Quiz',
-        description: 'Preview description',
-        tags: [
-          {
-            id: '1',
-            label: 'math',
-            type: 'static',
-            isSelected: false,
-            hasBorder: true,
-            backgroundColor: 'white',
-            textColor: 'black',
-          },
-        ],
-        questions: [mockQuestion],
-      };
+      it('should prepare valid ExportQuizQuestionsRequestDto', () => {
+        expect(mockExportRequest.quizName).toBe('Export Quiz');
+        expect(mockExportRequest.questions.length).toBe(1);
+      });
 
-      mockExportRequest = {
-        quizName: 'Export Quiz',
-        questions: [mockQuestionRequest],
-      };
-    });
+      it('should handle minimal ExportQuizQuestionsRequestDto', () => {
+        const minimalExportRequest: ExportQuizQuestionsRequestDto = {
+          quizName: '',
+          questions: [],
+        };
+        expect(minimalExportRequest.quizName).toBe('');
+        expect(minimalExportRequest.questions.length).toBe(0);
+      });
 
-    it('should create a valid SaveQuizRequest', () => {
-      expect(mockSaveQuizRequest.name).toBe('Math Quiz');
-      expect(mockSaveQuizRequest.noOfQuestionsPerDifficulty.length).toBe(3);
-      expect(mockSaveQuizRequest.questions?.length).toBe(1);
-      expect(mockSaveQuizRequest.tags?.length).toBe(1);
-      expect(mockSaveQuizRequest.price).toBeUndefined();
-      expect(mockSaveQuizRequest.status).toBeUndefined();
-    });
+      it('should allow QueOptionsAndAnswers mapping', () => {
+        expect(mockOption.value).toBe('Option A');
+        expect(mockOption.id).toBeUndefined();
+        expect(mockOption.questionId).toBeUndefined();
+      });
 
-    it('should handle minimal SaveQuizRequest', () => {
-      const minimalSaveQuizRequest: SaveQuizRequest = {
-        name: 'Minimal Quiz',
-        categoryId: 1,
-        description: '',
-        totalTime: 0,
-        difficultyLevelId: 1,
-        totalQuestion: 0,
-        isPaid: false,
-        noOfQuestionsPerDifficulty: [],
-      };
-      expect(minimalSaveQuizRequest.name).toBe('Minimal Quiz');
-      expect(minimalSaveQuizRequest.tags).toBeUndefined();
-      expect(minimalSaveQuizRequest.questions).toBeUndefined();
-      expect(minimalSaveQuizRequest.noOfQuestionsPerDifficulty.length).toBe(0);
-    });
-
-    it('should map QuizResponse correctly', () => {
-      expect(mockQuizResponse.questions?.[0].queText).toBe('What is 10 + 10?');
-      expect(mockQuizResponse.tags?.[0].name).toBe('math');
-      expect(mockQuizResponse.status).toBe(1);
-    });
-
-    it('should handle minimal QuizResponse', () => {
-      const minimalQuizResponse: QuizResponse = {
-        name: 'Minimal Quiz',
-        categoryId: 1,
-        description: '',
-        totalTime: 0,
-        difficultyLevelId: 1,
-        totalQuestion: 0,
-        isPaid: false,
-        status: 0,
-        noOfQuestionsPerDifficulty: [],
-      };
-      expect(minimalQuizResponse.name).toBe('Minimal Quiz');
-      expect(minimalQuizResponse.questions).toBeUndefined();
-      expect(minimalQuizResponse.tags).toBeUndefined();
-      expect(minimalQuizResponse.price).toBeUndefined();
-    });
-
-    it('should handle QuizStep1Data correctly', () => {
-      expect(mockQuizStep1Data.quizTitle).toBe('Algebra Quiz');
-      expect(mockQuizStep1Data.difficultyDistribution?.[0].key).toBe('easy');
-      expect(mockQuizStep1Data.tags.length).toBe(2);
-      expect(mockQuizStep1Data.quizCategoryName).toBeUndefined();
-    });
-
-    it('should handle minimal QuizStep1Data', () => {
-      const minimalQuizStep1Data: QuizStep1Data = {
-        quizTitle: 'Minimal Quiz',
-        quizCategory: 1,
-        description: '',
-        quizTiming: 0,
-        difficultyLevel: 1,
-        isPaid: false,
-        totalQuestions: 0,
-        tags: [],
-      };
-      expect(minimalQuizStep1Data.quizTitle).toBe('Minimal Quiz');
-      expect(minimalQuizStep1Data.difficultyDistribution).toBeUndefined();
-      expect(minimalQuizStep1Data.price).toBeUndefined();
-      expect(minimalQuizStep1Data.quizCategoryName).toBeUndefined();
-    });
-
-    it('should create valid QuizPreviewData', () => {
-      expect(mockQuizPreviewData.questions[0].queText).toBe('What is 2 + 2?');
-      expect(mockQuizPreviewData.tags[0].label).toBe('math');
-    });
-
-    it('should handle minimal QuizPreviewData', () => {
-      const minimalQuizPreviewData: QuizPreviewData = {
-        quizName: 'Empty Quiz',
-        description: '',
-        tags: [],
-        questions: [],
-      };
-      expect(minimalQuizPreviewData.tags.length).toBe(0);
-      expect(minimalQuizPreviewData.questions.length).toBe(0);
-    });
-
-    it('should prepare valid ExportQuizQuestionsRequestDto', () => {
-      expect(mockExportRequest.quizName).toBe('Export Quiz');
-      expect(mockExportRequest.questions.length).toBe(1);
-    });
-
-    it('should handle minimal ExportQuizQuestionsRequestDto', () => {
-      const minimalExportRequest: ExportQuizQuestionsRequestDto = {
-        quizName: '',
-        questions: [],
-      };
-      expect(minimalExportRequest.quizName).toBe('');
-      expect(minimalExportRequest.questions.length).toBe(0);
-    });
-
-    it('should allow QueOptionsAndAnswers mapping', () => {
-      expect(mockOption.value).toBe('Option A');
-      expect(mockOption.id).toBeUndefined();
-      expect(mockOption.questionId).toBeUndefined();
-    });
-
-    it('should handle QuestionsList with minimal properties', () => {
-      const minimalQuestion: QuestionsList = {
-        queText: 'Minimal Question',
-      };
-      expect(minimalQuestion.queText).toBe('Minimal Question');
-      expect(minimalQuestion.id).toBeUndefined();
-      expect(minimalQuestion.queOptionsAns).toBeUndefined();
-      expect(minimalQuestion.categoryId).toBeUndefined();
-      expect(minimalQuestion.queDifficultyId).toBeUndefined();
-      expect(minimalQuestion.queDifficultyName).toBeUndefined();
-      expect(minimalQuestion.queTypeId).toBeUndefined();
-      expect(minimalQuestion.queTypeName).toBeUndefined();
+      it('should handle QuestionsList with minimal properties', () => {
+        const minimalQuestion: QuestionsList = {
+          queText: 'Minimal Question',
+        };
+        expect(minimalQuestion.queText).toBe('Minimal Question');
+        expect(minimalQuestion.id).toBeUndefined();
+        expect(minimalQuestion.queOptionsAns).toBeUndefined();
+        expect(minimalQuestion.categoryId).toBeUndefined();
+        expect(minimalQuestion.queDifficultyId).toBeUndefined();
+        expect(minimalQuestion.queDifficultyName).toBeUndefined();
+        expect(minimalQuestion.queTypeId).toBeUndefined();
+        expect(minimalQuestion.queTypeName).toBeUndefined();
+      });
     });
   });
 });

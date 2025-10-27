@@ -106,14 +106,4 @@ export class QuizCreationService {
       responseType: 'blob',
     });
   }
-
-  /**
-   * Delete a quiz by its ID
-   * @param quizId quiz identifier
-   */
-  deleteQuiz(quizId: number): Observable<ApiResponse<null>> {
-    return this.http
-      .delete<ApiResponse<null>>(`${environment.baseUrl}/${EndPoints.DeleteQuiz}/${quizId}`)
-      .pipe(map((res) => res));
-  }
 }

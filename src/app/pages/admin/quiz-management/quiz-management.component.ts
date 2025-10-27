@@ -35,7 +35,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogData } from '../../../shared/interfaces/confirmation-dialog.interface';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { Router } from '@angular/router';
-import { deleteQuizDialog } from './configs/quiz-confirmation-dialog.config';
+import {
+  activateQuizDialog,
+  deleteQuizDialog,
+  inactivateQuizDialog,
+} from './configs/quiz-confirmation-dialog.config';
 import { Navigations } from '../../../shared/enums/navigation';
 import { QuizCreationService } from '../../../services/admin/quiz-management/quiz-creation/quiz-creation.service';
 import {
@@ -48,6 +52,7 @@ import {
 import { QuizPreviewComponent } from './components/quiz-preview/quiz-preview.component';
 import { getTagConfigWithCustomization } from '../../../utils/quiz-crud-common-functions.utils';
 import { DropDownData } from '../../../shared/interfaces/drop-down-data.interface';
+import { UserAction } from '../../../shared/enums/user-management.enum';
 
 @Component({
   selector: 'app-quiz-management',
@@ -290,7 +295,19 @@ export class QuizManagementComponent implements OnInit {
         ]);
         break;
       case quizActions.DELETE:
-        this.openConfirmationDialog(deleteQuizDialog, () => this.deleteQuiz(quiz['id'] as number));
+        this.openConfirmationDialog(deleteQuizDialog, () =>
+          this.deleteQuiz(quiz['id'] as number, UserAction.Delete),
+        );
+        break;
+      case quizActions.ACTIVATE:
+        this.openConfirmationDialog(activateQuizDialog, () =>
+          this.deleteQuiz(quiz['id'] as number, UserAction.UpdateStatus, QuizStatus.Active),
+        );
+        break;
+      case quizActions.INACTIVATE:
+        this.openConfirmationDialog(inactivateQuizDialog, () =>
+          this.deleteQuiz(quiz['id'] as number, UserAction.UpdateStatus, QuizStatus.Inactive),
+        );
         break;
     }
   }
@@ -308,17 +325,14 @@ export class QuizManagementComponent implements OnInit {
     });
   }
 
-  deleteQuiz(quizId: number): void {
+  deleteQuiz(quizId: number, action: UserAction, newStatus?: QuizStatus): void {
     this.quizManagementService
-      .deleteQuiz(quizId)
+      .updateQuizAction({ id: quizId, action, newStatus })
       .pipe(takeUntil(this.destroy))
       .subscribe({
         next: (res) => {
           if (res.statusCode === 200) {
-            this.snackbar.showSuccess(
-              platformMessages.successTitle,
-              platformMessages.deleteQuizSuccess,
-            );
+            this.snackbar.showSuccess(platformMessages.successTitle, res.message);
 
             // Handle pagination if last item on the last page
             const currentData = this.dataSource();

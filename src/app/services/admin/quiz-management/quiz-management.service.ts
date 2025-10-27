@@ -8,6 +8,8 @@ import { QuizManagementSummary } from '../../../pages/admin/quiz-management/inte
 import { PaginationRequest } from '../../../shared/interfaces/pagination-request.interface';
 import { PaginatedDataResponse } from '../../../shared/interfaces/paginated-data-response.interface';
 import { QuizListData } from '../../../pages/admin/quiz-management/interfaces/quiz-table-data.interface';
+import { QuizStatus } from '../../../shared/enums/quiz-management.enum';
+import { UserAction } from '../../../shared/enums/user-management.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -41,13 +43,17 @@ export class QuizManagementService {
   }
 
   /**
-   * Delete a quiz by its ID.
-   * @param id - The ID of the quiz to delete.
-   * @returns Observable<ApiResponse<object>> - response from backend after deletion.
+   * Perform a quiz action such as delete, activate, or inactivate.
+   * @param payload - Includes quiz ID, action type, and optional new status.
+   * @returns Observable<ApiResponse<object>> - Backend response.
    */
-  deleteQuiz(id: number): Observable<ApiResponse<object>> {
-    return this.http.delete<ApiResponse<object>>(
-      `${environment.baseUrl}/${EndPoints.DeleteQuiz}/${id}`,
-    );
+  updateQuizAction(payload: {
+    id: number;
+    action: UserAction;
+    newStatus?: QuizStatus;
+  }): Observable<ApiResponse<object>> {
+    return this.http
+      .put<ApiResponse<object>>(`${environment.baseUrl}/${EndPoints.UpdateQuizAction}`, payload)
+      .pipe(map((res) => res));
   }
 }
