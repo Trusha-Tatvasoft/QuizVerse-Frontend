@@ -503,6 +503,7 @@ export class BattleHubService {
       this.battleEnded$.next(result);
       if (result) {
         this.userBattlesService.updateBattleResults$.next(true);
+        this.useprofileUpdatedSource.next(true);
       }
     });
 

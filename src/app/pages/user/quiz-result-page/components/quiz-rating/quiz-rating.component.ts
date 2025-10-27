@@ -18,6 +18,7 @@ import { Navigations } from '../../../../../shared/enums/navigation';
 import {
   submitRatingButtonConfig,
   backToDashboardButtonConfig,
+  backToQuizButtonConfig,
 } from '../../configs/quiz-result-buttons.configs';
 import { QuizResultService } from '../../../../../services/user/quiz-result/quiz-result.service';
 import { QuizRating } from '../../interfaces/quiz-ratting.interface';
@@ -46,6 +47,7 @@ import { quizRatingFormField } from '../../configs/quiz-rating-form-field.config
 export class QuizRatingComponent implements OnInit, OnDestroy {
   submitRattingButtonConfig = submitRatingButtonConfig;
   dashboardButtonConfig = backToDashboardButtonConfig;
+  quizButtonConfig = backToQuizButtonConfig;
 
   @Input() quizId!: number;
 
@@ -133,6 +135,10 @@ export class QuizRatingComponent implements OnInit, OnDestroy {
   navigateToDashboard() {
     const route = `${Navigations.User}/${Navigations.Dashboard}`;
     this.router.navigate([route]);
+  }
+
+  navigateToBrowseQuiz() {
+    this.router.navigate([Navigations.User, Navigations.QuizList, Navigations.BrowseQuizzes]);
   }
 
   ngOnDestroy(): void {

@@ -55,16 +55,27 @@
 
     <!-- Actions -->
     <div class="quiz-rating-action">
-      <app-outline-button
-        [outlineButtonConfig]="dashboardButtonConfig"
-        (buttonClicked)="navigateToDashboard()"
-      ></app-outline-button>
-      @if (!ratingSubmitted) {
-        <!-- Submit button only if not submitted -->
+      <div
+        class="all-btn flex min-[693px]:justify-between justify-start flex-col-reverse min-[565px]:flex-row gap-3 flex-1"
+      >
         <app-filled-button
-          [filledButtonConfig]="submitRattingButtonConfig"
-          (buttonClicked)="onSubmit()"
+          [filledButtonConfig]="quizButtonConfig"
+          (buttonClicked)="navigateToBrowseQuiz()"
         ></app-filled-button>
+        <app-outline-button
+          [outlineButtonConfig]="dashboardButtonConfig"
+          (buttonClicked)="navigateToDashboard()"
+        ></app-outline-button>
+      </div>
+
+      @if (!ratingSubmitted) {
+        <div>
+          <!-- Submit button only if not submitted -->
+          <app-filled-button
+            [filledButtonConfig]="submitRattingButtonConfig"
+            (buttonClicked)="onSubmit()"
+          ></app-filled-button>
+        </div>
       }
     </div>
   </form>

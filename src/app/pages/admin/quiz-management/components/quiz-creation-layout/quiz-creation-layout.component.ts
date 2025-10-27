@@ -137,6 +137,11 @@ export class QuizCreationLayoutComponent {
     );
   }
 
+  /** Go back to the previous page */
+  goBack(): void {
+    this.router.navigate([Navigations.Admin, Navigations.Quizzes]);
+  }
+
   //used by step 1 child component to update data
   step1ValueChange(val: QuizStep1Data) {
     // copy val first

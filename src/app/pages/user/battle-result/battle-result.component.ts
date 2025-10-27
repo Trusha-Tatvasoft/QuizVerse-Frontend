@@ -48,7 +48,6 @@ export class BattleResultComponent {
     this.destroy$.next();
     this.destroy$.complete();
     this.battleHubService.cleanupBattleSubjects();
-    this.battleHubService.onBattleEnded;
   }
 
   private decodeRouteId(): void {

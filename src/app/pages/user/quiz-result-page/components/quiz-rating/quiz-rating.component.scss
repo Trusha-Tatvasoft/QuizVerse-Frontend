@@ -69,7 +69,6 @@
   // Actions container with proper button targeting
   .quiz-rating-action {
     display: flex;
-    justify-content: flex-end;
     gap: 1rem;
     margin-top: 1rem;
 
@@ -101,8 +100,8 @@
     }
 
     // Responsive for small screens
-    @media (max-width: 500px) {
-      flex-direction: column;
+    @media (max-width: 722px) {
+      flex-direction: column-reverse;
       align-items: stretch;
       gap: 0.5rem;
     }

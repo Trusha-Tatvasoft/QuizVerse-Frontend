@@ -579,13 +579,29 @@ app-data-table {
   }
 }
 
-.quiz-rating-action {
-  .outline-button {
-    width: 100%;
-  }
+@media (max-width: 730px) {
+  .quiz-rating-action {
+    .all-btn {
+      app-outline-button {
+        width: 100%;
 
-  .filled-button {
-    width: 100%;
+        .outline-button {
+          width: 100%;
+        }
+      }
+
+      app-filled-button {
+        width: 100%;
+
+        .filled-button {
+          width: 100%;
+        }
+      }
+    }
+
+    .filled-button {
+      width: 100%;
+    }
   }
 }
 
@@ -650,6 +666,7 @@ app-data-table {
       width: 100%;
     }
   }
+
   .text-button {
     width: 100% !important;
   }

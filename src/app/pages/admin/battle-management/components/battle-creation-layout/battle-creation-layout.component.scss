@@ -59,3 +59,39 @@
 .text-inactive {
   color: var(--gray-color);
 }
+
+.back-link-container {
+  width: 100%;
+  max-width: 44rem;
+  cursor: pointer;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  margin-bottom: 0.5rem;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--global-primary-color);
+
+    .back-arrow-icon {
+      transform: translateX(-2px);
+      content: url('/assets/images/back-arrow-hover.svg');
+      height: 1.1rem;
+      width: 1.1rem;
+    }
+  }
+
+  .back-arrow-icon {
+    width: 1rem;
+    height: 1rem;
+    margin-top: 2px;
+    transition: transform 0.2s ease;
+  }
+}

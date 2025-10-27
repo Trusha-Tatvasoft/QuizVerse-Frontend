@@ -375,6 +375,11 @@ export class BattleCreationLayoutComponent {
       });
   }
 
+  /** Go back to the previous page */
+  goBack(): void {
+    this.router.navigate([Navigations.Admin, Navigations.BattlesAdmin]);
+  }
+
   // Cleanup subscriptions
   ngOnDestroy(): void {
     this.destroy$.next();
