@@ -7,7 +7,7 @@ import {
   BattleStartDetails,
   PlayerProfileDTO,
 } from '../../../pages/user/user-battles/interface/search-opponent.interface';
-import { ReplaySubject, Subject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import {
   BattleQuestion,
@@ -16,6 +16,7 @@ import {
 } from '../../../pages/user/battle-attempt-layout/interfaces/battle-attempt.interface';
 import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
+import { IncomingBattleRequest } from '../../../shared/interfaces/incoming-battle-request.interface';
 import { BattleCompletionResult } from '../../../pages/user/battle-result/interfaces/battle-completion.interface';
 import { UserProfileService } from '../user-profile/user-profile.service';
 import { UserBattlesService } from './user-battles.service';
@@ -46,10 +47,27 @@ export class BattleHubService {
   private lastAnsweredDetail$ = new Subject<LastAnswerdQuestionDetail>();
   private _errorSubject = new Subject<string>();
   private readonly useprofileUpdatedSource = inject(UserProfileService).profileUpdatedSource;
-
+  private readonly incomingRequest$ = new BehaviorSubject<IncomingBattleRequest[]>([]);
   private battleAttemptId: number | null = null;
   private isConnected = false;
   private connectionPromise: Promise<void> | null = null;
+  private readonly requestAccepted$ = new Subject<{
+    receiverId: number;
+    battleRequest: IncomingBattleRequest;
+  }>();
+  private readonly requestDeclined$ = new Subject<{
+    requestId: number;
+    receiverName: string;
+    battleName: string;
+  }>();
+  private readonly requestAcceptedConfirmation$ = new Subject<{
+    senderId: number;
+    battleRequest: IncomingBattleRequest;
+  }>();
+  private readonly requestCancelled$ = new Subject<{
+    request: IncomingBattleRequest;
+    senderId: number;
+  }>();
 
   // Public observables
   get onSearching() {
@@ -98,6 +116,39 @@ export class BattleHubService {
 
   get onBattleEnded() {
     return this.battleEnded$.asObservable();
+  }
+
+  get onBattleRequest() {
+    return this.incomingRequest$.asObservable();
+  }
+
+  get onRequestAccepted() {
+    return this.requestAccepted$.asObservable();
+  }
+
+  get onRequestDeclined() {
+    return this.requestDeclined$.asObservable();
+  }
+
+  get onRequestAcceptedConfirmation() {
+    return this.requestAcceptedConfirmation$.asObservable();
+  }
+
+  get onRequestCancelled() {
+    return this.requestCancelled$.asObservable();
+  }
+
+  addIncomingRequest(request: IncomingBattleRequest) {
+    const current = this.incomingRequest$.value;
+    // avoid duplicates
+    if (!current.some((r) => r.requestId === request.requestId)) {
+      this.incomingRequest$.next([request, ...current]);
+    }
+  }
+
+  removeIncomingRequest(requestId: number) {
+    const updated = this.incomingRequest$.value.filter((r) => r.requestId !== requestId);
+    this.incomingRequest$.next(updated);
   }
 
   /** Establish SignalR connection */
@@ -219,6 +270,21 @@ export class BattleHubService {
     );
   }
 
+  acceptRequest(request: IncomingBattleRequest) {
+    const senderUserId = request.senderId;
+    this.hubConnection!.invoke('AcceptBattleRequest', senderUserId, request).catch((err) => {
+      this.snackbar.showError(err?.message || 'Failed to accept battle request');
+    });
+  }
+
+  declineRequest(requestId: number) {
+    this.hubConnection!.invoke('DeclineBattleRequest', requestId).catch((err: unknown) => {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to decline the battle request';
+      this.snackbar.showError(errorMessage);
+    });
+  }
+
   submitAnswer(battleId: number, index: number, answer: string): void {
     if (!this.connected) {
       this._errorSubject.next(platformMessages.serverNotConnected);
@@ -287,6 +353,10 @@ export class BattleHubService {
     this.battleEnded$ = new ReplaySubject<BattleCompletionResult>(1);
   }
 
+  cleanupIncomingRequests(): void {
+    this.incomingRequest$.next([]);
+  }
+
   async stopConnection(): Promise<void> {
     if (this.hubConnection) {
       try {
@@ -329,6 +399,57 @@ export class BattleHubService {
       platformMessages.battleHubContinueBattle,
       (data: { battleAttemptId: number; message: string }) => {
         this.continueBattle$.next(data);
+      },
+    );
+
+    this.hubConnection?.on(
+      platformMessages.recieveBattleRequest,
+      (request: IncomingBattleRequest) => {
+        if (!this.connected) return;
+
+        const current = this.incomingRequest$.value;
+        if (!current.some((r) => r.requestId === request.requestId)) {
+          this.incomingRequest$.next([request, ...current]);
+        }
+      },
+    );
+
+    this.hubConnection.on(
+      platformMessages.battleRequestAccepted,
+      (data: { receiverId: number; battleRequest: IncomingBattleRequest }) => {
+        this.requestAccepted$.next(data);
+        this.snackbar.showSuccess(`${platformMessages.battleRequestAccepted}`);
+      },
+    );
+
+    this.hubConnection.on(
+      platformMessages.battleRequestDeclined,
+      (data: { requestId: number; receiverName: string; battleName: string }) => {
+        this.requestDeclined$.next(data);
+        this.snackbar.showInfo(`${data.receiverName} declined the battle "${data.battleName}".`);
+      },
+    );
+
+    this.hubConnection.on(
+      platformMessages.battleRequestAcceptedConfirmation,
+      (data: { senderId: number; battleRequest: IncomingBattleRequest }) => {
+        this.requestAcceptedConfirmation$.next(data);
+        this.snackbar.showInfo(platformMessages.battleRequestAcceptedConfirmation);
+      },
+    );
+
+    this.hubConnection.on(
+      platformMessages.battleRequestCancelled,
+      (data: { request: IncomingBattleRequest; senderId: number }) => {
+        this.requestCancelled$.next(data); // 👈 Emit event
+
+        // Remove from the local list
+        const updated = this.incomingRequest$.value.filter(
+          (r) => r.requestId !== data.request.requestId,
+        );
+        this.incomingRequest$.next(updated);
+
+        this.snackbar.showInfo(platformMessages.battleRequestCancelled);
       },
     );
 
@@ -382,7 +503,6 @@ export class BattleHubService {
       this.battleEnded$.next(result);
       if (result) {
         this.userBattlesService.updateBattleResults$.next(true);
-        this.stopConnection();
       }
     });
 
