@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NotFoundComponent } from './not-found.component';
 import { BehaviorSubject } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/services/auth.service';
 
@@ -12,16 +12,21 @@ describe('UnauthorizedComponent', () => {
   let fixture: ComponentFixture<NotFoundComponent>;
   let routerMock: { navigate: jest.Mock };
   let authServiceMock: { currentRole$: BehaviorSubject<string | null> };
+  let location: jest.Mocked<Location>;
 
   beforeEach(async () => {
     routerMock = { navigate: jest.fn() };
     authServiceMock = { currentRole$: new BehaviorSubject<string | null>(null) };
+    location = {
+      back: jest.fn(),
+    } as any;
 
     await TestBed.configureTestingModule({
       imports: [NotFoundComponent, MatIconModule, CommonModule],
       providers: [
         { provide: Router, useValue: routerMock },
         { provide: AuthService, useValue: authServiceMock },
+        { provide: Location, useValue: location },
       ],
     }).compileComponents();
 
@@ -61,11 +66,10 @@ describe('UnauthorizedComponent', () => {
   });
 
   describe('goBack', () => {
-    it('should call window.history.go(-2)', () => {
-      const historySpy = jest.spyOn(window.history, 'go').mockImplementation(() => {});
+    it('should call location.back()', () => {
+      const backSpy = jest.spyOn(location, 'back');
       component.goBack();
-      expect(historySpy).toHaveBeenCalledWith(-1);
-      historySpy.mockRestore();
+      expect(backSpy).toHaveBeenCalledTimes(1);
     });
   });
 });

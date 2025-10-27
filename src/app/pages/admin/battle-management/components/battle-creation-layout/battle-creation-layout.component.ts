@@ -24,7 +24,7 @@ import {
   QuestionsList,
   SaveBattleRequest,
 } from '../../interfaces/battle-creation.interface';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 import { OutlineButtonComponent } from '../../../../../shared/components/outline-button/outline-button.component';
 import { FilledButtonComponent } from '../../../../../shared/components/filled-button/filled-button.component';
@@ -81,6 +81,7 @@ export class BattleCreationLayoutComponent {
   private readonly battleManagementService = inject(BattleManagementService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly location = inject(Location);
   private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
@@ -377,7 +378,7 @@ export class BattleCreationLayoutComponent {
 
   /** Go back to the previous page */
   goBack(): void {
-    this.router.navigate([Navigations.Admin, Navigations.BattlesAdmin]);
+    this.location.back();
   }
 
   // Cleanup subscriptions

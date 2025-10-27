@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { BattleCreationLayoutComponent } from './battle-creation-layout.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BattleManagementService } from '../../../../../services/admin/battle-management/battle-management.service';
@@ -72,6 +72,7 @@ describe('BattleCreationLayoutComponent', () => {
   let router: jest.Mocked<Router>;
   let route: { snapshot: { paramMap: { get: jest.Mock } } };
   let cdr: ChangeDetectorRef;
+  let location: jest.Mocked<Location>;
 
   // Mock data
   const mockBattleStep1Data: BattleStep1Data = {
@@ -200,6 +201,10 @@ describe('BattleCreationLayoutComponent', () => {
       navigate: jest.fn(),
     } as any;
 
+    location = {
+      back: jest.fn(),
+    } as any;
+
     route = {
       snapshot: {
         paramMap: {
@@ -226,6 +231,7 @@ describe('BattleCreationLayoutComponent', () => {
         { provide: SnackbarService, useValue: snackbarService },
         { provide: Router, useValue: router },
         { provide: ActivatedRoute, useValue: route },
+        { provide: Location, useValue: location },
         ChangeDetectorRef,
       ],
     }).compileComponents();
@@ -745,9 +751,10 @@ describe('BattleCreationLayoutComponent', () => {
   });
 
   describe('goBack', () => {
-    it('Go Back To Battle Management', () => {
+    it('should call location.back()', () => {
+      const backSpy = jest.spyOn(location, 'back');
       component.goBack();
-      expect(router.navigate).toHaveBeenCalledWith([Navigations.Admin, Navigations.BattlesAdmin]);
+      expect(backSpy).toHaveBeenCalledTimes(1);
     });
   });
 });

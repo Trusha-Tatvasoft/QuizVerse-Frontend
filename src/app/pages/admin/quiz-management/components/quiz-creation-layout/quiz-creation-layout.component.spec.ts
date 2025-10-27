@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { QuizCreationLayoutComponent } from './quiz-creation-layout.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
 import { FilledButtonComponent } from '../../../../../shared/components/filled-button/filled-button.component';
 import { OutlineButtonComponent } from '../../../../../shared/components/outline-button/outline-button.component';
@@ -69,6 +69,7 @@ describe('QuizCreationLayoutComponent', () => {
   let quizCreationService: jest.Mocked<QuizCreationService>;
   let snackbarService: jest.Mocked<SnackbarService>;
   let router: jest.Mocked<Router>;
+  let location: jest.Mocked<Location>;
   let route: { snapshot: { paramMap: { get: jest.Mock } } };
   let cdr: ChangeDetectorRef;
 
@@ -140,6 +141,10 @@ describe('QuizCreationLayoutComponent', () => {
       navigate: jest.fn(),
     } as any;
 
+    location = {
+      back: jest.fn(),
+    } as any;
+
     route = {
       snapshot: {
         paramMap: {
@@ -166,6 +171,7 @@ describe('QuizCreationLayoutComponent', () => {
         { provide: SnackbarService, useValue: snackbarService },
         { provide: Router, useValue: router },
         { provide: ActivatedRoute, useValue: route },
+        { provide: Location, useValue: location },
         ChangeDetectorRef,
       ],
     }).compileComponents();
@@ -671,9 +677,10 @@ describe('QuizCreationLayoutComponent', () => {
   });
 
   describe('goBack', () => {
-    it('Go Back To Quiz Management', () => {
+    it('should call location.back()', () => {
+      const backSpy = jest.spyOn(location, 'back');
       component.goBack();
-      expect(router.navigate).toHaveBeenCalledWith([Navigations.Admin, Navigations.Quizzes]);
+      expect(backSpy).toHaveBeenCalledTimes(1);
     });
   });
 });
