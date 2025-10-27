@@ -2,6 +2,7 @@ import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import {
   buildNotificationTabs,
+  loadMoreButtonConfig,
   notificationHeaderConfig,
   searchInputConfig,
   timeFilters,
@@ -52,6 +53,9 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
   markAsAllReadButton = markAsAllReadButtonConfig;
   showFilterBtn = showFilterButtonConfig;
   clearFilterBtn = clearFilterButtonConfig;
+  loadMoreButtonConfig = loadMoreButtonConfig;
+  batchNumber = 1;
+  hasMoreData = false;
 
   // State
   selectedTab = 0;
@@ -128,6 +132,12 @@ export class NotificationCenterComponent implements OnInit, OnDestroy {
     this.selectedType = 0;
     this.selectedUserCategory = 0;
 
+    this.fetchNotifications();
+  }
+
+  loadMore(): void {
+    if (!this.hasMoreData) return;
+    this.batchNumber++;
     this.fetchNotifications();
   }
 

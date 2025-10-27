@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
 import { BattleStartDetails, PlayerProfileDTO } from '../interface/search-opponent.interface';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -23,7 +22,7 @@ import { globalGetInitials } from '../../../../utils/get-profile-initials.utils'
 
 @Component({
   selector: 'app-found-opponent',
-  imports: [CommonModule, MatIcon, DisableQuizShortcutsDirective],
+  imports: [CommonModule, DisableQuizShortcutsDirective],
   templateUrl: './found-opponent.component.html',
   styleUrl: './found-opponent.component.scss',
 })

@@ -63,3 +63,9 @@ export const timeFilters = [
   { label: 'Last 30 Days', value: TimeFilter.Last30Days },
 ];
 //#endregion
+
+export const loadMoreButtonConfig: ButtonConfig = {
+  label: 'Load More',
+  variant: 'primary',
+  fontWeight: 500,
+};

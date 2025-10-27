@@ -98,3 +98,19 @@ export const updateAdminProfileButtonConfig: ButtonConfig = {
   fontWeight: 500,
   type: 'submit',
 };
+
+export const uploadProfilePicBtnConfig: ButtonConfig = {
+  label: '',
+  fontWeight: 500,
+  variant: 'secondary',
+  type: 'button',
+  matIcon: 'upload',
+};
+
+export const deleteProfilePicBtnConfig: ButtonConfig = {
+  label: '',
+  fontWeight: 500,
+  variant: 'secondary', // or 'secondary' based on your OutlineButton component variants
+  type: 'button',
+  matIcon: 'delete',
+};

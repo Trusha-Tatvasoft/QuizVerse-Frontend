@@ -48,7 +48,7 @@
       class="mt-2 flex flex-col gap-1 w-100"
       (change)="onAnswerChange($event)"
     >
-      @for (opt of currentQuestionData?.options; track opt.key) {
+      @for (opt of currentQuestionData?.options; track opt.optionId) {
         <mat-radio-button [value]="opt.value">
           {{ opt.value }}
         </mat-radio-button>
