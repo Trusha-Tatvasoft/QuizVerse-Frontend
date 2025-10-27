@@ -1,14 +1,15 @@
 import { Component, inject, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import {
-  BACK_TO_SIGNIN_CONFIG,
-  SEND_ANOTHER_EMAIL_CONFIG,
+  backToSignInConfig,
+  sendAnotherEmailConfig,
 } from '../../configs/reset-link-send-successfully.component.config';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import { OutlineButtonComponent } from '../../../../shared/components/outline-button/outline-button.component';
 import { Navigations } from '../../../../shared/enums/navigation';
 import { Router, RouterLink } from '@angular/router';
 import { LoaderService } from '../../../../shared/service/loader/loader.service';
+import { selectedTabIndexSignal } from '../login-signup/login-signup.component';
 
 @Component({
   selector: 'app-reset-link-send-successfully',
@@ -17,6 +18,7 @@ import { LoaderService } from '../../../../shared/service/loader/loader.service'
   styleUrls: [
     './reset-link-send-successfully.component.scss',
     '../login-signup/login-signup.component.scss',
+    '../reset-password/reset-password.component.scss',
   ],
 })
 export class ResetLinkSendSuccessfullyComponent {
@@ -27,8 +29,8 @@ export class ResetLinkSendSuccessfullyComponent {
   @Input() email: string;
 
   // Button configurations
-  loginButton = BACK_TO_SIGNIN_CONFIG;
-  sendAnotherEmailButton = SEND_ANOTHER_EMAIL_CONFIG;
+  loginButton = backToSignInConfig;
+  sendAnotherEmailButton = sendAnotherEmailConfig;
 
   // OnInit lifecycle hook to extract email from navigation state
   ngOnInit() {
@@ -44,5 +46,6 @@ export class ResetLinkSendSuccessfullyComponent {
   // Handler for "Back to Sign In" button
   onSignInClick() {
     this.router.navigate([Navigations.Login]);
+    selectedTabIndexSignal.set(0);
   }
 }

@@ -1,0 +1,79 @@
+.main-dialog-content {
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e5e7eb;
+
+    h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+  }
+
+  .dialog-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* pushes status to right */
+    gap: 0.75rem;
+    width: 100%;
+
+    .category-icon {
+      color: #3b82f6;
+
+      /* slightly bigger for prominence */
+    }
+
+    .category-info {
+      flex: 1;
+
+      /* takes remaining space */
+      h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+    }
+
+    .status-section {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .category-description {
+    .label {
+      font-size: 0.875rem;
+      color: #6b7280;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+
+    .label {
+      font-size: 0.875rem;
+      color: #6b7280;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+  }
+}

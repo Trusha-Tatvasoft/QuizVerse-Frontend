@@ -7,7 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { OutlineButtonComponent } from '../../../shared/components/outline-button/outline-button.component';
 import { FilledButtonComponent } from '../../../shared/components/filled-button/filled-button.component';
 import { By } from '@angular/platform-browser';
-import { of, throwError } from 'rxjs';
+import { BehaviorSubject, of, throwError } from 'rxjs';
 import { UserManagementService } from '../../../services/admin/user-management/user-management.service';
 import { UserListData } from './interfaces/user-list-data.interface';
 import { userToUserListingTableData } from './components/user-table/user-listing-data.mapper';
@@ -15,9 +15,17 @@ import { UserListingComponent } from './components/user-table/user-listing.compo
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { PaginatedDataResponse } from '../../../shared/interfaces/paginated-data-response.interface';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
-import { DEBOUNCE_TIME } from '../../../utils/constants';
+import { debounceTimeValue, platformMessages } from '../../../utils/constants';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { UserFormData } from './interfaces/user-form-data.interface';
+import { UserAction, UserStatus } from '../../../shared/enums/user-management.enum';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogData } from '../../../shared/interfaces/confirmation-dialog.interface';
+import { ButtonConfig } from '../../../shared/interfaces/button-config.interface';
+import { Role } from '../../../shared/enums/role';
+import { AuthService } from '../../../core/auth/services/auth.service';
+import { UserFormDialogComponent } from './components/user-form-dialog/user-form-dialog.component';
 
 jest.mock('../../../services/admin/user-management/user-management.service');
 jest.mock('../../../shared/service/snackbar/snackbar.service');
@@ -60,7 +68,60 @@ describe('UserManagementComponent', () => {
     openFromComponent: jest.fn(),
   };
 
+  const mockUserRow: UserFormData = {
+    id: 1,
+    fullName: 'John Doe',
+    userName: 'johndoe',
+    email: 'john@example.com',
+    bio: 'Team lead',
+    profilePic: 'https://example.com/john.jpg',
+    password: '',
+    roleId: 2,
+  };
+
+  const mockUserByIdResponse: ApiResponse<UserFormData> = {
+    result: true,
+    statusCode: 200,
+    message: 'User fetched successfully',
+    data: mockUserRow,
+  };
+
+  const mockUsers: UserFormData[] = [
+    {
+      id: 1,
+      fullName: 'John Doe',
+      userName: 'johndoe',
+      email: 'john@example.com',
+      bio: 'Team Lead',
+      profilePic: 'https://example.com/john.jpg',
+      password: '',
+      roleId: 2,
+    },
+    {
+      id: 2,
+      fullName: 'Jane Smith',
+      userName: 'janesmith',
+      email: 'jane@example.com',
+      bio: 'Developer',
+      profilePic: 'https://example.com/jane.jpg',
+      password: '',
+      roleId: 2,
+    },
+  ];
+
+  let dialogMock: { open: jest.Mock };
+  let dialog: MatDialog;
+  let mockCurrentRole$: BehaviorSubject<Role>;
+
   beforeEach(async () => {
+    mockCurrentRole$ = new BehaviorSubject<Role>(Role.SuperAdmin);
+
+    dialogMock = {
+      open: jest.fn().mockReturnValue({
+        afterClosed: () => of(true),
+      }),
+    };
+
     await TestBed.configureTestingModule({
       imports: [
         UserManagementComponent,
@@ -80,15 +141,32 @@ describe('UserManagementComponent', () => {
           useValue: {
             getUsers: jest.fn().mockReturnValue(of(mockApiResponse)),
             exportUsersToExcel: jest.fn().mockReturnValue(of(mockExportBlob)),
+            getUserById: jest.fn(),
+            createOrUpdateUser: jest.fn(),
+            updateUserStatusByAction: jest.fn(),
           },
         },
         {
           provide: SnackbarService,
           useValue: {
             showError: jest.fn(),
+            showSuccess: jest.fn(),
           },
         },
-        { provide: MatSnackBar, useValue: mockMatSnackBar },
+        {
+          provide: MatSnackBar,
+          useValue: mockMatSnackBar,
+        },
+        {
+          provide: MatDialog,
+          useValue: dialogMock,
+        },
+        {
+          provide: AuthService,
+          useValue: {
+            currentRole$: mockCurrentRole$, // Use BehaviorSubject instead of of()
+          },
+        },
       ],
     }).compileComponents();
 
@@ -96,6 +174,7 @@ describe('UserManagementComponent', () => {
     component = fixture.componentInstance;
     userService = TestBed.inject(UserManagementService) as jest.Mocked<UserManagementService>;
     snackbarService = TestBed.inject(SnackbarService) as jest.Mocked<SnackbarService>;
+    dialog = TestBed.inject(MatDialog);
     fixture.detectChanges();
   });
   const originalCreateElement = document.createElement;
@@ -113,9 +192,34 @@ describe('UserManagementComponent', () => {
   });
 
   it('should call fetchUsers on init', () => {
-    // checks API is called on component init
+    const mockResponse = {
+      result: true,
+      statusCode: 200,
+      message: 'Fetched successfully',
+      data: {
+        totalRecords: 1,
+        records: [
+          {
+            id: 1,
+            fullName: 'John Doe',
+            email: 'john@example.com',
+            userName: 'john',
+            roleId: 1,
+            status: 1,
+            createdDate: '2023-01-01',
+            lastLogin: '2023-01-05',
+            attemptedQuizzes: 3,
+          },
+        ],
+      },
+    };
+
+    jest.spyOn(userService, 'getUsers').mockReturnValue(of(mockResponse));
+
+    component.ngOnInit();
+
     expect(userService.getUsers).toHaveBeenCalled();
-    expect(component.dataSource().length).toBeGreaterThan(0);
+    expect(component.dataSource().length).toBe(1);
     expect(component.totalItems()).toBe(1);
   });
 
@@ -123,7 +227,7 @@ describe('UserManagementComponent', () => {
     const spy = jest.spyOn(component as any, 'fetchUsers');
     component.onSearchInputChange('Jane');
     expect(spy).not.toHaveBeenCalled();
-    tick(DEBOUNCE_TIME);
+    tick(debounceTimeValue);
     expect(spy).toHaveBeenCalledTimes(1);
   }));
 
@@ -217,7 +321,6 @@ describe('UserManagementComponent', () => {
   });
 
   it('should map UserListData to correct TableData', () => {
-    // verifies user data is correctly mapped for the table
     const input: UserListData = {
       id: 1,
       fullName: 'John Doe',
@@ -229,7 +332,9 @@ describe('UserManagementComponent', () => {
       lastLogin: '2023-01-05',
       attemptedQuizzes: 3,
     };
-    const output = userToUserListingTableData(input);
+
+    const output = userToUserListingTableData(input, Role.SuperAdmin);
+
     expect((output as Record<string, any>)['fullname'].name).toBe('John Doe');
     expect((output['role'] as { tagConfig: { label: string } }).tagConfig.label).toBe('Admin');
     expect((output['status'] as { tagConfig: { label: string } }).tagConfig.label).toBe('Active');
@@ -238,8 +343,12 @@ describe('UserManagementComponent', () => {
   it('should respond to actionClick from UserListingComponent', () => {
     // verifies event handler runs on table action click
     const userTable = fixture.debugElement.query(By.directive(UserListingComponent));
+
+    jest.spyOn(userService, 'getUserById').mockReturnValue(of(mockUserByIdResponse));
+
     const actionSpy = jest.spyOn(component, 'fetchUsers');
-    userTable.triggerEventHandler('actionClick', { action: 'edit', row: {} });
+
+    userTable.triggerEventHandler('actionClick', { action: 'edit', row: { id: 1 } });
     expect(actionSpy).not.toHaveBeenCalled(); // replace if needed
   });
 
@@ -453,5 +562,484 @@ describe('UserManagementComponent', () => {
         filters: {},
       }),
     );
+  });
+
+  it('should open user dialog with correct config', () => {
+    const result = { formData: new FormData(), isEdit: true };
+
+    dialogMock.open.mockReturnValue({
+      afterClosed: () => of(result),
+    } as any);
+
+    const saveSpy = jest.spyOn(component, 'handleUserSave');
+
+    component.openUserDialog(mockUserRow);
+
+    expect(dialogMock.open).toHaveBeenCalledWith(UserFormDialogComponent, {
+      width: '600px',
+      maxHeight: '95vh',
+      disableClose: false,
+      panelClass: 'custom-dialog-container',
+      autoFocus: false,
+      data: {
+        user: mockUserRow,
+        role: mockCurrentRole$.value,
+      },
+    });
+
+    expect(saveSpy).toHaveBeenCalledWith(result.formData, result.isEdit);
+  });
+
+  it('should handle user creation success (201)', () => {
+    const mockResponse: ApiResponse<null> = {
+      result: true,
+      statusCode: 201,
+      message: 'Created',
+      data: null,
+    };
+
+    userService.createOrUpdateUser.mockReturnValue(of(mockResponse));
+    const fetchSpy = jest.spyOn(component, 'fetchUsers').mockImplementation();
+
+    component.handleUserSave(new FormData(), false);
+
+    expect(snackbarService.showSuccess).toHaveBeenCalled();
+    expect(fetchSpy).toHaveBeenCalled();
+  });
+
+  it('should handle user update success (200)', () => {
+    const mockResponse: ApiResponse<null> = {
+      result: true,
+      statusCode: 200,
+      message: 'Updated',
+      data: null,
+    };
+
+    userService.createOrUpdateUser.mockReturnValue(of(mockResponse));
+    const fetchSpy = jest.spyOn(component, 'fetchUsers').mockImplementation();
+
+    component.handleUserSave(new FormData(), true);
+
+    expect(snackbarService.showSuccess).toHaveBeenCalled();
+    expect(fetchSpy).toHaveBeenCalled();
+  });
+
+  it('should handle failure on create', () => {
+    const mockResponse: ApiResponse<null> = {
+      result: false,
+      statusCode: 400,
+      message: 'Error',
+      data: null,
+    };
+
+    userService.createOrUpdateUser.mockReturnValue(of(mockResponse));
+    const fetchSpy = jest.spyOn(component, 'fetchUsers').mockImplementation();
+
+    component.handleUserSave(new FormData(), false);
+
+    expect(snackbarService.showError).toHaveBeenCalled();
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it('should handle API error on save', () => {
+    const err = { error: { message: 'Server error' } };
+    userService.createOrUpdateUser.mockReturnValue(throwError(() => err));
+
+    component.handleUserSave(new FormData(), false);
+
+    expect(snackbarService.showError).toHaveBeenCalledWith('Server error', expect.any(String));
+  });
+
+  it('should fetch users successfully', () => {
+    const mockResponse: ApiResponse<PaginatedDataResponse<UserListData>> = {
+      result: true,
+      statusCode: 200,
+      message: 'Success',
+      data: {
+        records: [
+          {
+            id: 1,
+            fullName: 'John Doe',
+            email: 'john@example.com',
+            userName: 'johndoe',
+            roleId: 1,
+            status: 1,
+            createdDate: '2023-01-01T00:00:00',
+            lastLogin: '2023-01-02T00:00:00',
+            attemptedQuizzes: 0,
+          } as UserListData,
+        ],
+        totalRecords: 1,
+      },
+    };
+
+    userService.getUsers.mockReturnValue(of(mockResponse));
+
+    component.fetchUsers();
+
+    expect(component.dataSource().length).toBe(1);
+    expect(component.totalItems()).toBe(1);
+  });
+
+  it('should handle fetchUsers failure', () => {
+    const mockResponse: ApiResponse<PaginatedDataResponse<UserListData>> = {
+      result: false,
+      statusCode: 500,
+      message: 'Error',
+      data: {
+        records: [],
+        totalRecords: 0,
+      },
+    };
+
+    userService.getUsers.mockReturnValue(of(mockResponse));
+
+    component.fetchUsers();
+
+    expect(snackbarService.showError).toHaveBeenCalled();
+    expect(component.dataSource().length).toBe(0);
+  });
+
+  it('should handle fetchUsers API error', () => {
+    const err = { error: { message: 'Network error' }, status: 500 };
+    userService.getUsers.mockReturnValue(throwError(() => err));
+
+    component.fetchUsers();
+
+    expect(snackbarService.showError).toHaveBeenCalledWith('Network error', 'Error 500');
+  });
+
+  it('should update user status successfully', () => {
+    const mockResponse: ApiResponse<null> = {
+      result: true,
+      statusCode: 200,
+      message: 'Status updated',
+      data: null,
+    };
+
+    userService.updateUserStatusByAction.mockReturnValue(of(mockResponse));
+
+    const fetchSpy = jest.spyOn(component, 'fetchUsers').mockImplementation();
+
+    component.updateUserStatus(1, UserAction.UpdateStatus);
+
+    expect(snackbarService.showSuccess).toHaveBeenCalled();
+    expect(fetchSpy).toHaveBeenCalled();
+  });
+
+  it('should handle updateUserStatus error', () => {
+    const mockResponse: ApiResponse<null> = {
+      result: false,
+      statusCode: 400,
+      message: 'Failed',
+      data: null,
+    };
+
+    userService.updateUserStatusByAction.mockReturnValue(of(mockResponse));
+
+    component.updateUserStatus(1, UserAction.UpdateStatus);
+
+    expect(snackbarService.showError).toHaveBeenCalled();
+  });
+
+  it('should load user for edit', () => {
+    const userId = 1;
+    const spyLoadUser = jest.spyOn(component, 'loadUserForEdit').mockImplementation();
+
+    component.handleUserAction({ action: 'edit', row: { id: userId } });
+
+    expect(spyLoadUser).toHaveBeenCalledWith(userId);
+  });
+
+  it('should open delete confirmation dialog', () => {
+    const userId = 1;
+    const spyConfirmDialog = jest.spyOn(component, 'openConfirmationDialog');
+
+    component.handleUserAction({ action: 'delete', row: { id: userId } });
+
+    expect(spyConfirmDialog).toHaveBeenCalledWith(expect.anything(), expect.any(Function));
+  });
+
+  it('should open suspend confirmation dialog', () => {
+    const userId = 1;
+    const spyConfirmDialog = jest.spyOn(component, 'openConfirmationDialog');
+
+    component.handleUserAction({ action: 'block', row: { id: userId } });
+
+    expect(spyConfirmDialog).toHaveBeenCalledWith(expect.anything(), expect.any(Function));
+  });
+
+  it('should open activate confirmation dialog', () => {
+    const userId = 1;
+    const spyConfirmDialog = jest.spyOn(component, 'openConfirmationDialog');
+
+    component.handleUserAction({ action: 'check_circle_outline', row: { id: userId } });
+
+    expect(spyConfirmDialog).toHaveBeenCalledWith(expect.anything(), expect.any(Function));
+  });
+
+  it('should open inactivate confirmation dialog', () => {
+    const userId = 1;
+    const spyConfirmDialog = jest.spyOn(component, 'openConfirmationDialog');
+
+    component.handleUserAction({ action: 'remove_circle_outline', row: { id: userId } });
+
+    expect(spyConfirmDialog).toHaveBeenCalledWith(expect.anything(), expect.any(Function));
+  });
+
+  it('should load user data and open dialog on success', () => {
+    const userId = 1;
+
+    const user: UserFormData = {
+      id: userId,
+      fullName: 'Test User',
+      userName: 'testuser',
+      email: 'test@example.com',
+      password: 'securepass123',
+      bio: 'Test bio',
+      profilePic: '',
+      roleId: 2,
+    };
+
+    const mockResponse: ApiResponse<typeof user> = {
+      result: true,
+      statusCode: 200,
+      message: 'User fetched successfully',
+      data: user,
+    };
+
+    const spyGetUser = jest.spyOn(userService, 'getUserById').mockReturnValue(of(mockResponse));
+    const spyOpenDialog = jest.spyOn(component, 'openUserDialog');
+
+    component.loadUserForEdit(userId);
+
+    expect(spyGetUser).toHaveBeenCalledWith(userId);
+    expect(spyOpenDialog).toHaveBeenCalledWith(user);
+  });
+
+  it('should show error if user fetch fails (non-200)', () => {
+    const userId = 1;
+
+    const mockErrorResponse: ApiResponse<UserFormData> = {
+      result: false,
+      statusCode: 404,
+      message: 'User not found',
+      data: null as unknown as UserFormData,
+    };
+
+    const spyGetUser = jest
+      .spyOn(userService, 'getUserById')
+      .mockReturnValue(of(mockErrorResponse));
+    const spyOpenDialog = jest.spyOn(component, 'openUserDialog');
+
+    component.loadUserForEdit(userId);
+
+    expect(spyGetUser).toHaveBeenCalledWith(userId);
+    expect(snackbarService.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      'User not found',
+    );
+    expect(spyOpenDialog).not.toHaveBeenCalled(); // dialog should not open
+  });
+
+  it('should show error if user fetch throws error', () => {
+    const userId = 1;
+    const errorMessage = 'Fetch failed';
+
+    const errorResponse = {
+      error: {
+        message: errorMessage,
+      },
+    };
+
+    const spyGetUser = jest
+      .spyOn(userService, 'getUserById')
+      .mockReturnValue(throwError(() => errorResponse));
+
+    const spySnackbar = jest.spyOn(snackbarService, 'showError');
+    const spyOpenDialog = jest.spyOn(component, 'openUserDialog');
+
+    component.loadUserForEdit(userId);
+
+    expect(spyGetUser).toHaveBeenCalledWith(userId);
+    expect(spySnackbar).toHaveBeenCalledWith(platformMessages.errorTitle, errorMessage);
+    expect(spyOpenDialog).not.toHaveBeenCalled();
+  });
+
+  it('should call onConfirm when dialog result is true', () => {
+    const mockDialogRef = {
+      afterClosed: () => of(true),
+    };
+    const onConfirm = jest.fn();
+
+    const dialogData: ConfirmationDialogData = {
+      title: 'Confirm Delete',
+      message: 'Are you sure?',
+      confirmButtonConfig: { text: 'Confirm' } as ButtonConfig,
+      cancelButtonConfig: { text: 'Cancel' } as ButtonConfig,
+    };
+
+    dialogMock.open.mockReturnValue(mockDialogRef as any);
+
+    component.openConfirmationDialog(dialogData, onConfirm);
+
+    expect(dialogMock.open).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining({
+        data: dialogData,
+        disableClose: false,
+        width: '600px',
+        panelClass: 'custom-dialog-radius',
+      }),
+    );
+
+    expect(onConfirm).toHaveBeenCalled();
+  });
+
+  it('should not call onConfirm when dialog result is false', () => {
+    const mockDialogRef = {
+      afterClosed: () => of(false),
+    };
+    const onConfirm = jest.fn();
+
+    const dialogData: ConfirmationDialogData = {
+      title: 'Confirm Action',
+      message: 'Do you want to proceed?',
+      confirmButtonConfig: { text: 'Confirm' } as ButtonConfig,
+      cancelButtonConfig: { text: 'Cancel' } as ButtonConfig,
+    };
+
+    dialogMock.open.mockReturnValue(mockDialogRef as any);
+
+    component.openConfirmationDialog(dialogData, onConfirm);
+
+    expect(dialogMock.open).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining({
+        data: dialogData,
+        width: '600px',
+        disableClose: false,
+        panelClass: 'custom-dialog-radius',
+      }),
+    );
+
+    expect(onConfirm).not.toHaveBeenCalled();
+  });
+
+  it('should show success and fetch users on status update success', () => {
+    const userId = 1;
+    const action: UserAction = UserAction.Delete;
+    const expectedSuccessMessage = 'User deleted successfully';
+
+    userService.updateUserStatusByAction.mockReturnValue(
+      of({
+        statusCode: 200,
+        message: expectedSuccessMessage,
+        result: true,
+        data: null,
+      }),
+    );
+
+    const fetchSpy = jest.spyOn(component, 'fetchUsers');
+
+    component.updateUserStatus(userId, action);
+
+    expect(userService.updateUserStatusByAction).toHaveBeenCalledWith({
+      id: userId,
+      action,
+      newStatus: undefined,
+    });
+    expect(snackbarService.showSuccess).toHaveBeenCalledWith(
+      platformMessages.successTitle,
+      expectedSuccessMessage,
+    );
+    expect(fetchSpy).toHaveBeenCalled();
+  });
+
+  it('should show error if status update fails (non-200)', () => {
+    const userId = 1;
+    const action: UserAction = UserAction.UpdateStatus;
+    const newStatus: UserStatus = UserStatus.Suspended;
+    const errorMessage = 'Bad Request';
+
+    userService.updateUserStatusByAction.mockReturnValue(
+      of({
+        statusCode: 400,
+        message: errorMessage,
+        result: false,
+        data: null,
+      }),
+    );
+
+    const serviceSpy = jest.spyOn(userService, 'updateUserStatusByAction');
+
+    component.updateUserStatus(userId, action, newStatus);
+
+    expect(serviceSpy).toHaveBeenCalledWith({
+      id: userId,
+      action,
+      newStatus,
+    });
+
+    expect(snackbarService.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      errorMessage,
+    );
+  });
+
+  it('should show error if update fails due to server error', () => {
+    const userId = 1;
+    const action: UserAction = UserAction.UpdateStatus;
+    const newStatus: UserStatus = UserStatus.Inactive;
+    const serverErrorMessage = 'Server Down';
+
+    userService.updateUserStatusByAction.mockReturnValue(
+      throwError(() => ({
+        error: { message: serverErrorMessage },
+      })),
+    );
+
+    const serviceSpy = jest.spyOn(userService, 'updateUserStatusByAction');
+
+    component.updateUserStatus(userId, action, newStatus);
+
+    expect(serviceSpy).toHaveBeenCalledWith({
+      id: userId,
+      action,
+      newStatus,
+    });
+
+    expect(snackbarService.showError).toHaveBeenCalledWith(
+      platformMessages.errorTitle,
+      serverErrorMessage,
+    );
+  });
+
+  it('should return delete message when action is Delete', () => {
+    const result = component.getActionMessage(UserAction.Delete);
+    expect(result).toBe('User deleted successfully');
+  });
+
+  it('should return activation message when status is Active', () => {
+    const result = component.getActionMessage(UserAction.UpdateStatus, UserStatus.Active);
+    expect(result).toBe('User activated successfully');
+  });
+
+  it('should return suspension message when status is Suspended', () => {
+    const result = component.getActionMessage(UserAction.UpdateStatus, UserStatus.Suspended);
+    expect(result).toBe('User suspended successfully');
+  });
+
+  it('should return inactivation message when status is Inactive', () => {
+    const result = component.getActionMessage(UserAction.UpdateStatus, UserStatus.Inactive);
+    expect(result).toBe('User inactivated successfully');
+  });
+
+  it('should return generic message when status is undefined or unrecognized', () => {
+    const result1 = component.getActionMessage(UserAction.UpdateStatus);
+    expect(result1).toBe('User status updated');
+
+    const result2 = component.getActionMessage(UserAction.UpdateStatus, 'unknownStatus' as any);
+    expect(result2).toBe('User status updated');
   });
 });

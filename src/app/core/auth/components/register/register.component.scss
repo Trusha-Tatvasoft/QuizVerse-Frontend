@@ -1,21 +1,59 @@
-.signup-button {
-  .loader {
-    border: 2px solid #f3f3f3;
-    border-top: 2px solid var(--global-primary-color);
-    border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    animation: spin 0.8s linear infinite;
-    display: inline-block;
-    margin-right: 0.5rem;
+.password-toggle-icon {
+  padding: 5px 0 0 5px !important;
+}
+
+.file-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 1px;
+
+  .file-input {
+    display: none;
   }
 
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
+  .file-upload-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #cbd5e0; // light border like native input
+    border-radius: 0.375rem;
+    background-color: #fff;
+    width: 100%;
+
+    &:hover {
+      border-color: var(--global-primary-color);
+      box-shadow: 0 0 0 1px var(--global-primary-color);
     }
   }
+
+  .error-message {
+    margin-top: -0.25rem;
+    color: #ef4444;
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  .custom-upload-button {
+    flex-shrink: 0;
+  }
+
+  .selected-file-name {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 1.5rem;
 }

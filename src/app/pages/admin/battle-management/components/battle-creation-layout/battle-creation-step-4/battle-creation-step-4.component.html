@@ -1,0 +1,105 @@
+<div class="mb-5">
+  <h2 class="form-heading">Review and Publish</h2>
+</div>
+
+<!-- Top: Quiz Info + Questions Summary -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+  <!-- Column 1: Quiz Info -->
+  @if (battleStep1Data) {
+    <div class="mb-4">
+      <h3 class="text-lg font-semibold mb-2">Battle Information</h3>
+      <p class="text-sm"><span class="font-bold">Title:</span> {{ battleStep1Data.name }}</p>
+      <p class="text-sm">
+        <span class="font-bold">Category:</span> {{ battleStep1Data.battleCategoryName }}
+      </p>
+      <p class="text-sm">
+        <span class="font-bold">Description:</span> {{ battleStep1Data.description }}
+      </p>
+      <p class="text-sm">
+        <span class="font-bold">Total Time:</span> {{ battleStep1Data.totalTime }} minutes
+      </p>
+      <p class="text-sm">
+        <span class="font-bold">Battle Difficulty:</span> {{ battleStep1Data.difficultyLevelName }}
+      </p>
+      <p class="text-sm">
+        <span class="font-bold">Type:</span> {{ battleStep1Data.battleTypeName }}
+      </p>
+      @if (battleStep1Data.startDate && battleStep1Data.endDate) {
+        <p class="text-sm">
+          <span class="font-bold">Start Date:</span>
+          {{ battleStep1Data.startDate | date: 'mediumDate' }}
+        </p>
+        <p class="text-sm">
+          <span class="font-bold">End Date:</span>
+          {{ battleStep1Data.endDate | date: 'mediumDate' }}
+        </p>
+      }
+    </div>
+  }
+
+  <!-- Column 2: Questions Summary -->
+  @if (battleStep1Data && questionDifficultyOption) {
+    <div>
+      <h3 class="text-lg font-semibold mb-2">Questions Summary</h3>
+      <p class="text-sm">
+        <span class="font-bold">Total Questions:</span> {{ totalQuestions(battleStep1Data) }}
+      </p>
+      @for (dist of battleStep1Data.questionsDifficulty; track dist.queDifficultyId) {
+        <p class="text-sm">
+          <span class="font-bold">{{ getDifficultyName(dist.queDifficultyId) }} </span>
+          ({{ dist.timePerQuestion }}s/each, {{ getXpPerQuestion(dist.queDifficultyId) }}xp/each):
+          {{ dist.noOfQues }}
+        </p>
+      }
+
+      <p class="text-sm"><span class="font-bold">Total Xp:</span> {{ battleStep1Data.totalXp }}</p>
+    </div>
+  }
+</div>
+
+<!-- Bottom: All Questions -->
+<div>
+  <h3 class="text-lg font-semibold mb-4">Questions</h3>
+  <div class="max-h-150 overflow-y-auto pr-2">
+    @for (question of selectedQuestions; track $index) {
+      <div class="border border-gray-200 rounded-lg p-4 hover:shadow-sm my-2">
+        <!-- Question number and text -->
+        <div class="text-gray-900 font-semibold">{{ $index + 1 }}. {{ question.queText }}</div>
+
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-2 mt-2">
+          <app-tag [tagConfig]="getTypeTagConfigWithLabelInCS(question.queTypeName!)"></app-tag>
+          <app-tag
+            [tagConfig]="getTagConfigWithDifficultyInCS(question.queDifficultyName!)"
+          ></app-tag>
+        </div>
+
+        <!-- MCQ options -->
+        @if (question.queTypeName === 'Multiple Choice') {
+          <div class="mt-2 text-sm text-gray-700">
+            <span class="font-medium">Options:</span> {{ getMCQOptions(question) }}
+          </div>
+        }
+
+        <!-- Answer -->
+        <div class="mt-1 text-sm font-semibold text-green-600">
+          Answer: {{ getAnswer(question) }}
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="flex gap-2 mt-5">
+  <app-outline-button
+    [outlineButtonConfig]="exportCsvButton"
+    (buttonClicked)="exportCsv()"
+    class="min-width-btn export-csv-btn"
+  ></app-outline-button>
+  <app-outline-button
+    [outlineButtonConfig]="previewBattleButton"
+    class="min-width-btn open-preview-btn"
+    (buttonClicked)="openPreview()"
+  ></app-outline-button>
+</div>

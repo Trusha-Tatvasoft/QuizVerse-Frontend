@@ -41,11 +41,30 @@ describe('TableComponent', () => {
     expect(spy).toHaveBeenCalledWith({ active: 'name', direction: 'asc' });
   });
 
-  it('should emit actionClick on icon button click', () => {
+  it('should emit sortChange with original sort if direction is not empty', () => {
+    const spy = jest.spyOn(component.sortChange, 'emit');
+    const sortEvent: Sort = { active: 'name', direction: 'asc' };
+
+    component.onSortChange(sortEvent);
+
+    expect(spy).toHaveBeenCalledWith({ active: 'name', direction: 'asc' });
+  });
+
+  it('should reset active and emit sortChange if direction is empty', () => {
+    const spy = jest.spyOn(component.sortChange, 'emit');
+    const sortEvent: Sort = { active: 'name', direction: '' };
+
+    component.onSortChange(sortEvent);
+
+    expect(spy).toHaveBeenCalledWith({ active: '', direction: '' });
+  });
+
+  it('should emit actionClick with action.icon on icon button click', () => {
     const spy = jest.spyOn(component.actionClick, 'emit');
     const row = { name: 'Alice' };
+    const action = { icon: 'edit', tooltip: 'Edit User' };
 
-    component.onActionClick('edit', row);
+    component.onActionClick(action, row);
 
     expect(spy).toHaveBeenCalledWith({ action: 'edit', row });
   });
@@ -104,38 +123,57 @@ describe('TableComponent', () => {
     expect(component.getCurrencyDigits(column2)).toBe('1.2-2');
   });
 
-  it('should hide paginator if totalItems <= pageSize', () => {
-    component.totalItems = 5;
-    component.pageSize = 10;
-    component.dataSource = [{ id: 1 }];
-
-    component.ngOnChanges({
-      dataSource: {
-        currentValue: component.dataSource,
-        previousValue: [],
-        firstChange: true,
-        isFirstChange: () => true,
-      },
+  describe('getInitials', () => {
+    it('should return empty string if name is empty', () => {
+      expect(component.getInitials('')).toBe('');
+      expect(component.getInitials(null as any)).toBe('');
     });
 
-    expect(component.showPaginator).toBe(false);
+    it('should return first letter in uppercase if name has one word', () => {
+      expect(component.getInitials('john')).toBe('J');
+      expect(component.getInitials(' alice ')).toBe('A');
+    });
+
+    it('should return first letters of first two words in uppercase if name has more than one word', () => {
+      expect(component.getInitials('john doe')).toBe('JD');
+      expect(component.getInitials(' alice wonderland ')).toBe('AW');
+      expect(component.getInitials('Mark Evan Smith')).toBe('ME'); // only first two words considered
+    });
   });
 
-  it('should show paginator if totalItems > pageSize', () => {
-    component.totalItems = 100;
-    component.pageSize = 10;
-    component.dataSource = [{ id: 1 }];
-
-    component.ngOnChanges({
-      dataSource: {
-        currentValue: component.dataSource,
-        previousValue: [],
-        firstChange: true,
-        isFirstChange: () => true,
-      },
+  describe('getInitialsColorClass', () => {
+    it('should return default class if name is empty', () => {
+      expect(component.getInitialsColorClass('')).toBe('bg-avatar-0');
+      expect(component.getInitialsColorClass(null as any)).toBe('bg-avatar-0');
     });
 
-    expect(component.showPaginator).toBe(true);
+    it('should return a valid avatar class between 0 and 11 based on name hash', () => {
+      const classRegex = /^bg-avatar-(\d+)$/;
+
+      const result1 = component.getInitialsColorClass('John Doe');
+      const result2 = component.getInitialsColorClass('Alice');
+      const result3 = component.getInitialsColorClass('Bob Smith');
+
+      [result1, result2, result3].forEach((result) => {
+        expect(result).toMatch(classRegex);
+        const index = parseInt(result.split('-')[2], 10);
+        expect(index).toBeGreaterThanOrEqual(0);
+        expect(index).toBeLessThan(12);
+      });
+    });
+
+    it('should return same class for same name', () => {
+      const name = 'John Doe';
+      const class1 = component.getInitialsColorClass(name);
+      const class2 = component.getInitialsColorClass(name);
+      expect(class1).toBe(class2);
+    });
+
+    it('should return different class for different names (likely)', () => {
+      const class1 = component.getInitialsColorClass('Alice');
+      const class2 = component.getInitialsColorClass('Bob');
+      expect(class1).not.toBe(class2);
+    });
   });
 
   it('should mark columns without isSortable as false by default', () => {

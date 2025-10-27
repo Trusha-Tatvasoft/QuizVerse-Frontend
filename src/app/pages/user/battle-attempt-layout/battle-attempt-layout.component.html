@@ -1,0 +1,144 @@
+<div class="battle-attempt-main" appDisableQuizShortcuts>
+  <div class="battle-container">
+    <div class="battle-content">
+      <!-- Header -->
+      <div class="card-header">
+        <div class="card-info">
+          <div class="question-info">
+            <app-tag [tagConfig]="battleTag"></app-tag>
+            <p class="question-count">
+              Question {{ currentQuestionIndex || 1 }} of {{ totalQuestion || 0 }}
+            </p>
+          </div>
+          <div class="timer">
+            <mat-icon fontSet="material-icons-outlined">timer</mat-icon>
+            <span>{{ formattedQuestionTime }}</span>
+          </div>
+        </div>
+        <app-progress-bar
+          [percentage]="progressBarPercentage"
+          [theme]="'secondary'"
+        ></app-progress-bar>
+      </div>
+
+      <!-- Scores -->
+      <div class="battle-scores card">
+        <!-- Player 1 Avatar -->
+        @if (me.imageUrl) {
+          <div class="avatar player1-avatar">
+            <img [src]="me.imageUrl" alt="Profile" (error)="(me.imageUrl == undefined)" />
+          </div>
+          @if (!isImageError['me']) {
+            <div class="avatar player1-avatar">
+              <img [src]="me.imageUrl" alt="You" (error)="imageError('me')" />
+            </div>
+          } @else {
+            <div class="avatar player1-avatar" [ngClass]="getInitialsColorClass(me?.name || 'You')">
+              {{ getInitials(me?.name || 'You') }}
+            </div>
+          }
+        } @else {
+          <div class="avatar player1-avatar" [ngClass]="getInitialsColorClass(me?.name || 'You')">
+            {{ getInitials(me?.name || 'You') }}
+          </div>
+        }
+
+        <!-- VS Column empty -->
+        <div></div>
+
+        <!-- Player 2 Avatar -->
+        @if (opponent.imageUrl) {
+          @if (!isImageError['opponent']) {
+            <div class="avatar player2-avatar">
+              <img [src]="opponent.imageUrl" alt="Opponent" (error)="imageError('opponent')" />
+            </div>
+          } @else {
+            <div
+              class="avatar player2-avatar"
+              [ngClass]="getInitialsColorClass(opponent?.name || 'Opponent')"
+            >
+              {{ getInitials(opponent?.name || 'Opponent') }}
+            </div>
+          }
+        } @else {
+          <div
+            class="avatar player2-avatar"
+            [ngClass]="getInitialsColorClass(opponent?.name || 'Opponent')"
+          >
+            {{ getInitials(opponent?.name || 'Opponent') }}
+          </div>
+        }
+
+        <!-- Player 1 Name -->
+        <div class="player-name player1-name">{{ 'You' }}</div>
+
+        <!-- VS Text -->
+        <div class="vs">
+          <h2>VS</h2>
+        </div>
+
+        <!-- Player 2 Name -->
+        <div class="player-name player2-name">{{ opponent?.name || 'Opponent' }}</div>
+
+        <!-- Player 1 Score -->
+        <div class="player-score player1-score">{{ me?.score || 0 }}</div>
+
+        <!-- Live Battle Text -->
+        <div class="live-battle-text">
+          <p>Live Battle</p>
+        </div>
+
+        <!-- Player 2 Score -->
+        <div class="player-score player2-score">{{ opponent?.score || 0 }}</div>
+
+        <!-- Empty left & center, Player 2 Tag -->
+        <div></div>
+        <div></div>
+        <app-tag class="player2-tag" [tagConfig]="opponentTag"></app-tag>
+      </div>
+
+      <!-- Question -->
+      @if (questions && questions.length > 0 && currentQuestionIndex > 0) {
+        <app-battle-question
+          [currentQuestionIndex]="currentQuestionIndex"
+          [currentQuestionData]="questions[currentQuestionArrayIndex]"
+          [currentAnswer]="selectedAnswer || ''"
+          [correctAnswer]="correctAnswer || ''"
+          [showCorrectAnswer]="showCorrectAnswer"
+          [isUserAnswerCorrect]="isUserAnswerCorrect"
+          [userAnswer]="userAnswer || ''"
+          (answerChanged)="submitAnswer($event)"
+        ></app-battle-question>
+      } @else {
+        <!-- Loading state when no questions yet -->
+        <div class="question-loading">
+          <div class="p-7 sm:p-10 bg-white border border-[#00000032] rounded-lg">
+            <div class="text-center">
+              <div
+                class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"
+              ></div>
+              <p class="text-gray-600">Waiting for questions...</p>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Footer Summary -->
+      <div class="battle-footer-summary">
+        <div class="accuracy card">
+          <mat-icon fontSet="material-icons-outlined" class="purple-icon">electric_bolt</mat-icon>
+          <div class="card-value accuracy-value">
+            {{ myAccuracy || 0 }}/{{ currentQuestionIndex || 0 }}
+          </div>
+          <div class="card-lable">Your Accuracy</div>
+        </div>
+
+        <div class="battle-status card">
+          <mat-icon fontSet="material-icons-outlined" class="gold-icon">emoji_events</mat-icon>
+          <div class="card-value battle-status-value">{{ battleStatus || 'tied' | titlecase }}</div>
+          <div class="card-lable">Battle Status</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

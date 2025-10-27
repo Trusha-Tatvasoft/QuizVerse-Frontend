@@ -1,24 +1,23 @@
 import { ButtonConfig } from '../../../shared/interfaces/button-config.interface';
 import { LazyTab } from '../../../shared/interfaces/tab-component.interface';
-import { TabLazyComponentMap } from '../../../utils/tab-component-lazy-map';
+import { tabLazyComponentMap } from '../../../utils/tab-component-lazy-map';
 
 /**
  * Google login button configuration
  */
-export const GOOGLE_BUTTON_CONFIG: ButtonConfig = {
+export const googleButtonConfig: ButtonConfig = {
   label: 'Google',
-  imageSrc: '../../../../../assets/images/google.svg',
+  imageSrc: '../../../../../assets/images/google1.svg',
   variant: 'secondary',
+  fontWeight: 500,
 };
 
 /**
  * Facebook login button configuration
  */
-export const FACEBOOK_BUTTON_CONFIG: ButtonConfig = {
+export const facebookButtonConfig: ButtonConfig = {
   label: 'Facebook',
-  matIcon: 'facebook',
-  iconFontSet: 'material-icons',
-  imagePosition: 'left',
+  imageSrc: '../../../../../assets/images/facebook.svg',
   variant: 'secondary',
   fontWeight: 500,
 };
@@ -26,15 +25,15 @@ export const FACEBOOK_BUTTON_CONFIG: ButtonConfig = {
 /**
  * Login/Signup tab configurations
  */
-export const LOGIN_SIGNUP_TABS_CONFIG: LazyTab[] = [
+export const loginSignUpTabsConfig: LazyTab[] = [
   {
     id: 'login-form',
     label: 'Sign In',
-    loadChildren: TabLazyComponentMap['login-form'],
+    loadChildren: tabLazyComponentMap['login-form'],
   },
   {
     id: 'register-form',
     label: 'Sign Up',
-    loadChildren: TabLazyComponentMap['register-form'],
+    loadChildren: tabLazyComponentMap['register-form'],
   },
 ];

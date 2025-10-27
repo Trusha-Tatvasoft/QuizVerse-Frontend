@@ -1,0 +1,67 @@
+<div class="battles-container">
+  <div class="battle-list">
+    @if (!battles || battles.length === 0) {
+      <div class="no-battles">No available battles</div>
+    } @else {
+      @for (battle of battles; track $index) {
+        <div class="battle-card">
+          <div class="battle-content">
+            <div class="battle-info">
+              <div class="battle-header">
+                <div class="title-section">
+                  <h3 class="battle-title">{{ battle.battleName }}</h3>
+                  <p class="category">{{ battle.category }}</p>
+                </div>
+                <span class="badge">
+                  <app-tag [tagConfig]="battle.difficultyTag"></app-tag>
+                </span>
+              </div>
+
+              <p class="description">{{ battle.description }}</p>
+
+              <div class="meta">
+                <span class="meta-item mat-item-xp">
+                  <mat-icon>military_tech</mat-icon>
+                  {{ battle.maxXP }} Max XP
+                </span>
+                <span class="meta-item">
+                  <mat-icon>help_outline</mat-icon>
+                  {{ battle.totalQuestions }} Questions
+                </span>
+                <span class="meta-item">
+                  <mat-icon>schedule</mat-icon>
+                  {{ battle.duration }}
+                </span>
+                <span class="meta-item">
+                  <mat-icon>groups</mat-icon>
+                  {{ battle.participants }} Participants
+                </span>
+              </div>
+            </div>
+
+            <div class="quiz-battle-actions">
+              @if (battle.isBattleRunning) {
+                <div class="waiting-flag">
+                  <mat-icon>hourglass_empty</mat-icon>
+                  Waiting for Result…
+                </div>
+              }
+              <!-- Case 2: Normal state -->
+              @else {
+                <app-filled-button
+                  [filledButtonConfig]="quickBattle"
+                  (buttonClicked)="navigateToBattle(battle)"
+                ></app-filled-button>
+
+                <app-outline-button
+                  [outlineButtonConfig]="challengeFriend"
+                  (buttonClicked)="openChallengeFriendDialgue(battle)"
+                ></app-outline-button>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>

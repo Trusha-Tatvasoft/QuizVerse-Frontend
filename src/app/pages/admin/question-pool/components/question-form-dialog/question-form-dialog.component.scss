@@ -1,0 +1,17 @@
+.dialog-container {
+  padding: 20px;
+
+  .question-dialog-header {
+    margin-bottom: 25px;
+    .dialog-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #222;
+    }
+
+    .dialog-subtitle {
+      font-size: 14px;
+      color: #666;
+    }
+  }
+}

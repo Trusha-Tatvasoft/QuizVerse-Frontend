@@ -1,0 +1,181 @@
+<div class="profile-page player-management-page">
+  <div class="player-page-heading">
+    <app-page-header
+      [icon]="browseQuizHeaderConfig.icon"
+      [title]="browseQuizHeaderConfig.title"
+      [subtitle]="browseQuizHeaderConfig.subtitle"
+      [theme]="browseQuizHeaderConfig.theme"
+    ></app-page-header>
+  </div>
+
+  <form [formGroup]="filtersForm">
+    <!-- Toolbar -->
+    <div class="player-management-toolbar">
+      <div class="flex flex-col gap-3 w-full">
+        <div class="flex flex-col gap-3 w-full">
+          <div class="flex gap-3 search-container">
+            <!-- Search Input -->
+            <app-search-input
+              [placeholder]="searchInputConfig.placeholder"
+              [control]="searchControl"
+              (search)="searchInputChange($event)"
+              class="browse-quiz-search"
+            ></app-search-input>
+
+            <!-- Filter Button (Large) -->
+            <div class="filter-btn-large">
+              <app-filled-button
+                [filledButtonConfig]="showFilterBtn"
+                (click)="toggleFilters()"
+              ></app-filled-button>
+            </div>
+          </div>
+
+          <!-- Top Filters (Category, Difficulty, Type, Actions) -->
+          <div class="w-100 flex filter-btn-container">
+            <div class="browse-quiz-filters">
+              <!-- Category -->
+              <mat-form-field appearance="outline" class="filter-select">
+                <mat-select
+                  formControlName="quizCategoryId"
+                  (selectionChange)="filterChange()"
+                  placeholder="All Category"
+                >
+                  <mat-option [value]="null">All Category</mat-option>
+                  @for (item of categoryList; track item.id) {
+                    <mat-option [value]="item.id">{{ item.name }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <!-- Difficulty -->
+              <mat-form-field appearance="outline" class="filter-select">
+                <mat-select
+                  formControlName="quizDifficultyLevelId"
+                  (selectionChange)="filterChange()"
+                  placeholder="All Difficulty"
+                >
+                  <mat-option [value]="null">All Difficulty</mat-option>
+                  @for (item of difficultyList; track item.id) {
+                    <mat-option [value]="item.id">{{ item.name }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <!-- Type -->
+              <mat-form-field appearance="outline" class="filter-select">
+                <mat-select
+                  formControlName="browseQuizzesSorting"
+                  (selectionChange)="filterChange()"
+                  placeholder="All Types"
+                >
+                  <mat-option [value]="null">All Types</mat-option>
+                  @for (item of typeList; track item.id) {
+                    <mat-option [value]="item.id">{{ item.name }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <!-- Action Buttons -->
+              <div class="flex gap-3 w-full">
+                <div class="text-nowrap quiz-btn-container">
+                  <app-outline-button
+                    [outlineButtonConfig]="clearFilterBtn"
+                    (click)="clearFilters()"
+                  ></app-outline-button>
+                </div>
+                <div class="filter-btn-small quiz-btn-container">
+                  <app-filled-button
+                    [filledButtonConfig]="showFilterBtn"
+                    (click)="toggleFilters()"
+                  ></app-filled-button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Expandable Filters Panel -->
+        @if (showFiltersPanel) {
+          <div class="filters-panel" formGroupName="filterRanges">
+            <div class="slider-row">
+              <!-- Price Range -->
+              <div class="filter-group">
+                <label class="filter-label">
+                  Price Range: ₹{{ filtersForm.get('filterRanges.minPrice')?.value }} - ₹{{
+                    filtersForm.get('filterRanges.maxPrice')?.value
+                  }}
+                </label>
+                <mat-slider min="0" max="1000" step="100" class="slider" (change)="filterChange()">
+                  <input matSliderStartThumb formControlName="minPrice" />
+                  <input matSliderEndThumb formControlName="maxPrice" />
+                </mat-slider>
+              </div>
+
+              <!-- Rating -->
+              <div class="filter-group">
+                <label class="filter-label">
+                  Minimum Rating:
+                  {{ filtersForm.get('filterRanges.minRating')?.value }} -
+                  {{ filtersForm.get('filterRanges.maxRating')?.value }} stars
+                </label>
+                <mat-slider min="0" max="5" step="0.5" class="slider" (change)="filterChange()">
+                  <input matSliderStartThumb formControlName="minRating" />
+                  <input matSliderEndThumb formControlName="maxRating" />
+                </mat-slider>
+              </div>
+
+              <!-- Duration -->
+              <div class="filter-group">
+                <label class="filter-label">
+                  Duration:
+                  {{ filtersForm.get('filterRanges.minTotalTime')?.value }} -
+                  {{ filtersForm.get('filterRanges.maxTotalTime')?.value }} minutes
+                </label>
+                <mat-slider min="2" max="180" step="1" class="slider" (change)="filterChange()">
+                  <input matSliderStartThumb formControlName="minTotalTime" />
+                  <input matSliderEndThumb formControlName="maxTotalTime" />
+                </mat-slider>
+              </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="filter-group tag-section">
+              <label class="filter-label">All Available Tags</label>
+              <div class="tag-container">
+                @for (tag of allTags; track tag.id) {
+                  <app-tag
+                    class="tags"
+                    [tagConfig]="tag"
+                    (tagSelected)="tagSelected($event)"
+                    (tagClosed)="tagClosed($event)"
+                  ></app-tag>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div>
+      <app-common-tab
+        [tabs]="tabs"
+        [selectedIndex]="selectedTab()"
+        (tabChanged)="switchToTab($event)"
+        class="user-profile-tabs"
+      >
+      </app-common-tab>
+    </div>
+
+    @if (hasMoreResults) {
+      <div class="load-more-btn-container">
+        <app-outline-button
+          [outlineButtonConfig]="loadMoreBtnConfig"
+          (click)="loadMore()"
+        ></app-outline-button>
+      </div>
+    }
+  </form>
+</div>

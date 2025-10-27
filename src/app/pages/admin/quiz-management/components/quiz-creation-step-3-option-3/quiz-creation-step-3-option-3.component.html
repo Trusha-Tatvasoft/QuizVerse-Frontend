@@ -1,0 +1,45 @@
+<div>
+  <div class="flex items-center justify-between mb-4">
+    <h4 class="form-heading">Import Questions from CSV/Excel</h4>
+    <app-outline-button
+      [outlineButtonConfig]="changeMethodButton"
+      class="min-width-btn"
+      (buttonClicked)="closeOption()"
+    ></app-outline-button>
+  </div>
+
+  <div class="flex gap-2">
+    <app-outline-button
+      [outlineButtonConfig]="downloadCsvButton"
+      (buttonClicked)="onDownloadCsv()"
+      class="min-width-btn"
+    ></app-outline-button
+    ><app-outline-button
+      [outlineButtonConfig]="downloadExelButton"
+      (buttonClicked)="onDownloadExcel()"
+      class="min-width-btn"
+    ></app-outline-button>
+  </div>
+
+  <div
+    class="mt-5 border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center text-center gap-3 cursor-pointer hover:border-blue-400 transition"
+    (drop)="fileDrop($event)"
+    (dragover)="dragOver($event)"
+    (click)="fileInput.click()"
+  >
+    <mat-icon class="card-icon-medium" style="font-size: 32px">upload</mat-icon>
+    <p class="text-gray-500">Drop your CSV/Excel file here, or click to browse</p>
+    <app-outline-button
+      [outlineButtonConfig]="chooseFileButton"
+      class="min-width-btn"
+    ></app-outline-button>
+
+    <input
+      #fileInput
+      type="file"
+      accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+      class="hidden"
+      (change)="onFileSelected($event)"
+    />
+  </div>
+</div>

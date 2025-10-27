@@ -2,7 +2,7 @@ import { Validators } from '@angular/forms';
 import { DynamicFormField } from '../../../shared/interfaces/dynamic-form-field.interface';
 import { ButtonConfig } from '../../../shared/interfaces/button-config.interface';
 
-export const RESET_PASSWORD_FORM_FIELD: DynamicFormField[] = [
+export const resetPasswordFormField: DynamicFormField[] = [
   {
     name: 'password',
     icon: 'lock',
@@ -31,7 +31,7 @@ export const RESET_PASSWORD_FORM_FIELD: DynamicFormField[] = [
   },
 ];
 
-export const SEND_RESET_LINK_CONFIG: ButtonConfig = {
+export const sendResetLinkConfig: ButtonConfig = {
   label: 'Update Password',
   fontWeight: 500,
   variant: 'gradient',

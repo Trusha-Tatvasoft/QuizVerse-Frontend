@@ -22,7 +22,6 @@
   }
 
   .logo-small {
-    background: var(--gradient);
     color: white;
     font-weight: bold;
     font-size: 1.125rem;
@@ -52,6 +51,25 @@
       @media (max-width: 1023px) {
         display: inline-flex; // show toggle on mobile
       }
+    }
+  }
+
+  .logo {
+    text-align: center;
+
+    span,
+    mat-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 35px;
+      height: 35px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      background: var(--gradient);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
     }
   }
 
@@ -139,9 +157,48 @@
     }
 
     .notification-box {
+      position: absolute;
+      top: 3rem;
+      z-index: 50;
+      right: 0;
+
       @media (max-width: 500px) {
-        width: 350px;
-        right: -50px; // adjust box position on mobile
+        position: fixed;
+        top: 95%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 350px;
+        right: auto;
+      }
+
+      @media (max-width: 400px) {
+        top: 95%;
+        width: 95%;
+        max-width: 300px;
+      }
+
+      .p-4.border-b-2 {
+        .flex.justify-between.items-center {
+          flex-wrap: wrap;
+          gap: 0.5rem;
+
+          @media (max-width: 400px) {
+            flex-direction: column;
+            align-items: flex-start;
+
+            .flex.items-center.gap-1 {
+              min-width: auto !important;
+              width: 100%;
+              justify-content: flex-start;
+              gap: 0.5rem;
+
+              app-text-button {
+                flex: 1;
+              }
+            }
+          }
+        }
       }
     }
 

@@ -6,16 +6,26 @@
     </a>
   </div>
   <div class="auth-card">
-    <div class="logo">
-      <span>Q</span>
-    </div>
+    @if (logoPath) {
+      <div class="logo-wrapper">
+        <img [src]="logoPath" alt="Platform Logo" class="logo-small" (error)="imageError()" />
+      </div>
+    } @else {
+      <div class="logo">
+        <span>{{ plateformName?.charAt(0) | uppercase }}</span>
+      </div>
+    }
     <div class="auth-header">
       <h1>Welcome to QuizVerse</h1>
       <p class="subtext">Sign in by your account or create a new one</p>
     </div>
 
-    <app-common-tab [tabs]="tabs" [selectedIndex]="selectedIndex" class="login-signup-tabs">
-    </app-common-tab>
+    <app-common-tab
+      [tabs]="tabs"
+      [selectedIndex]="selectedIndex"
+      class="login-signup-tabs"
+      (tabChanged)="switchToTab($event)"
+    ></app-common-tab>
 
     <div class="divider-container">
       <div class="divider">

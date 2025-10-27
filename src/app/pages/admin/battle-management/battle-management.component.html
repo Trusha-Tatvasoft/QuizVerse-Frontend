@@ -1,0 +1,91 @@
+<main class="admin-management-page">
+  <div class="admin-page-header">
+    <app-page-header
+      [icon]="userConfig.icon"
+      [title]="userConfig.title"
+      [subtitle]="userConfig.subtitle"
+      [theme]="userConfig.theme"
+    >
+    </app-page-header>
+  </div>
+
+  <div class="admin-management-toolbar">
+    <div class="heading">
+      <h1>Battle list</h1>
+    </div>
+
+    <div class="admin-management-btns">
+      <app-filled-button
+        [filledButtonConfig]="createBattleButtonConfig"
+        (buttonClicked)="openAddBattleDialgue()"
+        class="add-difficulty"
+      >
+      </app-filled-button>
+    </div>
+  </div>
+
+  @if (!battleData || battleData.length === 0) {
+    <div class="no-data-message">No battles available.</div>
+  } @else {
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+      @for (battle of battleData; track battle.id) {
+        <div class="battle-card bg-white min-h-24 p-5">
+          <div class="pb-7">
+            <div class="flex justify-between pb-2">
+              <h2 class="text-xl font-semibold text-[#000]">
+                {{ battle.battleName }}
+              </h2>
+              <app-tag [tagConfig]="battle.statusTag"></app-tag>
+            </div>
+            <span class="mb-3">{{ battle.category }}</span>
+          </div>
+
+          <div class="flex gap-3 flex-col pb-3 battle-data">
+            <span>{{ battle.description }}</span>
+
+            <div class="flex justify-content align-center gap-3">
+              <span class="inline-flex gap-2 align-center">
+                <mat-icon fontSet="material-icons-outlined">group</mat-icon>
+                {{ battle.participants }} participants
+              </span>
+              <span class="inline-flex gap-2 align-center">
+                <mat-icon>adjust</mat-icon>
+                {{ battle.totalXp }} Max XP
+              </span>
+            </div>
+
+            <div class="flex justify-start gap-3">
+              <app-tag [tagConfig]="battle.difficultyTag"></app-tag>
+              <app-tag [tagConfig]="battle.questionTag"></app-tag>
+              <app-tag [tagConfig]="battle.timeTag"></app-tag>
+            </div>
+
+            <span class="inline-flex gap-1 align-center justify-content h-[20px] date-range">
+              @if (battle.battleTime == 2) {
+                <mat-icon fontSet="material-icons-outlined" class="calender"
+                  >calendar_month</mat-icon
+                >
+                {{ battle.dateRange.start | date: 'dd-MM-yyyy' }} to
+                {{ battle.dateRange.end | date: 'dd-MM-yyyy' }}
+              }
+            </span>
+          </div>
+
+          <div>
+            <app-outline-button
+              class="inline-flex pe-5"
+              [outlineButtonConfig]="editButtonConfig"
+              (buttonClicked)="editBattle(battle.id)"
+            >
+            </app-outline-button>
+            <app-filled-button
+              [filledButtonConfig]="deleteButtonConfig"
+              (buttonClicked)="deleteBattleDialog(battle.id)"
+            >
+            </app-filled-button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</main>

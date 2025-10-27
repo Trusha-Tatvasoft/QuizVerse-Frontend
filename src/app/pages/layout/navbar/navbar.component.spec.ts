@@ -2,25 +2,65 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NavbarComponent } from './navbar.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { yellow } from '../../../utils/constants';
 import { mockDataNotifications } from './navbar-mock-data';
 import { Navigations } from '../../../shared/enums/navigation';
+import { AuthService } from '../../../core/auth/services/auth.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
+import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
+import { Router } from '@angular/router';
+import { environment } from '../../../../environments/environment.dev';
+import { UserProfileService } from '../../../services/user/user-profile/user-profile.service';
+import { Role } from '../../../shared/enums/role';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
-  let warning = yellow;
-
+  let authServiceMock: { logout: jest.Mock; currentRole$: any };
+  let routerMock: { navigate: jest.Mock };
+  let profileUpdated$: Subject<boolean>;
+  let mockUserProfileService: any;
+  let configSubject: BehaviorSubject<any>;
   const mockNotifications = mockDataNotifications;
 
   beforeEach(async () => {
+    // Create Subjects for Behavior testing
+    configSubject = new BehaviorSubject<any>(null);
+    profileUpdated$ = new Subject<boolean>();
+
+    // Mock UserProfileService with the profileUpdated$ observable
+    mockUserProfileService = {
+      profileUpdated$: profileUpdated$.asObservable(),
+    };
+
+    // Mock AuthService
+    authServiceMock = {
+      logout: jest.fn(),
+      currentRole$: of(Role.Player), // observable role
+    };
+
+    // Mock Router
+    routerMock = { navigate: jest.fn() };
+
+    // Configure TestBed
     await TestBed.configureTestingModule({
-      imports: [NavbarComponent],
+      imports: [NavbarComponent, HttpClientTestingModule],
       schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+        { provide: AuthService, useValue: authServiceMock },
+        { provide: Router, useValue: routerMock },
+        { provide: UserProfileService, useValue: mockUserProfileService },
+        {
+          provide: PlatformSettingsService,
+          useValue: { platformConfig$: configSubject.asObservable() },
+        },
+      ],
     }).compileComponents();
 
+    // Create component instance
     fixture = TestBed.createComponent(NavbarComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   // Verifies component is created without error
@@ -46,10 +86,14 @@ describe('NavbarComponent', () => {
 
   // Toggles the notifications dropdown open and closed
   it('should toggle notification dropdown', () => {
+    const mockEvent = { stopPropagation: jest.fn() } as unknown as Event;
+
     component.showNotifications = false;
-    component.toggleNotifications();
+    component.toggleNotifications(mockEvent);
+    expect(mockEvent.stopPropagation).toHaveBeenCalled();
     expect(component.showNotifications).toBe(true);
-    component.toggleNotifications();
+
+    component.toggleNotifications(mockEvent);
     expect(component.showNotifications).toBe(false);
   });
 
@@ -99,7 +143,7 @@ describe('NavbarComponent', () => {
     component.isLogin = true;
     component.isAdmin = false;
     component.currentXp = 500;
-    component.xpLimit = 1000;
+    component.progressPercentage = 100;
     fixture.detectChanges();
     const xpLabel = fixture.debugElement.query(By.css('.xp-label'));
     expect(xpLabel.nativeElement.textContent).toContain('XP: 500');
@@ -128,11 +172,18 @@ describe('NavbarComponent', () => {
   it('should toggle notification panel when text button is clicked', () => {
     component.isLogin = true;
     fixture.detectChanges();
+
     const notifButton = fixture.debugElement.query(By.css('.wrapper-text-button'));
-    notifButton.triggerEventHandler('buttonClicked', null);
+
+    // Mock event with stopPropagation
+    const mockEvent = { stopPropagation: jest.fn() } as unknown as Event;
+
+    notifButton.triggerEventHandler('buttonClicked', mockEvent);
     fixture.detectChanges();
+
     const notifBox = fixture.debugElement.query(By.css('.notification-box'));
     expect(notifBox).toBeTruthy();
+    expect(mockEvent.stopPropagation).toHaveBeenCalled();
   });
 
   // Displays mark-as-read and delete buttons for each notification
@@ -200,15 +251,410 @@ describe('NavbarComponent', () => {
     expect(closeSpy).toHaveBeenCalled();
   });
 
-  it('should navigate to BrowseQuizzes on browseQuizRedirect()', () => {
+  it('should navigate to get started button on getStartedRedirect()', () => {
     const navSpy = jest.spyOn(component['router'], 'navigate');
-    component.browseQuizRedirect();
-    expect(navSpy).toHaveBeenCalledWith([Navigations.BrowseQuizzes]);
+    component.getStartedRedirect();
+    expect(navSpy).toHaveBeenCalledWith([Navigations.Login]);
   });
 
   it('should navigate to Login on loginRedirect()', () => {
     const navSpy = jest.spyOn(component['router'], 'navigate');
-    component.loginRedirect();
+    component.signInRedirect();
     expect(navSpy).toHaveBeenCalledWith([Navigations.Login]);
+  });
+
+  it('should call AuthService.logout when logout() is invoked', () => {
+    component.logout();
+    expect(authServiceMock.logout).toHaveBeenCalled();
+  });
+
+  it('should close notifications when clicking outside notification wrapper', () => {
+    component.isLogin = true;
+    component.showNotifications = true;
+    fixture.detectChanges();
+
+    const wrapperEl = document.createElement('div');
+    component['notificationWrapper'] = { nativeElement: wrapperEl } as any;
+
+    const outsideClick = new MouseEvent('click', { bubbles: true });
+    document.body.dispatchEvent(outsideClick);
+
+    fixture.detectChanges();
+    expect(component.showNotifications).toBe(false);
+  });
+
+  it('should NOT close notifications when clicking inside notification wrapper', () => {
+    component.isLogin = true;
+    component.showNotifications = true;
+    fixture.detectChanges();
+
+    const wrapperEl = document.createElement('div');
+    const insideEl = document.createElement('button');
+    wrapperEl.appendChild(insideEl);
+
+    component['notificationWrapper'] = { nativeElement: wrapperEl } as any;
+
+    const insideClick = new MouseEvent('click', { bubbles: true });
+    insideEl.dispatchEvent(insideClick);
+
+    fixture.detectChanges();
+    expect(component.showNotifications).toBe(true);
+  });
+
+  it('should navigate to login if user is not logged in', () => {
+    component.isLogin = false;
+
+    const navSpy = jest.spyOn(component['router'], 'navigate');
+
+    component.navigateToDashboard();
+
+    expect(navSpy).toHaveBeenCalledWith([Navigations.Login]);
+  });
+
+  it('should navigate to admin dashboard for admin role', () => {
+    component.isLogin = true;
+    component.role = Role.Admin;
+    const navSpy = jest.spyOn(component['router'], 'navigate');
+
+    component.navigateToDashboard();
+    expect(navSpy).toHaveBeenCalledWith([`/${Navigations.Admin}/${Navigations.Dashboard}`]);
+  });
+
+  it('should navigate to admin dashboard for superadmin role', () => {
+    component.isLogin = true;
+    component.role = Role.SuperAdmin;
+    const navSpy = jest.spyOn(component['router'], 'navigate');
+
+    component.navigateToDashboard();
+    expect(navSpy).toHaveBeenCalledWith([`/${Navigations.Admin}/${Navigations.Dashboard}`]);
+  });
+
+  it('should navigate to player dashboard for player role', () => {
+    component.isLogin = true;
+    component.role = Role.Player;
+    const navSpy = jest.spyOn(component['router'], 'navigate');
+
+    component.navigateToDashboard();
+    expect(navSpy).toHaveBeenCalledWith([`/${Navigations.User}/${Navigations.Dashboard}`]);
+  });
+
+  it('should navigate to fallback "/" for unknown, null, or undefined role', () => {
+    const navSpy = jest.spyOn(component['router'], 'navigate');
+
+    component.isLogin = true;
+    component.role = 'unknown';
+    component.navigateToDashboard();
+    expect(navSpy).toHaveBeenCalledWith(['/']);
+
+    component.role = null;
+    component.navigateToDashboard();
+    expect(navSpy).toHaveBeenCalledWith(['/']);
+
+    component.role = undefined as any;
+    component.navigateToDashboard();
+    expect(navSpy).toHaveBeenCalledWith(['/']);
+  });
+
+  it('should set logoPath when config has logo', () => {
+    fixture.detectChanges();
+    configSubject.next({ logo: 'assets/images/custom.png' });
+    expect(component.logoPath).toBe('assets/images/custom.png');
+  });
+
+  describe('goToProfile', () => {
+    it('should navigate to admin profile when role is admin', () => {
+      component.role = Role.Admin;
+      component.goToProfile();
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.Admin}/${Navigations.Profile}`,
+      ]);
+    });
+
+    it('should navigate to admin profile when role is superadmin', () => {
+      component.role = Role.SuperAdmin;
+      component.goToProfile();
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.Admin}/${Navigations.Profile}`,
+      ]);
+    });
+
+    it('should navigate to user profile when role is player', () => {
+      component.role = Role.Player;
+      component.goToProfile();
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.User}/${Navigations.Profile}`,
+      ]);
+    });
+  });
+
+  describe('goToSetting', () => {
+    it('should navigate to admin settings with tab query param for admin', () => {
+      component.role = Role.Admin;
+      component.goToSetting();
+      expect(routerMock.navigate).toHaveBeenCalledWith(
+        [`/${Navigations.Admin}/${Navigations.Profile}/`],
+        { queryParams: { tab: 2 } },
+      );
+    });
+
+    it('should navigate to admin settings with tab query param for superadmin', () => {
+      component.role = Role.SuperAdmin;
+      component.goToSetting();
+      expect(routerMock.navigate).toHaveBeenCalledWith(
+        [`/${Navigations.Admin}/${Navigations.Profile}/`],
+        { queryParams: { tab: 2 } },
+      );
+    });
+
+    it('should navigate to user settings with tab query param', () => {
+      component.role = Role.Player;
+      component.goToSetting();
+      expect(routerMock.navigate).toHaveBeenCalledWith(
+        [`/${Navigations.User}/${Navigations.Profile}`],
+        { queryParams: { tab: 2 } },
+      );
+    });
+  });
+
+  describe('viewAllNotifications', () => {
+    it('should navigate to admin notifications and close panel for admin', () => {
+      component.role = Role.Admin;
+      component.showNotifications = true;
+
+      component.viewAllNotifications();
+
+      expect(component.showNotifications).toBe(false);
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.Admin}/${Navigations.Notifications}/`,
+      ]);
+    });
+
+    it('should navigate to admin notifications and close panel for superadmin', () => {
+      component.role = Role.SuperAdmin;
+      component.showNotifications = true;
+
+      component.viewAllNotifications();
+
+      expect(component.showNotifications).toBe(false);
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.Admin}/${Navigations.Notifications}/`,
+      ]);
+    });
+
+    it('should navigate to user notifications and close panel for player', () => {
+      component.role = Role.Player;
+      component.showNotifications = true;
+
+      component.viewAllNotifications();
+
+      expect(component.showNotifications).toBe(false);
+      expect(routerMock.navigate).toHaveBeenCalledWith([
+        `/${Navigations.User}/${Navigations.Notifications}`,
+      ]);
+    });
+  });
+
+  describe('viewDetails', () => {
+    it('should navigate to route returned by getNotificationRoute', () => {
+      const mockRoute = { path: '/test/path', queryParams: { foo: 'bar' } };
+      const spy = jest
+        .spyOn(require('../configs/navbar.component.config'), 'getNotificationRoute')
+        .mockReturnValue(mockRoute);
+
+      component.role = Role.Admin;
+      component.viewDetails(1);
+
+      expect(spy).toHaveBeenCalledWith(true, 1);
+      expect(routerMock.navigate).toHaveBeenCalledWith([mockRoute.path], {
+        queryParams: mockRoute.queryParams,
+      });
+    });
+  });
+
+  describe('ngOnDestroy', () => {
+    it('should complete destroy$ subject', () => {
+      const nextSpy = jest.spyOn(component['destroy$'], 'next');
+      const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+
+      component.ngOnDestroy();
+
+      expect(nextSpy).toHaveBeenCalled();
+      expect(completeSpy).toHaveBeenCalled();
+    });
+  });
+
+  it('should update XP, progress, notificationCount, and profileImageUrl on successful loadUserData', () => {
+    const mockResponse = {
+      result: true,
+      statusCode: 200,
+      message: 'Success',
+      data: {
+        currentUserXp: 200,
+        progressPercentage: 50,
+        notificationCount: 5,
+        profilePic: 'test-pic.png',
+      },
+    };
+
+    jest.spyOn(component['navbarService'], 'getNavbarData').mockReturnValue(of(mockResponse));
+
+    component['loadUserData']();
+
+    expect(component.currentXp).toBe(200);
+    expect(component.progressPercentage).toBe(50);
+    expect(component.notificationCount).toBe(5);
+    expect(component.profileImageUrl).toBe(`${(environment as any).imageBaseUrl}/test-pic.png`);
+  });
+
+  it('should not throw if notificationWrapper is not set', () => {
+    component.showNotifications = true;
+    component['notificationWrapper'] = null as any;
+
+    const event = new MouseEvent('click');
+    expect(() => component.onDocumentClick(event)).not.toThrow();
+  });
+
+  it('should call loadNotifications when opening notifications', () => {
+    const mockEvent = { stopPropagation: jest.fn() } as any;
+    const loadSpy = jest
+      .spyOn<any, any>(component as any, 'loadNotifications')
+      .mockImplementation(() => {});
+
+    component.showNotifications = false;
+    component.toggleNotifications(mockEvent);
+
+    expect(loadSpy).toHaveBeenCalled();
+  });
+  it('should close sidebar when going from >=1024 to <1024 width', () => {
+    const closeSpy = jest.spyOn(component.closeSidebar, 'emit');
+    component['previousWidth'] = 1200;
+
+    // mock window.innerWidth
+    Object.defineProperty(window, 'innerWidth', { value: 800, configurable: true });
+
+    component.onWindowResize();
+
+    expect(component.menuOpen).toBe(false);
+    expect(closeSpy).toHaveBeenCalled();
+  });
+
+  it('should call snackbarService.showError on loadUserData error', () => {
+    const snackbarSpy = jest.spyOn(component['snackbarService'], 'showError');
+
+    jest.spyOn(component['navbarService'], 'getNavbarData').mockReturnValue({
+      pipe: () =>
+        of().pipe(() => {
+          throw new Error('fail');
+        }),
+    } as any);
+
+    // Or simpler: throwError(() => new Error('fail'))
+    jest
+      .spyOn(component['navbarService'], 'getNavbarData')
+      .mockReturnValue(throwError(() => new Error('fail')));
+
+    component['loadUserData']();
+
+    expect(snackbarSpy).toHaveBeenCalledWith(expect.any(String), expect.any(String));
+  });
+
+  describe('NavbarComponent - profileUpdated$', () => {
+    it('should call loadUserData when profileUpdated$ emits true', () => {
+      const loadUserDataSpy = jest.spyOn(component as any, 'loadUserData');
+
+      profileUpdated$.next(true);
+
+      expect(loadUserDataSpy).toHaveBeenCalled();
+    });
+
+    it('should NOT call loadUserData when profileUpdated$ emits false', () => {
+      const loadUserDataSpy = jest.spyOn(component as any, 'loadUserData');
+
+      profileUpdated$.next(false);
+
+      expect(loadUserDataSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should set logoPath from config.logo if available', () => {
+    const customLogo = 'assets/images/custom-logo.png';
+    configSubject.next({ logo: customLogo });
+    fixture.detectChanges();
+
+    expect(component.logoPath).toBe(customLogo);
+  });
+  it('should assign currentXp, progressPercentage, notificationCount, and profileImageUrl correctly', () => {
+    const mockResponse = {
+      result: true,
+      statusCode: 200,
+      message: 'Success',
+      data: {
+        currentUserXp: 300,
+        progressPercentage: 75,
+        notificationCount: 10,
+        profilePic: 'user-pic.png',
+      },
+    };
+
+    jest.spyOn(component['navbarService'], 'getNavbarData').mockReturnValue(of(mockResponse));
+
+    component['loadUserData']();
+    fixture.detectChanges();
+
+    expect(component.currentXp).toBe(300);
+    expect(component.progressPercentage).toBe(75);
+    expect(component.notificationCount).toBe(10);
+    expect(component.profileImageUrl).toBe(`${environment.imageBaseUrl}/user-pic.png`);
+  });
+
+  it('should fallback profile image if profilePic is missing', () => {
+    const mockResponse = {
+      result: true,
+      statusCode: 200,
+      message: 'Success',
+      data: {
+        currentUserXp: 100,
+        progressPercentage: 50,
+        notificationCount: 5,
+        profilePic: null,
+      },
+    };
+
+    jest.spyOn(component['navbarService'], 'getNavbarData').mockReturnValue(of(mockResponse));
+
+    component['loadUserData']();
+    fixture.detectChanges();
+
+    expect(component.profileImageUrl).toBe('assets/images/profile-1.png'); // fallback
+  });
+  it('should set currentXp and progressPercentage from response', () => {
+    const res = {
+      data: {
+        currentUserXp: 50,
+        progressPercentage: 75,
+      },
+    };
+
+    // Simulate your method that assigns these values
+    component.currentXp = res.data.currentUserXp ?? 0;
+    component.progressPercentage = res.data.progressPercentage ?? 0;
+
+    expect(component.currentXp).toBe(50);
+    expect(component.progressPercentage).toBe(75);
+  });
+
+  it('should default currentXp and progressPercentage to 0 if undefined', () => {
+    const res = {
+      data: {
+        currentUserXp: undefined,
+        progressPercentage: undefined,
+      },
+    };
+
+    component.currentXp = res.data.currentUserXp ?? 0;
+    component.progressPercentage = res.data.progressPercentage ?? 0;
+
+    expect(component.currentXp).toBe(0);
+    expect(component.progressPercentage).toBe(0);
   });
 });

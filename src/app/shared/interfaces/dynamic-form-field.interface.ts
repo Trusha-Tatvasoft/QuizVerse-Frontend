@@ -6,8 +6,9 @@ export interface DynamicFormField {
   label: string;
   type: string;
   placeholder: string;
-  validators: any[];
-  options?: { value: any; label: string }[];
+  validators: unknown[];
+  options?: { value: unknown; label: string }[];
   icon?: string;
   validationMessages?: { [key: string]: string };
+  gridClass?: string;
 }

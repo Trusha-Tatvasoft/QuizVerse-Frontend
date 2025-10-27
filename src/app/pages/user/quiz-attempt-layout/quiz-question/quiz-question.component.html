@@ -1,0 +1,62 @@
+<h3 class="text-lg font-semibold mb-4">Question {{ currentQuestionIndex + 1 }}</h3>
+
+<p class="text-gray-800 mb-6">
+  {{ currentQuestionData?.questionName }}
+</p>
+
+<!-- Render based on type -->
+@switch (currentQuestionData?.questionTypeName) {
+  @case ('True/False') {
+    <mat-form-field appearance="outline" class="w-100 custom-form-field" [floatLabel]="'auto'">
+      <mat-select [value]="currentAnswer" (selectionChange)="onAnswerChange($event)">
+        <mat-option value="" disabled>Select True or False</mat-option>
+        <mat-option value="true">True</mat-option>
+        <mat-option value="false">False</mat-option>
+      </mat-select>
+    </mat-form-field>
+  }
+
+  @case ('Short Answer') {
+    <mat-form-field appearance="outline" class="w-100 custom-form-field" [floatLabel]="'auto'">
+      <input
+        matInput
+        type="text"
+        placeholder="Enter your answer"
+        autocomplete="off"
+        [value]="currentAnswer"
+        (input)="onAnswerChange($event)"
+      />
+    </mat-form-field>
+  }
+
+  @case ('Fill in the Blank') {
+    <mat-form-field appearance="outline" class="w-100 custom-form-field" [floatLabel]="'auto'">
+      <input
+        matInput
+        type="text"
+        placeholder="Enter your answer"
+        autocomplete="off"
+        [value]="currentAnswer"
+        (input)="onAnswerChange($event)"
+      />
+    </mat-form-field>
+  }
+
+  @case ('Multiple Choice') {
+    <mat-radio-group
+      [value]="currentAnswer"
+      class="mt-2 flex flex-col gap-1 w-100"
+      (change)="onAnswerChange($event)"
+    >
+      @for (opt of currentQuestionData?.options; track opt.key) {
+        <mat-radio-button [value]="opt.value">
+          {{ opt.value }}
+        </mat-radio-button>
+      }
+    </mat-radio-group>
+  }
+
+  @default {
+    <p class="text-gray-500 italic">Unsupported question type</p>
+  }
+}

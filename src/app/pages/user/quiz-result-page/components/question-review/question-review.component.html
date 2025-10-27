@@ -1,0 +1,63 @@
+<div class="question-review-container">
+  <h2 class="question-review-title">Question Review</h2>
+  <p class="question-review-subtitle">Review your answers and explanations</p>
+
+  <div class="question-list">
+    @for (q of questions; track q; let i = $index) {
+      <div class="question-item" [ngClass]="{ correct: q.isCorrect, wrong: !q.isCorrect }">
+        <!-- Question text -->
+        <div class="question-header">
+          <div class="question-text">{{ i + 1 }}. {{ q.questionText }}</div>
+
+          <div class="status-wrapper">
+            <app-tag
+              [tagConfig]="
+                q.isCorrect === true
+                  ? correctAnswerTagConfig
+                  : q.isCorrect === false
+                    ? wrongAnswerTagConfig
+                    : notAttemptTagConfig
+              "
+            ></app-tag>
+
+            <button (click)="openReportDialog(q)">
+              <mat-icon color="warn">error_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- User Answer -->
+        <div class="answer user-answer" [ngClass]="{ correct: q.isCorrect, wrong: !q.isCorrect }">
+          Your Answer:
+          <span [ngClass]="{ correct: q.isCorrect, wrong: !q.isCorrect }">
+            {{ q.userAnswer }}
+          </span>
+        </div>
+        @if (!q.isCorrect || q.isCorrect == null) {
+          <!-- Correct Answer (if wrong) -->
+          <div class="answer correct-answer">
+            Correct Answer: <span> {{ q.correctAnswer }} </span>
+          </div>
+        }
+        <!-- Toggle Explanation Button -->
+        <div class="toggle-explanation" (click)="fetchExplanation(q)">
+          <mat-icon class="toggle-icon">{{
+            q.showExplanation ? 'expand_less' : 'expand_more'
+          }}</mat-icon>
+          <span class="toggle-text">{{
+            q.showExplanation ? 'Hide Explanation' : 'Show Explanation'
+          }}</span>
+        </div>
+
+        <!-- Collapsible Explanation -->
+        <div class="explanation-wrapper" [class.open]="q.showExplanation">
+          @if (q.showExplanation && !q.loadingExplanation) {
+            <div class="explanation">
+              {{ q.explanation }}
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

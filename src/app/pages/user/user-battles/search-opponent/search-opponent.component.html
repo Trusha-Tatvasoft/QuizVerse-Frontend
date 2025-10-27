@@ -1,0 +1,31 @@
+<main class="player-management-page">
+  <div class="search-container">
+    <div class="card">
+      <!-- Searching State -->
+      <div class="relative">
+        <!-- Custom Loader -->
+        <div class="custom-loader">
+          <mat-icon fontSet="material-icons-outlined">offline_bolt</mat-icon>
+        </div>
+      </div>
+      <h2 class="my-2">Finding Opponent</h2>
+      <p class="my-2">Matching you with a player of similar skill level...</p>
+
+      <div class="quiz-info">
+        <h3>{{ battleData.battleName }}</h3>
+        <p>
+          {{ battleData.battleCategory }} • {{ battleData.battleDifficulty }} •
+          {{ battleData.battleXp }} XP
+        </p>
+      </div>
+
+      <p class="timer">Searching for {{ searchSeconds }}s...</p>
+
+      <app-outline-button
+        [outlineButtonConfig]="cancelSearchButtonConfig"
+        (buttonClicked)="cancelSearch()"
+        class="cancel-search-opponent"
+      ></app-outline-button>
+    </div>
+  </div>
+</main>

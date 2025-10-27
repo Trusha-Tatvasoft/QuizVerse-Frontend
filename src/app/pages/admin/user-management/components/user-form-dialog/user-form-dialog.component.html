@@ -1,0 +1,31 @@
+<div class="main-dialog-content">
+  <!-- Header -->
+  <div class="dialog-header px-5 py-3">
+    <h2 mat-dialog-title>{{ isEditMode ? 'Edit User' : 'Add New User' }}</h2>
+    <span class="dialog-sub-header">
+      {{
+        isEditMode
+          ? 'Update the user details below.'
+          : 'Create a new user account. Fill in the details below.'
+      }}
+    </span>
+  </div>
+
+  <!-- Close Button -->
+  <button mat-icon-button class="close-btn-dialog-all" (click)="handleCancel()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <!-- Body -->
+  <div class="p-5 custom-form-field-override">
+    <app-register
+      [isLogin]="true"
+      [user]="userData"
+      [isEditMode]="isEditMode"
+      (saveUser)="onRegisterSaveUser($event)"
+      (formCancelled)="handleCancel()"
+      [isSuperAdmin]="isSuperAdmin()"
+    >
+    </app-register>
+  </div>
+</div>

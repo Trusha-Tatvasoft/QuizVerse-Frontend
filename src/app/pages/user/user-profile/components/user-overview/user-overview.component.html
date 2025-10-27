@@ -1,0 +1,29 @@
+<div class="cards-section">
+  <!-- Recent Activity -->
+  <div class="card recent-activity">
+    <h3>Recent Activity</h3>
+    <ul class="activity-list">
+      @for (activity of recentActivities; track i; let i = $index) {
+        <li>
+          <span class="activity-text">{{ activity.text }}</span>
+          <app-tag [tagConfig]="getXpTag(activity.xp)" class="xp-tag"></app-tag>
+        </li>
+      } @empty {
+        <div class="no-activity-message">No recent activity available</div>
+      }
+    </ul>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="card quick-stats">
+    <h3>Quick Stats</h3>
+    <ul class="stats-list">
+      @for (stat of statsList; track i; let i = $index) {
+        <li>
+          <span class="label">{{ stat.label }}:</span>
+          <span class="value">{{ stat.value }}</span>
+        </li>
+      }
+    </ul>
+  </div>
+</div>

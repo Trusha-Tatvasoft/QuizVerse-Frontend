@@ -1,0 +1,31 @@
+<main class="admin-management-page">
+  <div class="admin-page-header">
+    <app-page-header
+      [icon]="questionDifficultyManagementHeaderConfiguration.icon"
+      [title]="questionDifficultyManagementHeaderConfiguration.title"
+      [subtitle]="questionDifficultyManagementHeaderConfiguration.subtitle"
+      [theme]="questionDifficultyManagementHeaderConfiguration.theme"
+    ></app-page-header>
+  </div>
+
+  <div class="admin-management-toolbar">
+    <div class="heading">
+      <h1>Difficulty Levels</h1>
+    </div>
+
+    <div class="admin-management-btns">
+      <app-filled-button
+        [filledButtonConfig]="addDifficultyButtonConfig"
+        (buttonClicked)="openAddEditDifficultyDialog()"
+        class="add-difficulty"
+      ></app-filled-button>
+    </div>
+  </div>
+
+  <app-data-table
+    [columns]="columnsConfig"
+    [dataSource]="tableDataSource()"
+    [applyPaginator]="false"
+    (actionClick)="handleAction($event)"
+  ></app-data-table>
+</main>

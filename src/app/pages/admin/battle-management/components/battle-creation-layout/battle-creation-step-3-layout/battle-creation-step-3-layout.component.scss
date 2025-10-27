@@ -1,0 +1,43 @@
+.card-icon-medium {
+  font-size: 30px !important;
+  width: 30px !important;
+  height: 30px !important;
+  line-height: 50px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.secondary-icon {
+  color: var(--global-secondary-color);
+}
+
+.primary-icon {
+  color: var(--global-primary-color);
+}
+
+.light-green-icon {
+  color: var(--green-color);
+}
+
+.form-heading {
+  font-size: revert;
+  font-weight: 500;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  background-color: #ffffff !important;
+
+  @media (max-width: 600px) {
+    flex-wrap: wrap;
+    padding: 0;
+  }
+
+  mat-paginator,
+  .mat-paginator-container {
+    background-color: #ffffff !important;
+  }
+}

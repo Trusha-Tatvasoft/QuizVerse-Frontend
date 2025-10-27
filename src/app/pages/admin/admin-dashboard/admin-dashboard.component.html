@@ -1,0 +1,37 @@
+<div class="dashboard-layout admin-management-page">
+  <div class="dashboard-body">
+    <div class="dashboard-main">
+      <app-page-header
+        [icon]="adminDashboardConfig.icon"
+        [title]="adminDashboardConfig.title"
+        [theme]="adminDashboardConfig.theme"
+        [subtitle]="adminDashboardConfig.subtitle"
+      ></app-page-header>
+      <div class="stats-grid">
+        @for (config of dashboardStatsConfigs; track config.title) {
+          <app-card [cardConfig]="config"></app-card>
+        }
+      </div>
+      <div class="analytics-visualization-section">
+        <div class="section-header-content">
+          <div class="section-header">
+            <mat-icon class="section-icon">trending_up</mat-icon>
+            <h2 class="section-title">Platform Analytics & Data Visualization</h2>
+          </div>
+          <div>
+            <p class="section-subtitle">Comprehensive analytics and performance metrics</p>
+          </div>
+        </div>
+        <div class="insights-grid">
+          @for (card of insightCards; track card.title) {
+            <app-insight-card
+              class="insights-column"
+              [class.centered]="$index === 2"
+              [card]="card"
+            ></app-insight-card>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

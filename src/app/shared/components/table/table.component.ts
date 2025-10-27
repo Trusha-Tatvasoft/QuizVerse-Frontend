@@ -18,9 +18,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
-import { TablePaginationConfig } from '../../../utils/constants';
+import { tablePaginationConfig } from '../../../utils/constants';
 import { TagComponent } from '../tag/tag.component';
 import { TextButtonComponent } from '../text-button/text-button.component';
+import {
+  globalGetInitials,
+  globalGetInitialsColorClass,
+} from '../../../utils/get-profile-initials.utils';
 
 @Component({
   selector: 'app-data-table',
@@ -44,9 +48,9 @@ import { TextButtonComponent } from '../text-button/text-button.component';
 export class TableComponent implements OnInit, OnChanges {
   @Input() columns: ColumnDef[] = [];
   @Input() dataSource: TableData[] = [];
-  @Input() totalItems = TablePaginationConfig.TotalItems;
-  @Input() pageSize = TablePaginationConfig.PageSize;
-  @Input() pageSizeOptions: number[] = TablePaginationConfig.PageSizeOptions;
+  @Input() totalItems = tablePaginationConfig.TotalItems;
+  @Input() pageSize = tablePaginationConfig.PageSize;
+  @Input() pageSizeOptions: number[] = tablePaginationConfig.PageSizeOptions;
   @Input() tableTitle?: string;
   @Input() tableDescription?: string;
   @Input() applyPaginator: boolean = true;
@@ -59,7 +63,6 @@ export class TableComponent implements OnInit, OnChanges {
   @ViewChild(MatSort) sort!: MatSort;
 
   displayedColumns: string[] = [];
-  showPaginator: boolean = false;
 
   ngOnInit() {
     this.setDisplayedColumns();
@@ -71,9 +74,23 @@ export class TableComponent implements OnInit, OnChanges {
       this.setDisplayedColumns();
     }
 
-    // Determine whether to show paginator based on data size
-    if (this.dataSource && Array.isArray(this.dataSource)) {
-      this.showPaginator = this.totalItems > this.pageSize;
+    // Sync pageSize with paginator
+    if (changes['pageSize'] && this.paginator) {
+      this.paginator.pageSize = this.pageSize;
+    }
+
+    // Fix paginator when last page is deleted
+    if ((changes['totalItems'] || changes['pageSize']) && this.paginator) {
+      const lastPageIndex = Math.max(Math.ceil(this.totalItems / this.pageSize) - 1, 0);
+
+      if (this.paginator.pageIndex > lastPageIndex) {
+        this.paginator.pageIndex = lastPageIndex;
+
+        this.pageChange.emit({
+          pageIndex: this.paginator.pageIndex,
+          pageSize: this.paginator.pageSize,
+        });
+      }
     }
   }
 
@@ -88,15 +105,20 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   onPageChange(event: PageEvent) {
+    this.pageSize = event.pageSize;
+
     this.pageChange.emit({ pageIndex: event.pageIndex, pageSize: event.pageSize });
   }
 
   onSortChange(sort: Sort) {
+    if (sort.direction === '') {
+      sort.active = '';
+    }
     this.sortChange.emit({ active: sort.active, direction: sort.direction });
   }
 
-  onActionClick(action: string, row: TableData) {
-    this.actionClick.emit({ action, row });
+  onActionClick(action: { icon: string; tooltip?: string; isDisabled?: boolean }, row: TableData) {
+    this.actionClick.emit({ action: action.icon, row });
   }
 
   /**
@@ -138,26 +160,13 @@ export class TableComponent implements OnInit, OnChanges {
    * Gets the initials of the profiles names for the avatar
    */
   getInitials(name: string): string {
-    if (!name) return '';
-    const words = name.trim().split(' ');
-    if (words.length === 1) {
-      return words[0].charAt(0).toUpperCase();
-    } else {
-      return words[0].charAt(0).toUpperCase() + words[1].charAt(0).toUpperCase();
-    }
+    return globalGetInitials(name);
   }
 
   /**
    * Gets randoms profile color for the initials of the avatar
    */
   getInitialsColorClass(name: string): string {
-    if (!name) return 'bg-avatar-0';
-    const colorsCount = 12;
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const index = Math.abs(hash) % colorsCount;
-    return `bg-avatar-${index}`;
+    return globalGetInitialsColorClass(name);
   }
 }

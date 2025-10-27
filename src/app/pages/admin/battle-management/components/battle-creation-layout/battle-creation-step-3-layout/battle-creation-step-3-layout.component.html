@@ -1,0 +1,84 @@
+<div class="mb-5">
+  <h2 class="form-heading">Add Questions</h2>
+  <span class="text-xs text-gray-500">Create questions manually or select from pool or import</span>
+</div>
+
+<!-- question addition options cards in manual method step 3 -->
+@if (!isInnerStep3) {
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    @for (option of questionAdditionOptionsInManualMethodStep3; let i = $index; track i) {
+      <div
+        class="flex flex-col px-4 py-2 rounded-2xl bg-white border border-gray-300 hover:shadow-lg transition duration-300 cursor-pointer"
+        (click)="cardClick(i)"
+      >
+        <div class="flex flex-col items-center text-center flex-grow">
+          <div class="flex items-center justify-center">
+            <div class="w-[60px] h-[60px] flex items-center justify-center overflow-hidden">
+              <mat-icon
+                [ngClass]="[option.iconColor, 'card-icon-medium']"
+                class="text-[40px] inline-block leading-none"
+              >
+                {{ option.icon }}
+              </mat-icon>
+            </div>
+          </div>
+
+          <h3 class="font-semibold text-xl">{{ option.title }}</h3>
+          <p class="text-gray-500 text-sm mb-1">{{ option.description }}</p>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+<!-- Inner Step 3 : Option 1 -->
+@if (isInnerStep3 && selectedQuestionMethodInManualAdditionIndex === 0) {
+  <app-battle-creation-step-3-option-1
+    (selectedQuestionsChangeFromInnerStep3Option1)="
+      selectedQuestionsChangeFromInnerStep3OptionsParent($event)
+    "
+    [selectedQuestions]="selectedQuestions"
+    [battleStep1Data]="battleStep1Data"
+    [questionDifficultyOption]="questionDifficultyOption"
+    [questionTypeOptions]="questionTypeOptions"
+    (closeQuestionAdditionOption)="closeQuestionAdditionOptionParent()"
+  ></app-battle-creation-step-3-option-1>
+}
+<!-- Inner Step 3 : Option 2 -->
+@if (isInnerStep3 && selectedQuestionMethodInManualAdditionIndex === 1) {
+  <app-battle-creation-step-3-option-2
+    (selectedQuestionsChangeFromInnerStep3Option2)="
+      selectedQuestionsChangeFromInnerStep3OptionsParent($event)
+    "
+    [selectedQuestions]="selectedQuestions"
+    [battleStep1Data]="battleStep1Data"
+    [questionDifficultyOption]="questionDifficultyOption"
+    (closeQuestionAdditionOption)="closeQuestionAdditionOptionParent()"
+  ></app-battle-creation-step-3-option-2>
+}
+<!-- Inner Step 3 : Option 3 -->
+@if (isInnerStep3 && selectedQuestionMethodInManualAdditionIndex === 2) {
+  <app-battle-creation-step-3-option-3
+    (selectedQuestionsChangeFromInnerStep3Option3)="
+      selectedQuestionsChangeFromInnerStep3OptionsParent($event)
+    "
+    [selectedQuestions]="selectedQuestions"
+    (closeQuestionAdditionOption)="closeQuestionAdditionOptionParent()"
+  ></app-battle-creation-step-3-option-3>
+}
+
+@if (totalQuestionsSelected > 0) {
+  <!-- added questions table -->
+  <div class="flex items-center justify-between mb-4 mt-4">
+    <h3 class="form-heading">Added Questions ({{ totalQuestionsSelected }})</h3>
+  </div>
+  <app-data-table
+    [columns]="columns"
+    [dataSource]="questionsTableData"
+    [totalItems]="totalQuestionsSelected"
+    [pageSize]="pageSizeSelected"
+    [pageSizeOptions]="pageSizeOptions"
+    (pageChange)="pageChangeTableSelectedQuestions($event)"
+    (actionClick)="handleDeleteAction($event)"
+  ></app-data-table>
+}

@@ -1,0 +1,186 @@
+<!-- Step 3 -->
+<div class="mb-5">
+  <h2 class="form-heading">Add Questions</h2>
+  <span class="text-xs text-gray-500">Create questions manually or select from pool or import</span>
+</div>
+
+<!-- question addition options cards in manual method step 3 -->
+@if (!isInnerStep3) {
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    @for (option of questionAdditionOptionsInManualMethodStep3; let i = $index; track i) {
+      <div
+        class="flex flex-col px-4 py-2 rounded-2xl bg-white border border-gray-300 hover:shadow-lg transition duration-300 cursor-pointer"
+        (click)="cardClick(i)"
+      >
+        <div class="flex flex-col items-center text-center flex-grow">
+          <div class="flex items-center justify-center">
+            <div class="w-[60px] h-[60px] flex items-center justify-center overflow-hidden">
+              <mat-icon
+                [ngClass]="[option.iconColor, 'card-icon-medium']"
+                class="text-[40px] inline-block leading-none"
+              >
+                {{ option.icon }}
+              </mat-icon>
+            </div>
+          </div>
+
+          <h3 class="font-semibold text-xl">{{ option.title }}</h3>
+          <p class="text-gray-500 text-sm mb-1">{{ option.description }}</p>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+<!-- Inner Step 3 : Option 1 -->
+@if (isInnerStep3 && selectedQuestionMethodInManualAdditionIndex === 0) {
+  <div>
+    <div class="flex items-center justify-between mb-4">
+      <h4 class="form-heading">Create New Question</h4>
+      <app-outline-button
+        [outlineButtonConfig]="changeMethodButton"
+        class="min-width-btn"
+        (buttonClicked)="isInnerStep3 = false"
+      ></app-outline-button>
+    </div>
+
+    <form
+      [formGroup]="questionForm"
+      class="grid grid-cols-1 sm:grid-cols-2 gap-4 no-icon-mat-btn no-bottom-margin-select"
+    >
+      @for (field of questionFormFieldForAddQuestionManuallyStep3; track field) {
+        @if (shouldRenderField(field)) {
+          <div class="form-field" [ngClass]="field.gridClass || 'col-span-1'">
+            <mat-label class="font-medium mb-0 block text-sm">{{ field.label }}</mat-label>
+
+            <!-- SPECIAL CASE: correctAnswer for true/false type -->
+            @if (field.name === 'correctAnswer' && isTrueFalseType()) {
+              <mat-form-field
+                appearance="outline"
+                class="w-full custom-form-field"
+                [floatLabel]="'auto'"
+              >
+                <mat-select [formControlName]="field.name" [placeholder]="field.placeholder">
+                  <mat-option [value]="true">True</mat-option>
+                  <mat-option [value]="false">False</mat-option>
+                </mat-select>
+                <mat-error>
+                  {{ getErrorQuestionForm(field.name) }}
+                </mat-error>
+              </mat-form-field>
+            } @else {
+              <!-- SELECT -->
+              @if (field.type === 'select') {
+                <mat-form-field
+                  appearance="outline"
+                  class="w-full custom-form-field"
+                  [floatLabel]="'auto'"
+                >
+                  <mat-select [formControlName]="field.name" [placeholder]="field.placeholder">
+                    @for (option of field.options; track option) {
+                      <mat-option [value]="option.value">
+                        {{ option.label }}
+                      </mat-option>
+                    }
+                  </mat-select>
+                  <mat-error>
+                    {{ getErrorQuestionForm(field.name) }}
+                  </mat-error>
+                </mat-form-field>
+              }
+
+              <!-- TEXTAREA -->
+              @if (field.type === 'textarea') {
+                <mat-form-field
+                  appearance="outline"
+                  class="w-full custom-form-field-text"
+                  [floatLabel]="'auto'"
+                >
+                  <textarea
+                    matInput
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder"
+                    rows="3"
+                  ></textarea>
+                  <mat-error>
+                    {{ getErrorQuestionForm(field.name) }}
+                  </mat-error>
+                </mat-form-field>
+              }
+
+              <!-- TEXT INPUT (default) -->
+              @if (field.type !== 'select' && field.type !== 'textarea') {
+                <mat-form-field
+                  appearance="outline"
+                  class="w-full custom-form-field"
+                  [floatLabel]="'auto'"
+                >
+                  <input
+                    matInput
+                    [type]="field.type"
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder"
+                    autocomplete="off"
+                  />
+                  <mat-error>
+                    {{ getErrorQuestionForm(field.name) }}
+                  </mat-error>
+                </mat-form-field>
+                @if (isFillInTheBlanksType() && field.name === 'questionText') {
+                  <p class="mb-1 text-xs text-gray-500">
+                    Use double curly braces {{ '{{}}' }} where you want the blank to appear in the
+                    question text.
+                  </p>
+                }
+              }
+            }
+          </div>
+        }
+      }
+    </form>
+    <app-filled-button
+      [filledButtonConfig]="addQuestionButton"
+      class="min-width-btn"
+      (buttonClicked)="addQuestion()"
+    ></app-filled-button>
+  </div>
+}
+<!-- Inner Step 3 : Option 2 -->
+@if (isInnerStep3 && selectedQuestionMethodInManualAdditionIndex === 1) {
+  <app-quiz-creation-step-3-option-2
+    (selectedQuestionsChangeFromInnerStep3Option3)="
+      selectedQuestionsChangeFromInnerStep3Option3Parent($event)
+    "
+    [selectedQuestions]="selectedQuestions"
+    [quizStep1Data]="quizStep1Data"
+    [questionDifficultyOption]="questionDifficultyOption"
+    (closeQuestionAdditionOption)="closeQuestionAdditionOptionParent()"
+  ></app-quiz-creation-step-3-option-2>
+}
+
+<!-- Inner Step 3 : Option 3 -->
+@if (isInnerStep3 && selectedQuestionMethodInManualAdditionIndex === 2) {
+  <app-quiz-creation-step-3-option-3
+    (selectedQuestionsChangeFromInnerStep3Option3)="
+      selectedQuestionsChangeFromInnerStep3Option3Parent($event)
+    "
+    [selectedQuestions]="selectedQuestions"
+    (closeQuestionAdditionOption)="closeQuestionAdditionOptionParent()"
+  ></app-quiz-creation-step-3-option-3>
+}
+
+@if (totalQuestionsSelected > 0) {
+  <!-- added questions table -->
+  <div class="flex items-center justify-between mb-4 mt-4">
+    <h3 class="form-heading">Added Questions ({{ totalQuestionsSelected }})</h3>
+  </div>
+  <app-data-table
+    [columns]="columns"
+    [dataSource]="questionsTableData"
+    [totalItems]="totalQuestionsSelected"
+    [pageSize]="pageSizeSelected"
+    [pageSizeOptions]="pageSizeOptions"
+    (pageChange)="pageChangeTableSelectedQuestions($event)"
+    (actionClick)="handleDeleteAction($event)"
+  ></app-data-table>
+}

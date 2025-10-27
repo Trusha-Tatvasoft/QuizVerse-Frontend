@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { By } from '@angular/platform-browser';
 import '@testing-library/jest-dom';
-import { DEFAULT_BUTTON_CONFIG } from '../../interfaces/default-button-config.constants';
+import { defaultButtonConfig } from '../../interfaces/default-button-config.constants';
 
 describe('TextButtonComponent', () => {
   let component: TextButtonComponent;
@@ -26,18 +26,18 @@ describe('TextButtonComponent', () => {
   });
 
   // Default config check
-  it('should apply default config values from DEFAULT_BUTTON_CONFIG', () => {
+  it('should apply default config values from defaultButtonConfig', () => {
     component.textButtonConfig = {};
     component.ngOnInit();
-    expect(component.config).toEqual(DEFAULT_BUTTON_CONFIG);
+    expect(component.config).toEqual(defaultButtonConfig);
   });
 
   // Merging input config with default config
-  it('should merge textButtonConfig with DEFAULT_BUTTON_CONFIG', () => {
+  it('should merge textButtonConfig with defaultButtonConfig', () => {
     component.textButtonConfig = { label: 'Custom', type: 'submit' };
     component.ngOnInit();
     expect(component.config).toEqual({
-      ...DEFAULT_BUTTON_CONFIG,
+      ...defaultButtonConfig,
       label: 'Custom',
       type: 'submit',
     });
@@ -253,12 +253,12 @@ describe('TextButtonComponent', () => {
   });
 
   // Button type fallback from default config
-  it('should use type from DEFAULT_BUTTON_CONFIG if not provided', () => {
+  it('should use type from defaultButtonConfig if not provided', () => {
     component.textButtonConfig = {};
     component.ngOnInit();
     fixture.detectChanges();
     const button = fixture.debugElement.query(By.css('button'));
-    expect(button.attributes['type']).toBe(DEFAULT_BUTTON_CONFIG.type);
+    expect(button.attributes['type']).toBe(defaultButtonConfig.type);
   });
 
   // Should still fallback to icon if only icon is set

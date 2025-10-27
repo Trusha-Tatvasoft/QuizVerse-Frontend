@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ButtonConfig } from '../../interfaces/button-config.interface';
-import { DEFAULT_BUTTON_CONFIG } from '../../interfaces/default-button-config.constants';
+import { defaultButtonConfig } from '../../interfaces/default-button-config.constants';
 import { ElementRef } from '@angular/core';
 
 @Component({
@@ -16,11 +16,11 @@ import { ElementRef } from '@angular/core';
 export class TextButtonComponent {
   @Input() textButtonConfig: ButtonConfig = {};
   @Output() buttonClicked = new EventEmitter<Event>();
-  config: Required<ButtonConfig> = { ...DEFAULT_BUTTON_CONFIG };
+  config: Required<ButtonConfig> = { ...defaultButtonConfig };
   private readonly elRef = inject(ElementRef);
 
   ngOnInit() {
-    this.config = { ...DEFAULT_BUTTON_CONFIG, ...this.textButtonConfig };
+    this.config = { ...defaultButtonConfig, ...this.textButtonConfig };
     this.elRef.nativeElement.style.setProperty('--font-weight', this.validFontWeight);
   }
 

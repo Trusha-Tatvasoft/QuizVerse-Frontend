@@ -1,7 +1,7 @@
 section {
   height: 100%;
   width: 100%;
-  background: rgba(var(--global-secondary-color-rgb), 0.05);
+  background: color-mix(in srgb, var(--global-secondary-color) 5%, transparent);
 
   .landing-wrapper {
     text-align: center;
@@ -40,7 +40,7 @@ section {
       white-space: nowrap;
       background: var(--highlight-gradient);
       color: var(--global-primary-color);
-      border: 1px solid rgba(var(--global-primary-color-rgb), 0.3);
+      border: 1px solid color-mix(in srgb, var(--global-primary-color) 30%, transparent);
       width: auto;
       max-width: 200px;
 
@@ -102,8 +102,8 @@ section {
       .highlight {
         background: linear-gradient(
           to right,
-          rgba(var(--global-primary-color-rgb), 1) 5%,
-          rgba(var(--global-secondary-color-rgb), 1) 95%
+          color-mix(in srgb, var(--global-primary-color) 100%, transparent) 5%,
+          color-mix(in srgb, var(--global-secondary-color) 100%, transparent) 95%
         );
         background-clip: text;
         -webkit-background-clip: text;
@@ -322,7 +322,7 @@ section {
         box-sizing: border-box;
 
         &:hover {
-          box-shadow: 0 4px 16px rgba(var(--global-secondary-color-rgb), 0.3);
+          box-shadow: 0 4px 16px rgb(from var(--global-secondary-color) r g b / 30%);
         }
 
         @media (max-width: 1024px) {
@@ -546,15 +546,48 @@ section {
             align-items: start;
           }
 
+          .logo-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            height: 100%;
+          }
+
+          .logo-small {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.75rem;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+          }
+
+          .logo {
+            text-align: center;
+
+            span,
+            mat-icon {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              width: 35px;
+              height: 35px;
+              font-size: 1.1rem;
+              font-weight: 700;
+              color: white;
+              background: var(--gradient);
+              border-radius: 12px;
+              box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+            }
+          }
+
           .logo-icon {
             width: 32px;
             height: 32px;
-            background: var(--gradient);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--light-white-color);
             font-weight: bold;
             flex-shrink: 0;
 

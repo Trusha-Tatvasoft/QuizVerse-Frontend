@@ -107,8 +107,9 @@
   }
 }
 
-// Login SignUp Page Tabs Override
-.login-signup-tabs .mat-mdc-tab-list {
+// Login SignUp Page Tabs and Question Pool Dialog Tabs Override
+.login-signup-tabs .mat-mdc-tab-list,
+.question-pool-tabs .mat-mdc-tab-list {
   background: #f1f5f9 !important;
   border-radius: 0.5rem !important;
   padding: 0.25rem !important;
@@ -118,6 +119,30 @@
   .mat-mdc-tab-labels {
     height: 32px !important;
   }
+}
+
+// user profile tabs
+.mat-mdc-tab-list {
+  background: #f1f5f9 !important;
+  border-radius: 0.5rem !important;
+  padding: 0.25rem !important;
+  height: 40px !important;
+
+  .mat-mdc-tab-labels {
+    height: 32px !important;
+  }
+}
+
+.user-profile-tabs .mat-mdc-tab-group.mat-mdc-tab-header {
+  margin-bottom: 0px !important;
+}
+// question pool create que dialog tabs
+.question-pool-tabs .mdc-tab {
+  width: 150px;
+}
+
+.question-pool-tabs .mat-mdc-tab-header {
+  margin-bottom: 5px;
 }
 
 .mat-mdc-snack-bar-container {
@@ -184,6 +209,7 @@
     transform: translateX(100%) translateY(50%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0) translateY(0);
     opacity: 1;
@@ -196,80 +222,133 @@
   }
 }
 
-.custom-form-field {
-  .mat-mdc-form-field {
-    @include mat.typography-hierarchy($custom-typography, font-family);
+// Shared base class
+%base-custom-form-field {
+  @include mat.typography-hierarchy($custom-typography, font-family);
+  width: 100%;
+
+  .mat-mdc-text-field-wrapper {
+    border: 1px solid #d3d3d3 !important;
+    border-radius: 8px !important;
     width: 100%;
 
-    .mat-mdc-text-field-wrapper {
-      height: 40px !important;
-      border: 1px solid #d3d3d3 !important;
-      border-radius: 8px !important;
-      width: 100%;
+    &:hover,
+    &:focus-within {
+      border-color: var(--global-primary-color) !important;
+      box-shadow: 0 0 0 1px var(--global-primary-color);
+    }
 
-      &:hover,
-      &:focus-within {
-        border-color: var(--global-primary-color) !important;
-        box-shadow: 0 0 0 1px var(--global-primary-color);
+    .mat-mdc-form-field-flex {
+      align-items: center;
+      padding: 0px 8px !important;
+
+      .mdc-notched-outline {
+        .mdc-notched-outline__trailing,
+        .mdc-notched-outline__leading {
+          border: none !important;
+        }
       }
 
-      .mat-mdc-form-field-flex {
-        height: 40px !important;
+      .mat-mdc-form-field-infix {
+        display: flex;
         align-items: center;
-        padding: 0px 8px !important;
 
-        .mdc-notched-outline {
-          .mdc-notched-outline__trailing,
-          .mdc-notched-outline__leading {
-            border: none !important;
+        @include mat.m2-typography-level($custom-typography, body-1);
+
+        .mdc-text-field__input {
+          &::placeholder {
+            color: #9ca3af;
           }
         }
+      }
 
-        .mat-mdc-form-field-infix {
-          min-height: 40px !important;
-          display: flex;
-          align-items: center;
-
-          @include mat.m2-typography-level($custom-typography, body-1);
-
-          .mdc-text-field__input {
-            padding: 14px 0px 10px 0px !important;
-
-            &::placeholder {
-              color: #9ca3af;
-            }
-          }
-        }
-
-        .mat-mdc-form-field-icon-prefix {
-          mat-icon {
-            padding: 2px 5px 0 5px;
-          }
-        }
-
-        .mat-mdc-form-field-icon-suffix {
-          mat-icon {
-            padding: 2px 5px 0 5px;
-          }
+      .mat-mdc-form-field-icon-prefix,
+      .mat-mdc-form-field-icon-suffix {
+        mat-icon {
+          padding: 2px 5px 0 5px;
         }
       }
     }
+  }
 
-    .mat-mdc-form-field-subscript-wrapper {
-      .mat-mdc-form-field-error-wrapper {
-        padding: 0rem;
-        height: 100%;
-        padding-top: 3px;
+  .mat-mdc-form-field-subscript-wrapper {
+    .mat-mdc-form-field-error-wrapper {
+      padding: 0rem;
+      height: 100%;
+      padding-top: 3px;
 
-        mat-error {
-          @include mat.m2-typography-level($custom-typography, caption);
+      mat-error {
+        @include mat.m2-typography-level($custom-typography, caption);
+        color: #ef4444 !important;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+    }
+  }
+}
 
-          color: #ef4444 !important;
-          display: flex;
-          justify-content: start;
-          align-items: center;
-          margin-bottom: 30px;
+.custom-form-field {
+  @extend %base-custom-form-field;
+
+  .mat-mdc-text-field-wrapper {
+    height: 40px !important;
+
+    .mat-mdc-form-field-flex {
+      height: 40px !important;
+
+      .mat-mdc-form-field-infix {
+        min-height: 40px !important;
+
+        .mdc-text-field__input {
+          margin: 14px 0px 10px 0px !important;
         }
+      }
+    }
+  }
+}
+
+.custom-form-icon-override .mat-mdc-form-field-icon-prefix,
+.custom-form-icon-override .mat-mdc-form-field-icon-suffix {
+  mat-icon {
+    color: #9ca3af;
+    font-size: 18px;
+  }
+}
+
+.custom-form-field-file {
+  @extend %base-custom-form-field;
+
+  .mat-mdc-text-field-wrapper {
+    max-height: 80px !important;
+
+    .mat-mdc-form-field-flex {
+      max-height: 80px !important;
+
+      .mat-mdc-form-field-infix {
+        max-height: 80px !important;
+        margin-top: 6px;
+
+        .mdc-text-field__input {
+          max-height: 66px;
+          padding-top: 6px;
+        }
+      }
+    }
+  }
+}
+
+.custom-form-field-text {
+  @extend %base-custom-form-field;
+
+  .mat-mdc-text-field-wrapper {
+    .mat-mdc-form-field-flex {
+      .mat-mdc-form-field-icon-prefix {
+        display: flex;
+        flex-direction: column;
+        align-self: flex-start;
+        padding-top: 8px;
       }
     }
   }
@@ -379,14 +458,17 @@
 .cdk-overlay-pane {
   margin: 5px 0px;
 }
+
 //#endregion
 
 .custom-paginator .mat-mdc-form-field.mat-mdc-form-field-type-mat-select {
   width: 80px !important;
   margin: initial !important;
+
   .mat-mdc-select-value {
     padding: initial !important;
   }
+
   .mat-mdc-select-arrow svg {
     width: initial !important;
     height: initial !important;
@@ -397,5 +479,125 @@
 .custom-paginator .mat-mdc-paginator-range-actions .mat-mdc-paginator-range-label {
   @media (max-width: 400px) {
     margin: 0 10px 0 10px !important;
+  }
+}
+
+.custom-dialog-radius .mat-mdc-dialog-surface {
+  border-radius: 0.5rem !important;
+}
+
+.custom-form-field-text.mat-form-field-invalid,
+.custom-form-field.mat-form-field-invalid {
+  .mdc-text-field--invalid.mat-mdc-text-field-wrapper {
+    border-color: var(--color-error) !important;
+    box-shadow: 0 0 0 1px var(--color-error) !important;
+    &:hover,
+    &:focus-within {
+      border-color: var(--color-error) !important;
+      box-shadow: 0 0 0 1px var(--color-error) !important;
+    }
+  }
+}
+
+.stats-card {
+  --mdc-elevated-card-container-elevation: none;
+}
+
+//for All mat dialogue title and action
+
+.dialog-header {
+  h2[mat-dialog-title] {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0;
+    color: #111827;
+    padding: 0px !important;
+  }
+
+  .dialog-sub-header {
+    font-size: 0.875rem;
+    color: #6b7280;
+    display: block;
+    margin-top: 0.25rem;
+  }
+}
+
+.mat-mdc-dialog-actions {
+  padding: 0px !important;
+}
+
+.mat-mdc-dialog-surface {
+  border-radius: 13px !important;
+}
+
+.mat-mdc-dialog-surface.mdc-dialog__surface {
+  background-color: white;
+}
+
+// Remove padding icons from mat-input
+.no-icon-mat-btn {
+  .mat-mdc-text-field-wrapper {
+    padding: 0px !important;
+  }
+}
+
+//remove mdc-switch icons
+.mdc-switch__icons {
+  display: none !important;
+}
+
+.no-bottom-margin-select {
+  .mat-mdc-form-field.mat-mdc-form-field-type-mat-select {
+    @include mat.typography-hierarchy($custom-typography, font-family);
+    width: 100%;
+    margin-bottom: 0px;
+  }
+}
+
+// Set Material Design colors according to primary and secondary settings
+html {
+  --mat-sys-primary: var(--global-primary-color);
+  --mat-sys-secondary: var(--global-secondary-color);
+}
+
+// Date Picker button on the date field styling
+.mat-datepicker-toggle {
+  position: relative;
+  left: 15px;
+  top: 3px;
+}
+
+// play-battle - question opt label
+.option-text {
+  div {
+    .mdc-label {
+      font-size: 1rem;
+    }
+  }
+}
+
+// slider - browse quizzes
+.mat-mdc-slider.mdc-slider.mat-primary {
+  margin: 0px;
+  .mdc-slider__thumb.mat-mdc-slider-visual-thumb {
+    .mdc-slider__thumb-knob {
+      height: 10px;
+      width: 10px;
+      border-width: 7.5px;
+      border-color: var(--global-secondary-color);
+      background-color: var(--global-secondary-color);
+    }
+  }
+
+  .mdc-slider__track .mdc-slider__track--active_fill {
+    border-color: var(--global-secondary-color);
+  }
+}
+
+.status-wrapper {
+  app-tag {
+    .tag-container {
+      display: flex;
+    }
   }
 }

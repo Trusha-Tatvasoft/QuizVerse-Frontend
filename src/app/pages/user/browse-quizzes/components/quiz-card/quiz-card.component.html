@@ -1,0 +1,73 @@
+<div class="quiz-card" [ngClass]="cardStyle()">
+  <!-- Title -->
+  <div class="quiz-title">
+    <h3>
+      <span>{{ cardConfig.title }}</span>
+      @if (cardConfig.isFeatured) {
+        <mat-icon fontSet="material-icons-outlined" class="mat-icon featured-icon">
+          diamond
+        </mat-icon>
+      }
+      @if (cardConfig.isPaid) {
+        <mat-icon fontSet="material-icons-outlined" class="mat-icon lock-icon"> lock </mat-icon>
+      } @else {
+        <mat-icon fontSet="material-icons-outlined" class="mat-icon lock-open-icon">
+          lock_open_right
+        </mat-icon>
+      }
+    </h3>
+  </div>
+
+  <p>{{ cardConfig.description }}</p>
+
+  <!-- Category & Price tags -->
+  <div class="category-tags">
+    @if (cardConfig.category) {
+      <app-tag [tagConfig]="cardConfig.category"></app-tag>
+    }
+    @if (cardConfig.difficulty) {
+      <app-tag [tagConfig]="cardConfig.difficulty"></app-tag>
+    }
+    @if (cardConfig.priceTag) {
+      <app-tag [tagConfig]="cardConfig.priceTag"></app-tag>
+    }
+  </div>
+
+  <!-- Quiz Tags -->
+  <div class="tags">
+    @for (tag of displayTags(); track tag.id) {
+      <app-tag [tagConfig]="tag"></app-tag>
+    }
+  </div>
+
+  <!-- Meta info -->
+  <div class="meta">
+    <div class="meta-container">
+      <div class="meta-info">
+        <mat-icon fontSet="material-icons-outlined" class="mat-icon">schedule</mat-icon>
+        <span>{{ cardConfig.duration }}</span>
+      </div>
+      <div class="meta-info">
+        <mat-icon fontSet="material-icons-outlined" class="mat-icon">question_mark</mat-icon>
+        <span>{{ cardConfig.questions }} questions</span>
+      </div>
+    </div>
+    <div class="meta-container">
+      <div class="meta-info">
+        <mat-icon fontSet="material-icons-outlined" class="mat-icon">group</mat-icon>
+        <span>{{ cardConfig.participants }}</span>
+      </div>
+      <div class="meta-info">
+        <mat-icon fontSet="material-icons-outlined" class="mat-icon star">star_rate</mat-icon>
+        <span>{{ cardConfig.rating }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-play-btn">
+    <app-filled-button
+      [filledButtonConfig]="cardConfig.buttonConfig"
+      (click)="quizBtnClick()"
+    ></app-filled-button>
+  </div>
+</div>

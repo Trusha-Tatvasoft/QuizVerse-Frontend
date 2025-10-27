@@ -59,7 +59,7 @@ export const UserRole: Story = {
   ],
   args: {
     sidebarItems: userSidebarItems,
-    role: 'user',
+    role: 'player',
   },
 };
 

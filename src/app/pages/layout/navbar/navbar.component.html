@@ -13,12 +13,15 @@
         </mat-icon>
       </button>
     }
-    <div class="flex items-center space-x-2 h-12">
-      <div
-        class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-lg logo-small"
-      >
-        {{ plateformName.charAt(0) }}
-      </div>
+
+    <div class="flex items-center space-x-2 h-12 cursor-pointer" (click)="navigateToDashboard()">
+      @if (logoPath) {
+        <img [src]="logoPath" alt="Platform Logo" class="logo-small" (error)="imageError()" />
+      } @else {
+        <div class="logo">
+          <span>{{ plateformName?.charAt(0) | uppercase }}</span>
+        </div>
+      }
       <div class="logo-big">{{ plateformName }}</div>
     </div>
   </div>
@@ -27,10 +30,10 @@
   @if (isLogin) {
     <div class="navbar__right">
       <!-- Notifications -->
-      <div class="notification-wrapper">
+      <div class="notification-wrapper" #notificationWrapper>
         <app-text-button
           [textButtonConfig]="textButton"
-          (buttonClicked)="toggleNotifications()"
+          (buttonClicked)="toggleNotifications($event)"
           class="wrapper-text-button"
         >
         </app-text-button>
@@ -50,8 +53,14 @@
                   <p class="font-semibold text-base">Notifications</p>
                 </div>
                 <div class="flex items-center gap-1" style="min-width: 245px">
-                  <app-text-button [textButtonConfig]="markAsAllReadButton"></app-text-button>
-                  <app-text-button [textButtonConfig]="viewAllButton"></app-text-button>
+                  <app-text-button
+                    [textButtonConfig]="markAsAllReadButton"
+                    (buttonClicked)="markAsAllRead()"
+                  ></app-text-button>
+                  <app-text-button
+                    [textButtonConfig]="viewAllButton"
+                    (buttonClicked)="viewAllNotifications()"
+                  ></app-text-button>
                 </div>
               </div>
               <span class="text-sm text-gray-500 pb-1"
@@ -69,7 +78,7 @@
 
               @for (notif of notifications; track notif.id) {
                 <div
-                  class="border-b border-gray-100 px-4 py-2"
+                  class="border-b border-gray-200 px-4 py-2 mb-2"
                   [ngClass]="
                     notif.read ? 'bg-white' : 'hover:bg-gray-50 transition-colors bg-blue-50/50'
                   "
@@ -83,8 +92,18 @@
                       }
                     </div>
                     <div class="flex items-center gap-1">
-                      <app-text-button [textButtonConfig]="markAsReadButton"></app-text-button>
-                      <app-text-button [textButtonConfig]="deleteButton"></app-text-button>
+                      @if (!notif.read) {
+                        <app-text-button
+                          [textButtonConfig]="markAsReadButton"
+                          (buttonClicked)="markAsRead(notif.id)"
+                          matTooltip="Mark As Read"
+                        ></app-text-button>
+                      }
+                      <app-text-button
+                        [textButtonConfig]="deleteButton"
+                        (buttonClicked)="deleteNotification(notif.id)"
+                        matTooltip="Delete Notification"
+                      ></app-text-button>
                     </div>
                   </div>
 
@@ -93,7 +112,7 @@
 
                   <!-- Footer -->
                   <div class="flex justify-between items-center mt-1.5">
-                    <span class="text-[11px] text-gray-500">{{ notif.timeAgo }}</span>
+                    <span class="text-[11px] text-gray-500">{{ notif.timeAgo | timeAgo }}</span>
                     <app-tag [tagConfig]="notif.tagConfig"></app-tag>
                   </div>
 
@@ -101,6 +120,7 @@
                   <div class="py-3">
                     <app-outline-button
                       [outlineButtonConfig]="viewDetailsButton"
+                      (buttonClicked)="viewDetails(notif.categoryValue)"
                     ></app-outline-button>
                   </div>
                 </div>
@@ -111,21 +131,27 @@
       </div>
 
       <!-- XP Bar -->
-      <div class="xp-main">
-        @if (!isAdmin) {
-          <div class="xp-section">
-            <div class="xp-label">XP: {{ currentXp }}</div>
-            <app-progress-bar
-              class="custom-xp-bar"
-              [percentage]="(currentXp / xpLimit) * 100"
-            ></app-progress-bar>
-          </div>
-        }
-      </div>
+      @if (!isAdmin) {
+        <div class="xp-main">
+          @if (!isAdmin) {
+            <div class="xp-section">
+              <div class="xp-label">XP: {{ currentXp }}</div>
+              <app-progress-bar
+                class="custom-xp-bar"
+                [percentage]="progressPercentage"
+              ></app-progress-bar>
+            </div>
+          }
+        </div>
+      }
 
       <!-- Profile Menu -->
-      <button class="profile-button" [matMenuTriggerFor]="menu">
-        <img [src]="profileImageUrl" alt="Profile" />
+      <button class="profile-button cursor-pointer" [matMenuTriggerFor]="menu">
+        @if (!isImageError) {
+          <img [src]="profileImageUrl" alt="Profile" (error)="profileImageError()" />
+        } @else {
+          <img [src]="profileImageUrl" alt="Profile" />
+        }
       </button>
 
       <mat-menu #menu="matMenu" class="profile-menu">
@@ -135,20 +161,20 @@
               <div class="xp-label">XP: {{ currentXp }}</div>
               <app-progress-bar
                 class="custom-xp-bar"
-                [percentage]="(currentXp / xpLimit) * 100"
+                [percentage]="progressPercentage"
               ></app-progress-bar>
             </div>
           </div>
         }
-        <button mat-menu-item>
+        <button mat-menu-item (click)="goToProfile()">
           <mat-icon fontSet="material-icons-outlined">person</mat-icon>
           <span>Profile</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="goToSetting()">
           <mat-icon fontSet="material-icons-outlined">settings</mat-icon>
           <span>Settings</span>
         </button>
-        <button mat-menu-item class="logout-item">
+        <button mat-menu-item class="logout-item" (click)="logout()">
           <mat-icon>logout</mat-icon>
           <span>Sign out</span>
         </button>
@@ -161,11 +187,11 @@
     <div class="navbar__guest">
       <app-text-button
         [textButtonConfig]="signInButton"
-        (buttonClicked)="loginRedirect()"
+        (buttonClicked)="signInRedirect()"
       ></app-text-button>
       <app-filled-button
         [filledButtonConfig]="getStartedButton"
-        (buttonClicked)="browseQuizRedirect()"
+        (buttonClicked)="getStartedRedirect()"
       ></app-filled-button>
     </div>
   }

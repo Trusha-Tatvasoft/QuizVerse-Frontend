@@ -1,0 +1,115 @@
+<div
+  class="p-7 sm:p-10 bg-white border border-[#00000032] rounded-lg question-container no-icon-mat-btn"
+>
+  <!-- Question Header -->
+  <div class="mb-6">
+    <p class="text-gray-800 text-lg lg:text-xl font-bold">
+      {{ currentQuestionData?.questionName }}
+    </p>
+  </div>
+
+  <!-- Question Type -->
+  @switch (currentQuestionData?.questionType) {
+    @case ('True/False') {
+      <mat-form-field appearance="outline" class="w-full custom-form-field">
+        <mat-select [value]="currentAnswer" (selectionChange)="onAnswerChange($event)">
+          <mat-option value="" disabled>Select True or False</mat-option>
+          <mat-option value="true">True</mat-option>
+          <mat-option value="false">False</mat-option>
+        </mat-select>
+      </mat-form-field>
+    }
+
+    @case ('Short Answer') {
+      <mat-form-field appearance="outline" class="w-full custom-form-field-text">
+        <textarea
+          matInput
+          placeholder="Enter your answer"
+          rows="5"
+          [(ngModel)]="typedAnswer"
+          [readonly]="showCorrectAnswer"
+          class="custom-input-field min-h-[50px] resize-y overflow-auto text-base sm:text-lg lg:text-xl"
+        ></textarea>
+      </mat-form-field>
+
+      @if (!showCorrectAnswer) {
+        <div class="mt-5 flex justify-end">
+          <app-filled-button
+            [filledButtonConfig]="nextQuesBtnConfig"
+            (buttonClicked)="submitAnswer()"
+          ></app-filled-button>
+        </div>
+      }
+    }
+
+    @case ('Fill in the Blank') {
+      <mat-form-field appearance="outline" class="w-full custom-form-field p-0">
+        <input
+          matInput
+          type="text"
+          placeholder="Enter your answer"
+          autocomplete="off"
+          [(ngModel)]="typedAnswer"
+          [readonly]="showCorrectAnswer"
+          class="p-0 text-base sm:text-lg lg:text-xl"
+        />
+      </mat-form-field>
+
+      @if (!showCorrectAnswer) {
+        <div class="mt-5 flex justify-end">
+          <app-filled-button
+            [filledButtonConfig]="nextQuesBtnConfig"
+            (buttonClicked)="submitAnswer()"
+          ></app-filled-button>
+        </div>
+      }
+    }
+
+    @case ('Multiple Choice') {
+      <mat-radio-group
+        [value]="currentAnswer"
+        (change)="onAnswerChange($event)"
+        class="grid grid-cols-1 sm:grid-cols-2 gap-4"
+      >
+        @for (opt of currentQuestionData?.options; track $index) {
+          <mat-radio-button [value]="opt.value" class="flex items-center option-text">
+            {{ opt.value }}
+          </mat-radio-button>
+        }
+      </mat-radio-group>
+    }
+
+    @default {
+      <p class="text-gray-500 italic">
+        Unsupported question type: {{ currentQuestionData?.questionType }}
+      </p>
+    }
+  }
+
+  <!-- Correct / Incorrect Answer Feedback -->
+  @if (showCorrectAnswer) {
+    <div class="mt-4 mb-4">
+      @if (isUserAnswerCorrect) {
+        <!-- Correct Answer -->
+        <div class="p-3 bg-green-50 border border-green-200 rounded-lg">
+          <p class="text-green-800 font-medium">
+            <mat-icon class="text-green-600 mr-1 align-middle">check_circle</mat-icon>
+            Correct!
+          </p>
+        </div>
+      } @else {
+        <!-- Incorrect Answer -->
+        <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
+          <p class="text-red-800 font-medium mb-2">
+            <mat-icon class="text-red-600 mr-1 align-middle">cancel</mat-icon>
+            Incorrect!
+          </p>
+          <p class="text-red-700">
+            Correct Answer:
+            <span class="font-bold">{{ correctAnswer }}</span>
+          </p>
+        </div>
+      }
+    </div>
+  }
+</div>

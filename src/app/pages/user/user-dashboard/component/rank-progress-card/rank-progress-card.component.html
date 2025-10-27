@@ -1,0 +1,21 @@
+<div class="rank-card">
+  <div class="header">
+    <mat-icon class="header-icon">trending_up</mat-icon>
+    <span class="title">Rank Progress</span>
+  </div>
+
+  <div class="rank-info">
+    <span
+      >Current: <strong>{{ rankData.currentRank }}</strong></span
+    >
+    <span
+      >Next: <strong>{{ rankData.nextRank }}</strong></span
+    >
+  </div>
+
+  <app-progress-bar [percentage]="rankData.progressPercent" theme="secondary"> </app-progress-bar>
+
+  <div class="xp-info">
+    {{ rankData.xpNeeded }} more XP needed to reach {{ rankData.nextRank }} rank
+  </div>
+</div>

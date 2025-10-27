@@ -1,19 +1,25 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FilledButtonComponent } from '../../../../shared/components/filled-button/filled-button.component';
 import {
-  RESET_PASSWORD_FORM_FIELD,
-  SEND_RESET_LINK_CONFIG,
+  resetPasswordFormField,
+  sendResetLinkConfig,
 } from '../../configs/reset-password.component.config';
-import { ResetCredential } from '../../interfaces/forgot-reset-password.interface';
 import { TogglePasswordDirective } from '../toggle-password.directive';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ValidationErrorService } from '../../../../shared/service/validation-error/validation-error.service';
+import { ForgotResetPasswordService } from '../../services/forgot-reset-password.service';
+import { Subject, takeUntil } from 'rxjs';
+import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
+import { platformMessages } from '../../../../utils/constants';
+import { Navigations } from '../../../../shared/enums/navigation';
+import { ResetCredential } from '../../interfaces/forgot-reset-password.interface';
+import { selectedTabIndexSignal } from '../login-signup/login-signup.component';
 
 @Component({
   selector: 'app-reset-password',
@@ -35,22 +41,29 @@ import { ValidationErrorService } from '../../../../shared/service/validation-er
     '../login/login.component.scss',
   ],
 })
-export class ResetPasswordComponent {
-  private readonly fb = inject(FormBuilder); // For creating form group
+export class ResetPasswordComponent implements OnInit, OnDestroy {
+  private readonly fb = inject(FormBuilder);
   private readonly validationErrorService = inject(ValidationErrorService);
+  private readonly authService = inject(ForgotResetPasswordService);
+  private readonly snackbarService = inject(SnackbarService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
-  resetFields = RESET_PASSWORD_FORM_FIELD;
+  resetFields = resetPasswordFormField;
+  sendResetLinkButton = sendResetLinkConfig;
+
   resetForm: FormGroup;
-  sendResetLinkButton = SEND_RESET_LINK_CONFIG;
+  resetToken: string = '';
 
-  // Initializes form controls and attaches validator
+  private readonly destroy$ = new Subject<void>();
+
   constructor() {
     const formControls = this.resetFields.reduce(
       (acc, field) => {
         acc[field.name] = ['', field.validators];
         return acc;
       },
-      {} as Record<string, any>,
+      {} as Record<string, unknown>,
     );
 
     this.resetForm = this.fb.group(formControls, {
@@ -58,9 +71,40 @@ export class ResetPasswordComponent {
     });
   }
 
-  // Tracks form fields by name to optimize rendering
-  trackByField(index: number, field: any): string {
-    return field.name;
+  ngOnInit(): void {
+    this.resetToken = this.route.snapshot.queryParamMap.get('token') || '';
+    this.resetLinkValidation();
+  }
+
+  resetLinkValidation() {
+    if (!this.resetToken) {
+      this.router.navigate([Navigations.ResetLinkInvalid]);
+      return;
+    }
+
+    this.authService
+      .verifyResetToken(this.resetToken)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (!res.result || res.statusCode !== 200 || res.data === false) {
+            this.snackbarService.showError(
+              `${platformMessages.errorTitle}`,
+              res.message || platformMessages.errorMessage,
+            );
+
+            this.router.navigate([Navigations.ResetLinkInvalid]);
+          }
+        },
+        error: (err) => {
+          this.snackbarService.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
+
+          this.router.navigate([Navigations.ResetLinkInvalid]);
+        },
+      });
   }
 
   getError(fieldName: string): string | null {
@@ -78,7 +122,6 @@ export class ResetPasswordComponent {
     if (confirmPasswordControl?.value && password !== confirmPasswordControl?.value) {
       confirmPasswordControl?.setErrors({ passwordMismatch: true });
     } else {
-      // Clear error if previously set and now matched
       if (confirmPasswordControl?.hasError('passwordMismatch')) {
         confirmPasswordControl.setErrors(null);
       }
@@ -86,7 +129,6 @@ export class ResetPasswordComponent {
     return null;
   }
 
-  // Handles form submission and simulates API call
   onSubmit(): void {
     if (this.resetForm.invalid) {
       this.resetForm.markAllAsTouched();
@@ -95,7 +137,45 @@ export class ResetPasswordComponent {
 
     const credentials: ResetCredential = {
       password: this.resetForm.value.password,
-      confirmPassword: this.resetForm.value.confirmPassword,
+      resetPasswordToken: this.resetToken,
     };
+
+    this.authService
+      .resetPassword(credentials)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (!res.result || res.statusCode !== 200) {
+            this.snackbarService.showError(
+              `${platformMessages.errorTitle}`,
+              res.message || platformMessages.errorMessage,
+            );
+
+            this.router.navigate([Navigations.ForgetPassword]);
+            return;
+          }
+
+          this.snackbarService.showSuccess(
+            platformMessages.successTitle,
+            res.message || platformMessages.passwordResetSuccess,
+          );
+
+          this.router.navigate([Navigations.Login]);
+          selectedTabIndexSignal.set(0);
+        },
+        error: (err) => {
+          this.snackbarService.showError(
+            platformMessages.errorTitle,
+            err?.error?.message || platformMessages.errorMessage,
+          );
+
+          this.router.navigate([Navigations.ForgetPassword]);
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

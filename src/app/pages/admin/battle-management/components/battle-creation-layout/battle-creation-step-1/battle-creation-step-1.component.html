@@ -1,0 +1,142 @@
+<div class="mb-5">
+  <h2 class="form-heading">{{ isEditMode ? 'Edit Battle' : 'Create Battle' }}</h2>
+  <span class="text-xs text-gray-500">Enter basic battle information and settings</span>
+</div>
+
+@if (newBattleForm) {
+  <form
+    class="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-3 no-icon-mat-btn no-bottom-margin-select"
+    [formGroup]="newBattleForm"
+  >
+    @for (field of newBattleFields; track field.name) {
+      @if (
+        (field.name !== 'startDate' && field.name !== 'endDate') ||
+        newBattleForm.get('battleType')?.value === BattleTimeType.TimeLimited
+      ) {
+        <div class="form-field" [ngClass]="field.gridClass || 'col-span-1'" style="min-width: 0">
+          @if (field.type === 'checkbox') {
+            <div
+              [ngClass]="
+                newBattleForm.get(field.name)?.value ? 'mt-0 mb-3 sm:pt-3 sm:mt-4 sm:mb-0' : ''
+              "
+            >
+              <div class="flex justify-between items-center w-full">
+                <div class="font-medium text-sm w-full">
+                  {{ field.label }}
+                </div>
+                <mat-slide-toggle
+                  color="primary"
+                  class="small-toggle ml-4"
+                  [formControlName]="field.name"
+                >
+                </mat-slide-toggle>
+              </div>
+            </div>
+            <mat-error>
+              {{ getError(field.name) }}
+            </mat-error>
+          } @else {
+            <mat-label class="font-medium mb-0 block text-sm">{{ field.label }}</mat-label>
+            <mat-form-field
+              appearance="outline"
+              class="w-full"
+              [floatLabel]="'auto'"
+              [ngClass]="field.type === 'textarea' ? 'custom-form-field-text' : 'custom-form-field'"
+            >
+              @switch (field.type) {
+                @case ('select') {
+                  <mat-select
+                    [id]="field.name"
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder"
+                  >
+                    @for (option of field.options ?? []; track option.value) {
+                      <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                    }
+                  </mat-select>
+                }
+
+                @case ('textarea') {
+                  <textarea
+                    matInput
+                    [id]="field.name"
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder"
+                    rows="3"
+                    class="text-area-height"
+                  ></textarea>
+                }
+
+                @case ('date') {
+                  <input
+                    matInput
+                    [id]="field.name"
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder"
+                    [matDatepicker]="picker"
+                    autocomplete="off"
+                  />
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                }
+
+                @default {
+                  <input
+                    matInput
+                    [id]="field.name"
+                    [type]="field.type"
+                    [formControlName]="field.name"
+                    [placeholder]="field.placeholder"
+                    autocomplete="off"
+                  />
+                }
+              }
+
+              <mat-error>
+                {{ getError(field.name) }}
+              </mat-error>
+            </mat-form-field>
+          }
+        </div>
+      }
+    }
+
+    <div class="col-span-1 sm:col-span-2">
+      <hr class="border-t border-gray-200" />
+    </div>
+
+    <!-- Difficulty Config Section -->
+    <div class="col-span-1 sm:col-span-2">
+      <h3 class="text-base font-medium mb-3">Difficulty Configuration</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        @for (field of questionFields; track field.name) {
+          <div class="form-field" [ngClass]="field.gridClass || 'col-span-1'">
+            <mat-label class="font-medium mb-0 block text-sm">{{ field.label }}</mat-label>
+            <mat-form-field
+              appearance="outline"
+              class="w-full custom-form-field-text"
+              [floatLabel]="'auto'"
+              [ngClass]="field.type === 'textarea' ? 'custom-form-field-text' : 'custom-form-field'"
+            >
+              <input
+                matInput
+                [id]="field.name"
+                [type]="field.type"
+                [formControlName]="field.name"
+                [placeholder]="field.placeholder"
+                autocomplete="off"
+              />
+              <mat-error>
+                {{ getError(field.name) }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        }
+      </div>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <span class="text-gray-500 me-5">Total Questions: {{ totalQuestionsStep1 }}</span>
+        <span class="text-gray-500 me-5">Total Time: {{ totalTimeStep1 }} Minutes</span>
+      </div>
+    </div>
+  </form>
+}

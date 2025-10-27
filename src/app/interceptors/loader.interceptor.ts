@@ -2,25 +2,26 @@ import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent } from '@angul
 import { inject } from '@angular/core';
 import { Observable, finalize } from 'rxjs';
 import { LoaderService } from '../shared/service/loader/loader.service';
+import { skipLoader } from '../utils/constants';
 
 export const loaderInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> => {
   const loaderService = inject(LoaderService);
-  const skipLoader = req.headers.get('X-Skip-Loader') === 'true';
+  const skipLoaderReq = req.headers.get(skipLoader) === 'true';
 
-  if (!skipLoader) {
+  if (!skipLoaderReq) {
     loaderService.show();
   }
 
   const modifiedReq = req.clone({
-    headers: req.headers.delete('X-Skip-Loader'),
+    headers: req.headers.delete(skipLoader),
   });
 
   return next(modifiedReq).pipe(
     finalize(() => {
-      if (!skipLoader) {
+      if (!skipLoaderReq) {
         loaderService.hide();
       }
     }),

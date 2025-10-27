@@ -1,0 +1,104 @@
+<main class="admin-management-page battle-creation red-bordered-form-field">
+  <div class="admin-page-header battle-creation-page-header">
+    <app-page-header
+      [icon]="battleCreationHeaderConfiguration.icon"
+      [title]="battleCreationHeaderConfiguration.title"
+      [subtitle]="battleCreationHeaderConfiguration.subtitle"
+      [theme]="battleCreationHeaderConfiguration.theme"
+    ></app-page-header>
+  </div>
+
+  <!-- 4 steps for new battle -->
+  <div
+    class="grid grid-cols-1 w-full bg-white rounded-lg p-4 shadow lg:grid-cols-4 gap-4 battle-grid-2-cols"
+  >
+    @for (step of steps; track i; let i = $index) {
+      <div class="flex items-center space-x-2">
+        <div
+          class="flex items-center justify-center w-8 h-8 rounded-full font-bold shrink-0"
+          [ngClass]="getStepClass(i)"
+        >
+          {{ i + 1 }}
+        </div>
+        <div class="flex flex-col">
+          <span class="font-semibold" [ngClass]="getTextClass(i)">
+            {{ step.heading }}
+          </span>
+          <span class="text-xs text-gray-500">
+            {{ step.description }}
+          </span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="battle-creation-form-container bg-white rounded-lg p-4 mb-5 shadow">
+    @switch (activeStep) {
+      @case (1) {
+        <app-battle-creation-step-1
+          [initialFormValues]="battleStep1Data"
+          [isEditMode]="isEditMode"
+          (categoryChanged)="categoryChanged()"
+          (formValuesChange)="step1ValueChange($event)"
+        ></app-battle-creation-step-1>
+      }
+      @case (2) {
+        <app-battle-creation-step-2
+          [(selectedIndexStep2)]="selectedIndexStep2"
+        ></app-battle-creation-step-2>
+      }
+      @case (3) {
+        <app-battle-creation-step-3-layout
+          (selectedQuestionsChange)="updateSelectedQuestions($event)"
+          [selectedQuestions]="selectedQuestions"
+          [battleStep1Data]="battleStep1Data"
+          (validSelectedQuestionsChange)="validSelectedQuestionsChange($event)"
+          [isValidSelectedQuestions]="isValidSelectedQuestions"
+        ></app-battle-creation-step-3-layout>
+      }
+      @case (4) {
+        <app-battle-creation-step-4
+          [selectedQuestions]="selectedQuestions"
+          [battleStep1Data]="battleStep1Data"
+          [questionDifficultyOption]="questionDifficultyOption"
+          [questionsDifficultyXPOption]="questionsDifficultyXPOption"
+        ></app-battle-creation-step-4>
+      }
+    }
+  </div>
+
+  <div class="grid grid-cols-2">
+    <!-- Back button on the left -->
+    <div class="justify-self-start">
+      @if (activeStep > 1) {
+        <app-filled-button
+          [filledButtonConfig]="backButton"
+          (buttonClicked)="goToPreviousStep()"
+        ></app-filled-button>
+      }
+      <!-- Empty placeholder to maintain grid layout -->
+      @if (activeStep === 1) {
+        <div></div>
+      }
+    </div>
+
+    <!-- Save Draft + Next/Publish on the right -->
+    <div class="justify-self-end min-width-btns flex flex-col sm:flex-row gap-3 col-span-1">
+      @if (activeStep === maxSteps) {
+        <!-- Show Publish Button on Last Step -->
+        <app-filled-button
+          [filledButtonConfig]="publishBattleButton"
+          (buttonClicked)="saveBattle()"
+          class="min-width-btn"
+        ></app-filled-button>
+      } @else {
+        <!-- Show Next Button on Other Steps -->
+        <app-filled-button
+          [filledButtonConfig]="nextButton"
+          (buttonClicked)="goToNextStep()"
+          class="min-width-btn"
+        ></app-filled-button>
+      }
+    </div>
+  </div>
+</main>

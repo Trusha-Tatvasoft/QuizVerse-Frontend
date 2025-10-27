@@ -5,7 +5,7 @@ import { DynamicFormField } from '../../../shared/interfaces/dynamic-form-field.
 /**
  * Sign In button configuration
  */
-export const SIGNIN_BUTTON_CONFIG: ButtonConfig = {
+export const signInButtonConfig: ButtonConfig = {
   label: 'Sign In',
   fontWeight: 500,
   variant: 'gradient',
@@ -16,10 +16,10 @@ export const SIGNIN_BUTTON_CONFIG: ButtonConfig = {
  * Login form field configurations
  */
 
-export const LOGIN_FORM_FIELDS: DynamicFormField[] = [
+export const loginFormFields: DynamicFormField[] = [
   {
     name: 'email',
-    label: 'Email',
+    label: 'Email*',
     type: 'email',
     placeholder: 'Enter your email',
     icon: 'mail',
@@ -34,7 +34,7 @@ export const LOGIN_FORM_FIELDS: DynamicFormField[] = [
   },
   {
     name: 'password',
-    label: 'Password',
+    label: 'Password*',
     type: 'password',
     placeholder: 'Enter your password',
     icon: 'lock',
@@ -42,5 +42,12 @@ export const LOGIN_FORM_FIELDS: DynamicFormField[] = [
     validationMessages: {
       required: 'Password is required.',
     },
+  },
+  {
+    name: 'rememberMe',
+    label: 'Remember Me',
+    type: 'checkbox',
+    placeholder: '',
+    validators: [],
   },
 ];

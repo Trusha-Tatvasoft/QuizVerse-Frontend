@@ -1,36 +1,143 @@
-<!-- Register Form -->
-<form class="custom-form-field" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-  @for (field of registerFields; track field.name) {
-    <div class="d-flex flex-column justify-content-start form-field pb-1">
-      <mat-label>{{ field.label }}</mat-label>
+<form [formGroup]="isLogin ? userForm : registerForm" (ngSubmit)="onSubmit()">
+  <div class="grid gap-3 pb-3">
+    @for (field of isLogin ? userFields : registerFields; track field.name) {
+      <div
+        class="form-field"
+        [ngClass]="[
+          field.gridClass || 'col-span-1 sm:col-span-1',
+          isLogin && isEditMode && field.name === 'email' ? 'col-span-1 sm:col-span-2' : '',
+        ]"
+      >
+        <mat-label>{{ field.label }}</mat-label>
 
-      <mat-form-field appearance="outline" class="full-width" [floatLabel]="'auto'">
-        <mat-icon fontSet="material-icons-outlined" matPrefix>{{ field.icon || 'input' }}</mat-icon>
+        @if (field.type !== 'file' && field.type !== 'select') {
+          <mat-form-field
+            [ngClass]="[
+              field.type === 'textarea' ? 'custom-form-field-text' : 'custom-form-field',
+              'full-width',
+            ]"
+            appearance="outline"
+            floatLabel="auto"
+          >
+            <mat-icon fontSet="material-icons-outlined" matPrefix>{{
+              field.icon || 'person'
+            }}</mat-icon>
 
-        <input
-          #fieldRef
-          matInput
-          [id]="field.name"
-          [type]="field.type"
-          [formControlName]="field.name"
-          [placeholder]="field.placeholder"
-          autocomplete="off"
-          required
-        />
+            @if (field.type === 'textarea') {
+              <textarea
+                matInput
+                [id]="field.name"
+                [formControlName]="field.name"
+                [placeholder]="field.placeholder"
+                rows="3"
+                class="min-h-[50px]"
+              ></textarea>
+            } @else {
+              <input
+                #fieldRef
+                matInput
+                [id]="field.name"
+                [type]="field.type"
+                [formControlName]="field.name"
+                [placeholder]="field.placeholder"
+                [attr.autocomplete]="'off'"
+                [readonly]="isEditMode && field.name === 'email'"
+                required
+                (blur)="
+                  field.name === 'username' && validateUserName();
+                  field.name === 'email' && validateEmail()
+                "
+              />
 
-        @if (field.type === 'password') {
-          <button mat-icon-button matSuffix type="button" [appTogglePassword]="fieldRef">
-            <mat-icon fontSet="material-icons-outlined">visibility_off</mat-icon>
-          </button>
+              @if (field.type === 'password') {
+                <mat-icon
+                  fontSet="material-icons-outlined"
+                  [appTogglePassword]="fieldRef"
+                  matSuffix
+                  class="password-toggle-icon"
+                  style="cursor: pointer"
+                  aria-label="Toggle password visibility"
+                >
+                  visibility_off
+                </mat-icon>
+              }
+            }
+
+            <mat-error>
+              {{ getError(field.name) }}
+            </mat-error>
+          </mat-form-field>
         }
 
-        <mat-error>
-          {{ getError(field.name) }}
-        </mat-error>
-      </mat-form-field>
+        @if (field.type === 'file') {
+          <div class="file-input-container mt-3">
+            <input
+              #fileInput
+              [id]="field.name"
+              type="file"
+              class="file-input"
+              (change)="onFileSelected($event)"
+              [accept]="'.jpg,.jpeg,.png'"
+            />
+            <div class="file-upload-row">
+              <app-filled-button
+                [filledButtonConfig]="uploadButton"
+                (buttonClicked)="fileInput.click()"
+                class="custom-upload-button"
+              ></app-filled-button>
+              <span class="selected-file-name"
+                >{{ displayFileName | filenameTruncate }}
+                @if (selectedFile || userForm.get('profilePic')?.value) {
+                  <mat-icon (click)="selectedFile = null" class="clear-icon">cancel</mat-icon>
+                }
+              </span>
+            </div>
+            <div class="error-message">
+              {{ getError(field.name) }}
+            </div>
+          </div>
+        }
+
+        @if (field.type === 'select') {
+          <mat-form-field appearance="outline" class="full-width custom-form-field">
+            <mat-icon fontSet="material-icons-outlined" matPrefix>
+              {{ field.icon || 'list' }}
+            </mat-icon>
+            <mat-select
+              [id]="field.name"
+              [formControlName]="field.name"
+              [placeholder]="field.placeholder"
+            >
+              @for (option of field.options; track option.value) {
+                <mat-option [value]="option.value">{{ option.label | titlecase }}</mat-option>
+              }
+            </mat-select>
+
+            <mat-error>
+              {{ getError(field.name) }}
+            </mat-error>
+          </mat-form-field>
+        }
+      </div>
+    }
+  </div>
+
+  @if (isLogin) {
+    <div class="dialog-actions">
+      <app-outline-button
+        [outlineButtonConfig]="cancelButton"
+        (buttonClicked)="cancel()"
+      ></app-outline-button>
+      <app-filled-button
+        [filledButtonConfig]="isEditMode ? updateUserButton : createUserButton"
+      ></app-filled-button>
+    </div>
+  } @else {
+    <div class="col-span-2 sm:col-span-1">
+      <app-filled-button
+        [filledButtonConfig]="registerButton"
+        class="signup-button w-full mt-4"
+      ></app-filled-button>
     </div>
   }
-
-  <app-filled-button [filledButtonConfig]="registerButton" class="signup-button">
-  </app-filled-button>
 </form>

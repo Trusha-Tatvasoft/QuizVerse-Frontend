@@ -1,0 +1,71 @@
+<div class="rating-container custom-form-field-override">
+  <form [formGroup]="ratingForm" (ngSubmit)="onSubmit()">
+    <!-- Title -->
+    <div class="rating-title">⭐ Rate This Quiz</div>
+    <div class="rating-subtitle">Help other learners by rating this quiz</div>
+
+    <!-- Dynamic Form Fields -->
+    <ng-container *ngFor="let field of formFields">
+      <!-- Star Rating -->
+      @if (field.type === 'star-rating') {
+        <div class="form-field">
+          <label class="form-label">{{ field.label }}</label>
+          <div class="stars" [ngClass]="{ 'disable-icon': ratingSubmitted }">
+            @for (star of stars; track $index) {
+              <mat-icon
+                fontSet="material-icons"
+                (click)="!ratingSubmitted && setRating(star)"
+                [class.active]="star <= currentRating"
+                [class.readonly]="ratingSubmitted"
+              >
+                star
+              </mat-icon>
+            }
+          </div>
+          @if (ratingForm.get(field.name)?.invalid && ratingForm.get(field.name)?.touched) {
+            <mat-error>
+              {{ field.validationMessages?.['required'] || '' }}
+            </mat-error>
+          }
+        </div>
+      }
+
+      <!-- Textarea / Feedback -->
+      @if (field.type === 'textarea') {
+        <div class="form-field">
+          <label class="form-label">{{ field.label }}</label>
+          <mat-form-field appearance="outline" class="custom-form-field-text full-width">
+            <mat-icon fontSet="material-icons-outlined" matPrefix>edit_note</mat-icon>
+            <textarea
+              matInput
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="3"
+              cdkAutosizeMaxRows="6"
+              [formControlName]="field.name"
+              [placeholder]="field.placeholder"
+              [readonly]="ratingSubmitted"
+            ></textarea>
+            @if (ratingForm.get(field.name)?.invalid && ratingForm.get(field.name)?.touched) {
+              <mat-error> Please enter valid feedback. </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      }
+    </ng-container>
+
+    <!-- Actions -->
+    <div class="quiz-rating-action">
+      <app-outline-button
+        [outlineButtonConfig]="dashboardButtonConfig"
+        (buttonClicked)="navigateToDashboard()"
+      ></app-outline-button>
+      @if (!ratingSubmitted) {
+        <!-- Submit button only if not submitted -->
+        <app-filled-button
+          [filledButtonConfig]="submitRattingButtonConfig"
+          (buttonClicked)="onSubmit()"
+        ></app-filled-button>
+      }
+    </div>
+  </form>
+</div>

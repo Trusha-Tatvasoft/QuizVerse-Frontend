@@ -1,0 +1,125 @@
+<div class="dialog-container">
+  <div class="flex justify-between items-center mb-5">
+    <div>
+      <div class="question-dialog-header">
+        <div class="dialog-title">
+          {{ mode === 'create' ? 'Create New Email Template' : 'Edit Email Template' }}
+        </div>
+        <div class="dialog-subtitle">Configure the email template content and settings</div>
+      </div>
+      <button mat-icon-button class="close-btn-dialog-all" (click)="closeDialog()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="saveEmailTemplate()">
+    <div class="grid gap-3 pb-3">
+      @for (field of fields; track field.name) {
+        <div class="form-field">
+          @if (!(field.name === 'status' && mode === 'create')) {
+            <mat-label class="mb-2">{{ field.label }}</mat-label>
+          }
+
+          <!-- Select -->
+          @if (field.type === 'select') {
+            @if (!(field.name === 'status' && mode === 'create')) {
+              <mat-form-field
+                appearance="outline"
+                class="custom-form-field full-width dropdown-error font-small"
+              >
+                <mat-icon matPrefix class="field-icon">{{ field.icon }}</mat-icon>
+                <mat-select [formControlName]="field.name" [placeholder]="field.placeholder">
+                  @for (option of field.options; track option.value) {
+                    <mat-option [value]="option.value">
+                      {{ option.label }}
+                    </mat-option>
+                  }
+                </mat-select>
+                @if (form.get(field.name)?.touched && form.get(field.name)?.invalid) {
+                  <mat-error>
+                    {{ getError(field.name) }}
+                  </mat-error>
+                }
+              </mat-form-field>
+            }
+          }
+
+          <!-- Textarea -->
+          @if (field.type === 'textarea') {
+            <div class="full-width">
+              <mat-form-field class="custom-form-field-text full-width" appearance="outline">
+                <mat-icon matPrefix class="field-icon">{{ field.icon }}</mat-icon>
+                <textarea
+                  matInput
+                  rows="5"
+                  [id]="field.name"
+                  [formControlName]="field.name"
+                  [placeholder]="field.placeholder || 'Enter text...'"
+                  class="custom-input-field min-h-[50px] resize-y overflow-auto"
+                ></textarea>
+                @if (form.get(field.name)?.touched && form.get(field.name)?.invalid) {
+                  <mat-error>
+                    {{ getError(field.name) }}
+                  </mat-error>
+                }
+              </mat-form-field>
+
+              @if (field.name === 'body') {
+                <a
+                  href="javascript:void(0)"
+                  class="text-blue-600 underline text-sm"
+                  (click)="showNotes = !showNotes"
+                >
+                  {{ showNotes ? 'Hide Notes' : 'Show Notes' }}
+                </a>
+                @if (showNotes) {
+                  <div class="bg-gray-100 border border-gray-300 rounded-md p-3 mt-2 text-sm">
+                    <strong>Points to Remember:</strong>
+                    <ul class="list-disc pl-5 mt-1 space-y-1">
+                      <li>Use &amp;quot; instead of single quotes</li>
+                      <li>Use rgba() values for colors</li>
+                      <li>Do not end inline styles with a semicolon (;)</li>
+                      <li>Do not add id, class, or comment in the body</li>
+                    </ul>
+                  </div>
+                }
+              }
+            </div>
+          }
+
+          <!-- Input -->
+          @if (field.type !== 'select' && field.type !== 'textarea') {
+            <mat-form-field class="custom-form-field full-width" appearance="outline">
+              <mat-icon matPrefix class="field-icon">{{ field.icon }}</mat-icon>
+              <input
+                matInput
+                [id]="field.name"
+                [type]="field.type"
+                [formControlName]="field.name"
+                [placeholder]="field.placeholder"
+                autocomplete="off"
+              />
+              <mat-error>{{ getError(field.name) }}</mat-error>
+            </mat-form-field>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Actions -->
+    <mat-dialog-actions class="dialog-actions flex justify-end gap-3 p-0">
+      <app-outline-button
+        class="custom-btn"
+        [outlineButtonConfig]="cancelBtn"
+        (click)="closeDialog()"
+      ></app-outline-button>
+      <app-outline-button
+        class="custom-btn"
+        [outlineButtonConfig]="previewBtn"
+        (click)="openPreviewDialog()"
+      ></app-outline-button>
+      <app-filled-button [filledButtonConfig]="submitBtn" class="custom-btn"></app-filled-button>
+    </mat-dialog-actions>
+  </form>
+</div>

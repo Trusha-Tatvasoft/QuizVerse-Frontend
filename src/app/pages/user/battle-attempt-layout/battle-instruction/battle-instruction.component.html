@@ -1,0 +1,136 @@
+<div
+  class="w-full min-h-screen flex items-center justify-center p-6 main-container"
+  appDisableQuizShortcuts
+>
+  <div class="w-full max-w-7xl flex flex-col space-y-6">
+    <!-- Header -->
+    <h2 class="text-xl sm:text-2xl font-bold sm:text-left">Battle Instructions</h2>
+
+    <!-- Battle Info -->
+    <div class="border border-red-600 rounded-lg bg-red-50 p-4 sm:p-6">
+      <h3 class="text-lg sm:text-xl font-semibold mb-2">
+        {{ battleInstructions?.battleName }}
+      </h3>
+      <p class="text-gray-600 mb-4 text-sm sm:text-base">
+        {{ battleInstructions?.battleDescription }}
+      </p>
+
+      <!-- Tags and Meta Info -->
+      <div class="flex flex-wrap gap-4 items-center text-sm sm:text-base">
+        <!-- Category Tag -->
+        <app-tag [tagConfig]="getBattleCategoryTagConfig()"></app-tag>
+
+        <!-- Time -->
+        <div class="flex items-center gap-2">
+          <mat-icon class="text-blue-600 text-base sm:text-lg">schedule</mat-icon>
+          <span>{{ battleInstructions?.timeInSeconds | number: '1.1-1' }} minutes</span>
+        </div>
+
+        <!-- Players -->
+        <div class="flex items-center gap-2">
+          <div class="flex items-centerext-base sm:text-lg">
+            <mat-icon fontSet="material-icons-outlined">groups</mat-icon>
+          </div>
+          <span>2 Players (Head-to-Head)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Important Instructions -->
+    <div class="rounded-lg bg-white p-4 sm:p-6 shadow-md">
+      <div class="flex items-center gap-2 mb-4 font-semibold text-yellow-600">
+        <mat-icon>warning</mat-icon>
+        <span class="text-lg sm:text-xl font-bold">Important Instructions</span>
+      </div>
+
+      <ol class="space-y-3 text-gray-700 text-sm sm:text-md">
+        <li class="flex gap-2">
+          <span
+            class="w-6 h-6 flex items-center justify-center rounded-full bg-red-100 text-red-600 font-semibold"
+            >1</span
+          >
+          <div>
+            <span class="font-semibold">Be ready</span><br />
+            The battle starts as soon as both players join. No waiting after matchmaking.
+          </div>
+        </li>
+        <li class="flex gap-2">
+          <span
+            class="w-6 h-6 flex items-center justify-center rounded-full bg-red-100 text-red-600 font-semibold"
+            >2</span
+          >
+          <div>
+            <span class="font-semibold">Answer quickly</span><br />
+            You will have limited time for each question.
+          </div>
+        </li>
+        <li class="flex gap-2">
+          <span
+            class="w-6 h-6 flex items-center justify-center rounded-full bg-red-100 text-red-600 font-semibold"
+            >3</span
+          >
+          <div>
+            <span class="font-semibold">Scoring</span><br />
+            Points are awarded for correct answers. Faster answers may score higher.
+          </div>
+        </li>
+        <li class="flex gap-2">
+          <span
+            class="w-6 h-6 flex items-center justify-center rounded-full bg-red-100 text-red-600 font-semibold"
+            >4</span
+          >
+          <div>
+            <span class="font-semibold">No pausing</span><br />
+            The battle runs in real-time. You cannot pause or delay the game.
+          </div>
+        </li>
+        <li class="flex gap-2">
+          <span
+            class="w-6 h-6 flex items-center justify-center rounded-full bg-red-100 text-red-600 font-semibold"
+            >5</span
+          >
+          <div>
+            <span class="font-semibold">Forfeit conditions</span><br />
+            Leaving the tab, switching windows, or disconnecting will count as forfeit.
+          </div>
+        </li>
+        <li class="flex gap-2">
+          <span
+            class="w-6 h-6 flex items-center justify-center rounded-full bg-red-100 text-red-600 font-semibold"
+            >6</span
+          >
+          <div>
+            <span class="font-semibold">Result</span><br />
+            The player with higher points at the end wins. A tie results in a draw.
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <!-- Warnings -->
+    <div class="border border-yellow-600 rounded-lg bg-orange-50 p-4 sm:p-6">
+      <div class="flex items-center gap-2 text-yellow-600 mb-3 font-semibold">
+        <mat-icon>warning</mat-icon>
+        <span>Important Warnings</span>
+      </div>
+      <ul class="list-disc list-inside text-sm sm:text-base text-gray-700 space-y-2">
+        <li>Do not close the tab or window – it will be treated as a forfeit.</li>
+        <li>Switching tabs or exiting full screen will end the battle immediately.</li>
+        <li>Ensure stable internet connection throughout the battle.</li>
+        <li>No external help or switching devices is allowed.</li>
+        <li>Battle is strictly time-bound; late answers will not be accepted.</li>
+      </ul>
+    </div>
+
+    <!-- Redirect Message-->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-gray-800 font-semibold text-base sm:text-lg">
+        Redirecting to live battle in
+        <span class="text-blue-600">{{ countdownSeconds }}</span> seconds...
+      </p>
+
+      <app-filled-button [filledButtonConfig]="skipBtnConfig" (click)="skipToBattle()">
+      </app-filled-button>
+    </div>
+  </div>
+</div>

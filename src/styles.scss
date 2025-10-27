@@ -200,13 +200,27 @@ $custom-typography: mat.m2-define-typography-config(
   }
 }
 
+.dialog-actions {
+  @media (max-width: 400px) {
+    .custom-btn {
+      width: 100%;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
 // action buttons of table
 app-data-table {
   .table-responsive {
     .action-icons {
       gap: 5px !important;
+
       .text-button {
         padding: 8px !important;
+
         .secondary {
           color: #424242;
         }
@@ -219,20 +233,190 @@ app-data-table {
   }
 }
 
+// all page common header styling (Admin Pages/ Player Pages)
+.admin-management-page,
+.player-management-page {
+  padding: 24px 32px;
+  background: var(--global-bg-gradient);
+  min-height: 100%;
+
+  @media (min-width: 1024px) {
+    width: calc(100vw - 283px);
+  }
+
+  .admin-page-heading,
+  .player-page-heading {
+    font-size: revert;
+    font-weight: revert;
+    margin-bottom: 24px;
+  }
+
+  .admin-page-header,
+  .player-page-header {
+    margin-bottom: 24px;
+  }
+
+  .admin-management-toolbar,
+  .player-management-toolbar {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 1rem;
+    align-items: center;
+    border-radius: 8px;
+    border: 0.5px solid #e2e8f0;
+    background-color: white;
+    margin-bottom: 24px;
+    padding: 24px;
+
+    @media (max-width: 768px) {
+      padding: 16px;
+    }
+
+    @media (max-width: 480px) {
+      padding: 12px;
+    }
+  }
+
+  @media (max-width: 1036px) {
+    padding: 24px 16px;
+  }
+}
+
 //User Management Buttons
-.user-management {
-  .user-management-toolbar {
+.admin-management-page {
+  .admin-management-toolbar {
     .user-management-btns {
       .add-user,
       .export-users {
         flex: 1 1 50%;
         min-width: 0;
+
         button {
           width: 100% !important;
           white-space: nowrap !important;
         }
       }
     }
+  }
+}
+
+//Question Pool Management Buttons
+.admin-management-page {
+  .admin-management-toolbar {
+    .add-question-btn {
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+//Quiz Category Management Buttons
+.admin-management-page {
+  .admin-management-toolbar {
+    .add-category-btn {
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+//Question Pool Management Buttons
+.admin-management-page {
+  .admin-management-toolbar {
+    .add-quiz-btn {
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+//form feild
+.form-field {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #000000;
+}
+
+//add quiz difficulty level
+.admin-management-toolbar {
+  @media (max-width: 400px) {
+    .admin-management-btns {
+      width: 100% !important;
+
+      .add-difficulty {
+        .filled-button {
+          width: 100% !important;
+        }
+      }
+    }
+  }
+}
+
+// user profile
+.form-wrapper {
+  .form-field-wrapper {
+    @media (max-width: 500px) {
+      .btn-container {
+        width: 100% !important;
+
+        .otp-btn {
+          button {
+            width: 100% !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+.recent-activity {
+  .activity-list {
+    li {
+      .xp-tag .tag-container {
+        width: max-content !important;
+      }
+    }
+  }
+}
+
+// browse quizzes page btns
+.quiz-btn-container {
+  width: 100%;
+
+  @media (max-width: 700px) {
+    width: 50%;
+  }
+
+  button {
+    width: 100%;
+
+    @media (max-width: 700px) {
+      width: 100%;
+    }
+  }
+}
+
+// browsr quiz play button
+.quiz-play-btn {
+  margin-top: 1rem;
+
+  button {
+    width: 100% !important;
+  }
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 16px;
+  color: #ff4d4d;
+  font-size: 16px;
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+    padding: 12px;
   }
 }
 
@@ -256,4 +440,208 @@ app-data-table {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+.cdk-overlay-backdrop {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+//for button take full width as parent button component
+.quiz-creation {
+  .min-width-btns {
+    .min-width-btn {
+      button.filled-button,
+      button.outline-button {
+        width: 100% !important;
+      }
+    }
+  }
+}
+
+.user-dashboard-actions {
+  app-filled-button button {
+    background-color: #9a90cb85 !important;
+    color: #fff !important;
+    width: 166.67px;
+    display: inline-block;
+    margin-right: 1rem;
+
+    &:last-child {
+      margin-right: 1;
+    }
+
+    @media (max-width: 768px) {
+      width: auto;
+      min-width: 140px;
+    }
+
+    @media (max-width: 425px) {
+      width: 100% !important;
+      display: block !important;
+      margin-right: 0 !important;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 375px) {
+      width: 100% !important;
+      font-size: 0.9rem;
+      padding: 0.6rem 0.75rem;
+    }
+  }
+}
+
+.user-dashboard-primary-button {
+  .filled-button.secondary {
+    padding: 0.45rem 0.9rem;
+    font-size: 14px;
+  }
+
+  .outline-button {
+    padding: 0.45rem 0.9rem;
+    font-size: 14px;
+    border: 1.5px solid var(--global-secondary-color);
+  }
+
+  @media (max-width: 425px) {
+    .text-button {
+      width: 100%;
+    }
+  }
+}
+
+.user-dashboard-text-button {
+  .text-button {
+    width: 100%;
+  }
+}
+
+.user-dashboard-tag {
+  app-tag {
+    .tag-container {
+      .tag {
+        border: 1px solid var(--black-color);
+      }
+    }
+  }
+}
+
+.profile-card {
+  .mat-mdc-card.mdc-card {
+    min-height: 100px !important;
+  }
+}
+
+.featured-quiz-actions app-filled-button {
+  button {
+    display: block;
+    width: 100% !important;
+  }
+}
+
+.quiz-instruction-buttons app-filled-button,
+.quiz-instruction-buttons app-outline-button,
+.question-navigation-buttons app-outline-button,
+.question-navigation-buttons app-filled-button {
+  button {
+    width: 100% !important;
+  }
+}
+
+.marked-for-review-button {
+  button {
+    background: #fef9c2 !important;
+    border: 1px solid #f0b100 !important;
+    color: #000000 !important;
+  }
+}
+
+.marked-for-review-icon-button {
+  button {
+    background: #fef9c2 !important;
+    border: 1px solid #f0b100 !important;
+    color: #000000 !important;
+    padding: 8px !important;
+  }
+}
+
+.mark-for-review-icon-button {
+  button {
+    padding: 8px !important;
+  }
+}
+
+.quiz-rating-action {
+  .outline-button {
+    width: 100%;
+  }
+
+  .filled-button {
+    width: 100%;
+  }
+}
+
+.close-btn-dialog-all {
+  position: absolute !important;
+  right: 1rem !important;
+  top: 1rem !important;
+  cursor: pointer !important;
+  padding: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: opacity 0.2s !important;
+
+  &:hover {
+    opacity: 1 !important;
+    background-color: #cecece52 !important;
+    border-radius: 50% !important;
+    transition: opacity 0.5s !important;
+
+    mat-icon {
+      color: #000 !important;
+    }
+  }
+
+  .mat-mdc-button-persistent-ripple,
+  .mat-ripple {
+    display: none !important;
+  }
+
+  mat-icon {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    font-size: 1.25rem !important;
+    line-height: 1.25rem !important;
+    color: #848484 !important;
+  }
+}
+
+.quiz-battle-actions {
+  app-filled-button {
+    .filled-button {
+      width: 100%;
+    }
+  }
+
+  app-outline-button {
+    .outline-button {
+      width: 100%;
+    }
+  }
+}
+
+.user-search-container .mat-mdc-form-field-hint-wrapper {
+  padding: 0px;
+}
+
+// notification-center
+@media (max-width: 372px) {
+  .notification-center-view {
+    .outline-button {
+      width: 100%;
+    }
+  }
+  .text-button {
+    width: 100% !important;
+  }
 }

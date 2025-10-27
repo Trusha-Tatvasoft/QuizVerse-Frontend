@@ -7,9 +7,19 @@ export enum Navigations {
   ResetLinkInvalid = 'reset-link-invalid',
 
   User = 'user',
-  Dashboard = '',
+  Dashboard = 'dashboard',
+  QuizList = 'quizzes',
   BrowseQuizzes = 'browse-quizzes',
+  QuizAttempt = 'quiz-attempt',
+  QuizInstruction = 'quiz-instruction',
+  QuizResult = 'quiz-result',
   Battles = 'battles',
+  BattleInstruction = 'battle-instruction',
+  BattleAttempt = 'battle-attempt',
+  BattleResult = 'battle-result',
+  WaitingBattleResult = 'waiting-battle-result',
+  SearchOpponent = 'search-opponent',
+  FoundOpponent = 'found-opponent',
   Tournaments = 'tournaments',
   Leaderboards = 'leaderboards',
   Profile = 'profile',
@@ -20,11 +30,24 @@ export enum Navigations {
   Categories = 'quiz-categories',
   Difficulties = 'difficulty-levels',
   BattlesAdmin = 'battle-management',
+  TournamentsAdmin = 'tournament-management',
   QuestionPool = 'questions-pool',
   QuestionDifficulty = 'question-difficulty',
   EmailTemplates = 'email-templates',
   Settings = 'platform-settings',
   AiConfig = 'ai',
   Finance = 'financial-management',
+  ContentModeration = 'content-moderation',
+
   Notifications = 'notification-center',
+
+  Unauthorized = 'unauthorized',
+
+  QuizCreation = 'quiz-creation',
+
+  BattleCreation = 'battle-creation',
+  BattleUpdation = 'edit-battle',
+
+  BattleList = 'battle-list',
+  SearchOpponentComponent = 'SearchOpponentComponent',
 }

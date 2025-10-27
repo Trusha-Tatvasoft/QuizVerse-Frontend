@@ -1,0 +1,20 @@
+.rank-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px !important;
+  height: 35px !important;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.rank-icon.top-rank {
+  background-color: #fff7d1;
+  color: #8b4513;
+}
+
+.rank-icon.other-rank {
+  background-color: #e0e0e0;
+  color: #000;
+}

@@ -1,0 +1,91 @@
+<main class="admin-management-page">
+  <div class="quiz-page-header">
+    <app-page-header
+      [icon]="quizConfig.icon"
+      [title]="quizConfig.title"
+      [subtitle]="quizConfig.subtitle"
+      [theme]="quizConfig.theme"
+    ></app-page-header>
+    <div class="stats-grid">
+      @for (config of quizStatsConfigs; track config.title) {
+        <app-card [cardConfig]="config"></app-card>
+      }
+    </div>
+  </div>
+  <div class="admin-management-toolbar">
+    <div class="flex gap-4 serach-container">
+      <app-search-input
+        [placeholder]="searchInputConfig.placeholder"
+        [control]="searchControl"
+        (search)="onSearchInputChange($event)"
+        class="quiz-pool-search"
+      ></app-search-input>
+      <div class="add-quiz-btn-tablet">
+        <app-filled-button
+          [filledButtonConfig]="createNewQuizButtonConfig"
+          (buttonClicked)="navigateToQuizCreation()"
+        ></app-filled-button>
+      </div>
+    </div>
+
+    <div class="w-100 flex filter-btn-container">
+      <div class="quiz-pool-filters">
+        <!-- Status Filter -->
+        <mat-form-field appearance="outline" class="filter-select">
+          <mat-select
+            [(value)]="selectedStatus"
+            (selectionChange)="onFilterChange()"
+            placeholder="All Status"
+          >
+            <mat-option [value]="''">All Status</mat-option>
+            @for (status of quizStatus; track status.value) {
+              <mat-option [value]="status.value">{{ status.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Category Filter -->
+        <mat-form-field appearance="outline" class="filter-select">
+          <mat-select
+            [(value)]="selectedCategory"
+            (selectionChange)="onFilterChange()"
+            placeholder="All Categories"
+          >
+            <mat-option [value]="''">All Categories</mat-option>
+            @for (item of categoryList; track item.id) {
+              <mat-option [value]="item.id"> {{ item.name }} </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Difficulty Filter -->
+        <mat-form-field appearance="outline" class="filter-select">
+          <mat-select
+            [(value)]="selectedDifficulty"
+            (selectionChange)="onFilterChange()"
+            placeholder="All Difficulties"
+          >
+            <mat-option [value]="''">All Difficulties</mat-option>
+            @for (item of difficultyList; track item.id) {
+              <mat-option [value]="item.id"> {{ item.name }} </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="add-quiz-btn">
+      <app-filled-button
+        [filledButtonConfig]="createNewQuizButtonConfig"
+        (buttonClicked)="navigateToQuizCreation()"
+      ></app-filled-button>
+    </div>
+  </div>
+
+  <app-quiz-table
+    [dataSource]="dataSource()"
+    [totalItems]="totalItems()"
+    (pageChange)="onPageChange($event)"
+    (sortChange)="onSortChange($event)"
+    (actionClick)="handleQuizAction($event)"
+  ></app-quiz-table>
+</main>

@@ -5,20 +5,22 @@ import { OutlineButtonComponent } from '../../../shared/components/outline-butto
 import { MatIcon } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import {
-  BROWSE_QUIZZES_BUTTON,
-  FEATURES,
-  JOIN_PLATFORM_BUTTON,
-  LANDING_PAGE_CONTENT,
-  START_PLAY_BUTTON,
+  browseQuizzesButton,
+  landingPageFeaturesCardsConfig,
+  joinPlatformButton,
+  landingPageContent,
+  startPlayButton,
 } from '../configs/landing-page.component.config';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { Navigations } from '../../../shared/enums/navigation';
 import { LandingPageDataService } from '../../../services/user/landing-page/landing-page-data.service';
 import { LandingPageStats } from '../../../shared/interfaces/landing-page-stats.interface';
-import { PlateformName, PlatformMessages } from '../../../utils/constants';
+import { plateformName, platformMessages } from '../../../utils/constants';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { LoaderService } from '../../../shared/service/loader/loader.service';
+import { PlatformSettingsService } from '../../../services/admin/platform-settings/platform-settings.service';
+import { selectedTabIndexSignal } from '../../../core/auth/components/login-signup/login-signup.component';
 
 @Component({
   selector: 'app-landing-page',
@@ -27,27 +29,61 @@ import { LoaderService } from '../../../shared/service/loader/loader.service';
   styleUrl: './landing-page.component.scss',
 })
 export class LandingPageComponent implements OnInit, OnDestroy {
+  landingPageContent = landingPageContent;
+  quizFeatures = landingPageFeaturesCardsConfig;
+  startPlayButton = startPlayButton;
+  browseQuizButton = browseQuizzesButton;
+  joinPlatFormButton = joinPlatformButton;
+  plateformName = plateformName;
+  stats: LandingPageStats;
+  logoPath: string | null;
+
   private readonly router = inject(Router);
   private readonly landingPageDataService = inject(LandingPageDataService);
   private readonly snackbarService = inject(SnackbarService);
   private readonly loaderService = inject(LoaderService);
+  private readonly platformSettingsService = inject(PlatformSettingsService);
 
-  landingPageContent = LANDING_PAGE_CONTENT;
-  quizFeatures = FEATURES;
-  startPlayButton = START_PLAY_BUTTON;
-  browseQuizButton = BROWSE_QUIZZES_BUTTON;
-  joinPlatFormButton = JOIN_PLATFORM_BUTTON;
-  plateformName = PlateformName;
-  stats: LandingPageStats;
   private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
     this.loadLandingPageStats();
+    this.loadPlatformConfig();
+  }
+
+  browseQuizRedirect() {
+    //NOTE: Remaining to create browse quiz for guset user
+    // this.router.navigate([Navigations.BrowseQuizzes]);
+  }
+
+  startPlayRedirect(): void {
+    this.router.navigate([Navigations.Login]);
+    selectedTabIndexSignal.set(0);
+  }
+
+  joinPlatFormRedirect(): void {
+    this.router.navigate([Navigations.Login]);
+    selectedTabIndexSignal.set(1);
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private loadPlatformConfig(): void {
+    this.platformSettingsService.platformConfig$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((config) => {
+        if (config) {
+          this.landingPageContent.quote = config!.quote;
+          this.logoPath = config.logo ?? null;
+        }
+      });
+  }
+
+  imageError() {
+    this.logoPath = null;
   }
 
   private loadLandingPageStats(): void {
@@ -75,8 +111,8 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.snackbarService.showError(
-            PlatformMessages.errorMessage,
-            err.error?.message || PlatformMessages.errorTitle,
+            platformMessages.errorTitle,
+            err.error?.message || platformMessages.errorMessage,
           );
         },
       });
@@ -92,13 +128,5 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     } else {
       return `${num}`;
     }
-  }
-
-  browseQuizRedirect() {
-    this.router.navigate([Navigations.BrowseQuizzes]);
-  }
-
-  loginRedirect(): void {
-    this.router.navigate([Navigations.Login]);
   }
 }

@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="card-wrapper">
+    <!-- Main Card -->
+    <div class="card">
+      <!-- Header Section -->
+      <div class="card-header">
+        <div class="relative z-10">
+          <div class="icon-wrapper">
+            <mat-icon
+              style="color: #fff; font-size: 50px; height: 50px; width: 50px; padding-left: 1px"
+              >warning</mat-icon
+            >
+          </div>
+          <h1>404</h1>
+        </div>
+      </div>
+
+      <!-- Content Section -->
+      <div class="card-content">
+        <h2>Page Not Found</h2>
+        <p class="subtitle">The page you are looking for doesn’t exist or has been moved.</p>
+        <p class="note">Please check the URL or return to your dashboard.</p>
+
+        <!-- Role-based Dashboard Buttons -->
+        @if (userRole === 'admin') {
+          <button (click)="navigateToDashboard()" class="dashboard-btn admin">
+            <div class="left-section">
+              <div class="icon-circle">
+                <mat-icon style="margin-top: 4px">settings</mat-icon>
+              </div>
+              <div class="text">
+                <p class="title">Admin Dashboard</p>
+                <p class="desc">Manage system and users</p>
+              </div>
+            </div>
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        } @else if (userRole === 'player') {
+          <button (click)="navigateToDashboard()" class="dashboard-btn player">
+            <div class="left-section">
+              <div class="icon-circle">
+                <mat-icon>person</mat-icon>
+              </div>
+              <div class="text">
+                <p class="title">User Dashboard</p>
+                <p class="desc">Access your workspace</p>
+              </div>
+            </div>
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        }
+
+        <!-- Divider -->
+        <div class="divider">
+          <span>or</span>
+        </div>
+
+        <!-- Go Back Button -->
+        <button (click)="goBack()" class="back-btn cursor-pointer">
+          <mat-icon>arrow_back</mat-icon>
+          Go Back to Previous Page
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

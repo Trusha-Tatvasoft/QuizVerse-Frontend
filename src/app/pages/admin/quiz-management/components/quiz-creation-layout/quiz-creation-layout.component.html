@@ -1,0 +1,107 @@
+<main class="admin-management-page quiz-creation red-bordered-form-field">
+  <div class="admin-page-header quiz-creation-page-header">
+    <app-page-header
+      [icon]="quizCreationHeaderConfiguration.icon"
+      [title]="quizCreationHeaderConfiguration.title"
+      [subtitle]="quizCreationHeaderConfiguration.subtitle"
+      [theme]="quizCreationHeaderConfiguration.theme"
+    ></app-page-header>
+  </div>
+
+  <!-- 4 steps for new quiz -->
+  <div
+    class="grid grid-cols-1 w-full bg-white rounded-lg p-4 shadow lg:grid-cols-4 gap-4 quiz-grid-2-cols"
+  >
+    @for (step of steps; track i; let i = $index) {
+      <div class="flex items-center space-x-2">
+        <div
+          class="flex items-center justify-center w-8 h-8 rounded-full font-bold shrink-0"
+          [ngClass]="getStepClass(i)"
+        >
+          {{ i + 1 }}
+        </div>
+        <div class="flex flex-col">
+          <span class="font-semibold" [ngClass]="getTextClass(i)">
+            {{ step.heading }}
+          </span>
+          <span class="text-xs text-gray-500">
+            {{ step.description }}
+          </span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="quiz-creation-form-container bg-white rounded-lg p-4 mb-5 shadow">
+    @if (activeStep === 1) {
+      <app-quiz-creation-step-1
+        [initialFormValues]="quizStep1Data"
+        [isEditMode]="isEditMode"
+        (formValuesChange)="step1ValueChange($event)"
+        (categoryChanged)="categoryChanged()"
+      ></app-quiz-creation-step-1>
+    }
+    @if (activeStep === 2) {
+      <app-quiz-creation-step-2
+        [(selectedIndexStep2)]="selectedIndexStep2"
+      ></app-quiz-creation-step-2>
+    }
+    @if (activeStep === 3) {
+      <app-quiz-creation-step-3-layout
+        (selectedQuestionsChange)="updateSelectedQuestions($event)"
+        [selectedQuestions]="selectedQuestions"
+        [quizStep1Data]="quizStep1Data"
+        (validSelectedQuestionsChange)="validSelectedQuestionsChange($event)"
+        [isValidSelectedQuestions]="isValidSelectedQuestions"
+      ></app-quiz-creation-step-3-layout>
+    }
+    @if (activeStep === 4) {
+      <app-quiz-creation-step-4
+        [selectedQuestions]="selectedQuestions"
+        [quizStep1Data]="quizStep1Data"
+      ></app-quiz-creation-step-4>
+    }
+  </div>
+
+  <div class="quiz-creation-btn">
+    <!-- Back button on the left -->
+    <div class="previous-btn min-width-btns">
+      @if (activeStep > 1) {
+        <app-filled-button
+          [filledButtonConfig]="backButton"
+          (buttonClicked)="goToPreviousStep()"
+          class="min-width-btn"
+        ></app-filled-button>
+      }
+      <!-- Empty placeholder to maintain layout -->
+      @if (activeStep === 1) {
+        <div></div>
+      }
+    </div>
+
+    <!-- Save Draft + Next/Publish on the right -->
+    <div class="min-width-btns next-btns">
+      <app-outline-button
+        [outlineButtonConfig]="saveDraftButton"
+        (buttonClicked)="draftQuiz()"
+        class="min-width-btn"
+      ></app-outline-button>
+
+      @if (activeStep === maxSteps) {
+        <!-- Show Publish Button on Last Step -->
+        <app-filled-button
+          [filledButtonConfig]="publishQuizButton"
+          (buttonClicked)="saveQuiz()"
+          class="min-width-btn"
+        ></app-filled-button>
+      } @else {
+        <!-- Show Next Button on Other Steps -->
+        <app-filled-button
+          [filledButtonConfig]="nextButton"
+          (buttonClicked)="goToNextStep()"
+          class="min-width-btn"
+        ></app-filled-button>
+      }
+    </div>
+  </div>
+</main>
