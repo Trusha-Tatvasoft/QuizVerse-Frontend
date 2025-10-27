@@ -8,6 +8,7 @@ import {
 import {
   addQuestionButtonConfig,
   changeQuestionMethodButtonConfig,
+  changeQuestionMethodSmallButtonConfig,
   columns,
   deleteQuestionDialog,
   questionAdditionOptionsInManualMethod,
@@ -47,6 +48,7 @@ import { ConfirmationDialogComponent } from '../../../../../shared/components/co
 import { MatDialog } from '@angular/material/dialog';
 import { DropDownType } from '../../../../../shared/enums/dropdown-types.enum';
 import { QuestionType } from '../../../../../shared/enums/quiz-management.enum';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-quiz-creation-step-3-layout',
@@ -68,20 +70,15 @@ import { QuestionType } from '../../../../../shared/enums/quiz-management.enum';
   styleUrl: './quiz-creation-step-3-layout.component.scss',
 })
 export class QuizCreationStep3LayoutComponent {
-  @Output() selectedQuestionsChange = new EventEmitter<QuestionsList[]>();
   @Input() selectedQuestions: QuestionsList[] = [];
   @Input() quizStep1Data: QuizStep1Data;
   @Input() isValidSelectedQuestions = false;
 
+  @Output() selectedQuestionsChange = new EventEmitter<QuestionsList[]>();
   @Output() validSelectedQuestionsChange = new EventEmitter<boolean>();
 
-  private readonly fb = inject(FormBuilder);
-  private readonly validationErrorService = inject(ValidationErrorService);
-  private readonly quizCreationService = inject(QuizCreationService);
-  private readonly snackbar = inject(SnackbarService);
-  private readonly dialog = inject(MatDialog);
-
   changeMethodButton = changeQuestionMethodButtonConfig;
+  changeMethodSmallButton = changeQuestionMethodSmallButtonConfig;
   searchInputConfig = searchInputConfig;
   questionAdditionOptionsInManualMethodStep3 = questionAdditionOptionsInManualMethod;
   questionFormFieldForAddQuestionManuallyStep3 = questionFormFieldForAddQuestionManually;
@@ -93,7 +90,6 @@ export class QuizCreationStep3LayoutComponent {
   pageSizeSelected = tablePaginationConfig.PageSize;
   questionForm: FormGroup;
 
-  private readonly destroy$ = new Subject<void>();
   selectedQuestionMethodInManualAdditionIndex: number;
 
   dataSource = signal<QuestionPoolList[]>([]);
@@ -101,10 +97,20 @@ export class QuizCreationStep3LayoutComponent {
   questionDifficultyOption: { value: number; label: string }[] = [];
   questionTypeOptions: { value: number; label: string }[] = [];
   isInnerStep3: boolean = false;
+  isSmallScreen = false;
 
   selectedQuestionsTableData: QuestionsList[] = [];
   totalQuestionsSelected = 0;
   currentPageSelected = 1;
+
+  private readonly fb = inject(FormBuilder);
+  private readonly validationErrorService = inject(ValidationErrorService);
+  private readonly quizCreationService = inject(QuizCreationService);
+  private readonly snackbar = inject(SnackbarService);
+  private readonly dialog = inject(MatDialog);
+  private readonly breakpointObserver = inject(BreakpointObserver);
+
+  private readonly destroy$ = new Subject<void>();
 
   ngOnInit() {
     // Apply initial logic
@@ -112,25 +118,13 @@ export class QuizCreationStep3LayoutComponent {
     this.updateFieldsBasedOnType(this.questionForm.get('type')?.value);
     this.getDropDownsData();
     this.updateSelectedQuestionsValidity();
-  }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  private buildQuestionForm(): void {
-    const group: Record<string, unknown> = {};
-    this.questionFormFieldForAddQuestionManuallyStep3.forEach((field) => {
-      group[field.name] = ['', field.validators];
-    });
-
-    this.questionForm = this.fb.group(group);
-
-    // React to type changes
-    this.questionForm.get('type')?.valueChanges.subscribe((selectedType) => {
-      this.updateFieldsBasedOnType(selectedType);
-    });
+    this.breakpointObserver
+      .observe([Breakpoints.XSmall])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((result) => {
+        this.isSmallScreen = result.matches;
+      });
   }
 
   fillMissingLabelsForSelectedQuestions() {
@@ -478,6 +472,36 @@ export class QuizCreationStep3LayoutComponent {
     });
   }
 
+  selectedQuestionsChangeFromInnerStep3Option3Parent(questions: QuestionsList[]) {
+    this.selectedQuestions = [...questions];
+    this.totalQuestionsSelected = this.selectedQuestions.length;
+    this.fillMissingLabelsForSelectedQuestions();
+    this.updateSelectedQuestionsTable();
+  }
+
+  closeQuestionAdditionOptionParent() {
+    this.isInnerStep3 = false;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private buildQuestionForm(): void {
+    const group: Record<string, unknown> = {};
+    this.questionFormFieldForAddQuestionManuallyStep3.forEach((field) => {
+      group[field.name] = ['', field.validators];
+    });
+
+    this.questionForm = this.fb.group(group);
+
+    // React to type changes
+    this.questionForm.get('type')?.valueChanges.subscribe((selectedType) => {
+      this.updateFieldsBasedOnType(selectedType);
+    });
+  }
+
   private areAllSelectedQuestionsWithinLimit(): boolean {
     if (!this.quizStep1Data || !Array.isArray(this.selectedQuestions)) {
       return true;
@@ -506,16 +530,5 @@ export class QuizCreationStep3LayoutComponent {
       return false;
     }
     return true;
-  }
-
-  selectedQuestionsChangeFromInnerStep3Option3Parent(questions: QuestionsList[]) {
-    this.selectedQuestions = [...questions];
-    this.totalQuestionsSelected = this.selectedQuestions.length;
-    this.fillMissingLabelsForSelectedQuestions();
-    this.updateSelectedQuestionsTable();
-  }
-
-  closeQuestionAdditionOptionParent() {
-    this.isInnerStep3 = false;
   }
 }

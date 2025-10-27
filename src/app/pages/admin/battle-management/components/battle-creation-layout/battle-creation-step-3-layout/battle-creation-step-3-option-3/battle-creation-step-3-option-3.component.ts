@@ -10,13 +10,17 @@ import { BattleManagementService } from '../../../../../../../services/admin/bat
 import { SnackbarService } from '../../../../../../../shared/service/snackbar/snackbar.service';
 import {
   changeQuestionMethodButtonConfig,
+  changeQuestionMethodSmallButtonConfig,
   chooseFileButtonConfig,
   downloadCsvButtonConfig,
+  downloadCsvSmallButtonConfig,
   downloadExelButtonConfig,
+  downloadExelSmallButtonConfig,
 } from '../../../../../quiz-management/configs/quiz-creation.config';
 import { Subject, takeUntil } from 'rxjs';
 import { platformMessages, quizCRUDMessages } from '../../../../../../../utils/constants';
 import { EndPoints } from '../../../../../../../shared/enums/end-point.enum';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-battle-creation-step-3-option-3',
@@ -31,16 +35,30 @@ export class BattleCreationStep3Option3Component {
 
   // Button configs
   changeMethodButton = changeQuestionMethodButtonConfig;
+  changeMethodSmallButton = changeQuestionMethodSmallButtonConfig;
   downloadCsvButton = downloadCsvButtonConfig;
+  downloadCsvSmallButton = downloadCsvSmallButtonConfig;
   downloadExelButton = downloadExelButtonConfig;
+  downloadExelSmallButton = downloadExelSmallButtonConfig;
   chooseFileButton = chooseFileButtonConfig;
+  isSmallScreen = false;
 
   // Inject services
   private readonly battleManagementService = inject(BattleManagementService);
   private readonly snackbar = inject(SnackbarService);
+  private readonly breakpointObserver = inject(BreakpointObserver);
 
   // Used for unsubscribing observables on destroy
   private readonly destroy$ = new Subject<void>();
+
+  ngOnInit(): void {
+    this.breakpointObserver
+      .observe([Breakpoints.XSmall])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((result) => {
+        this.isSmallScreen = result.matches;
+      });
+  }
 
   // Emit event to close option panel
   closeOption() {

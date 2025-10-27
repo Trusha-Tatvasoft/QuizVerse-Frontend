@@ -490,6 +490,15 @@ app-data-table {
   }
 }
 
+.battle-management {
+  app-outline-button,
+  app-filled-button {
+    button {
+      width: 100%;
+    }
+  }
+}
+
 .user-dashboard-primary-button {
   .filled-button.secondary {
     padding: 0.45rem 0.9rem;
@@ -661,4 +670,30 @@ app-data-table {
   .text-button {
     width: 100% !important;
   }
+}
+
+.request-button {
+  app-filled-button {
+    width: 100% !important;
+
+    .filled-button {
+      width: 100% !important;
+    }
+  }
+
+  app-outline-button {
+    width: 100% !important;
+
+    .outline-button {
+      width: 100% !important;
+    }
+  }
+}
+
+.notification-container .incoming-request-actions app-filled-button .filled-button {
+  width: 100% !important;
+}
+
+.notification-container .incoming-request-actions app-outline-button .outline-button {
+  width: 100% !important;
 }

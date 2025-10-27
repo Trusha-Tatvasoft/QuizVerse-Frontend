@@ -14,6 +14,7 @@ export function userToUserListingTableData(user: UserListData, currentUserRole: 
   const isCurrentUserSuperAdmin = currentUserRole === Role.SuperAdmin;
   const isTargetUserAdmin = user.roleId === UserRoles.Admin;
   const isTargetUserSuperAdmin = user.roleId === UserRoles.SuperAdmin;
+  const isAdminOrSuperAdmin = isTargetUserAdmin || isTargetUserSuperAdmin;
 
   const shouldDisableEditActions =
     isCurrentUserAdmin && (isTargetUserSuperAdmin || isTargetUserAdmin);
@@ -48,16 +49,26 @@ export function userToUserListingTableData(user: UserListData, currentUserRole: 
     },
     createdDate: user.createdDate,
     lastLogin: user.lastLogin !== defaultLastLoginDate ? user.lastLogin : null,
-    quizattempt: {
-      tagConfig: {
-        id: `quizzes-${user.id}`,
-        label: user.attemptedQuizzes.toString(),
-        type: 'static',
-        backgroundColor: 'white',
-        textColor: 'black',
-      },
-      extraText: 'quizzes',
-    },
+    quizattempt: isAdminOrSuperAdmin
+      ? {
+          tagConfig: {
+            id: `quizzes-${user.id}`,
+            label: 'NA',
+            type: 'static',
+            backgroundColor: 'white',
+            textColor: 'black',
+          },
+        }
+      : {
+          tagConfig: {
+            id: `quizzes-${user.id}`,
+            label: user.attemptedQuizzes.toString(),
+            type: 'static',
+            backgroundColor: 'white',
+            textColor: 'black',
+          },
+          extraText: 'quizzes',
+        },
     actions: [
       {
         icon: 'edit',

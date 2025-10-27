@@ -349,9 +349,13 @@ export const platformMessages = {
   battleHubLastAnsweredDetail: 'LastAnsweredDetail',
   battleHubPlayerInterrupted: 'PlayerInterrupted',
   battleHubBattleEndedForPlayer: 'BattleEndedForParticularPlayerDueToInterrupt',
+  recieveBattleRequest: 'ReceiveBattleRequest',
   battleEnded: 'battleEnded',
   battleHubSkipInstruction: 'SkipInstructions',
-
+  battleRequestAccepted: 'BattleRequestAccepted',
+  battleRequestAcceptedConfirmation: 'BattleRequestAcceptedConfirmation',
+  battleRequestCancelled: 'BattleRequestCancelled',
+  battleRequestDeclined: 'BattleRequestDeclined',
   // Battle flow messages
   battleStart: 'Battle started! All the best!',
   timeoutNextQuestion: "Time's up! Moving to the next question...",
@@ -670,4 +674,5 @@ export const battleIdStorageKey = 'battleAttemptId';
 
 export const userIdClaimKey = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata';
 
+export const notificationTimeout = 30000;
 // #endregion
