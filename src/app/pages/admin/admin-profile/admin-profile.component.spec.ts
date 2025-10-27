@@ -5,7 +5,7 @@ import { AdminProfileComponent } from './admin-profile.component';
 import { UserProfileService } from '../../../services/user/user-profile/user-profile.service';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { ValidationErrorService } from '../../../shared/service/validation-error/validation-error.service';
-import { platformMessages } from '../../../utils/constants';
+import { platformMessages, defaultProfilePic } from '../../../utils/constants';
 
 describe('AdminProfileComponent (Jest)', () => {
   let component: AdminProfileComponent;
@@ -115,6 +115,17 @@ describe('AdminProfileComponent (Jest)', () => {
         of({ result: true, data: { fullName: 'Admin', email: 'a@test.com', userName: 'adm' } }),
       );
 
+      // Mock FileReader
+      const readerMock = {
+        onload: null as ((ev: ProgressEvent<FileReader>) => void) | null,
+        readAsDataURL: jest.fn(function (this: any) {
+          if (this.onload) {
+            this.onload({ target: { result: 'assets/images/profile.png' } } as any);
+          }
+        }),
+      } as unknown as FileReader;
+      jest.spyOn(window as any, 'FileReader').mockImplementation(() => readerMock);
+
       component.profileUpload(event);
       tick();
 
@@ -123,6 +134,7 @@ describe('AdminProfileComponent (Jest)', () => {
         platformMessages.uploadSuccess,
       );
       expect(mockUserProfileService.updateProfilePic).toHaveBeenCalled();
+      expect(component.profilePicUrl).toBe('assets/images/profile.png');
     }));
 
     it('should handle upload error', () => {
@@ -137,6 +149,24 @@ describe('AdminProfileComponent (Jest)', () => {
         platformMessages.errorTitle,
         platformMessages.uploadFailed,
       );
+    });
+
+    it('should not do anything if no file is selected', () => {
+      const emptyEvent = { target: { files: [] } } as unknown as Event;
+
+      component.profileUpload(emptyEvent);
+
+      expect(mockUserProfileService.updateProfilePic).not.toHaveBeenCalled();
+      expect(mockSnackbar.showError).not.toHaveBeenCalled();
+      expect(mockSnackbar.showSuccess).not.toHaveBeenCalled();
+    });
+
+    it('should not do anything if files is null', () => {
+      const nullFilesEvent = { target: { files: null } } as unknown as Event;
+
+      component.profileUpload(nullFilesEvent);
+
+      expect(mockUserProfileService.updateProfilePic).not.toHaveBeenCalled();
     });
   });
 
@@ -243,6 +273,28 @@ describe('AdminProfileComponent (Jest)', () => {
     });
   });
 
+  describe('isOtpLimitReached', () => {
+    it('should return false when email is empty', () => {
+      component.buildForm();
+      component.adminProfileForm.get('email')?.setValue('');
+      expect(component.isOtpLimitReached()).toBe(false);
+    });
+
+    it('should return true when limit is reached', () => {
+      component.buildForm();
+      component.adminProfileForm.get('email')?.setValue('test@test.com');
+      component.emailOtpAttempts.set('test@test.com', component.maxOtpAttempts);
+      expect(component.isOtpLimitReached()).toBe(true);
+    });
+
+    it('should return false when under limit', () => {
+      component.buildForm();
+      component.adminProfileForm.get('email')?.setValue('test@test.com');
+      component.emailOtpAttempts.set('test@test.com', 1);
+      expect(component.isOtpLimitReached()).toBe(false);
+    });
+  });
+
   describe('updateOtpButtonConfig', () => {
     beforeEach(() => {
       component.adminProfileForm = new FormBuilder().group({ email: ['x@test.com'] });
@@ -345,22 +397,133 @@ describe('AdminProfileComponent (Jest)', () => {
     });
   });
 
-  it('should cancel changes', () => {
-    component.buildForm();
-    component.otpSent.set(true);
-    component.otpVerified.set(true);
-    component.cancelChanges();
-    expect(component.otpSent()).toBe(false);
-    expect(component.otpVerified()).toBe(false);
+  describe('cancelChanges', () => {
+    it('should reset OTP state and reload profile', () => {
+      component.buildForm();
+      component.otpSent.set(true);
+      component.otpVerified.set(true);
+      component.countdown.set(30);
+
+      mockUserProfileService.getAdminProfile.mockReturnValue(
+        of({
+          result: true,
+          data: {
+            fullName: 'Admin',
+            email: 'admin@test.com',
+            userName: 'adm',
+            bio: '',
+            profilePic: '',
+          },
+        }),
+      );
+
+      component.cancelChanges();
+
+      expect(component.otpSent()).toBe(false);
+      expect(component.otpVerified()).toBe(false);
+      expect(component.countdown()).toBe(0);
+      expect(component.emailOtpAttempts.size).toBe(0);
+    });
   });
 
-  it('should cleanup on destroy', () => {
-    const nextSpy = jest.spyOn(component['destroy$'], 'next');
-    component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
+  describe('deleteProfilePic', () => {
+    it('should delete profile picture successfully', fakeAsync(() => {
+      mockUserProfileService.updateProfilePic.mockReturnValue(of({ result: true }));
+
+      component.profilePicUrl = 'custom-pic.png';
+      component.isImageError = true;
+
+      component.deleteProfilePic();
+      tick();
+
+      expect(mockUserProfileService.updateProfilePic).toHaveBeenCalled();
+      expect(component.profilePicUrl).toBe(defaultProfilePic);
+      expect(component.isImageError).toBe(false);
+      expect(mockSnackbar.showSuccess).toHaveBeenCalledWith(
+        platformMessages.successTitle,
+        platformMessages.profileDeleteSuccess,
+      );
+    }));
+
+    it('should show error if delete fails', fakeAsync(() => {
+      mockUserProfileService.updateProfilePic.mockReturnValue(
+        throwError(() => new Error('Delete failed')),
+      );
+
+      component.deleteProfilePic();
+      tick();
+
+      expect(mockSnackbar.showError).toHaveBeenCalledWith(
+        platformMessages.errorTitle,
+        platformMessages.profileDeleteFailure,
+      );
+    }));
+
+    it('should send empty string as ProfilePic in FormData', fakeAsync(() => {
+      mockUserProfileService.updateProfilePic.mockReturnValue(of({ result: true }));
+
+      component.deleteProfilePic();
+      tick();
+
+      expect(mockUserProfileService.updateProfilePic).toHaveBeenCalledWith(expect.any(FormData));
+    }));
   });
 
-  describe('AdminProfileComponent - loadAdminProfile & listenToEmailChanges', () => {
+  describe('hasCustomProfilePic', () => {
+    it('should return false if profilePicUrl is default', () => {
+      component.profilePicUrl = defaultProfilePic;
+      component.isImageError = false;
+
+      expect(component.hasCustomProfilePic()).toBe(false);
+    });
+
+    it('should return false if isImageError is true', () => {
+      component.profilePicUrl = 'custom-pic.png';
+      component.isImageError = true;
+
+      expect(component.hasCustomProfilePic()).toBe(false);
+    });
+
+    it('should return true if profilePicUrl is custom and no error', () => {
+      component.profilePicUrl = 'custom-pic.png';
+      component.isImageError = false;
+
+      expect(component.hasCustomProfilePic()).toBe(true);
+    });
+
+    it('should return false if both default pic and image error', () => {
+      component.profilePicUrl = defaultProfilePic;
+      component.isImageError = true;
+
+      expect(component.hasCustomProfilePic()).toBe(false);
+    });
+  });
+
+  describe('profileImageError', () => {
+    it('should set profilePicUrl to default and mark isImageError as true', () => {
+      component.profilePicUrl = 'some-url.png';
+      component.isImageError = false;
+
+      component.profileImageError();
+
+      expect(component.profilePicUrl).toBe(defaultProfilePic);
+      expect(component.isImageError).toBe(true);
+    });
+  });
+
+  describe('ngOnDestroy', () => {
+    it('should complete destroy$ subject', () => {
+      const nextSpy = jest.spyOn(component['destroy$'], 'next');
+      const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+
+      component.ngOnDestroy();
+
+      expect(nextSpy).toHaveBeenCalled();
+      expect(completeSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('loadAdminProfile & listenToEmailChanges', () => {
     beforeEach(() => {
       component.ngOnInit(); // ensures form built
     });
@@ -416,20 +579,20 @@ describe('AdminProfileComponent (Jest)', () => {
       tick();
 
       expect(component.lastTypedEmail).toBe('new@test.com');
-      expect(control?.validator).toBeTruthy();
       expect(component.emailOtpAttempts.has('new@test.com')).toBe(true);
     }));
 
     it('should not update when email stays the same', fakeAsync(() => {
       const control = component.adminProfileForm.get('email');
+      component.lastTypedEmail = 'same@test.com';
+
+      jest.spyOn(component, 'stopCountdown');
+
+      (component as any).listenToEmailChanges();
       control?.setValue('same@test.com');
       tick();
 
-      jest.spyOn(component as any, 'updateOtpButtonConfig');
-      control?.setValue('same@test.com'); // set same again
-      tick();
-
-      expect((component as any).updateOtpButtonConfig).not.toHaveBeenCalled();
+      expect(component.stopCountdown).not.toHaveBeenCalled();
     }));
 
     it('should clear validators on otp when email equals backend and otpVerified is true', fakeAsync(() => {

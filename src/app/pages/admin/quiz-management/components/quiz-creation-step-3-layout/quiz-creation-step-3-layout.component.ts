@@ -25,7 +25,6 @@ import { MatOptionModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { OutlineButtonComponent } from '../../../../../shared/components/outline-button/outline-button.component';
 import { MatIcon } from '@angular/material/icon';
-import { TagComponent } from '../../../../../shared/components/tag/tag.component';
 import { MatInputModule } from '@angular/material/input';
 import { FilledButtonComponent } from '../../../../../shared/components/filled-button/filled-button.component';
 import {
@@ -58,7 +57,6 @@ import { QuestionType } from '../../../../../shared/enums/quiz-management.enum';
     CommonModule,
     OutlineButtonComponent,
     MatIcon,
-    TagComponent,
     MatInputModule,
     FilledButtonComponent,
     QuizCreationStep3Option3Component,
