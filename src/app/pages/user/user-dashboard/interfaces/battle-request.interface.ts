@@ -1,16 +1,5 @@
-export interface BattleRequest {
-  requestId: number;
-  senderUserName: string;
-  senderFullName: string;
-  senderProfilePic?: string | null;
-  battleName?: string | null;
-  battleCategory: string;
-  battleDifficulty: string;
-  sendingDate: string;
-  timeAgo: string;
-}
-
-export interface BattleRequestWithProfile extends BattleRequest {
+import { IncomingBattleRequest } from '../../../../shared/interfaces/incoming-battle-request.interface';
+export interface BattleRequestWithProfile extends IncomingBattleRequest {
   displayImage?: string | null;
   initials?: string;
   initialsColor?: string;

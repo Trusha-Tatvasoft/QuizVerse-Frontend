@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BattleRequestNotificationsComponent } from '../../user/battle-request-notifications/battle-request-notifications.component';
+import { BattleRequestNotificationsComponent } from './battle-request-notifications.component';
 import { IncomingBattleRequest } from '../../../shared/interfaces/incoming-battle-request.interface';
 import { BattleHubService } from '../../../services/user/user-battles/battle-hub.service';
 import { of, Subject } from 'rxjs';
 import { IncomingRequestNotificationComponent } from '../../../shared/components/incoming-request-notification/incoming-request-notification.component';
 import { CommonModule } from '@angular/common';
 
-jest.useFakeTimers();
+jest.useFakeTimers(); // handle setTimeout for auto-remove
 
 describe('BattleRequestNotificationsComponent', () => {
   let component: BattleRequestNotificationsComponent;
@@ -16,9 +16,9 @@ describe('BattleRequestNotificationsComponent', () => {
 
   const mockRequest: IncomingBattleRequest = {
     requestId: 2,
+    senderUserName: 'john_doe',
     senderId: 10,
     battleId: 5,
-    senderUserName: 'john_doe',
     senderFullName: 'John Doe',
     senderProfilePic: 'https://example.com/avatar.jpg',
     battleName: 'Battle of Minds',

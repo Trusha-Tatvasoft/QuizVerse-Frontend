@@ -32,7 +32,11 @@
             <!-- Request Info -->
             <div class="requests-info">
               <strong>{{ request.senderUserName }}</strong>
-              <p>{{ request.battleCategory }} • {{ request.battleDifficulty }}</p>
+              <p>
+                <span>{{ request.battleCategory }}</span> •
+                <span>{{ request.battleDifficulty }}</span>
+              </p>
+              <p>Battle: {{ request.battleName }}</p>
               <span class="time">{{ request.timeAgo }}</span>
             </div>
           </div>
