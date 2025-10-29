@@ -39,6 +39,7 @@ import { AdminProfileComponent } from './pages/admin/admin-profile/admin-profile
 import { BattleResultComponent } from './pages/user/battle-result/battle-result.component';
 import { WaitingBattleResultComponent } from './pages/user/battle-result/components/waiting-battle-result/waiting-battle-result.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
+import { ContentModerationComponent } from './pages/admin/content-moderation/content-moderation.component';
 
 export const routes: Routes = [
   {
@@ -172,6 +173,11 @@ export const routes: Routes = [
         path: Navigations.Profile,
         component: AdminProfileComponent,
         title: 'Quizeverse | Question Difficulty',
+      },
+      {
+        path: Navigations.ContentModeration,
+        component: ContentModerationComponent,
+        title: 'Quizeverse | Content Moderation',
       },
     ],
   },
