@@ -12,13 +12,13 @@ import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar
 import { battleRequestMessages, platformMessages } from '../../../../../utils/constants';
 import { Subject, takeUntil } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BattleRequestStatus } from '../../../../../shared/enums/user-dashboard.enum';
 import {
   globalGetInitials,
   globalGetInitialsColorClass,
 } from '../../../../../utils/get-profile-initials.utils';
 import { IncomingBattleRequest } from '../../../../../shared/interfaces/incoming-battle-request.interface';
 import { BattleHubService } from '../../../../../services/user/user-battles/battle-hub.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-battle-request',
@@ -40,6 +40,7 @@ export class BattleRequestComponent implements OnInit {
   private readonly snackBarService = inject(SnackbarService);
   private readonly destroy$ = new Subject<void>();
   private readonly battleHubService = inject(BattleHubService);
+  private readonly router = inject(Router);
 
   ngOnInit(): void {
     this.loadBattleRequests();
@@ -95,56 +96,28 @@ export class BattleRequestComponent implements OnInit {
       });
   }
 
-  acceptRequest(request: BattleRequestWithProfile) {
-    this.dashboardService
-      .updateBattleRequestStatus({
-        requestId: request.requestId,
-        status: BattleRequestStatus.acceptRequest,
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (res) => {
-          if (res.result && res.data) {
-            this.snackBarService.showSuccess(
-              platformMessages.successTitle,
-              battleRequestMessages.accepted(request.senderUserName),
-            );
-            this.loadBattleRequests();
-          }
-        },
-        error: () => {
-          this.snackBarService.showError(
-            platformMessages.errorTitle,
-            battleRequestMessages.acceptFailed(request.senderUserName),
-          );
-        },
-      });
+  acceptRequest(request: BattleRequestWithProfile): void {
+    this.battleHubService.acceptRequest(request);
+
+    this.requests = this.requests.filter((r) => r.requestId !== request.requestId);
+
+    this.snackBarService.showSuccess(
+      platformMessages.successTitle,
+      battleRequestMessages.accepted(request.senderUserName),
+    );
+
+    this.navigateToSearchOpponent(request);
   }
 
-  declineRequest(request: BattleRequestWithProfile) {
-    this.dashboardService
-      .updateBattleRequestStatus({
-        requestId: request.requestId,
-        status: BattleRequestStatus.declineRequest,
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (res) => {
-          if (res.result && res.data) {
-            this.snackBarService.showSuccess(
-              platformMessages.successTitle,
-              battleRequestMessages.declined(request.senderUserName),
-            );
-            this.loadBattleRequests();
-          }
-        },
-        error: () => {
-          this.snackBarService.showError(
-            platformMessages.errorTitle,
-            battleRequestMessages.declineFailed(request.senderUserName),
-          );
-        },
-      });
+  declineRequest(request: BattleRequestWithProfile): void {
+    this.battleHubService.declineRequest(request.requestId);
+
+    this.requests = this.requests.filter((r) => r.requestId !== request.requestId);
+
+    this.snackBarService.showSuccess(
+      platformMessages.successTitle,
+      battleRequestMessages.declined(request.senderUserName),
+    );
   }
 
   handleImageError(event: Event, request: BattleRequestWithProfile) {
@@ -164,5 +137,29 @@ export class BattleRequestComponent implements OnInit {
 
   private getInitialsColorClass(name: string): string {
     return globalGetInitialsColorClass(name);
+  }
+
+  private navigateToSearchOpponent(request: BattleRequestWithProfile): void {
+    if (!request?.battleId || request.battleId <= 0) return;
+
+    const battleData = {
+      battleName: request.battleName,
+      battleCategory: request.battleCategory,
+      battleXp: 0,
+      battleDifficulty: request.battleDifficulty,
+    };
+
+    this.router.navigate(
+      [
+        'user',
+        'battles',
+        'battle-list',
+        'waiting-opponent',
+        btoa(encodeURIComponent(request.battleId)),
+      ],
+      {
+        state: { battleData },
+      },
+    );
   }
 }

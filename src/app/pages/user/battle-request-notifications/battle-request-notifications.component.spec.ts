@@ -17,9 +17,9 @@ describe('BattleRequestNotificationsComponent', () => {
   const mockRequest: IncomingBattleRequest = {
     requestId: 2,
     senderUserName: 'john_doe',
-    senderId: 10,
-    battleId: 5,
     senderFullName: 'John Doe',
+    battleId: 5,
+    senderId: 5,
     senderProfilePic: 'https://example.com/avatar.jpg',
     battleName: 'Battle of Minds',
     battleCategory: 'General Knowledge',

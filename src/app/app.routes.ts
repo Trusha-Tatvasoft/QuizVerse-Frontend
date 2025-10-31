@@ -39,6 +39,7 @@ import { AdminProfileComponent } from './pages/admin/admin-profile/admin-profile
 import { BattleResultComponent } from './pages/user/battle-result/battle-result.component';
 import { WaitingBattleResultComponent } from './pages/user/battle-result/components/waiting-battle-result/waiting-battle-result.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
+import { WaitingOpponetComponent } from './pages/user/user-battles/waiting-opponent/waiting-opponent.component';
 
 export const routes: Routes = [
   {
@@ -213,6 +214,11 @@ export const routes: Routes = [
             path: `${Navigations.BattleList}/${Navigations.SearchOpponent}/:id`,
             component: SearchOpponentComponent,
             title: 'Quizeverse | Search Opponent',
+          },
+          {
+            path: `${Navigations.BattleList}/${Navigations.WaitingOpponent}/:id`,
+            component: WaitingOpponetComponent,
+            title: 'Quizeverse | Waiting Opponent',
           },
           {
             path: `${Navigations.BattleList}/${Navigations.BattleResult}/:id`,

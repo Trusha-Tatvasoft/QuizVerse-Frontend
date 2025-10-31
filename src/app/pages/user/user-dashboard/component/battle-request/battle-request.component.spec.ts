@@ -29,6 +29,8 @@ describe('BattleRequestComponent (Jest)', () => {
       senderFullName: 'John Doe',
       senderProfilePic: 'profile/john.png',
       battleCategory: 'Math',
+      senderId: 5,
+      battleId: 10,
       battleDifficulty: 'Easy',
       timeAgo: '2h ago',
       sendingDate: new Date('2025-09-01T10:00:00Z'),
@@ -53,6 +55,8 @@ describe('BattleRequestComponent (Jest)', () => {
       ensureConnection: jest.fn().mockResolvedValue(void 0),
       onBattleRequest: onBattleRequestSubject,
       cleanupIncomingRequests: jest.fn(),
+      acceptRequest: jest.fn(),
+      declineRequest: jest.fn(),
     } as unknown as jest.Mocked<BattleHubService>;
 
     await TestBed.configureTestingModule({
@@ -96,73 +100,48 @@ describe('BattleRequestComponent (Jest)', () => {
   });
 
   describe('acceptRequest', () => {
-    it('should call update service and show success message on success', () => {
-      const req = { ...mockRequests[0], requestId: 1 } as any;
-      mockDashboardService.updateBattleRequestStatus.mockReturnValue(
-        of({ result: true, data: true, statusCode: 200, message: '' }),
-      );
+    it('should call decline request via hub and show success message', () => {
+      const req = { requestId: 1, senderUserName: 'John' } as any;
       const loadSpy = jest.spyOn(component, 'loadBattleRequests');
+
+      mockBattleHubService.declineRequest.mockImplementation(() => {}); // mock hub call
+
+      component.declineRequest(req);
+
+      expect(mockBattleHubService.declineRequest).toHaveBeenCalledWith(1);
+      expect(mockSnackbarService.showSuccess).toHaveBeenCalledWith(
+        platformMessages.successTitle,
+        battleRequestMessages.declined('John'),
+      );
+      expect(loadSpy).not.toHaveBeenCalled(); // hub version doesn’t reload
+    });
+
+    it('should show success message when request is accepted', () => {
+      const req = { requestId: 1, senderUserName: 'john123' } as any;
+      component.requests = [req];
 
       component.acceptRequest(req);
 
-      expect(mockDashboardService.updateBattleRequestStatus).toHaveBeenCalledWith({
-        requestId: 1,
-        status: BattleRequestStatus.acceptRequest,
-      });
+      expect(mockBattleHubService.acceptRequest).toHaveBeenCalledWith(req);
       expect(mockSnackbarService.showSuccess).toHaveBeenCalledWith(
         platformMessages.successTitle,
         battleRequestMessages.accepted(req.senderUserName),
-      );
-      expect(loadSpy).toHaveBeenCalled();
-    });
-
-    it('should show error message on failure', () => {
-      const req = { ...mockRequests[0], requestId: 1 } as any;
-      mockDashboardService.updateBattleRequestStatus.mockReturnValue(
-        throwError(() => new Error('API error')),
-      );
-
-      component.acceptRequest(req);
-
-      expect(mockSnackbarService.showError).toHaveBeenCalledWith(
-        platformMessages.errorTitle,
-        battleRequestMessages.acceptFailed(req.senderUserName),
       );
     });
   });
 
   describe('declineRequest', () => {
-    it('should call update service and show success message on success', () => {
-      const req = { ...mockRequests[0], requestId: 1 } as any;
-      mockDashboardService.updateBattleRequestStatus.mockReturnValue(
-        of({ result: true, data: true, statusCode: 200, message: '' }),
-      );
-      const loadSpy = jest.spyOn(component, 'loadBattleRequests');
+    it('should call battleHubService.declineRequest and show success message on success', () => {
+      const req = { requestId: 1, senderUserName: 'John' } as any;
+      component.requests = [req];
 
       component.declineRequest(req);
 
-      expect(mockDashboardService.updateBattleRequestStatus).toHaveBeenCalledWith({
-        requestId: 1,
-        status: BattleRequestStatus.declineRequest,
-      });
+      expect(mockBattleHubService.declineRequest).toHaveBeenCalledWith(1);
+      expect(component.requests).toEqual([]);
       expect(mockSnackbarService.showSuccess).toHaveBeenCalledWith(
         platformMessages.successTitle,
-        battleRequestMessages.declined(req.senderUserName),
-      );
-      expect(loadSpy).toHaveBeenCalled();
-    });
-
-    it('should show error message on failure', () => {
-      const req = { ...mockRequests[0], requestId: 1 } as any;
-      mockDashboardService.updateBattleRequestStatus.mockReturnValue(
-        throwError(() => new Error('API error')),
-      );
-
-      component.declineRequest(req);
-
-      expect(mockSnackbarService.showError).toHaveBeenCalledWith(
-        platformMessages.errorTitle,
-        battleRequestMessages.declineFailed(req.senderUserName),
+        battleRequestMessages.declined('John'),
       );
     });
   });
@@ -202,6 +181,8 @@ describe('BattleRequestComponent (Jest)', () => {
       const newRequest: IncomingBattleRequest = {
         requestId: 2,
         senderUserName: 'jane456',
+        battleId: 4,
+        senderId: 5,
         senderFullName: 'Jane Smith',
         senderProfilePic: 'profile/jane.png',
         battleCategory: 'Coding',
@@ -211,10 +192,8 @@ describe('BattleRequestComponent (Jest)', () => {
         battleName: 'JS Battle',
       };
 
-      // Call subscribeToBattleHub
       component.subscribeToBattleHub();
 
-      // Emit new request through the Subject
       (mockBattleHubService.onBattleRequest as Subject<IncomingBattleRequest[]>).next([newRequest]);
 
       setTimeout(() => {
