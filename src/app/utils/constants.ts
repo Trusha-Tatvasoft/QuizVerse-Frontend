@@ -184,6 +184,11 @@ export const navigationItems = {
       icon: 'notifications',
       route: `${Navigations.Admin}/${Navigations.Notifications}`,
     },
+    {
+      label: 'Content Moderation',
+      icon: 'warning',
+      route: `${Navigations.Admin}/${Navigations.ContentModeration}`,
+    },
   ],
 };
 //#endregion
