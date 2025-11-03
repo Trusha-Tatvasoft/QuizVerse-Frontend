@@ -124,4 +124,15 @@ export const tabLazyComponentMap: Record<string, () => Promise<Type<unknown>>> =
     import(
       '../pages/layout/notification-center/components/notification-card/notification-card.component'
     ).then((m) => m.NotificationCardComponent),
+
+  // content moderation tabs
+  reportedQuizzes: () =>
+    import(
+      '../pages/layout/notification-center/components/notification-card/notification-card.component'
+    ).then((m) => m.NotificationCardComponent),
+
+  flaggedComments: () =>
+    import(
+      '../pages/layout/notification-center/components/notification-card/notification-card.component'
+    ).then((m) => m.NotificationCardComponent),
 };

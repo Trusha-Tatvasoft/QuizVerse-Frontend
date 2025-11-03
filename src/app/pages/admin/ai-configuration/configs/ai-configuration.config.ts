@@ -70,9 +70,7 @@ export function mapAiSummaryToCards(data: AIConfigurationSummary): CardInputConf
   ];
 }
 
-/**
- * Utility to calculate % growth between current & last month.
- */
+// Utility to calculate % growth between current & last month.
 export function calculateGrowthRate(current: number, last: number): string {
   if (!last || last === 0) {
     if (current === 0) {

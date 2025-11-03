@@ -186,6 +186,11 @@ export const navigationItems = {
       route: `${Navigations.Admin}/${Navigations.Notifications}`,
     },
     {
+      label: 'Content Moderation',
+      icon: 'warning',
+      route: `${Navigations.Admin}/${Navigations.ContentModeration}`,
+    },
+    {
       label: 'AI Configuration',
       icon: 'electric_bolt',
       route: `${Navigations.Admin}/${Navigations.AiConfig}`,

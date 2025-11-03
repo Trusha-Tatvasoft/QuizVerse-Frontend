@@ -1,0 +1,19 @@
+<main class="admin-management-page">
+  <div class="content-moderation-page-header">
+    <app-page-header
+      [icon]="contentModerationConfig.icon"
+      [title]="contentModerationConfig.title"
+      [subtitle]="contentModerationConfig.subtitle"
+      [theme]="contentModerationConfig.theme"
+    ></app-page-header>
+    <div class="stats-grid">
+      @for (config of contentModerationStatsConfigs; track config.title) {
+        <app-card [cardConfig]="config"></app-card>
+      }
+    </div>
+  </div>
+  <div class="content-moderation-tabs">
+    <app-common-tab [tabs]="tabs" [selectedIndex]="selectedTab" (tabChanged)="onTabChanged($event)">
+    </app-common-tab>
+  </div>
+</main>

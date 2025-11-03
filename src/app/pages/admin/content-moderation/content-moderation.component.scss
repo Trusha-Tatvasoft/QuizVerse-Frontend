@@ -1,0 +1,18 @@
+.admin-management-page {
+  .content-moderation-page-header {
+    .stats-grid {
+      display: grid;
+      gap: 1.25rem;
+      padding: 1.5rem 0;
+      grid-template-columns: 1fr;
+
+      @media (min-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (min-width: 1440px) {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+  }
+}
