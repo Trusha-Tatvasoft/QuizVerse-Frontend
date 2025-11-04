@@ -129,21 +129,16 @@ describe('FromPdfComponent', () => {
 
     it('should accept valid PDF file', () => {
       const mockFile = new File(['dummy'], 'valid.pdf', { type: 'application/pdf' });
-      const mockCallback = jest.fn();
-      component.pdfFileSelected = mockCallback;
 
       const event = { target: { files: [mockFile] } } as unknown as Event;
       component.fileSelected(event);
 
       expect(component.selectedFile).toBe(mockFile);
-      expect(mockCallback).toHaveBeenCalledWith(mockFile);
       expect(component.uploadForm.get('file')?.value).toBe(mockFile);
     });
 
     it('should reject file with invalid MIME type', () => {
       const invalidFile = new File(['dummy'], 'invalid.txt', { type: 'text/plain' });
-      const mockCallback = jest.fn();
-      component.pdfFileSelected = mockCallback;
 
       const event = { target: { files: [invalidFile] } } as unknown as Event;
       const control = component.uploadForm.get('file');
@@ -152,14 +147,11 @@ describe('FromPdfComponent', () => {
 
       expect(control?.errors).toEqual({ fileType: true });
       expect(control?.touched).toBe(true);
-      expect(mockCallback).toHaveBeenCalledWith(null);
       expect(component.selectedFile).toBeNull();
     });
 
     it('should reject file without .pdf extension even with correct MIME type', () => {
       const invalidFile = new File(['dummy'], 'invalid.TXT', { type: 'application/pdf' });
-      const mockCallback = jest.fn();
-      component.pdfFileSelected = mockCallback;
 
       const event = { target: { files: [invalidFile] } } as unknown as Event;
       const control = component.uploadForm.get('file');
@@ -167,7 +159,6 @@ describe('FromPdfComponent', () => {
       component.fileSelected(event);
 
       expect(control?.errors).toEqual({ fileType: true });
-      expect(mockCallback).toHaveBeenCalledWith(null);
       expect(component.selectedFile).toBeNull();
     });
 
@@ -204,20 +195,27 @@ describe('FromPdfComponent', () => {
 
     it('should handle uppercase PDF extension', () => {
       const mockFile = new File(['dummy'], 'valid.PDF', { type: 'application/pdf' });
-      const mockCallback = jest.fn();
-      component.pdfFileSelected = mockCallback;
 
       const event = { target: { files: [mockFile] } } as unknown as Event;
       component.fileSelected(event);
 
       expect(component.selectedFile).toBe(mockFile);
-      expect(mockCallback).toHaveBeenCalledWith(mockFile);
     });
 
     it('should call updateGenerateButtonState after file selection', () => {
       const updateSpy = jest.spyOn(component as any, 'updateGenerateButtonState');
       const mockFile = new File(['dummy'], 'valid.pdf', { type: 'application/pdf' });
       const event = { target: { files: [mockFile] } } as unknown as Event;
+
+      component.fileSelected(event);
+
+      expect(updateSpy).toHaveBeenCalled();
+    });
+
+    it('should call updateGenerateButtonState after invalid file selection', () => {
+      const updateSpy = jest.spyOn(component as any, 'updateGenerateButtonState');
+      const invalidFile = new File(['dummy'], 'invalid.txt', { type: 'text/plain' });
+      const event = { target: { files: [invalidFile] } } as unknown as Event;
 
       component.fileSelected(event);
 
@@ -233,10 +231,8 @@ describe('FromPdfComponent', () => {
     it('should clear selected file and reset input', () => {
       const fileInput = document.createElement('input');
       const pdfFile = new File(['data'], 'test.pdf', { type: 'application/pdf' });
-      const mockCallback = jest.fn();
 
       component.selectedFile = pdfFile;
-      component.pdfFileSelected = mockCallback;
       component.uploadForm.patchValue({ file: pdfFile });
       fileInput.value = 'test.pdf';
 
@@ -245,7 +241,6 @@ describe('FromPdfComponent', () => {
       expect(component.selectedFile).toBeNull();
       expect(fileInput.value).toBe('');
       expect(component.uploadForm.get('file')?.value).toBeNull();
-      expect(mockCallback).toHaveBeenCalledWith(null);
     });
 
     it('should call updateGenerateButtonState after clearing file', () => {
@@ -255,16 +250,6 @@ describe('FromPdfComponent', () => {
       component.clearSelectedFile(fileInput);
 
       expect(updateSpy).toHaveBeenCalled();
-    });
-
-    it('should clear file when pdfFileSelected callback is not provided', () => {
-      const fileInput = document.createElement('input');
-      component.pdfFileSelected = undefined;
-      component.selectedFile = new File(['data'], 'test.pdf', { type: 'application/pdf' });
-
-      component.clearSelectedFile(fileInput);
-
-      expect(component.selectedFile).toBeNull();
     });
   });
 

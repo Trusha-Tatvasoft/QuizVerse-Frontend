@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { SnackbarService } from '../../../../../../../shared/service/snackbar/snackbar.service';
 import { ValidationErrorService } from '../../../../../../../shared/service/validation-error/validation-error.service';
@@ -33,8 +33,6 @@ import { AiQuestionTabComponent } from '../../ai-question-tab.component';
   styleUrl: './from-pdf.component.scss',
 })
 export class FromPdfComponent {
-  @Input() pdfFileSelected?: (file: File | null) => void;
-
   uploadForm!: FormGroup;
   selectedFile: File | null = null;
 
@@ -83,14 +81,12 @@ export class FromPdfComponent {
         control?.setErrors({ fileType: true });
         control?.markAsTouched();
         this.selectedFile = null;
-        this.pdfFileSelected?.(null);
         this.updateGenerateButtonState();
         return;
       }
 
       this.selectedFile = file;
       this.uploadForm.patchValue({ file });
-      this.pdfFileSelected?.(file);
       this.updateGenerateButtonState();
     }
   }
@@ -99,7 +95,6 @@ export class FromPdfComponent {
     this.selectedFile = null;
     this.uploadForm.patchValue({ file: null });
     fileInput.value = '';
-    this.pdfFileSelected?.(null);
     this.updateGenerateButtonState();
   }
 
