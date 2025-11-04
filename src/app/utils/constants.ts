@@ -206,6 +206,8 @@ export const platformMessages = {
   errorExport: `Export failed.`,
   registerSuccessfully: `Register Successfully!!`,
   unexpectedError: 'An unexpected error occurred. Please try again later.',
+  dropDownLoadFailed: 'Failed to load the Dropdowns',
+
   //#region authMessages
   loginRedirectMessage: 'Redirecting to login.',
   unauthorizedTitle: 'Unauthorized',
@@ -238,6 +240,11 @@ export const platformMessages = {
   noQuestionsToSave: 'No questions to save.',
   saveQuestionsSuccess: 'Questions added successfully.',
   saveQuestionsFailure: 'Something went wrong while saving questions.',
+
+  selectRequiredField: 'Please select all required fields.',
+  maxNoOfQueLimit: 'Total number of questions cannot exceed 10.',
+  uploadFileRequired: 'Please Uplaod a file',
+  aiConfigRequired: 'Please configure at least one question type',
   //#endregion
 
   //#region QuizManagement Messages
@@ -400,6 +407,9 @@ export const allowedImportQuestionFileTypes = [
   'application/vnd.ms-excel', // .xls
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
 ];
+
+export const allowedPDFType = 'application/pdf';
+
 export const maxOtpAttempts = 2;
 
 export const maxFileUploadSize = 10 * 1024 * 1024;

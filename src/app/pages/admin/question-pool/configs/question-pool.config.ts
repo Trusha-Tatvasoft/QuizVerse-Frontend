@@ -53,3 +53,24 @@ export const deleteQuestionDialog: ConfirmationDialogData = {
   confirmButtonConfig: deleteButtonConfig,
   cancelButtonConfig: cancelButtonConfig,
 };
+
+export const addButtonConfig: ButtonConfig = {
+  label: 'Add',
+  fontWeight: 500,
+  variant: 'secondary',
+  type: 'submit',
+};
+
+export const generateQueButtonConfig: ButtonConfig = {
+  label: 'Generate Question',
+  fontWeight: 500,
+  variant: 'gradient',
+  type: 'submit',
+};
+
+export const resetBtnConfig: ButtonConfig = {
+  label: 'Reset All',
+  fontWeight: 500,
+  variant: 'secondary',
+  type: 'submit',
+};

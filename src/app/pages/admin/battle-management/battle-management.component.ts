@@ -17,7 +17,7 @@ import { BattleManagementService } from '../../../services/admin/battle-manageme
 import { battleToBattleCardData } from './battle-management-list.mapper';
 import { platformMessages } from '../../../utils/constants';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { Navigations } from '../../../shared/enums/navigation';
 import { ConfirmationDialogData } from '../../../shared/interfaces/confirmation-dialog.interface';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
@@ -33,7 +33,6 @@ import { deleteBattleDialog } from './configs/battle-delete-confirmation-dialog.
     MatIcon,
     OutlineButtonComponent,
     CommonModule,
-    RouterLink,
   ],
   templateUrl: './battle-management.component.html',
   styleUrls: [
