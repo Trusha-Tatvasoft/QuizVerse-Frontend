@@ -12,5 +12,8 @@
   ></app-sidebar>
   <main class="main-content">
     <router-outlet></router-outlet>
+    @if (!isAdmin) {
+      <app-battle-request-notifications></app-battle-request-notifications>
+    }
   </main>
 </div>
