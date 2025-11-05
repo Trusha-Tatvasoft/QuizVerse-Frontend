@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { BattleRequest, BattleRequestWithProfile } from '../../interfaces/battle-request.interface';
+import { BattleRequestWithProfile } from '../../interfaces/battle-request.interface';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { FilledButtonComponent } from '../../../../../shared/components/filled-button/filled-button.component';
@@ -12,11 +12,13 @@ import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar
 import { battleRequestMessages, platformMessages } from '../../../../../utils/constants';
 import { Subject, takeUntil } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { BattleRequestStatus } from '../../../../../shared/enums/user-dashboard.enum';
 import {
   globalGetInitials,
   globalGetInitialsColorClass,
 } from '../../../../../utils/get-profile-initials.utils';
+import { IncomingBattleRequest } from '../../../../../shared/interfaces/incoming-battle-request.interface';
+import { BattleHubService } from '../../../../../services/user/user-battles/battle-hub.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-battle-request',
@@ -37,14 +39,12 @@ export class BattleRequestComponent implements OnInit {
   private readonly dashboardService = inject(UserDashboardService);
   private readonly snackBarService = inject(SnackbarService);
   private readonly destroy$ = new Subject<void>();
+  private readonly battleHubService = inject(BattleHubService);
+  private readonly router = inject(Router);
 
   ngOnInit(): void {
     this.loadBattleRequests();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.subscribeToBattleHub();
   }
 
   loadBattleRequests(): void {
@@ -52,7 +52,7 @@ export class BattleRequestComponent implements OnInit {
       .getBattleRequests()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (res: ApiResponse<BattleRequest[]>) => {
+        next: (res: ApiResponse<IncomingBattleRequest[]>) => {
           if (res.result && res.data) {
             this.requests = res.data.map((req) => ({
               ...req,
@@ -73,61 +73,62 @@ export class BattleRequestComponent implements OnInit {
       });
   }
 
-  acceptRequest(request: BattleRequestWithProfile) {
-    this.dashboardService
-      .updateBattleRequestStatus({
-        requestId: request.requestId,
-        status: BattleRequestStatus.acceptRequest,
+  subscribeToBattleHub(): void {
+    this.battleHubService
+      .ensureConnection()
+      .then(() => {
+        this.battleHubService.onBattleRequest
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((requests: IncomingBattleRequest[]) => {
+            requests.forEach((request) => {
+              const requestWithProfile = {
+                ...request,
+                displayImage: request.senderProfilePic ?? '',
+                initials: this.getInitials(request.senderFullName),
+                initialsColor: this.getInitialsColorClass(request.senderFullName),
+              };
+              this.requests.unshift(requestWithProfile);
+            });
+          });
       })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (res) => {
-          if (res.result && res.data) {
-            this.snackBarService.showSuccess(
-              platformMessages.successTitle,
-              battleRequestMessages.accepted(request.senderUserName),
-            );
-            this.loadBattleRequests();
-          }
-        },
-        error: () => {
-          this.snackBarService.showError(
-            platformMessages.errorTitle,
-            battleRequestMessages.acceptFailed(request.senderUserName),
-          );
-        },
+      .catch(() => {
+        this.snackBarService.showError('Failed to connect to battle notifications.');
       });
   }
 
-  declineRequest(request: BattleRequestWithProfile) {
-    this.dashboardService
-      .updateBattleRequestStatus({
-        requestId: request.requestId,
-        status: BattleRequestStatus.declineRequest,
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (res) => {
-          if (res.result && res.data) {
-            this.snackBarService.showSuccess(
-              platformMessages.successTitle,
-              battleRequestMessages.declined(request.senderUserName),
-            );
-            this.loadBattleRequests();
-          }
-        },
-        error: () => {
-          this.snackBarService.showError(
-            platformMessages.errorTitle,
-            battleRequestMessages.declineFailed(request.senderUserName),
-          );
-        },
-      });
+  acceptRequest(request: BattleRequestWithProfile): void {
+    this.battleHubService.acceptRequest(request);
+
+    this.requests = this.requests.filter((r) => r.requestId !== request.requestId);
+
+    this.snackBarService.showSuccess(
+      platformMessages.successTitle,
+      battleRequestMessages.accepted(request.senderUserName),
+    );
+
+    this.navigateToSearchOpponent(request);
+  }
+
+  declineRequest(request: BattleRequestWithProfile): void {
+    this.battleHubService.declineRequest(request.requestId);
+
+    this.requests = this.requests.filter((r) => r.requestId !== request.requestId);
+
+    this.snackBarService.showSuccess(
+      platformMessages.successTitle,
+      battleRequestMessages.declined(request.senderUserName),
+    );
   }
 
   handleImageError(event: Event, request: BattleRequestWithProfile) {
     (event.target as HTMLImageElement).style.display = 'none';
     request.displayImage = null;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.battleHubService.cleanupIncomingRequests();
   }
 
   private getInitials(name: string): string {
@@ -136,5 +137,29 @@ export class BattleRequestComponent implements OnInit {
 
   private getInitialsColorClass(name: string): string {
     return globalGetInitialsColorClass(name);
+  }
+
+  private navigateToSearchOpponent(request: BattleRequestWithProfile): void {
+    if (!request?.battleId || request.battleId <= 0) return;
+
+    const battleData = {
+      battleName: request.battleName,
+      battleCategory: request.battleCategory,
+      battleXp: 0,
+      battleDifficulty: request.battleDifficulty,
+    };
+
+    this.router.navigate(
+      [
+        'user',
+        'battles',
+        'battle-list',
+        'waiting-opponent',
+        btoa(encodeURIComponent(request.battleId)),
+      ],
+      {
+        state: { battleData },
+      },
+    );
   }
 }

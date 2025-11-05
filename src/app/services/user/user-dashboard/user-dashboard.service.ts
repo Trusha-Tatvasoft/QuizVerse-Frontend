@@ -8,11 +8,11 @@ import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { SnackbarService } from '../../../shared/service/snackbar/snackbar.service';
 import { platformMessages } from '../../../utils/constants';
 import { UserDashboardApiResponse } from '../../../pages/user/user-dashboard/interfaces/user-dashboard-api-response.interface';
-import { BattleRequest } from '../../../pages/user/user-dashboard/interfaces/battle-request.interface';
 import { RankProgress } from '../../../pages/user/user-dashboard/interfaces/rank-progress.interface';
 import { QuizResult } from '../../../pages/user/user-dashboard/interfaces/quiz-result.interface';
 import { FeaturedQuizList } from '../../../pages/user/user-dashboard/interfaces/featured-quiz.interface';
 import { BattleRequestAction } from '../../../pages/user/user-dashboard/interfaces/battle-request-action.interface';
+import { IncomingBattleRequest } from '../../../shared/interfaces/incoming-battle-request.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -73,8 +73,8 @@ export class UserDashboardService {
     );
   }
 
-  getBattleRequests(): Observable<ApiResponse<BattleRequest[]>> {
-    return this.http.get<ApiResponse<BattleRequest[]>>(
+  getBattleRequests(): Observable<ApiResponse<IncomingBattleRequest[]>> {
+    return this.http.get<ApiResponse<IncomingBattleRequest[]>>(
       `${environment.baseUrl}/${EndPoints.GetBattleRequests}`,
     );
   }

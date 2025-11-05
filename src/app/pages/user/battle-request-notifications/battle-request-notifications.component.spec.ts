@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BattleRequestNotificationsComponent } from '../../user/battle-request-notifications/battle-request-notifications.component';
+import { BattleRequestNotificationsComponent } from './battle-request-notifications.component';
 import { IncomingBattleRequest } from '../../../shared/interfaces/incoming-battle-request.interface';
 import { BattleHubService } from '../../../services/user/user-battles/battle-hub.service';
 import { of, Subject } from 'rxjs';
 import { IncomingRequestNotificationComponent } from '../../../shared/components/incoming-request-notification/incoming-request-notification.component';
 import { CommonModule } from '@angular/common';
 
-jest.useFakeTimers();
+jest.useFakeTimers(); // handle setTimeout for auto-remove
 
 describe('BattleRequestNotificationsComponent', () => {
   let component: BattleRequestNotificationsComponent;
@@ -18,8 +18,8 @@ describe('BattleRequestNotificationsComponent', () => {
     requestId: 2,
     senderUserName: 'john_doe',
     senderFullName: 'John Doe',
-    senderId: 3,
-    battleId: 4,
+    battleId: 5,
+    senderId: 5,
     senderProfilePic: 'https://example.com/avatar.jpg',
     battleName: 'Battle of Minds',
     battleCategory: 'General Knowledge',
