@@ -135,4 +135,8 @@ export const tabLazyComponentMap: Record<string, () => Promise<Type<unknown>>> =
     import(
       '../pages/layout/notification-center/components/notification-card/notification-card.component'
     ).then((m) => m.NotificationCardComponent),
+  reportedQuestions: () =>
+    import(
+      '../pages/admin/content-moderation/reported-questions/reported-questions.component'
+    ).then((m) => m.ReportedQuestionsComponent),
 };

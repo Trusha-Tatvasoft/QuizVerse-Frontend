@@ -169,4 +169,8 @@ export enum EndPoints {
   MarkAsAllRead = 'NotificationCenter/mark-as-all-read',
   MarkAsRead = 'NotificationCenter/mark-read',
   //#endregion
+
+  //#region Content Moderation
+  ContentModerationMatricsData = 'ContentModeration/get-content-moderation-matrics-data',
+  //#endregion
 }
