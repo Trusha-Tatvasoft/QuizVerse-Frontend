@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   templateUrl: './reported-questions.component.html',
   styleUrls: [
     './reported-questions.component.scss',
-    '../../../layout/notification-center/components/notification-card/notification-card.component.scss',
+    '../../../../layout/notification-center/components/notification-card/notification-card.component.scss',
   ],
 })
 export class ReportedQuestionsComponent {}
