@@ -1,0 +1,84 @@
+<main class="admin-management-page">
+  <div class="quiz-page-header">
+    <app-page-header
+      [icon]="aiheaderConfig.icon"
+      [title]="aiheaderConfig.title"
+      [subtitle]="aiheaderConfig.subtitle"
+      [theme]="aiheaderConfig.theme"
+    >
+    </app-page-header>
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 py-[24px] gap-5">
+      @for (config of configss; let i = $index; track config.title) {
+        <div
+          [ngClass]="{
+            'col-span-1': true,
+            'md:col-span-2 md:mx-auto md:w-1/2 xl:col-span-1 xl:mx-0 xl:w-auto':
+              i === configss.length - 1 && configss.length % 2 !== 0,
+          }"
+        >
+          <app-card [cardConfig]="config"></app-card>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="monitoring-card bg-white p-5">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
+      <div>
+        <h2 class="monitoring-heading">Usage Monitoring</h2>
+        <p class="monitoring-subtitle">Monitor AI usage and performance metrics</p>
+      </div>
+      <div>
+        <mat-form-field appearance="outline" class="filter-select">
+          <mat-select
+            [(value)]="selectedStatus"
+            (selectionChange)="fetchAiUsageFilterData($event.value)"
+            placeholder="All Models"
+          >
+            <mat-option [value]="''">All Models</mat-option>
+            @for (status of aiModels; track status.value) {
+              <mat-option [value]="status.value">{{ status.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 mt-6">
+      <div class="card-border p-3">
+        <div class="flex flex-col justify-start">
+          <h3 class="text-[16px] md:text-[20px] font-medium">Today's Usage</h3>
+          <span class="font-bold text-[30px] text-blue-600">
+            {{ aiMonitoringData.todaysApiCalls }}
+          </span>
+          <p class="text-gray-600 text-sm">API calls</p>
+        </div>
+      </div>
+
+      <div class="card-border p-3">
+        <div class="flex flex-col justify-start">
+          <h3 class="text-[16px] md:text-[20px] font-medium">Overall Average Response Time</h3>
+          <span class="font-bold text-[30px] text-green-600">
+            {{ aiMonitoringData.averageResponseTimeInSecond }}
+          </span>
+          <p class="text-gray-500 text-sm">Response time</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-border p-3 mb-6">
+      <div class="flex flex-col justify-start gap-3">
+        <h3 class="text-[16px] md:text-[20px] font-medium">Error Rate</h3>
+        <div class="flex flex-row items-center gap-2">
+          <app-progress-bar
+            class="w-full"
+            [percentage]="aiMonitoringData.errorRate"
+            theme="primary"
+          ></app-progress-bar>
+          <span> {{ aiMonitoringData.errorRate }}%</span>
+        </div>
+        <p class="text-gray-500 text-sm">Within acceptable limits</p>
+      </div>
+    </div>
+  </div>
+</main>

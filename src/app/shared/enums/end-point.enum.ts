@@ -169,4 +169,9 @@ export enum EndPoints {
   MarkAsAllRead = 'NotificationCenter/mark-as-all-read',
   MarkAsRead = 'NotificationCenter/mark-read',
   //#endregion
+
+  // #region AI Configuration
+  AiConfigurationCardData = 'AiConfiguration/get-ai-configuration-card-details',
+  AiUsageDetails = 'AiConfiguration/get-ai-uses-details',
+  //#endregion
 }
