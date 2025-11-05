@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable, of, switchMap, tap } from 'rxjs';
@@ -19,15 +19,16 @@ import {
 } from '../../../utils/constants';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { Navigations } from '../../../shared/enums/navigation';
+import { BattleHubService } from '../../../services/user/user-battles/battle-hub.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly API = environment.baseUrl;
-
   private readonly router = inject(Router);
   private readonly snackbar = inject(SnackbarService);
   private readonly cookieService = inject(CookieService);
   private readonly http = inject(HttpClient);
+  private readonly injector = inject(Injector);
 
   currentRole$ = new BehaviorSubject<string | null>(null);
 
@@ -137,8 +138,11 @@ export class AuthService {
     this.cookieService.delete(refreshTokenKey, '/');
     this.currentRole$.next(null);
     this.router.navigate([Navigations.Login]);
+    const battleHub = this.injector.get(BattleHubService);
+
     if (isLogout) {
       this.snackbar.showSuccess(platformMessages.logoutSuccess);
+      battleHub.stopConnection();
     } else {
       this.snackbar.showError(
         platformMessages.sessionExpiredTitle,
