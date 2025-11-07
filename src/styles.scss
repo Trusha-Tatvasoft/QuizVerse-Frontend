@@ -697,3 +697,11 @@ app-data-table {
 .notification-container .incoming-request-actions app-outline-button .outline-button {
   width: 100% !important;
 }
+
+.quiz-title {
+  .report-quiz-btn {
+    button {
+      padding-inline: 0.5rem;
+    }
+  }
+}
