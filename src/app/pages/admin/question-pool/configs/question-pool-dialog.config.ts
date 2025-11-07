@@ -204,3 +204,18 @@ export const importQuestionFormFields: DynamicFormField[] = [
     },
   },
 ];
+
+export const importPdfFormFields: DynamicFormField[] = [
+  {
+    name: 'file',
+    label: 'Upload PDF',
+    type: 'file',
+    placeholder: 'Choose a PDF file',
+    icon: 'upload',
+    validators: [Validators.required],
+    validationMessages: {
+      required: 'A PDF file is required.',
+      fileType: 'Only PDF files are allowed.',
+    },
+  },
+];

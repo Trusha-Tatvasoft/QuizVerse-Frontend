@@ -1,5 +1,139 @@
-<app-common-tab
-  [tabs]="tabs"
-  [selectedIndex]="selectedIndex()"
-  (tabChanged)="switchToTab($event)"
-></app-common-tab>
+<form [formGroup]="aiQuestionForm" class="ai-question-form">
+  <div class="ai-form-container">
+    <!-- Filter Section -->
+    <div class="ai-filter-section">
+      <div class="ai-filter-row">
+        <!-- Category -->
+        <mat-form-field
+          appearance="outline"
+          class="filter-select"
+          [ngClass]="[isCategoryFixed ? 'locked-category' : '']"
+        >
+          <mat-select formControlName="category" placeholder="Select Category*" class="options">
+            <mat-option [value]="null">All Category</mat-option>
+            @for (item of categoryList; track item.id) {
+              <mat-option [value]="item.name">{{ item.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Difficulty -->
+        <mat-form-field appearance="outline" class="filter-select">
+          <mat-select formControlName="difficulty" placeholder="Select Difficulty*">
+            <mat-option [value]="null">All Difficulty</mat-option>
+            @for (item of difficultyList; track item.id) {
+              <mat-option [value]="item.name">{{ item.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Type -->
+        <mat-form-field appearance="outline" class="filter-select">
+          <mat-select formControlName="type" placeholder="Select Type*">
+            <mat-option [value]="null">All Types</mat-option>
+            @for (item of typeList; track item.id) {
+              <mat-option [value]="item.name">{{ item.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- no of que -->
+      <div class="second-row-container">
+        <div class="question-input-container">
+          <mat-label class="question-label">No. of question*</mat-label>
+          <mat-form-field appearance="outline" class="custom-form-field">
+            <input
+              matInput
+              type="number"
+              min="1"
+              max="10"
+              placeholder="1"
+              formControlName="numberOfQuestions"
+            />
+            @if (isFieldInvalid('numberOfQuestions')) {
+              <mat-error> Please enter a valid number (1–10) </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="add-btn-container">
+          <app-filled-button
+            [filledButtonConfig]="addBtnConfig"
+            (click)="addConfig()"
+          ></app-filled-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    @if (formError) {
+      <div class="error-message">
+        <mat-icon>error</mat-icon>
+        <span>{{ formError }}</span>
+      </div>
+    }
+
+    <!-- Added Configurations List -->
+    @if (configsByDifficulty.length > 0) {
+      <div class="added-questions-list">
+        <div class="list-header">
+          <div class="info-container">
+            <h3>Added AI Configurations</h3>
+            <span class="total-badge">Total: {{ totalQuestions() }}/10</span>
+          </div>
+
+          <app-outline-button
+            [outlineButtonConfig]="resetBtnConfig"
+            (click)="resetAllConfigs()"
+            class="reset-all-btn"
+          ></app-outline-button>
+        </div>
+
+        <div class="category-tag">
+          <app-tag [tagConfig]="categoryTag"></app-tag>
+        </div>
+
+        @for (difficultyGroup of configsByDifficulty; track $index; let diffIndex = $index) {
+          <div class="difficulty-group">
+            <h4 class="difficulty-title">
+              Difficulty : {{ difficultyGroup.questionDifficultyName }}
+            </h4>
+
+            @for (
+              question of difficultyGroup.questionPerQuestionType;
+              track $index;
+              let qIndex = $index
+            ) {
+              <div class="question-config-item">
+                <div class="config-details">
+                  <span class="config-badge primary">{{ question.noOfQuesitons }} Questions</span>
+
+                  <div class="config-info-group">
+                    <span class="config-label">Type:</span>
+                    <span class="config-value">{{ question.questionPerQuestionTypeName }}</span>
+                  </div>
+                </div>
+
+                <button
+                  mat-icon-button
+                  (click)="removeConfig(diffIndex, qIndex)"
+                  class="remove-btn"
+                  matTooltip="Remove"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <app-common-tab
+      [tabs]="tabs"
+      [selectedIndex]="selectedIndex()"
+      (tabChanged)="switchToTab($event)"
+    ></app-common-tab>
+  </div>
+</form>
