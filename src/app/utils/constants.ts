@@ -1,3 +1,4 @@
+import { AiModelName } from '../shared/enums/ai-configuration.enum';
 import { EmailTemplateType } from '../shared/enums/email-template.enum';
 import { Navigations } from '../shared/enums/navigation';
 import { TagInputConfig } from '../shared/interfaces/tag-component.interface';
@@ -188,6 +189,11 @@ export const navigationItems = {
       label: 'Content Moderation',
       icon: 'warning',
       route: `${Navigations.Admin}/${Navigations.ContentModeration}`,
+    },
+    {
+      label: 'AI Configuration',
+      icon: 'electric_bolt',
+      route: `${Navigations.Admin}/${Navigations.AiConfig}`,
     },
   ],
 };
@@ -685,3 +691,19 @@ export const userIdClaimKey = 'http://schemas.microsoft.com/ws/2008/06/identity/
 
 export const notificationTimeout = 30000;
 // #endregion
+
+//#region AI Configuration
+export const aiModelLabels: Record<keyof typeof AiModelName, string> = {
+  Gemini2Point5FlashLite: 'gemini-2.5-flash-lite',
+  Gemini2Point5Flash: 'gemini-2.5-flash',
+  Gemini2Point0FlashLite: 'gemini-2.0-flash-lite',
+  Gemini2Point0Flash: 'gemini-2.0-flash',
+  Gemini2Point5Pro: 'gemini-2.5-pro',
+  Gemini2Point0FlashExp: 'gemini-2.0-flash-exp',
+  Llama3Point18BInstant: 'llama-3.1-8b-instant',
+  Llama3Point370BVersatile: 'llama-3.3-70b-versatile',
+  GroqCompound: 'groq/compound',
+  MoonshotAiKimiK2Instruct: 'moonshotai/kimi-k2-instruct',
+  OpenAiGptOss20B: 'openai/gpt-oss-20b',
+};
+//#endregion
