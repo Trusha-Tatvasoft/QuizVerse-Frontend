@@ -702,6 +702,14 @@ export const userIdClaimKey = 'http://schemas.microsoft.com/ws/2008/06/identity/
 export const notificationTimeout = 30000;
 // #endregion
 
+//#region Question generation from web url
+export const fetchContentFromUrlMessages = {
+  enterValidUrl: 'Please enter a valid Web URL.',
+  questionGeneratedSuccess: 'Questions generated successfully from the web page!',
+  questionGeneratedFailed: 'Failed to generate questions from the web page.',
+};
+// #endregion
+
 //#region AI Configuration
 export const aiModelLabels: Record<keyof typeof AiModelName, string> = {
   Gemini2Point5FlashLite: 'gemini-2.5-flash-lite',

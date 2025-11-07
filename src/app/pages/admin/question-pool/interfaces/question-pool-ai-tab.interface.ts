@@ -19,3 +19,7 @@ export interface QuestionPerQuestionType {
 export interface GenerateQuizFromPDFRequest extends GenerateQuizRequest {
   prompt: File;
 }
+
+export interface GenerateQuestionFromWebUrlRequest extends GenerateQuizRequest {
+  url: string;
+}
