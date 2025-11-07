@@ -1,1 +1,41 @@
-<p>comming soon!</p>
+<form [formGroup]="uploadForm">
+  <div class="file-input-container">
+    <input
+      #fileInput
+      type="file"
+      [accept]="'.pdf'"
+      (change)="fileSelected($event)"
+      class="file-input"
+    />
+
+    @for (field of fields; track field.name) {
+      <div class="file-upload-row">
+        <app-filled-button
+          [filledButtonConfig]="uploadButton"
+          (buttonClicked)="fileInput.click()"
+          class="custom-upload-button"
+        ></app-filled-button>
+
+        <span class="selected-file-name">
+          {{ displayFileName }}
+          @if (selectedFile) {
+            <mat-icon (click)="clearSelectedFile(fileInput)" class="clear-icon">cancel</mat-icon>
+          }
+        </span>
+      </div>
+    }
+
+    @if (uploadForm.get('file')?.touched && uploadForm.get('file')?.invalid) {
+      <mat-error>
+        {{ getError('file') }}
+      </mat-error>
+    }
+  </div>
+
+  <div class="generate-button-container mt-2">
+    <app-filled-button
+      [filledButtonConfig]="generateBtnConfig"
+      (click)="generateQuestion()"
+    ></app-filled-button>
+  </div>
+</form>

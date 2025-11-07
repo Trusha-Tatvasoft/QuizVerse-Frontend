@@ -705,3 +705,47 @@ app-data-table {
     }
   }
 }
+
+// question-pool - generate from ai btns
+.generate-button-container {
+  width: 100%;
+  app-filled-button {
+    width: 100%;
+    button {
+      width: 100%;
+    }
+  }
+}
+
+.add-btn-container {
+  flex: 1 1 50%;
+  app-filled-button {
+    width: 100%;
+    button {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.filter-select {
+  &.locked-category {
+    .mat-mdc-text-field-wrapper {
+      background-color: #f4f4f4;
+      border-radius: 8px;
+      opacity: 0.9;
+      position: relative;
+    }
+  }
+}
+
+.list-header {
+  @media (max-width: 480px) {
+    .reset-all-btn {
+      width: 100%;
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

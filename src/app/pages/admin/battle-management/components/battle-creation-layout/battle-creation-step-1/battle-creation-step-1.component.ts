@@ -7,11 +7,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatCheckbox } from '@angular/material/checkbox';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatError, MatFormFieldModule } from '@angular/material/form-field';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import {
@@ -26,7 +25,6 @@ import { BattleManagementService } from '../../../../../../services/admin/battle
 import { Subject, takeUntil, tap } from 'rxjs';
 import { DropDownType } from '../../../../../../shared/enums/dropdown-types.enum';
 import { DynamicFormField } from '../../../../../../shared/interfaces/dynamic-form-field.interface';
-import { MatCard } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { BattleTimeType } from '../../../../../../shared/enums/battle-management.enum';
@@ -49,10 +47,7 @@ import { platformMessages } from '../../../../../../utils/constants';
     MatOptionModule,
     MatDividerModule,
     MatError,
-    MatIcon,
     MatInputModule,
-    MatCheckbox,
-    MatCard,
     MatDatepickerModule,
     MatNativeDateModule,
   ],

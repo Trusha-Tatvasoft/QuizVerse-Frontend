@@ -1,0 +1,11 @@
+<div class="notification-container">
+  @for (request of notifications; track request.requestId) {
+    <app-incoming-request-notification
+      [request]="request"
+      (accept)="acceptRequest(request)"
+      (decline)="declineRequest(request)"
+      (dismiss)="removeNotification(request)"
+    >
+    </app-incoming-request-notification>
+  }
+</div>

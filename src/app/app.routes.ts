@@ -40,6 +40,8 @@ import { BattleResultComponent } from './pages/user/battle-result/battle-result.
 import { WaitingBattleResultComponent } from './pages/user/battle-result/components/waiting-battle-result/waiting-battle-result.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 import { ContentModerationComponent } from './pages/admin/content-moderation/content-moderation.component';
+import { WaitingOpponetComponent } from './pages/user/user-battles/waiting-opponent/waiting-opponent.component';
+import { AiConfigurationComponent } from './pages/admin/ai-configuration/ai-configuration.component';
 
 export const routes: Routes = [
   {
@@ -179,6 +181,11 @@ export const routes: Routes = [
         component: ContentModerationComponent,
         title: 'Quizeverse | Content Moderation',
       },
+      {
+        path: Navigations.AiConfig,
+        component: AiConfigurationComponent,
+        title: 'Quizeverse | AI Configuration',
+      },
     ],
   },
   {
@@ -219,6 +226,11 @@ export const routes: Routes = [
             path: `${Navigations.BattleList}/${Navigations.SearchOpponent}/:id`,
             component: SearchOpponentComponent,
             title: 'Quizeverse | Search Opponent',
+          },
+          {
+            path: `${Navigations.BattleList}/${Navigations.WaitingOpponent}/:id`,
+            component: WaitingOpponetComponent,
+            title: 'Quizeverse | Waiting Opponent',
           },
           {
             path: `${Navigations.BattleList}/${Navigations.BattleResult}/:id`,

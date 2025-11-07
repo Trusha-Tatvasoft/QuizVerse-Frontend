@@ -26,7 +26,6 @@ import {
 } from '../../interfaces/battle-creation.interface';
 import { CommonModule, Location } from '@angular/common';
 import { PageHeaderComponent } from '../../../../../shared/components/page-header/page-header.component';
-import { OutlineButtonComponent } from '../../../../../shared/components/outline-button/outline-button.component';
 import { FilledButtonComponent } from '../../../../../shared/components/filled-button/filled-button.component';
 import { platformMessages, quizCRUDMessages } from '../../../../../utils/constants';
 import { BattleManagementService } from '../../../../../services/admin/battle-management/battle-management.service';
@@ -38,7 +37,6 @@ import { Navigations } from '../../../../../shared/enums/navigation';
     CommonModule,
     PageHeaderComponent,
     FilledButtonComponent,
-    OutlineButtonComponent,
     BattleCreationStep1Component,
     BattleCreationStep2Component,
     BattleCreationStep3LayoutComponent,

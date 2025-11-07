@@ -1,4 +1,12 @@
-import { Component, ElementRef, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,6 +29,13 @@ export class FilledButtonComponent {
   ngOnInit() {
     this.config = { ...defaultButtonConfig, ...this.filledButtonConfig };
     this.elRef.nativeElement.style.setProperty('--font-weight', this.validFontWeight);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const newConfig = changes['filledButtonConfig']?.currentValue;
+    if (newConfig) {
+      this.config = { ...defaultButtonConfig, ...newConfig };
+    }
   }
 
   // Returns font weight as string for inline styling

@@ -1,35 +1,49 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { of, throwError, Subject } from 'rxjs';
 import { BattleRequestComponent } from './battle-request.component';
 import { UserDashboardService } from '../../../../../services/user/user-dashboard/user-dashboard.service';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
-import { BattleRequest } from '../../interfaces/battle-request.interface';
+import { BattleHubService } from '../../../../../services/user/user-battles/battle-hub.service';
 import { environment } from '../../../../../../environments/environment.dev';
 import { battleRequestMessages, platformMessages } from '../../../../../utils/constants';
+import { IncomingBattleRequest } from '../../../../../shared/interfaces/incoming-battle-request.interface';
+import { BattleRequestStatus } from '../../../../../shared/enums/user-dashboard.enum';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FilledButtonComponent } from '../../../../../shared/components/filled-button/filled-button.component';
+import { OutlineButtonComponent } from '../../../../../shared/components/outline-button/outline-button.component';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('BattleRequestComponent (Jest)', () => {
   let component: BattleRequestComponent;
   let fixture: ComponentFixture<BattleRequestComponent>;
   let mockDashboardService: jest.Mocked<UserDashboardService>;
   let mockSnackbarService: jest.Mocked<SnackbarService>;
+  let mockBattleHubService: jest.Mocked<BattleHubService>;
+  let onBattleRequestSubject: Subject<IncomingBattleRequest[]>;
 
-  const mockRequests: BattleRequest[] = [
+  const mockRequests: IncomingBattleRequest[] = [
     {
       requestId: 1,
       senderUserName: 'john123',
       senderFullName: 'John Doe',
       senderProfilePic: 'profile/john.png',
       battleCategory: 'Math',
+      senderId: 5,
+      battleId: 10,
       battleDifficulty: 'Easy',
       timeAgo: '2h ago',
-      sendingDate: '2025-09-01T10:00:00Z',
+      sendingDate: new Date('2025-09-01T10:00:00Z'),
+      battleName: 'Algebra Battle',
     },
   ];
 
   beforeEach(async () => {
+    onBattleRequestSubject = new Subject<IncomingBattleRequest[]>();
+    // Mock services
     mockDashboardService = {
-      getBattleRequests: jest.fn(),
-      updateBattleRequestStatus: jest.fn(),
+      getBattleRequests: jest.fn().mockReturnValue(of({ result: true, data: mockRequests }) as any),
+      updateBattleRequestStatus: jest.fn().mockReturnValue(of({ result: true, data: {} }) as any),
     } as unknown as jest.Mocked<UserDashboardService>;
 
     mockSnackbarService = {
@@ -37,16 +51,31 @@ describe('BattleRequestComponent (Jest)', () => {
       showError: jest.fn(),
     } as unknown as jest.Mocked<SnackbarService>;
 
+    mockBattleHubService = {
+      ensureConnection: jest.fn().mockResolvedValue(void 0),
+      onBattleRequest: onBattleRequestSubject,
+      cleanupIncomingRequests: jest.fn(),
+      acceptRequest: jest.fn(),
+      declineRequest: jest.fn(),
+    } as unknown as jest.Mocked<BattleHubService>;
+
     await TestBed.configureTestingModule({
-      imports: [BattleRequestComponent],
-      providers: [
-        { provide: UserDashboardService, useValue: mockDashboardService },
-        { provide: SnackbarService, useValue: mockSnackbarService },
+      imports: [
+        MatIconModule,
+        CommonModule,
+        FilledButtonComponent,
+        OutlineButtonComponent,
+        MatTooltipModule,
       ],
-    }).compileComponents();
+    })
+      .overrideProvider(UserDashboardService, { useValue: mockDashboardService })
+      .overrideProvider(SnackbarService, { useValue: mockSnackbarService })
+      .overrideProvider(BattleHubService, { useValue: mockBattleHubService })
+      .compileComponents();
 
     fixture = TestBed.createComponent(BattleRequestComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create component', () => {
@@ -68,86 +97,51 @@ describe('BattleRequestComponent (Jest)', () => {
       expect(component.requests[0].initials).toBe('JD');
       expect(component.requests[0].initialsColor).toMatch(/bg-avatar-/);
     });
-
-    it('should set empty requests when API fails', () => {
-      mockDashboardService.getBattleRequests.mockReturnValue(
-        throwError(() => new Error('API Error')),
-      );
-
-      component.loadBattleRequests();
-
-      expect(component.requests).toHaveLength(0);
-    });
   });
 
   describe('acceptRequest', () => {
-    it('should call update service and show success message on success', () => {
-      const req = { ...mockRequests[0], requestId: 1 } as any;
-      mockDashboardService.updateBattleRequestStatus.mockReturnValue(
-        of({ result: true, data: true, statusCode: 200, message: '' }),
-      );
+    it('should call decline request via hub and show success message', () => {
+      const req = { requestId: 1, senderUserName: 'John' } as any;
       const loadSpy = jest.spyOn(component, 'loadBattleRequests');
+
+      mockBattleHubService.declineRequest.mockImplementation(() => {}); // mock hub call
+
+      component.declineRequest(req);
+
+      expect(mockBattleHubService.declineRequest).toHaveBeenCalledWith(1);
+      expect(mockSnackbarService.showSuccess).toHaveBeenCalledWith(
+        platformMessages.successTitle,
+        battleRequestMessages.declined('John'),
+      );
+      expect(loadSpy).not.toHaveBeenCalled(); // hub version doesn’t reload
+    });
+
+    it('should show success message when request is accepted', () => {
+      const req = { requestId: 1, senderUserName: 'john123' } as any;
+      component.requests = [req];
 
       component.acceptRequest(req);
 
-      expect(mockDashboardService.updateBattleRequestStatus).toHaveBeenCalledWith({
-        requestId: 1,
-        status: 1,
-      });
+      expect(mockBattleHubService.acceptRequest).toHaveBeenCalledWith(req);
       expect(mockSnackbarService.showSuccess).toHaveBeenCalledWith(
         platformMessages.successTitle,
         battleRequestMessages.accepted(req.senderUserName),
-      );
-      expect(loadSpy).toHaveBeenCalled();
-    });
-
-    it('should show error message on failure', () => {
-      const req = { ...mockRequests[0], requestId: 1 } as any;
-      mockDashboardService.updateBattleRequestStatus.mockReturnValue(
-        throwError(() => new Error('API error')),
-      );
-
-      component.acceptRequest(req);
-
-      expect(mockSnackbarService.showError).toHaveBeenCalledWith(
-        platformMessages.errorTitle,
-        battleRequestMessages.acceptFailed(req.senderUserName),
       );
     });
   });
 
   describe('declineRequest', () => {
-    it('should call update service and show success message on success', () => {
-      const req = { ...mockRequests[0], requestId: 1 } as any;
-      mockDashboardService.updateBattleRequestStatus.mockReturnValue(
-        of({ result: true, data: true, statusCode: 200, message: '' }),
-      );
-      const loadSpy = jest.spyOn(component, 'loadBattleRequests');
+    it('should call battleHubService.declineRequest and show success message on success', () => {
+      const req = { requestId: 1, senderUserName: 'John' } as any;
+      component.requests = [req];
 
       component.declineRequest(req);
 
-      expect(mockDashboardService.updateBattleRequestStatus).toHaveBeenCalledWith({
-        requestId: 1,
-        status: 2,
-      });
+      expect(mockBattleHubService.declineRequest).toHaveBeenCalledWith(1);
+      expect(component.requests).toEqual([]);
       expect(mockSnackbarService.showSuccess).toHaveBeenCalledWith(
         platformMessages.successTitle,
-        battleRequestMessages.declined(req.senderUserName),
-      );
-      expect(loadSpy).toHaveBeenCalled();
-    });
-
-    it('should show error message on failure', () => {
-      const req = { ...mockRequests[0], requestId: 1 } as any;
-      mockDashboardService.updateBattleRequestStatus.mockReturnValue(
-        throwError(() => new Error('API error')),
-      );
-
-      component.declineRequest(req);
-
-      expect(mockSnackbarService.showError).toHaveBeenCalledWith(
-        platformMessages.errorTitle,
-        battleRequestMessages.declineFailed(req.senderUserName),
+        battleRequestMessages.declined('John'),
       );
     });
   });
@@ -179,6 +173,34 @@ describe('BattleRequestComponent (Jest)', () => {
       const class2 = (component as any).getInitialsColorClass('John Doe');
       expect(class1).toBe(class2);
       expect(class1).toMatch(/bg-avatar-/);
+    });
+  });
+
+  describe('subscribeToBattleHub', () => {
+    it('should add new requests from hub', (done) => {
+      const newRequest: IncomingBattleRequest = {
+        requestId: 2,
+        senderUserName: 'jane456',
+        battleId: 4,
+        senderId: 5,
+        senderFullName: 'Jane Smith',
+        senderProfilePic: 'profile/jane.png',
+        battleCategory: 'Coding',
+        battleDifficulty: 'Medium',
+        timeAgo: '1h ago',
+        sendingDate: new Date(),
+        battleName: 'JS Battle',
+      };
+
+      component.subscribeToBattleHub();
+
+      (mockBattleHubService.onBattleRequest as Subject<IncomingBattleRequest[]>).next([newRequest]);
+
+      setTimeout(() => {
+        expect(component.requests[0].senderUserName).toBe('jane456');
+        expect(component.requests[0].displayImage).toBe('profile/jane.png');
+        done();
+      }, 0);
     });
   });
 });

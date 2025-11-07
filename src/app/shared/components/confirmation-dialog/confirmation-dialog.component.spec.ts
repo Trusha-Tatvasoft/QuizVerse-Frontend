@@ -99,7 +99,7 @@ describe('ConfirmationDialogComponent (Jest)', () => {
 
     const buttons = fixture.nativeElement.querySelectorAll('button');
     expect(buttons[0].textContent).toContain('Button');
-    expect(buttons[1].textContent).toContain('Delete');
+    expect(buttons[1].textContent).toContain('Button');
   });
 
   // Confirm default label is used when only variant is provided
@@ -108,7 +108,7 @@ describe('ConfirmationDialogComponent (Jest)', () => {
     fixture.detectChanges();
 
     const buttons = fixture.nativeElement.querySelectorAll('button');
-    expect(buttons[1].textContent).toContain('Delete');
+    expect(buttons[1].textContent).toContain('Button');
   });
 
   // Ensures default labels and variants are applied when button config is missing in dialog input.

@@ -1,3 +1,4 @@
+import { AiModelName } from '../shared/enums/ai-configuration.enum';
 import { EmailTemplateType } from '../shared/enums/email-template.enum';
 import { Navigations } from '../shared/enums/navigation';
 import { TagInputConfig } from '../shared/interfaces/tag-component.interface';
@@ -189,6 +190,11 @@ export const navigationItems = {
       icon: 'warning',
       route: `${Navigations.Admin}/${Navigations.ContentModeration}`,
     },
+    {
+      label: 'AI Configuration',
+      icon: 'electric_bolt',
+      route: `${Navigations.Admin}/${Navigations.AiConfig}`,
+    },
   ],
 };
 //#endregion
@@ -206,6 +212,8 @@ export const platformMessages = {
   errorExport: `Export failed.`,
   registerSuccessfully: `Register Successfully!!`,
   unexpectedError: 'An unexpected error occurred. Please try again later.',
+  dropDownLoadFailed: 'Failed to load the Dropdowns',
+
   //#region authMessages
   loginRedirectMessage: 'Redirecting to login.',
   unauthorizedTitle: 'Unauthorized',
@@ -238,6 +246,11 @@ export const platformMessages = {
   noQuestionsToSave: 'No questions to save.',
   saveQuestionsSuccess: 'Questions added successfully.',
   saveQuestionsFailure: 'Something went wrong while saving questions.',
+
+  selectRequiredField: 'Please select all required fields.',
+  maxNoOfQueLimit: 'Total number of questions cannot exceed 10.',
+  uploadFileRequired: 'Please Uplaod a file',
+  aiConfigRequired: 'Please configure at least one question type',
   //#endregion
 
   //#region QuizManagement Messages
@@ -405,6 +418,9 @@ export const allowedImportQuestionFileTypes = [
   'application/vnd.ms-excel', // .xls
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
 ];
+
+export const allowedPDFType = 'application/pdf';
+
 export const maxOtpAttempts = 2;
 
 export const maxFileUploadSize = 10 * 1024 * 1024;
@@ -690,3 +706,19 @@ export const userIdClaimKey = 'http://schemas.microsoft.com/ws/2008/06/identity/
 
 export const notificationTimeout = 30000;
 // #endregion
+
+//#region AI Configuration
+export const aiModelLabels: Record<keyof typeof AiModelName, string> = {
+  Gemini2Point5FlashLite: 'gemini-2.5-flash-lite',
+  Gemini2Point5Flash: 'gemini-2.5-flash',
+  Gemini2Point0FlashLite: 'gemini-2.0-flash-lite',
+  Gemini2Point0Flash: 'gemini-2.0-flash',
+  Gemini2Point5Pro: 'gemini-2.5-pro',
+  Gemini2Point0FlashExp: 'gemini-2.0-flash-exp',
+  Llama3Point18BInstant: 'llama-3.1-8b-instant',
+  Llama3Point370BVersatile: 'llama-3.3-70b-versatile',
+  GroqCompound: 'groq/compound',
+  MoonshotAiKimiK2Instruct: 'moonshotai/kimi-k2-instruct',
+  OpenAiGptOss20B: 'openai/gpt-oss-20b',
+};
+//#endregion
