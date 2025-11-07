@@ -1,0 +1,57 @@
+<div class="comment-section-container">
+  @if (quizComments.length > 0) {
+    <div class="header">
+      <h3>Public Discussion ({{ totalComments }})</h3>
+      <p class="subtitle">See what other learners are saying about this quiz</p>
+    </div>
+
+    <div class="comments-list">
+      @for (comment of quizComments; track comment) {
+        <div class="comment-card">
+          <div class="profile">
+            @if (comment.profilePic) {
+              <img
+                [src]="comment.profilePic"
+                alt="User Profile"
+                class="profile-pic"
+                (error)="comment.profilePic = null"
+              />
+            } @else {
+              <div class="profile-fallback" [ngClass]="getInitialsColorClass(comment.fullName)">
+                {{ getInitials(comment.fullName) }}
+              </div>
+            }
+          </div>
+
+          <div class="comment-content">
+            <div class="comment-header">
+              <div class="user-info">
+                <p class="user-name">{{ comment.isUser ? 'You' : comment.userName }}</p>
+                <p class="comment-date">{{ formatCommentDate(comment.commentDate) }}</p>
+              </div>
+              <div class="rating">
+                @for (star of [].constructor(5); track $index; let i = $index) {
+                  <mat-icon class="star" [class.filled]="i < comment.rating">star</mat-icon>
+                }
+              </div>
+            </div>
+            <p class="comment-text">{{ comment.commentText }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (hasMoreComments) {
+      <div class="load-more-container">
+        <app-outline-button
+          [outlineButtonConfig]="loadMoreButton"
+          (buttonClicked)="loadMoreComments()"
+        ></app-outline-button>
+      </div>
+    }
+  } @else {
+    <div class="no-comments">
+      <p>No comments yet. Be the first to share your thoughts!</p>
+    </div>
+  }
+</div>

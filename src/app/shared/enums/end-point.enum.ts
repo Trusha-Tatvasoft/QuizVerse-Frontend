@@ -51,6 +51,7 @@ export enum EndPoints {
   SaveQuestions = 'QuestionPool/save-questions',
   PreviewQuestionsFromCsv = 'QuestionPool/preview-questions-from-csv',
   PreviewQuestionsFromExcel = 'QuestionPool/preview-questions-from-excel',
+  GenerateQuestionFromPromptRequest = 'QuestionPool/generate-from-text-prompt',
   // #endregion
 
   // #region QuizCategory
@@ -162,6 +163,8 @@ export enum EndPoints {
   ReportQuestionIssue = 'Quiz/report-question-issue',
   QuizRating = 'Quiz/quiz-rating',
   SubmitQuizRating = 'Quiz/submit-quiz-rating',
+  QuizComments = 'Quiz/quiz-comments',
+  TotalQuizComments = 'Quiz/total-quiz-comments',
   //  #endregion
 
   //#region Notification Center
