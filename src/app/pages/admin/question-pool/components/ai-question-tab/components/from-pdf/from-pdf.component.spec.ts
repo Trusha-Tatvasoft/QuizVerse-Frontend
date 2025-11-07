@@ -1,18 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FromPdfComponent } from './from-pdf.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { SnackbarService } from '../../../../../../../shared/service/snackbar/snackbar.service';
 import { ValidationErrorService } from '../../../../../../../shared/service/validation-error/validation-error.service';
 import { AiQuestionTabComponent } from '../../ai-question-tab.component';
+import { QuestionPoolService } from '../../../../../../../services/admin/question-pool/question-pool.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { platformMessages } from '../../../../../../../utils/constants';
 import { GenerateQuizRequest } from '../../../../interfaces/question-pool-ai-tab.interface';
+import { QuestionPoolListData } from '../../../../interfaces/question-pool-list-data.interface';
 
 describe('FromPdfComponent', () => {
   let component: FromPdfComponent;
   let fixture: ComponentFixture<FromPdfComponent>;
   let snackbarServiceMock: jest.Mocked<SnackbarService>;
   let validationErrorServiceMock: jest.Mocked<ValidationErrorService>;
+  let questionPoolServiceMock: jest.Mocked<QuestionPoolService>;
+  let dialogMock: jest.Mocked<MatDialog>;
+  let dialogRefMock: jest.Mocked<MatDialogRef<any>>;
   let aiComponentMock: any;
 
   beforeEach(async () => {
@@ -25,6 +31,19 @@ describe('FromPdfComponent', () => {
       getErrorMessage: jest.fn().mockReturnValue('Mock error message'),
     } as any;
 
+    questionPoolServiceMock = {
+      generateQuestionsFromPdf: jest.fn(),
+    } as any;
+
+    dialogMock = {
+      open: jest.fn(),
+    } as any;
+
+    dialogRefMock = {
+      close: jest.fn(),
+      afterClosed: jest.fn().mockReturnValue(of(false)),
+    } as any;
+
     aiComponentMock = {
       quizConfig$: new Subject<GenerateQuizRequest | null>(),
     };
@@ -35,6 +54,9 @@ describe('FromPdfComponent', () => {
         { provide: SnackbarService, useValue: snackbarServiceMock },
         { provide: ValidationErrorService, useValue: validationErrorServiceMock },
         { provide: AiQuestionTabComponent, useValue: aiComponentMock },
+        { provide: QuestionPoolService, useValue: questionPoolServiceMock },
+        { provide: MatDialog, useValue: dialogMock },
+        { provide: MatDialogRef, useValue: dialogRefMock },
       ],
     }).compileComponents();
 
@@ -336,33 +358,10 @@ describe('FromPdfComponent', () => {
       );
     });
 
-    it('should not show error when both file and valid quizConfig exist', () => {
-      component.selectedFile = new File([], 'file.pdf', { type: 'application/pdf' });
-      component.quizConfig = {
-        category: 'Science',
-        questionSpec: [
-          {
-            questionDifficultyId: 1,
-            questionDifficultyName: 'Easy',
-            questionPerQuestionType: [
-              {
-                questionPerQuestionTypeId: 1,
-                questionPerQuestionTypeName: 'MCQ',
-                noOfQuesitons: 5,
-              },
-            ],
-          },
-        ],
-      };
-
-      component.generateQuestion();
-
-      expect(snackbarServiceMock.showError).not.toHaveBeenCalled();
-    });
-
-    it('should create correct request payload with file and quizConfig', () => {
-      const mockFile = new File([], 'test.pdf', { type: 'application/pdf' });
+    it('should call API with FormData when both file and valid quizConfig exist', () => {
+      const mockFile = new File(['test content'], 'test.pdf', { type: 'application/pdf' });
       const mockConfig: GenerateQuizRequest = {
+        categoryId: 5,
         category: 'Math',
         questionSpec: [
           {
@@ -379,27 +378,28 @@ describe('FromPdfComponent', () => {
         ],
       };
 
+      const mockResponse = {
+        result: true,
+        statusCode: 200,
+        message: 'fetched success',
+        data: [] as QuestionPoolListData[],
+      };
+
+      questionPoolServiceMock.generateQuestionsFromPdf.mockReturnValue(of(mockResponse));
+
       component.selectedFile = mockFile;
       component.quizConfig = mockConfig;
       component.generateQuestion();
 
-      const expectedPayload = {
-        ...mockConfig,
-        prompt: mockFile,
-      };
-
-      expect(expectedPayload).toEqual(
-        expect.objectContaining({
-          category: 'Math',
-          questionSpec: mockConfig.questionSpec,
-          prompt: mockFile,
-        }),
-      );
+      expect(questionPoolServiceMock.generateQuestionsFromPdf).toHaveBeenCalled();
+      const formDataArg = questionPoolServiceMock.generateQuestionsFromPdf.mock.calls[0][0];
+      expect(formDataArg).toBeInstanceOf(FormData);
     });
 
-    it('should return early when file is missing', () => {
-      component.selectedFile = null;
-      component.quizConfig = {
+    it('should show success message when API call succeeds', () => {
+      const mockFile = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+      const mockConfig: GenerateQuizRequest = {
+        categoryId: 1,
         category: 'Science',
         questionSpec: [
           {
@@ -416,13 +416,251 @@ describe('FromPdfComponent', () => {
         ],
       };
 
+      const mockQuestions: QuestionPoolListData[] = [
+        {
+          id: 1,
+          categoryId: 10,
+          categoryName: 'Science',
+          queDifficultyId: 2,
+          queDifficultyName: 'Medium',
+          queText: 'Test Question',
+          queTypeId: 1,
+          queTypeName: 'MCQ',
+          queOptionsAns: [],
+        },
+      ];
+
+      const mockResponse = {
+        result: true,
+        statusCode: 200,
+        message: 'success',
+        data: mockQuestions,
+      };
+
+      questionPoolServiceMock.generateQuestionsFromPdf.mockReturnValue(of(mockResponse));
+
+      component.selectedFile = mockFile;
+      component.quizConfig = mockConfig;
       component.generateQuestion();
 
-      expect(snackbarServiceMock.showError).toHaveBeenCalledTimes(1);
+      expect(snackbarServiceMock.showSuccess).toHaveBeenCalledWith(
+        platformMessages.successTitle,
+        'Questions successfully created!',
+      );
+    });
+
+    it('should show error message when API returns result false', () => {
+      const mockFile = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+      const mockConfig: GenerateQuizRequest = {
+        category: 'Science',
+        questionSpec: [
+          {
+            questionDifficultyId: 1,
+            questionDifficultyName: 'Easy',
+            questionPerQuestionType: [
+              {
+                questionPerQuestionTypeId: 1,
+                questionPerQuestionTypeName: 'MCQ',
+                noOfQuesitons: 5,
+              },
+            ],
+          },
+        ],
+      };
+
+      const mockResponse = {
+        result: false,
+        statusCode: 400,
+        message: 'Error',
+        data: [],
+      };
+
+      questionPoolServiceMock.generateQuestionsFromPdf.mockReturnValue(of(mockResponse));
+
+      component.selectedFile = mockFile;
+      component.quizConfig = mockConfig;
+      component.generateQuestion();
+
       expect(snackbarServiceMock.showError).toHaveBeenCalledWith(
         platformMessages.errorTitle,
-        platformMessages.uploadFileRequired,
+        'Please try another PDF.',
       );
+    });
+
+    it('should show error message when API call fails', () => {
+      const mockFile = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+      const mockConfig: GenerateQuizRequest = {
+        category: 'Science',
+        questionSpec: [
+          {
+            questionDifficultyId: 1,
+            questionDifficultyName: 'Easy',
+            questionPerQuestionType: [
+              {
+                questionPerQuestionTypeId: 1,
+                questionPerQuestionTypeName: 'MCQ',
+                noOfQuesitons: 5,
+              },
+            ],
+          },
+        ],
+      };
+
+      questionPoolServiceMock.generateQuestionsFromPdf.mockReturnValue(
+        throwError(() => new Error('API Error')),
+      );
+
+      component.selectedFile = mockFile;
+      component.quizConfig = mockConfig;
+      component.generateQuestion();
+
+      expect(snackbarServiceMock.showError).toHaveBeenCalledWith(
+        platformMessages.errorTitle,
+        'Something went wrong while generating from PDF.',
+      );
+    });
+
+    it('should open preview dialog on successful generation', () => {
+      const mockFile = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+      const mockConfig: GenerateQuizRequest = {
+        category: 'Science',
+        questionSpec: [
+          {
+            questionDifficultyId: 1,
+            questionDifficultyName: 'Easy',
+            questionPerQuestionType: [
+              {
+                questionPerQuestionTypeId: 1,
+                questionPerQuestionTypeName: 'MCQ',
+                noOfQuesitons: 5,
+              },
+            ],
+          },
+        ],
+      };
+
+      const mockQuestions: QuestionPoolListData[] = [
+        {
+          id: 1,
+          categoryId: 10,
+          categoryName: 'Science',
+          queDifficultyId: 2,
+          queDifficultyName: 'Medium',
+          queText: 'Test Question',
+          queTypeId: 1,
+          queTypeName: 'MCQ',
+          queOptionsAns: [],
+        },
+      ];
+
+      const mockResponse = {
+        result: true,
+        statusCode: 200,
+        message: 'Success',
+        data: mockQuestions,
+      };
+
+      const mockPreviewDialogRef = {
+        afterClosed: jest.fn().mockReturnValue(of(true)),
+      };
+
+      questionPoolServiceMock.generateQuestionsFromPdf.mockReturnValue(of(mockResponse));
+      dialogMock.open.mockReturnValue(mockPreviewDialogRef as any);
+
+      component.selectedFile = mockFile;
+      component.quizConfig = mockConfig;
+      component.generateQuestion();
+
+      expect(dialogMock.open).toHaveBeenCalled();
+    });
+
+    it('should close parent dialog when preview dialog returns true', () => {
+      const mockFile = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+      const mockConfig: GenerateQuizRequest = {
+        category: 'Science',
+        questionSpec: [
+          {
+            questionDifficultyId: 1,
+            questionDifficultyName: 'Easy',
+            questionPerQuestionType: [
+              {
+                questionPerQuestionTypeId: 1,
+                questionPerQuestionTypeName: 'MCQ',
+                noOfQuesitons: 5,
+              },
+            ],
+          },
+        ],
+      };
+
+      const mockQuestions: QuestionPoolListData[] = [
+        {
+          id: 1,
+          categoryId: 10,
+          categoryName: 'Science',
+          queDifficultyId: 2,
+          queDifficultyName: 'Medium',
+          queText: 'Test Question',
+          queTypeId: 1,
+          queTypeName: 'MCQ',
+          queOptionsAns: [],
+        },
+      ];
+
+      const mockResponse = {
+        result: true,
+        statusCode: 200,
+        message: 'Success',
+        data: mockQuestions,
+      };
+
+      const mockPreviewDialogRef = {
+        afterClosed: jest.fn().mockReturnValue(of(true)),
+      };
+
+      questionPoolServiceMock.generateQuestionsFromPdf.mockReturnValue(of(mockResponse));
+      dialogMock.open.mockReturnValue(mockPreviewDialogRef as any);
+
+      component.selectedFile = mockFile;
+      component.quizConfig = mockConfig;
+      component.generateQuestion();
+
+      expect(dialogRefMock.close).toHaveBeenCalledWith(true);
+    });
+
+    it('should handle FormData correctly with categoryId as 0 when undefined', () => {
+      const mockFile = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+      const mockConfig: GenerateQuizRequest = {
+        category: 'Science',
+        categoryId: undefined,
+        questionSpec: [
+          {
+            questionDifficultyId: 1,
+            questionDifficultyName: 'Easy',
+            questionPerQuestionType: [
+              {
+                questionPerQuestionTypeId: 1,
+                questionPerQuestionTypeName: 'MCQ',
+                noOfQuesitons: 5,
+              },
+            ],
+          },
+        ],
+      };
+
+      const mockResponse = {
+        result: true,
+        statusCode: 200,
+        message: 'Success',
+        data: [],
+      };
+      questionPoolServiceMock.generateQuestionsFromPdf.mockReturnValue(of(mockResponse));
+
+      component.selectedFile = mockFile;
+      component.quizConfig = mockConfig;
+      component.generateQuestion();
+
+      expect(questionPoolServiceMock.generateQuestionsFromPdf).toHaveBeenCalled();
     });
   });
 
