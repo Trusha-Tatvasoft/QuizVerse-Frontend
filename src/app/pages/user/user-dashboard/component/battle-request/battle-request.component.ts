@@ -19,6 +19,7 @@ import {
 import { IncomingBattleRequest } from '../../../../../shared/interfaces/incoming-battle-request.interface';
 import { BattleHubService } from '../../../../../services/user/user-battles/battle-hub.service';
 import { Router } from '@angular/router';
+import { BattleData } from '../../../user-battles/interface/search-opponent.interface';
 
 @Component({
   selector: 'app-battle-request',
@@ -98,22 +99,18 @@ export class BattleRequestComponent implements OnInit {
 
   acceptRequest(request: BattleRequestWithProfile): void {
     this.battleHubService.acceptRequest(request);
-
     this.requests = this.requests.filter((r) => r.requestId !== request.requestId);
-
     this.snackBarService.showSuccess(
       platformMessages.successTitle,
       battleRequestMessages.accepted(request.senderUserName),
     );
 
-    this.navigateToSearchOpponent(request);
+    this.navigateToWaitingOpponent(request);
   }
 
   declineRequest(request: BattleRequestWithProfile): void {
     this.battleHubService.declineRequest(request.requestId);
-
     this.requests = this.requests.filter((r) => r.requestId !== request.requestId);
-
     this.snackBarService.showSuccess(
       platformMessages.successTitle,
       battleRequestMessages.declined(request.senderUserName),
@@ -139,16 +136,14 @@ export class BattleRequestComponent implements OnInit {
     return globalGetInitialsColorClass(name);
   }
 
-  private navigateToSearchOpponent(request: BattleRequestWithProfile): void {
+  private navigateToWaitingOpponent(request: BattleRequestWithProfile): void {
     if (!request?.battleId || request.battleId <= 0) return;
-
-    const battleData = {
+    const battleData: BattleData = {
       battleName: request.battleName,
       battleCategory: request.battleCategory,
-      battleXp: 0,
+      battleXp: request.totalXp,
       battleDifficulty: request.battleDifficulty,
     };
-
     this.router.navigate(
       [
         'user',
