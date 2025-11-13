@@ -174,4 +174,8 @@ export enum EndPoints {
   AiConfigurationCardData = 'AiConfiguration/get-ai-configuration-card-details',
   AiUsageDetails = 'AiConfiguration/get-ai-uses-details',
   //#endregion
+
+  //#region Content Moderation
+  ContentModerationMatricsData = 'ContentModeration/get-content-moderation-matrics-data',
+  //#endregion
 }
