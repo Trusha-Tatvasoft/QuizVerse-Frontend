@@ -51,6 +51,7 @@ export enum EndPoints {
   SaveQuestions = 'QuestionPool/save-questions',
   PreviewQuestionsFromCsv = 'QuestionPool/preview-questions-from-csv',
   PreviewQuestionsFromExcel = 'QuestionPool/preview-questions-from-excel',
+  GenerateFromPdf = 'QuestionPool/generate-from-pdf',
   // #endregion
 
   // #region QuizCategory
