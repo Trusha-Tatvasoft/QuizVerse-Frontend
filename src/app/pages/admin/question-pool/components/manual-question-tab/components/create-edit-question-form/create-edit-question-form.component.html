@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="createOrUpdateQuestion()" class="px-1">
+<form [formGroup]="form" class="px-1">
   <div class="grid gap-1">
     @for (field of fields; track field.name) {
       <div [ngClass]="field.gridClass || 'col-span-1'">
@@ -82,11 +82,20 @@
       </div>
     }
   </div>
-  <div class="dialog-actions">
-    <app-outline-button
-      [outlineButtonConfig]="cancelBtn"
-      (click)="closeDialog()"
-    ></app-outline-button>
-    <app-filled-button [filledButtonConfig]="submitBtn" type="submit"></app-filled-button>
+  <div>
+    <div class="cancel-report-question flex justify-end flex-row gap-4">
+      <app-outline-button
+        [outlineButtonConfig]="cancelBtn"
+        (click)="closeDialog()"
+      ></app-outline-button>
+      @if (isReportForm) {
+        <app-filled-button [filledButtonConfig]="editBtn" (click)="onAction()"></app-filled-button>
+      } @else {
+        <app-filled-button
+          [filledButtonConfig]="submitBtn"
+          (click)="createOrUpdateQuestion()"
+        ></app-filled-button>
+      }
+    </div>
   </div>
 </form>

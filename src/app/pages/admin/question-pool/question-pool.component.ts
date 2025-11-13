@@ -261,7 +261,7 @@ export class QuestionPoolComponent implements OnInit, OnDestroy {
   openQuestionDialog(mode: 'create' | 'edit' = 'create', questionData?: QuestionDetail): void {
     const dialogRef = this.dialog.open(QuestionFormDialogComponent, {
       minWidth: '50vw',
-      maxWidth: '100vw',
+      maxWidth: '90vw',
       maxHeight: '95vh',
       autoFocus: false,
       disableClose: false,

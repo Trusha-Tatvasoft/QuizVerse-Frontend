@@ -698,6 +698,19 @@ app-data-table {
   width: 100% !important;
 }
 
+.cancel-report-question {
+  @media (max-width: 500px) {
+    app-outline-button,
+    app-filled-button {
+      width: 100%;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+
 // question-pool - generate from ai btns
 .generate-button-container {
   width: 100%;

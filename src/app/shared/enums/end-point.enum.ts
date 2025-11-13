@@ -178,5 +178,10 @@ export enum EndPoints {
 
   //#region Content Moderation
   ContentModerationMatricsData = 'ContentModeration/get-content-moderation-matrics-data',
+  ReportQuestionsList = 'ContentModeration/get-question-report-by-pagination',
+  ReportQuestionAction = 'ContentModeration/update-question_report_action',
+  GetReportedQuestionPreview = 'ContentModeration/get_question_issue_report_preview',
+  GetListOfAffectedQuizAndBattle = 'ContentModeration/get_affected_quiz_and_battle',
+  UpdateReportedQuestion = 'ContentModeration/update-reported-question',
   //#endregion
 }

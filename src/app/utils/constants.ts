@@ -717,3 +717,15 @@ export const aiModelLabels: Record<keyof typeof AiModelName, string> = {
   OpenAiGptOss20B: 'openai/gpt-oss-20b',
 };
 //#endregion
+
+//#region QUestion Report Action
+export const questionReportAction = {
+  VIEW: 'visibility',
+  ACCEPTED: 'check_circle',
+  IGNORED: 'block',
+  PENDING: 'hourglass_empty',
+  UNDERREVIEW: 'bookmark_added',
+};
+
+export const dialogCloseCorrectly = 'Dialogue closs correctly';
+//#endregion

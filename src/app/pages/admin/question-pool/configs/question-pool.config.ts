@@ -74,3 +74,10 @@ export const resetBtnConfig: ButtonConfig = {
   variant: 'secondary',
   type: 'submit',
 };
+
+export const editReportedButtonConfig: ButtonConfig = {
+  label: 'Update Reported Question',
+  fontWeight: 500,
+  variant: 'secondary',
+  type: 'submit',
+};

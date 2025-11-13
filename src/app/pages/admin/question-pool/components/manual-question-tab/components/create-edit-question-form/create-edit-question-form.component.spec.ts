@@ -339,4 +339,46 @@ describe('CreateEditQuestionFormComponent', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('onAction should emit actionTriggered with correct payload when form is valid', () => {
+    component.questionData = mockQuestionData;
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
+
+    // Mark form as valid
+    Object.defineProperty(component.form, 'valid', { get: () => true });
+    const emitSpy = jest.spyOn(component.actionTriggered, 'emit');
+
+    component.onAction();
+
+    expect(mapFormToQuestionRequest).toHaveBeenCalledWith(component.form);
+    expect(emitSpy).toHaveBeenCalledWith({
+      questionId: mockQuestionData.id,
+      formData: { dto: true },
+    });
+  });
+
+  it('onAction should mark all controls as touched if form is invalid', () => {
+    component.baseFields = buildBaseFields();
+    component.fields = [...component.baseFields];
+    component.buildForm();
+
+    // Mark form invalid
+    Object.defineProperty(component.form, 'valid', { get: () => false });
+    const markAllSpy = jest.spyOn(component.form, 'markAllAsTouched');
+
+    component.onAction();
+
+    expect(markAllSpy).toHaveBeenCalled();
+  });
+
+  it('should set default value of isReportForm to false', () => {
+    expect(component.isReportForm).toBe(false);
+  });
+
+  it('should allow setting isReportForm to true as input', () => {
+    component.isReportForm = true;
+    expect(component.isReportForm).toBe(true);
+  });
 });
