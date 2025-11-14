@@ -441,7 +441,7 @@ export class BattleHubService {
     this.hubConnection.on(
       platformMessages.battleRequestCancelled,
       (data: { request: IncomingBattleRequest; senderId: number }) => {
-        this.requestCancelled$.next(data); // 👈 Emit event
+        this.requestCancelled$.next(data);
 
         // Remove from the local list
         const updated = this.incomingRequest$.value.filter(

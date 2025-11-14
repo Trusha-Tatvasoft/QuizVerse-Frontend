@@ -571,9 +571,9 @@ export const quizCRUDMessages = {
   selectAIGenerationMethod: 'Please provide the content (text, URL, or PDF).',
   addAIQueGenerationConfiguration: 'Please add at least one AI configuration.',
   aiGenMethodError: 'Invalid generation method selected.',
-  queGeneratedSUccess:'Questions successfully created!',
+  queGeneratedSUccess: 'Questions successfully created!',
   tryOtherGenSource: 'Please try another source.',
-  errorWhileQueGeneration:'Something went wrong while generating questions.',
+  errorWhileQueGeneration: 'Something went wrong while generating questions.',
   difficultyWiseQuestionSelectionError: 'Please select the questions as per your quiz settings.',
   minimumNumberOfQuestionError: 'Total questions must be between 5 and 100.',
   mcqOptionError: 'Correct answer must match one of the options.',
@@ -710,6 +710,14 @@ export const battleIdStorageKey = 'battleAttemptId';
 export const userIdClaimKey = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata';
 
 export const notificationTimeout = 30000;
+// #endregion
+
+//#region Question generation from web url
+export const fetchContentFromUrlMessages = {
+  enterValidUrl: 'Please enter a valid Web URL.',
+  questionGeneratedSuccess: 'Questions generated successfully from the web page!',
+  questionGeneratedFailed: 'Failed to generate questions from the web page.',
+};
 // #endregion
 
 //#region AI Configuration
