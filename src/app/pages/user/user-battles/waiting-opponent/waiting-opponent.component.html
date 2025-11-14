@@ -9,10 +9,10 @@
       <h2 class="my-2">'Waiting for Opponent'</h2>
       <p class="my-2">'Waiting for your opponent to accept the battle...'</p>
       <div class="quiz-info">
-        <h3>{{ battleData.battleName }}</h3>
+        <h3>{{ battleData?.battleName }}</h3>
         <p>
-          {{ battleData.battleCategory }} • {{ battleData.battleDifficulty }} •
-          {{ battleData.battleXp }} XP
+          {{ battleData?.battleCategory }} • {{ battleData?.battleDifficulty }} •
+          {{ battleData?.battleXp }} XP
         </p>
       </div>
       <p class="timer">Waiting for {{ searchSeconds }}s...</p>

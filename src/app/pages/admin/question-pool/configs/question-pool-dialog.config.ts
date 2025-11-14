@@ -241,3 +241,21 @@ export const promptTextAreaFormFields: DynamicFormField[] = [
     },
   },
 ];
+
+export const importQuestionFromWebFormFields: DynamicFormField[] = [
+  {
+    name: 'url',
+    label: 'Web Url',
+    type: 'text',
+    placeholder: 'Enter a Web Url',
+    icon: 'insert_link',
+    validators: [
+      Validators.required,
+      Validators.pattern(/^(?!.*\s)(?:https?:\/\/)?[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+(?:\/\S*)?$/),
+    ],
+    validationMessages: {
+      required: 'A Web Url is required.',
+      pattern: 'Please enter a valid URL without spaces (e.g., https://example.com).',
+    },
+  },
+];

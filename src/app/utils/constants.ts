@@ -702,6 +702,14 @@ export const userIdClaimKey = 'http://schemas.microsoft.com/ws/2008/06/identity/
 export const notificationTimeout = 30000;
 // #endregion
 
+//#region Question generation from web url
+export const fetchContentFromUrlMessages = {
+  enterValidUrl: 'Please enter a valid Web URL.',
+  questionGeneratedSuccess: 'Questions generated successfully from the web page!',
+  questionGeneratedFailed: 'Failed to generate questions from the web page.',
+};
+// #endregion
+
 //#region Question generation from text prompt
 export const generateQuestionFormTextPromptMessages = {
   enterValidPrompt: 'Please enter a valid Prompt.',

@@ -23,3 +23,7 @@ export interface GenerateQuizFromPDFRequest extends GenerateQuizRequest {
 export interface GenerateQuestionFromPromptRequest extends GenerateQuizRequest {
   prompt: string;
 }
+
+export interface GenerateQuestionFromWebUrlRequest extends GenerateQuizRequest {
+  url: string;
+}

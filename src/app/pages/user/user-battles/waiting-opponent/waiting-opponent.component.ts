@@ -1,8 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { Subject, takeUntil } from 'rxjs';
+
+import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { BattleHubService } from '../../../../services/user/user-battles/battle-hub.service';
 import { CheatPreventionService } from '../../../../shared/service/cheat-prevention/cheat-prevention.service';
 import { platformMessages } from '../../../../utils/constants';
@@ -13,22 +14,22 @@ import {
   BattleStartDetails,
   PlayerProfileDTO,
 } from '../interface/search-opponent.interface';
-import { IncomingBattleRequest } from '../../../../shared/interfaces/incoming-battle-request.interface';
 
 @Component({
-  selector: 'app-waiting-opponet',
+  selector: 'app-waiting-opponent',
+  standalone: true,
   imports: [MatIconModule],
   templateUrl: './waiting-opponent.component.html',
-  styleUrls: ['./waiting-opponent.component.scss'],
+  styleUrl: './waiting-opponent.component.scss',
 })
-export class WaitingOpponetComponent implements OnInit {
+export class WaitingOpponentComponent implements OnInit, OnDestroy {
   cancelSearchButtonConfig = cancelSearchButtonConfig;
   searchSeconds = 0;
   battleId: number | null = null;
-  isSearchTimeOut: boolean = false;
+  isSearchTimeOut = false;
   battleStartDetails: BattleStartDetails | null = null;
   opponent: PlayerProfileDTO | null = null;
-  battleData: BattleData;
+  battleData!: BattleData;
 
   private timerInterval: ReturnType<typeof setInterval> | null = null;
   private readonly route = inject(ActivatedRoute);
@@ -44,26 +45,50 @@ export class WaitingOpponetComponent implements OnInit {
       if (reason === platformMessages.openedDeveloperTools) {
         this.snackbar.showError(reason);
       }
-      this.startSearchTimer();
     });
+
     await this.connectToHub();
     this.decodeRouteId();
+    this.startSearchTimer();
+  }
+
+  cancelSearch(): void {
+    if (this.battleId && this.battleId > 0) {
+      this.battleHub.cancelMatchmaking(this.battleId);
+    }
+    if (!this.isSearchTimeOut) this.snackbar.showInfo(platformMessages.cancelSearch);
+    setTimeout(() => {
+      this.stopTimer();
+      this.destroy$.next();
+      this.destroy$.complete();
+      this.battleHub.stopConnection();
+      this.router.navigate([Navigations.User, Navigations.Battles, Navigations.BattleList]);
+    }, 100);
+  }
+
+  openFullscreen(): void {
+    const elem = document.documentElement as HTMLElement & {
+      webkitRequestFullscreen?: () => Promise<void>;
+      msRequestFullscreen?: () => void;
+    };
+    if (elem.requestFullscreen) elem.requestFullscreen();
+    else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+    else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+  }
+
+  ngOnDestroy(): void {
+    this.stopTimer();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private startSearchTimer(): void {
-    this.searchSeconds = 0;
-
     this.timerInterval = setInterval(() => {
       this.searchSeconds++;
-
       if (this.searchSeconds >= 30) {
+        this.snackbar.showWarning(platformMessages.searchTimeOut);
         this.isSearchTimeOut = true;
-        this.stopTimer();
-        this.snackbar.showInfo('No opponent found. Redirecting to dashboard...');
-
-        setTimeout(() => {
-          this.router.navigate([Navigations.User, Navigations.Battles, Navigations.BattleList]);
-        }, 1500);
+        this.cancelSearch();
       }
     }, 1000);
   }
@@ -77,30 +102,31 @@ export class WaitingOpponetComponent implements OnInit {
 
   private async connectToHub(): Promise<void> {
     try {
-      if (!this.battleHub.connected) await this.battleHub.connect();
+      if (!this.battleHub.connected) {
+        await this.battleHub.connect();
+      }
 
       this.battleHub.onRequestAccepted
         .pipe(takeUntil(this.destroy$))
-        .subscribe((data: { receiverId: number; battleRequest: IncomingBattleRequest }) => {
-          const request = data.battleRequest;
-          this.snackbar.showSuccess(`${request.senderFullName} accepted the battle request!`);
+        .subscribe(({ battleRequest }) => {
+          this.snackbar.showSuccess(`${battleRequest.senderFullName} accepted the battle request!`);
         });
 
       this.battleHub.onRequestAcceptedConfirmation
         .pipe(takeUntil(this.destroy$))
-        .subscribe((data: { senderId: number; battleRequest: IncomingBattleRequest }) => {
-          const request = data.battleRequest;
-          // Show snackbar
-          this.snackbar.showSuccess(`${request.senderFullName} accepted the battle request!`);
+        .subscribe(({ battleRequest }) => {
+          this.snackbar.showSuccess(`${battleRequest.senderFullName} accepted the battle request!`);
         });
 
       this.battleHub.onBattleStarted
         .pipe(takeUntil(this.destroy$))
         .subscribe((result: BattleStartDetails) => {
           if (result) {
+            this.stopTimer();
             this.battleStartDetails = result;
+
             if (this.battleId) {
-              setTimeout(() => this.openFullscreen(), 0);
+              this.openFullscreen();
               this.router.navigate(
                 [
                   Navigations.User,
@@ -120,11 +146,11 @@ export class WaitingOpponetComponent implements OnInit {
           }
         });
     } catch (error) {
-      this.snackbar.showError(
+      const message =
         error instanceof Error && error.message
           ? error.message
-          : platformMessages.matchMakingFailed,
-      );
+          : platformMessages.matchMakingFailed;
+      this.snackbar.showError(message);
     }
   }
 
@@ -140,29 +166,15 @@ export class WaitingOpponetComponent implements OnInit {
       this.battleData = state.battleData;
     }
     try {
-      const urlDecoded = decodeURIComponent(encodedId);
-      const base64Decoded = atob(urlDecoded);
-      const asNumber = Number(base64Decoded);
-
-      if (!isNaN(asNumber) && asNumber > 0) {
-        this.battleId = asNumber;
+      const decoded = Number(atob(decodeURIComponent(encodedId)));
+      if (!isNaN(decoded) && decoded > 0) {
+        this.battleId = decoded;
       } else {
         throw new Error(platformMessages.invalideBattleId);
       }
     } catch {
       this.snackbar.showError(platformMessages.invalideBattleId);
-      this.battleId = null;
       this.router.navigate([Navigations.User, Navigations.Battles, Navigations.BattleList]);
     }
-  }
-
-  openFullscreen(): void {
-    const elem = document.documentElement as HTMLElement & {
-      webkitRequestFullscreen?: () => Promise<void>;
-      msRequestFullscreen?: () => void;
-    };
-    if (elem.requestFullscreen) elem.requestFullscreen();
-    else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-    else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
   }
 }
