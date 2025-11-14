@@ -1,1 +1,42 @@
-<p>comming soon!</p>
+<form [formGroup]="uploadForm">
+  <div>
+    @for (field of fields; track field.name) {
+      @if (field.type === 'text') {
+        <div>
+          <mat-form-field
+            class="custom-form-field full-width mt-1 px-1"
+            appearance="outline"
+            [floatLabel]="'auto'"
+          >
+            <mat-icon fontSet="material-icons-outlined" matPrefix>
+              {{ field.icon || 'link' }}
+            </mat-icon>
+
+            <input
+              matInput
+              [id]="field.name"
+              [type]="field.type"
+              [formControlName]="field.name"
+              [placeholder]="field.placeholder"
+              autocomplete="off"
+              class="custom-input-field"
+            />
+
+            @if (uploadForm.get(field.name)?.touched && uploadForm.get(field.name)?.invalid) {
+              <mat-error>
+                {{ getError(field.name) }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      }
+    }
+  </div>
+
+  <div class="generate-button-container mt-2">
+    <app-filled-button
+      [filledButtonConfig]="generateBtnConfig"
+      (click)="generateQuestion()"
+    ></app-filled-button>
+  </div>
+</form>

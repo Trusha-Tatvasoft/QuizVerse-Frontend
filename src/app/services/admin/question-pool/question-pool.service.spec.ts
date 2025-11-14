@@ -9,6 +9,7 @@ import { QuestionPoolListData } from '../../../pages/admin/question-pool/interfa
 import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { QuestionRequest } from '../../../pages/admin/question-pool/interfaces/question-request.interface';
+import { GenerateQuestionFromWebUrlRequest } from '../../../pages/admin/question-pool/interfaces/question-pool-ai-tab.interface';
 
 describe('QuestionPoolService', () => {
   let service: QuestionPoolService;
@@ -353,6 +354,67 @@ describe('QuestionPoolService', () => {
     const req = httpMock.expectOne(generateUrl);
     expect(req.request.method).toBe('POST');
     expect(req.request.body instanceof FormData).toBe(true);
+    req.flush(mockResponse);
+  });
+
+  it('should generate questions using web URL', () => {
+    const generateUrl = `${environment.baseUrl}/${EndPoints.GenerateQuestionFromWebUrlRequest}`;
+
+    const requestPayload: GenerateQuestionFromWebUrlRequest = {
+      url: 'https://example.com/science-articles',
+      categoryId: 2,
+      questionSpec: [
+        {
+          questionDifficultyId: 1,
+          questionDifficultyName: 'Easy',
+          questionPerQuestionType: [
+            {
+              questionPerQuestionTypeId: 5,
+              questionPerQuestionTypeName: 'Multiple Choice',
+              noOfQuesitons: 3,
+            },
+            {
+              questionPerQuestionTypeId: 6,
+              questionPerQuestionTypeName: 'True/False',
+              noOfQuesitons: 2,
+            },
+          ],
+        },
+      ],
+    };
+
+    const mockResponse: ApiResponse<QuestionPoolListData[]> = {
+      result: true,
+      statusCode: 200,
+      message: 'Questions generated successfully',
+      data: [
+        {
+          id: 1,
+          categoryId: 2,
+          categoryName: 'Science',
+          queDifficultyId: 1,
+          queDifficultyName: 'Easy',
+          queText: 'What is the boiling point of water?',
+          queTypeId: 5,
+          queTypeName: 'Multiple Choice',
+          queOptionsAns: [
+            { id: 1, questionId: 1, key: 'Answer', value: '100°C' },
+            { id: 2, questionId: 1, key: 'Option1', value: '90°C' },
+          ],
+        },
+      ],
+    };
+
+    service.getQuestionsUsingWebUrl(requestPayload).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+      expect(res.result).toBe(true);
+      expect(res.data.length).toBe(1);
+      expect(res.data[0].queText).toBe('What is the boiling point of water?');
+    });
+
+    const req = httpMock.expectOne(generateUrl);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(requestPayload);
     req.flush(mockResponse);
   });
 });
