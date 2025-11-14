@@ -4,3 +4,10 @@ export interface QuizManagementSummary {
   activeQuiz: number;
   totalQuestions: number;
 }
+
+export interface AIGenerationOption {
+  value: string;
+  label: string;
+  icon: string;
+  description: string;
+}

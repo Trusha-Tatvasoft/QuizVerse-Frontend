@@ -12,6 +12,7 @@ import {
   QueOptionsAndAns,
 } from '../../../../interfaces/question-pool-list-data.interface';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ImportPreviewDialogData } from '../../../../interfaces/question-pool-ai-tab.interface';
 
 describe('ImportQuestionPreviewComponent', () => {
   let component: ImportQuestionPreviewComponent;
@@ -34,6 +35,11 @@ describe('ImportQuestionPreviewComponent', () => {
       ],
     },
   ];
+
+  const mockDialogData: ImportPreviewDialogData = {
+    questions: mockQuestions,
+    isFromQuizCreation: false,
+  };
 
   const dialogRefMock = {
     close: jest.fn(),
@@ -58,7 +64,7 @@ describe('ImportQuestionPreviewComponent', () => {
       ],
       providers: [
         { provide: MatDialogRef, useValue: dialogRefMock },
-        { provide: MAT_DIALOG_DATA, useValue: mockQuestions },
+        { provide: MAT_DIALOG_DATA, useValue: mockDialogData },
         { provide: QuestionPoolService, useValue: questionPoolServiceMock },
         { provide: SnackbarService, useValue: snackbarMock },
       ],
@@ -72,10 +78,41 @@ describe('ImportQuestionPreviewComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('should create the component and initialize questions', () => {
+  it('should create the component and initialize questions and isFromQuizCreation', () => {
     expect(component).toBeTruthy();
     expect(component.questions.length).toBe(1);
     expect(component.questions[0].queText).toBe('What is 2 + 2?');
+    expect(component.isFromQuizCreation).toBe(false);
+  });
+
+  it('should initialize with isFromQuizCreation as true when provided in data', () => {
+    const quizCreationData: ImportPreviewDialogData = {
+      questions: mockQuestions,
+      isFromQuizCreation: true,
+    };
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [
+        MatDialogModule,
+        FilledButtonComponent,
+        OutlineButtonComponent,
+        ImportQuestionPreviewComponent,
+      ],
+      providers: [
+        { provide: MatDialogRef, useValue: dialogRefMock },
+        { provide: MAT_DIALOG_DATA, useValue: quizCreationData },
+        { provide: QuestionPoolService, useValue: questionPoolServiceMock },
+        { provide: SnackbarService, useValue: snackbarMock },
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+    }).compileComponents();
+
+    const quizCreationFixture = TestBed.createComponent(ImportQuestionPreviewComponent);
+    const quizCreationComponent = quizCreationFixture.componentInstance;
+    quizCreationFixture.detectChanges();
+
+    expect(quizCreationComponent.isFromQuizCreation).toBe(true);
   });
 
   it('should remove a question by index', () => {
@@ -83,59 +120,100 @@ describe('ImportQuestionPreviewComponent', () => {
     expect(component.questions.length).toBe(0);
   });
 
-  it('should close dialog if no questions are present when adding', () => {
-    component.questions = [];
-    component.addQuestions();
+  describe('addQuestions()', () => {
+    describe('when no questions are present', () => {
+      it('should show error and close dialog', () => {
+        component.questions = [];
+        component.addQuestions();
 
-    expect(snackbarMock.showError).toHaveBeenCalledWith(
-      platformMessages.errorTitle,
-      platformMessages.noQuestionsToSave,
-    );
-    expect(dialogRefMock.close).toHaveBeenCalled();
-  });
+        expect(snackbarMock.showError).toHaveBeenCalledWith(
+          platformMessages.errorTitle,
+          platformMessages.noQuestionsToSave,
+        );
+        expect(dialogRefMock.close).toHaveBeenCalled();
+      });
+    });
 
-  it('should call saveQuestions and close dialog on success', () => {
-    questionPoolServiceMock.saveQuestions.mockReturnValue(of({}));
+    describe('when isFromQuizCreation is false (from Question Pool)', () => {
+      beforeEach(() => {
+        component.isFromQuizCreation = false;
+      });
 
-    component.addQuestions();
+      it('should call saveQuestions and close dialog with true on success', () => {
+        questionPoolServiceMock.saveQuestions.mockReturnValue(of({}));
 
-    expect(questionPoolServiceMock.saveQuestions).toHaveBeenCalledWith(mockQuestions);
-    expect(snackbarMock.showSuccess).toHaveBeenCalledWith(
-      platformMessages.successTitle,
-      platformMessages.saveQuestionsSuccess,
-    );
-    expect(dialogRefMock.close).toHaveBeenCalledWith(true);
-  });
+        component.addQuestions();
 
-  it('should show error if saveQuestions fails', () => {
-    const errorResponse = {
-      error: { message: 'Save failed' },
-      status: 500,
-    };
+        expect(questionPoolServiceMock.saveQuestions).toHaveBeenCalledWith(mockQuestions);
+        expect(snackbarMock.showSuccess).toHaveBeenCalledWith(
+          platformMessages.successTitle,
+          platformMessages.saveQuestionsSuccess,
+        );
+        expect(dialogRefMock.close).toHaveBeenCalledWith(true);
+      });
 
-    questionPoolServiceMock.saveQuestions.mockReturnValue(throwError(() => errorResponse));
+      it('should show error if saveQuestions fails', () => {
+        const errorResponse = {
+          error: { message: 'Save failed' },
+          status: 500,
+        };
 
-    component.addQuestions();
+        questionPoolServiceMock.saveQuestions.mockReturnValue(throwError(() => errorResponse));
 
-    expect(snackbarMock.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'Save failed');
-    expect(dialogRefMock.close).not.toHaveBeenCalledWith(true);
-  });
+        component.addQuestions();
 
-  it('should show default error message if saveQuestions fails without error message', () => {
-    const errorResponse = {
-      error: {},
-      status: 500,
-    };
+        expect(snackbarMock.showError).toHaveBeenCalledWith(
+          platformMessages.errorTitle,
+          'Save failed',
+        );
+        expect(dialogRefMock.close).not.toHaveBeenCalledWith(true);
+      });
 
-    questionPoolServiceMock.saveQuestions.mockReturnValue(throwError(() => errorResponse));
+      it('should show default error message if saveQuestions fails without error message', () => {
+        const errorResponse = {
+          error: {},
+          status: 500,
+        };
 
-    component.addQuestions();
+        questionPoolServiceMock.saveQuestions.mockReturnValue(throwError(() => errorResponse));
 
-    expect(snackbarMock.showError).toHaveBeenCalledWith(
-      platformMessages.errorTitle,
-      platformMessages.saveQuestionsFailure,
-    );
-    expect(dialogRefMock.close).not.toHaveBeenCalledWith(true);
+        component.addQuestions();
+
+        expect(snackbarMock.showError).toHaveBeenCalledWith(
+          platformMessages.errorTitle,
+          platformMessages.saveQuestionsFailure,
+        );
+        expect(dialogRefMock.close).not.toHaveBeenCalledWith(true);
+      });
+    });
+
+    describe('when isFromQuizCreation is true (from Quiz Creation)', () => {
+      beforeEach(() => {
+        component.isFromQuizCreation = true;
+      });
+
+      it('should close dialog with questions data without calling service', () => {
+        component.addQuestions();
+
+        expect(questionPoolServiceMock.saveQuestions).not.toHaveBeenCalled();
+        expect(snackbarMock.showSuccess).not.toHaveBeenCalled();
+        expect(snackbarMock.showError).not.toHaveBeenCalled();
+        expect(dialogRefMock.close).toHaveBeenCalledWith(mockQuestions);
+      });
+
+      it('should close with empty array when questions are empty (edge case)', () => {
+        component.questions = [];
+        component.isFromQuizCreation = true;
+
+        component.addQuestions();
+
+        expect(snackbarMock.showError).toHaveBeenCalledWith(
+          platformMessages.errorTitle,
+          platformMessages.noQuestionsToSave,
+        );
+        expect(dialogRefMock.close).toHaveBeenCalled();
+      });
+    });
   });
 
   describe('hasOptions()', () => {
@@ -183,6 +261,6 @@ describe('ImportQuestionPreviewComponent', () => {
 
   it('should close dialog when closeDialog is called', () => {
     component.closeDialog();
-    expect(dialogRefMock.close).toHaveBeenCalled();
+    expect(dialogRefMock.close).toHaveBeenCalledWith(false);
   });
 });
