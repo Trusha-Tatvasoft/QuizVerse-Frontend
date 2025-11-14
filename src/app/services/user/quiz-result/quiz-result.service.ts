@@ -56,4 +56,10 @@ export class QuizResultService {
       request,
     );
   }
+
+  getQuestionReport(reportId: number): Observable<ApiResponse<QuestionIssueReportRequest>> {
+    return this.http.get<ApiResponse<QuestionIssueReportRequest>>(
+      `${environment.baseUrl}/${EndPoints.GetQuestionReported}/${reportId}`,
+    );
+  }
 }

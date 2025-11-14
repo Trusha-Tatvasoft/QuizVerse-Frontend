@@ -19,9 +19,24 @@
                     : notAttemptTagConfig
               "
             ></app-tag>
-
-            <button (click)="openReportDialog(q)">
-              <mat-icon color="warn">error_outline</mat-icon>
+            <button
+              (click)="openReportDialog(q)"
+              [matTooltip]="
+                q.reportId
+                  ? q.isEditable
+                    ? 'Update Reported Question Issue'
+                    : 'Reported Question — Under Review'
+                  : 'Report Question'
+              "
+              matTooltipPosition="above"
+            >
+              <mat-icon class="report-icon material-icons-outlined">
+                @if (q.reportId && !q.isEditable) {
+                  report_off
+                } @else {
+                  report
+                }
+              </mat-icon>
             </button>
           </div>
         </div>

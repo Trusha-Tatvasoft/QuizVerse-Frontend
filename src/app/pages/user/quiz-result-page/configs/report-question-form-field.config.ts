@@ -8,9 +8,10 @@ export const reportQuestionFormField: DynamicFormField[] = [
     type: 'textarea',
     placeholder: 'Enter your report description...',
     icon: 'report',
-    validators: [Validators.required, Validators.maxLength(255)],
+    validators: [Validators.required, Validators.minLength(40), Validators.maxLength(255)],
     validationMessages: {
       required: 'Description is required.',
+      minlength: 'Description must be at least 40 characters.',
       maxlength: 'Description must not exceed 255 characters.',
     },
   },

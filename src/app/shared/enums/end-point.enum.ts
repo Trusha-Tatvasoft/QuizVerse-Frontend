@@ -159,9 +159,10 @@ export enum EndPoints {
   QuizCompletedSummary = 'Quiz/quiz-summary', // GET /quiz/quiz-summary/{quizId}
   QuizQuestionReview = 'Quiz/quiz-question-review', // GET /quiz/question-review/{quizId}
   QuizAnswerExplanation = 'Quiz/answer-explanation', // POST /quiz/answer-explanation
-  ReportQuestionIssue = 'Quiz/report-question-issue',
+  ReportQuestionIssue = 'Quiz/create-or-update-question-issue-report',
   QuizRating = 'Quiz/quiz-rating',
   SubmitQuizRating = 'Quiz/submit-quiz-rating',
+  GetQuestionReported = 'Quiz/get-report-question-issue',
   //  #endregion
 
   //#region Notification Center

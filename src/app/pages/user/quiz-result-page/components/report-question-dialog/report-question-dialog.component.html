@@ -9,17 +9,8 @@
     </div>
 
     <!-- Close Button -->
-    <button
-      type="button"
-      class="close-button"
-      (click)="onCancel()"
-      (keydown.enter)="onCancel()"
-      (keydown.space)="onCancel()"
-      aria-label="Close dialog"
-      tabindex="0"
-      disableRipple
-    >
-      <mat-icon class="close-icon">close</mat-icon>
+    <button mat-icon-button class="close-btn-dialog-all" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
     </button>
   </div>
 
@@ -35,7 +26,7 @@
         <label class="field-label">Question</label>
         <mat-form-field appearance="outline" class="custom-form-field full-width">
           <mat-icon fontSet="material-icons-outlined" matPrefix>help</mat-icon>
-          <input matInput [value]="questionText" readonly />
+          <input matInput [value]="data.questionText" readonly />
         </mat-form-field>
       </div>
 
@@ -44,35 +35,20 @@
         <div class="form-field">
           <label class="field-label">{{ field.label }}</label>
 
-          <mat-form-field
-            appearance="outline"
-            [ngClass]="[
-              field.type === 'textarea' ? 'custom-form-field-text' : 'custom-form-field',
-              'full-width',
-            ]"
-          >
+          <mat-form-field appearance="outline" class="custom-form-field-text full-width">
             <mat-icon fontSet="material-icons-outlined" matPrefix>
               {{ field.icon || 'report' }}
             </mat-icon>
 
-            @if (field.type === 'textarea') {
-              <textarea
-                matInput
-                cdkTextareaAutosize
-                cdkAutosizeMinRows="3"
-                cdkAutosizeMaxRows="6"
-                [formControlName]="field.name"
-                [placeholder]="field.placeholder"
-              ></textarea>
-            } @else {
-              <input
-                matInput
-                [type]="field.type"
-                [formControlName]="field.name"
-                [placeholder]="field.placeholder"
-                autocomplete="off"
-              />
-            }
+            <textarea
+              matInput
+              [id]="field.name"
+              [formControlName]="field.name"
+              [placeholder]="field.placeholder"
+              rows="3"
+              [readonly]="data.reportId != null && !data.isEditable"
+              class="min-h-[50px]"
+            ></textarea>
 
             <mat-error>
               {{ getError(field.name) }}
@@ -84,11 +60,21 @@
 
     <!-- Actions -->
     <mat-dialog-actions class="dialog-actions flex justify-end gap-3 p-0">
-      <app-outline-button
-        [outlineButtonConfig]="cancelButton"
-        (buttonClicked)="onCancel()"
-      ></app-outline-button>
-      <app-filled-button [filledButtonConfig]="submitButton" class="w-auto"></app-filled-button>
+      <app-outline-button [outlineButtonConfig]="cancelButton" (buttonClicked)="onCancel()">
+      </app-outline-button>
+
+      @if (data.isEditable) {
+        <!-- Editable Mode -->
+        <app-filled-button [filledButtonConfig]="submitButton" class="w-auto"> </app-filled-button>
+      } @else {
+        <!-- Readonly / Under Review Mode -->
+        <app-filled-button
+          [filledButtonConfig]="data.reportId != null ? disabledSubmitButton : submitButton"
+          class="w-auto"
+          [matTooltip]="data.reportId != null ? 'Reported Question — Under Review' : ''"
+        >
+        </app-filled-button>
+      }
     </mat-dialog-actions>
   </form>
 </div>
