@@ -201,6 +201,7 @@ describe('SearchOpponentComponent', () => {
         playerProfile: mockOpponent,
         battleName: 'Math Battle',
         totalQuestions: 10,
+        battleId: 5,
         // Add other required properties
       };
 
@@ -250,6 +251,7 @@ describe('SearchOpponentComponent', () => {
         playerProfile: mockOpponent,
         battleName: 'Math Battle',
         totalQuestions: 10,
+        battleId: 5,
       };
 
       // Test case 1: battleId is null

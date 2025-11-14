@@ -314,6 +314,49 @@ describe('QuestionPoolService', () => {
     req.flush(mockResponse);
   });
 
+  it('should generate questions from a PDF file', () => {
+    const pdfFile = new File(['pdf-content'], 'questions.pdf', { type: 'application/pdf' });
+    const formData = new FormData();
+    formData.append('file', pdfFile);
+
+    const generateUrl = `${environment.baseUrl}/${EndPoints.GenerateFromPdf}`;
+
+    const mockResponse: ApiResponse<QuestionPoolListData[]> = {
+      result: true,
+      statusCode: 200,
+      message: 'PDF processed successfully',
+      data: [
+        {
+          id: 10,
+          categoryId: 1,
+          categoryName: 'Generated Category',
+          queDifficultyId: 2,
+          queDifficultyName: 'Medium',
+          queText: 'Generated question from PDF?',
+          queTypeId: 4,
+          queTypeName: 'Multiple Choice',
+          queOptionsAns: [
+            { id: 1, questionId: 10, key: 'Answer', value: '42' },
+            { id: 2, questionId: 10, key: 'Option', value: '24' },
+          ],
+        },
+      ],
+    };
+
+    service.generateQuestionsFromPdf(formData).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+      expect(res.result).toBe(true);
+      expect(res.data.length).toBe(1);
+      expect(res.data[0].queText).toBe('Generated question from PDF?');
+      expect(res.data[0].queOptionsAns[0].value).toBe('42');
+    });
+
+    const req = httpMock.expectOne(generateUrl);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body instanceof FormData).toBe(true);
+    req.flush(mockResponse);
+  });
+
   it('should generate questions using web URL', () => {
     const generateUrl = `${environment.baseUrl}/${EndPoints.GenerateQuestionFromWebUrlRequest}`;
 

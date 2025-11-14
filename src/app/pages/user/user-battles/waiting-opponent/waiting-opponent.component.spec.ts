@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { WaitingOpponetComponent } from './waiting-opponent.component';
+import { WaitingOpponentComponent } from './waiting-opponent.component';
 import { SnackbarService } from '../../../../shared/service/snackbar/snackbar.service';
 import { BattleHubService } from '../../../../services/user/user-battles/battle-hub.service';
 import { CheatPreventionService } from '../../../../shared/service/cheat-prevention/cheat-prevention.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { of, Subject, throwError } from 'rxjs';
+import { Subject } from 'rxjs';
 import { platformMessages } from '../../../../utils/constants';
 import { Navigations } from '../../../../shared/enums/navigation';
 
-describe('WaitingOpponetComponent', () => {
-  let component: WaitingOpponetComponent;
-  let fixture: ComponentFixture<WaitingOpponetComponent>;
+describe('WaitingOpponentComponent', () => {
+  let component: WaitingOpponentComponent;
+  let fixture: ComponentFixture<WaitingOpponentComponent>;
 
   // Mock dependencies
   const mockRouter = {
@@ -25,11 +25,14 @@ describe('WaitingOpponetComponent', () => {
     showError: jest.fn(),
     showInfo: jest.fn(),
     showSuccess: jest.fn(),
+    showWarning: jest.fn(),
   };
 
   const mockBattleHub = {
     connected: false,
     connect: jest.fn(),
+    stopConnection: jest.fn(),
+    cancelMatchmaking: jest.fn(),
     onRequestAccepted: new Subject<any>(),
     onRequestAcceptedConfirmation: new Subject<any>(),
     onBattleStarted: new Subject<any>(),
@@ -42,7 +45,7 @@ describe('WaitingOpponetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WaitingOpponetComponent],
+      imports: [WaitingOpponentComponent],
       providers: [
         { provide: SnackbarService, useValue: mockSnackbar },
         { provide: BattleHubService, useValue: mockBattleHub },
@@ -52,8 +55,10 @@ describe('WaitingOpponetComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(WaitingOpponetComponent);
+    fixture = TestBed.createComponent(WaitingOpponentComponent);
     component = fixture.componentInstance;
+
+    component.battleData = { battleName: 'Mock Battle' } as any;
   });
 
   afterEach(() => {
@@ -78,20 +83,14 @@ describe('WaitingOpponetComponent', () => {
   });
 
   it('should increment searchSeconds and timeout after 30 seconds', fakeAsync(() => {
-    const navigateSpy = jest.spyOn(mockRouter, 'navigate');
-
+    const cancelSpy = jest.spyOn(component, 'cancelSearch');
     component['startSearchTimer']();
+
     tick(30000);
+    expect(mockSnackbar.showWarning).toHaveBeenCalledWith(platformMessages.searchTimeOut);
     expect(component.isSearchTimeOut).toBe(true);
-    expect(mockSnackbar.showInfo).toHaveBeenCalledWith(
-      'No opponent found. Redirecting to dashboard...',
-    );
-    tick(1500);
-    expect(navigateSpy).toHaveBeenCalledWith([
-      Navigations.User,
-      Navigations.Battles,
-      Navigations.BattleList,
-    ]);
+    expect(cancelSpy).toHaveBeenCalled();
+
     component['stopTimer']();
   }));
 
@@ -163,5 +162,62 @@ describe('WaitingOpponetComponent', () => {
     expect(
       elem.requestFullscreen || elem.webkitRequestFullscreen || elem.msRequestFullscreen,
     ).toBeDefined();
+  });
+
+  it('should cancel search and navigate back', fakeAsync(() => {
+    component.battleId = 5;
+    const navigateSpy = jest.spyOn(mockRouter, 'navigate');
+
+    component.cancelSearch();
+    tick(200);
+
+    expect(mockBattleHub.cancelMatchmaking).toHaveBeenCalledWith(5);
+    expect(mockSnackbar.showInfo).toHaveBeenCalledWith(platformMessages.cancelSearch);
+    expect(navigateSpy).toHaveBeenCalledWith([
+      Navigations.User,
+      Navigations.Battles,
+      Navigations.BattleList,
+    ]);
+  }));
+
+  it('should handle onBattleStarted event, stop timer, open fullscreen, and navigate', fakeAsync(async () => {
+    component.battleId = 123;
+    component.battleData = { battleName: 'Mock Battle' } as any;
+
+    const stopTimerSpy = jest.spyOn<any, any>(component as any, 'stopTimer');
+    const openFullscreenSpy = jest.spyOn(component, 'openFullscreen').mockImplementation();
+
+    const mockBattleStartDetails = {
+      battleAttemptId: 999,
+      playerProfile: { name: 'OpponentUser' },
+    };
+
+    mockBattleHub.connected = false;
+    mockBattleHub.connect.mockResolvedValueOnce(undefined);
+
+    fixture.detectChanges();
+
+    await component['connectToHub']();
+
+    mockBattleHub.onBattleStarted.next(mockBattleStartDetails);
+
+    expect(stopTimerSpy).toHaveBeenCalled();
+    expect(component.battleStartDetails).toEqual(mockBattleStartDetails);
+    expect(openFullscreenSpy).toHaveBeenCalled();
+    expect(mockRouter.navigate).toHaveBeenCalled();
+  }));
+
+  it('should handle missing id and navigate back', () => {
+    mockActivatedRoute.snapshot.paramMap.get = jest.fn().mockReturnValue(null);
+    const navigateSpy = jest.spyOn(mockRouter, 'navigate');
+
+    component['decodeRouteId']();
+
+    expect(mockSnackbar.showError).toHaveBeenCalledWith(platformMessages.invalideBattleId);
+    expect(navigateSpy).toHaveBeenCalledWith([
+      Navigations.User,
+      Navigations.Battles,
+      Navigations.BattleList,
+    ]);
   });
 });

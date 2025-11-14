@@ -112,6 +112,18 @@ export class QuestionPoolService {
   }
 
   /**
+   * Generate quiz questions automatically by analyzing the content of a PDF file.
+   * @param formData - The uploaded PDF file wrapped in FormData.
+   * @returns Observable<ApiResponse<QuestionPoolListData[]>> - generated questions from backend.
+   */
+  generateQuestionsFromPdf(formData: FormData) {
+    return this.http.post<ApiResponse<QuestionPoolListData[]>>(
+      `${environment.baseUrl}/${EndPoints.GenerateFromPdf}`,
+      formData,
+    );
+  }
+
+  /**
    * Generate questions using web url.
    * @param request - Web url and question category & count.
    * @returns Observable<ApiResponse<QuestionPoolListData[]>> - response message after generation.

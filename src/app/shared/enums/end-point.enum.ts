@@ -52,6 +52,7 @@ export enum EndPoints {
   GenerateQuestionFromWebUrlRequest = 'QuestionPool/generate-question-using-web-url',
   PreviewQuestionsFromCsv = 'QuestionPool/preview-questions-from-csv',
   PreviewQuestionsFromExcel = 'QuestionPool/preview-questions-from-excel',
+  GenerateFromPdf = 'QuestionPool/generate-from-pdf',
   // #endregion
 
   // #region QuizCategory
@@ -67,6 +68,7 @@ export enum EndPoints {
   CreateOrUpdateQuiz = 'QuizManagement/create-update-quiz',
   GetQuizById = 'QuizManagement/get-quiz-by-id',
   ExportQuestions = 'QuizManagement/export-questions-to-csv',
+  DeleteQuiz = 'QuizManagement/delete-quiz',
   UpdateQuizAction = 'QuizManagement/update-quiz-action',
   // #endregion
 
@@ -174,5 +176,9 @@ export enum EndPoints {
   // #region AI Configuration
   AiConfigurationCardData = 'AiConfiguration/get-ai-configuration-card-details',
   AiUsageDetails = 'AiConfiguration/get-ai-uses-details',
+  //#endregion
+
+  //#region Content Moderation
+  ContentModerationMatricsData = 'ContentModeration/get-content-moderation-matrics-data',
   //#endregion
 }
