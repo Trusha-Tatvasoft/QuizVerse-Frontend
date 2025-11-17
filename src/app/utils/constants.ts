@@ -393,6 +393,10 @@ export const platformMessages = {
   failToIntrrupteBattle: 'Failed to interrupt battle',
   failedLoadUserBattles: 'Failed to fatch user battles',
   // #endregion
+
+  // #region Content Moderation
+  failedToLoadCommentPreview: 'Failed to load comment details',
+  // #endregion
 };
 //#endregion
 
@@ -734,4 +738,24 @@ export const aiModelLabels: Record<keyof typeof AiModelName, string> = {
   MoonshotAiKimiK2Instruct: 'moonshotai/kimi-k2-instruct',
   OpenAiGptOss20B: 'openai/gpt-oss-20b',
 };
+//#endregion
+
+//#region Flagged Comments Action
+export const flaggedCommentsAction = {
+  VIEW: 'message',
+  ACCEPTED: 'check_circle',
+  IGNORED: 'block',
+};
+//#endregion
+
+//#region QUestion Report Action
+export const questionReportAction = {
+  VIEW: 'visibility',
+  ACCEPTED: 'check_circle',
+  IGNORED: 'block',
+  PENDING: 'hourglass_empty',
+  UNDERREVIEW: 'bookmark_added',
+};
+
+export const dialogCloseCorrectly = 'Dialogue closs correctly';
 //#endregion
