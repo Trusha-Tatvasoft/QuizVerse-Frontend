@@ -178,7 +178,9 @@ export enum EndPoints {
   AiUsageDetails = 'AiConfiguration/get-ai-uses-details',
   //#endregion
 
-  //#region Content Moderation
+  // #region Content Moderation
+  GetQuizReportByPagination = 'ContentModeration/get-quiz-report-by-pagination',
+  ReportQuizAction = 'ContentModeration/update-quiz-report-action',
   ContentModerationMatricsData = 'ContentModeration/get-content-moderation-matrics-data',
-  //#endregion
+  // #endregion
 }

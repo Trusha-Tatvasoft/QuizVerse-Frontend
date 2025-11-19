@@ -1,0 +1,50 @@
+<main>
+  <div class="admin-management-toolbar">
+    <section class="page-header">
+      <h2 class="page-title">Reported Quiz Content</h2>
+    </section>
+
+    <div class="user-management-filters">
+      <!-- Severity Filter -->
+
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-select
+          [(value)]="selectedSeverity"
+          placeholder="All Severity"
+          (selectionChange)="onFilterChange()"
+        >
+          <mat-option [value]="null">All Severity</mat-option>
+          @for (severity of severtyOptions; track severity.value) {
+            <mat-option [value]="severity.value">
+              {{ severity.label }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Status Filter -->
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-select
+          [(value)]="selectedStatus"
+          placeholder="All Status"
+          (selectionChange)="onFilterChange()"
+        >
+          <mat-option [value]="null">All Status</mat-option>
+          @for (status of selectOptions; track status.value) {
+            <mat-option [value]="status.value">
+              {{ status.label }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <app-reported-quizz-listing
+    [dataSource]="dataSource()"
+    [totalItems]="totalItems()"
+    (pageChange)="onPageChange($event)"
+    (sortChange)="onSortChange($event)"
+  >
+  </app-reported-quizz-listing>
+</main>

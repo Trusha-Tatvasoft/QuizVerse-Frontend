@@ -393,6 +393,10 @@ export const platformMessages = {
   failToIntrrupteBattle: 'Failed to interrupt battle',
   failedLoadUserBattles: 'Failed to fatch user battles',
   // #endregion
+
+  // #region
+  failToLoadReportedQuizList: 'Failed to load reported quiz list.',
+  // #endRegion
 };
 //#endregion
 
@@ -537,6 +541,34 @@ export const colors = {
   black: { bg: 'black', text: 'lightWhite' },
   white: { bg: 'lightWhite', text: 'black' },
   brown: { bg: 'lightBrown', text: 'brown' },
+};
+//#endregion
+
+//#region reportedQuizSeverty
+export const reportedQuizSeverty = {
+  high: 1,
+  low: 2,
+  midium: 3,
+  underProcessing: 4,
+};
+//#endregion
+
+// #region reportedQuizStatusLabel
+export const reportedQuizStatusLabel = {
+  accepted: 1,
+  ignore: 2,
+  pending: 3,
+  underReview: 4,
+};
+// #endregion
+
+//#region QUestion Report Action
+export const quizReportAction = {
+  VIEW: 'visibility',
+  ACCEPTED: 'check_circle',
+  IGNORED: 'block',
+  PENDING: 'hourglass_empty',
+  UNDERREVIEW: 'bookmark_added',
 };
 //#endregion
 
