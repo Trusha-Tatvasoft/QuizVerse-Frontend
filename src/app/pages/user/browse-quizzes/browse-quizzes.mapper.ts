@@ -62,6 +62,7 @@ export function mapQuizToCardConfig(apiQuiz: BrowseQuizResponse): QuizCardConfig
     isFeatured: apiQuiz.isFeatured,
     isPaid: apiQuiz.isPaid,
     isAttempted: apiQuiz.isAttempted,
+    report: apiQuiz.report,
     buttonConfig: apiQuiz.isAttempted
       ? {
           label: 'Show Result',

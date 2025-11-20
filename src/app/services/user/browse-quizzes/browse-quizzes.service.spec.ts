@@ -4,7 +4,10 @@ import { of } from 'rxjs';
 import { BrowseQuizzesService } from './browse-quizzes.service';
 import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
-import { BrowseQuizzesRequest } from '../../../pages/user/browse-quizzes/interfaces/browsr-quiz-request.interface';
+import {
+  BrowseQuizzesRequest,
+  QuizReportRequest,
+} from '../../../pages/user/browse-quizzes/interfaces/browsr-quiz-request.interface';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
 import { BrowseQuizzesApiResponse } from '../../../pages/user/browse-quizzes/interfaces/browse-quiz-response.interface';
 
@@ -25,7 +28,7 @@ describe('BrowseQuizzesService', () => {
     httpMock = TestBed.inject(HttpClient) as jest.Mocked<HttpClient>;
   });
 
-  it('should send POST request to correct URL with given payload', (done) => {
+  it('should send POST request to correct URL with given payload (browseQuizzes)', (done) => {
     const mockPayload: BrowseQuizzesRequest = {
       searchText: 'test',
       batchNumber: 1,
@@ -64,6 +67,32 @@ describe('BrowseQuizzesService', () => {
       expect(response).toEqual(mockResponse);
       expect(httpMock.post).toHaveBeenCalledWith(
         `${environment.baseUrl}/${EndPoints.BrowseQuizzes}`,
+        mockPayload,
+      );
+      done();
+    });
+  });
+
+  it('should send POST request to correct URL with given payload (reportQuiz)', (done) => {
+    const mockPayload: QuizReportRequest = {
+      quizId: 1,
+      reportId: 123,
+      reason: 'Spam report',
+    };
+
+    const mockResponse: ApiResponse<object> = {
+      result: true,
+      statusCode: 200,
+      message: 'Report submitted successfully',
+      data: {},
+    };
+
+    httpMock.post.mockReturnValue(of(mockResponse));
+
+    service.reportQuiz(mockPayload).subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+      expect(httpMock.post).toHaveBeenCalledWith(
+        `${environment.baseUrl}/${EndPoints.AddQuizReport}`,
         mockPayload,
       );
       done();

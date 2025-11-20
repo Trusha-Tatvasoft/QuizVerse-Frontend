@@ -28,6 +28,14 @@ export const loadMoreButtonConfig: ButtonConfig = {
   fontWeight: 500,
 };
 
+export const reportQuizButtonConfig: ButtonConfig = {
+  label: '',
+  variant: 'secondary',
+  fontWeight: 500,
+  matIcon: 'warning',
+  iconFontSet: 'material-icons-outlined',
+};
+
 // Common default config for all tags
 export const defaultTagConfig: Omit<TagInputConfig, 'id' | 'label'> = {
   type: 'selectable',

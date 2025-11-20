@@ -393,6 +393,11 @@ export const platformMessages = {
   failToIntrrupteBattle: 'Failed to interrupt battle',
   failedLoadUserBattles: 'Failed to fatch user battles',
   // #endregion
+
+  //#region Report Quiz
+  successQuizReport: 'Quiz reported successfully.',
+  failedToReportQuiz: 'Failed to report quiz',
+  //#endregion
 };
 //#endregion
 

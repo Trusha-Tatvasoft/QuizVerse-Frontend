@@ -13,6 +13,13 @@ export interface BrowseQuizResponse {
   totalParticipates: number;
   rating: number;
   isAttempted: boolean;
+  report: QuizReport;
+}
+
+export interface QuizReport {
+  reportId: number;
+  reportReason: string;
+  isEditable: boolean;
 }
 
 export interface BrowseQuizzesApiResponse {
