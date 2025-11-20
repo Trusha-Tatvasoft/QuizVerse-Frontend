@@ -3,6 +3,7 @@ import { DynamicFormField } from '../../../../shared/interfaces/dynamic-form-fie
 import { ButtonConfig } from '../../../../shared/interfaces/button-config.interface';
 import { ColumnDef } from '../../../../shared/interfaces/table-component.interface';
 import { ConfirmationDialogData } from '../../../../shared/interfaces/confirmation-dialog.interface';
+import { AIGenerationOption } from '../interfaces/quiz-management-summary.interface';
 
 // Header section config for Quiz Creation page
 export const quizCreationHeaderConfig = {
@@ -240,10 +241,10 @@ export const saveDraftButtonConfig: ButtonConfig = {
 };
 
 export const selectQuestionMethodPrimaryButtonConfig: ButtonConfig = {
-  label: 'Coming Soon',
+  label: 'Add',
   fontWeight: 500,
   type: 'button',
-  variant: 'secondary',
+  variant: 'primary',
 };
 
 export const selectQuestionMethodSecondaryButtonConfig: ButtonConfig = {
@@ -311,6 +312,24 @@ export const changeQuestionMethodButtonConfig: ButtonConfig = {
   type: 'button',
   variant: 'secondary',
 };
+
+export const generateQuestionButtonConfig: ButtonConfig = {
+  label: 'Generate Questions',
+  variant: 'primary',
+  type: 'button',
+  matIcon: 'auto_awesome',
+};
+
+export const aiGenerationOptions: AIGenerationOption[] = [
+  {
+    value: 'text',
+    label: 'From Text',
+    icon: 'description',
+    description: 'Paste or type text content',
+  },
+  { value: 'url', label: 'From URL', icon: 'language', description: 'Generate from web content' },
+  { value: 'pdf', label: 'From PDF', icon: 'upload_file', description: 'Upload PDF document' },
+];
 
 export const changeQuestionMethodSmallButtonConfig: ButtonConfig = {
   variant: 'secondary',

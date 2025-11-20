@@ -1,0 +1,256 @@
+<div class="mb-5">
+  <h2 class="form-heading">Generate Questions with AI</h2>
+  <span class="text-xs text-gray-500"> Use AI to generate questions from text, URL, or PDF </span>
+</div>
+
+<form [formGroup]="generationForm" class="generation-form">
+  <form [formGroup]="generationForm" class="generation-form">
+    <div>
+      <h3 class="font-bold text-lg mb-2">Question Type Distribution</h3>
+      <div class="mb-2">
+        <span class="text-gray-800 font-semibold">Selected Configs : </span>
+        @for (info of difficultyInfo; track info.name) {
+          <span class="text-sm text-gray-700">
+            <span class="font-semibold">{{ info.name }}:</span> {{ info.value }} Questions
+          </span>
+        }
+      </div>
+
+      <form [formGroup]="specBuilderForm" class="p-4 border border-gray-300 rounded-lg mb-4">
+        <div class="ai-filter-section">
+          <div class="ai-filter-row">
+            <mat-form-field
+              appearance="outline"
+              class="custom-form-field filter-select"
+              subscriptSizing="dynamic"
+            >
+              <input matInput [value]="quizStep1Data.quizCategoryName" disabled />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-select">
+              <mat-select formControlName="difficulty" placeholder="Select Difficulty*">
+                @for (item of difficultyList; track item.id) {
+                  <mat-option [value]="item">{{ item.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-select">
+              <mat-select formControlName="type" placeholder="Select Type*">
+                @for (item of typeList; track item.id) {
+                  <mat-option [value]="item">{{ item.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="second-row-container">
+            <div class="question-input-container">
+              <mat-label>No. of question*</mat-label>
+              <mat-form-field appearance="outline" class="w-full custom-form-field">
+                <input matInput type="number" formControlName="noOfQuestions" min="1" />
+              </mat-form-field>
+            </div>
+
+            <div class="add-btn-container">
+              <app-filled-button
+                [filledButtonConfig]="{ label: 'Add', variant: 'primary', matIcon: 'add' }"
+                (buttonClicked)="onAddSpec()"
+              ></app-filled-button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      @if (addedSpecs.length > 0) {
+        <div class="added-questions-list">
+          <div class="list-header">
+            <div class="info-container">
+              <h3>Added AI Configurations</h3>
+              <span class="total-badge">Total: {{ getTotalAddedOverall() }}/10</span>
+            </div>
+
+            <app-outline-button
+              [outlineButtonConfig]="resetBtn"
+              (click)="onResetAll()"
+              class="reset-all-btn"
+            ></app-outline-button>
+          </div>
+
+          <div class="category-tag">
+            <app-tag [tagConfig]="categoryTag"></app-tag>
+          </div>
+
+          @for (difficultyGroup of addedSpecs; track difficultyGroup.questionDifficultyId) {
+            <div class="difficulty-group">
+              <h4 class="difficulty-title">
+                Difficulty : {{ difficultyGroup.questionDifficultyName }}
+              </h4>
+
+              @for (
+                question of difficultyGroup.questionPerQuestionType;
+                track $index;
+                let qIndex = $index
+              ) {
+                <div class="question-config-item">
+                  <div class="config-details">
+                    <span class="config-badge primary">{{ question.noOfQuesitons }} Questions</span>
+
+                    <div class="config-info-group">
+                      <span class="config-label">Type:</span>
+                      <span class="config-value">{{ question.questionPerQuestionTypeName }}</span>
+                    </div>
+                  </div>
+
+                  <button
+                    mat-icon-button
+                    (click)="onRemoveSpec(difficultyGroup, question)"
+                    class="remove-btn"
+                    matTooltip="Remove"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="flex justify-end gap-3"></div>
+  </form>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    @for (option of aiGenerationOptions; track option.value) {
+      <div
+        class="generation-method-card p-4 rounded-lg border-2 cursor-pointer transition-all border border-gray-300 hover:shadow-lg"
+        [class.selected]="selectedGenerationMethod === option.value"
+        (click)="selectMethod(option.value)"
+      >
+        <div class="flex flex-col items-center text-center">
+          <mat-icon class="md:text-4xl text-2xl mb-2">{{ option.icon }}</mat-icon>
+          <h5 class="font-semibold text-lg mb-1">{{ option.label }}</h5>
+        </div>
+      </div>
+    }
+  </div>
+
+  @switch (selectedGenerationMethod) {
+    @case ('text') {
+      <div class="mb-4">
+        <mat-label class="font-medium mb-2 block">Enter Text Content</mat-label>
+        <mat-form-field appearance="outline" class="w-full custom-form-field-text">
+          <textarea
+            matInput
+            formControlName="prompt"
+            rows="8"
+            placeholder="Paste the text content here from which you want to generate questions..."
+          ></textarea>
+          @if (getError('prompt')) {
+            <mat-error>{{ getError('prompt') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    }
+
+    @case ('url') {
+      <div class="mb-4">
+        <mat-label class="font-medium mb-2 block">Enter URL</mat-label>
+        <mat-form-field appearance="outline" class="w-full custom-form-field">
+          <input
+            matInput
+            formControlName="url"
+            placeholder="https://example.com/article"
+            type="url"
+          />
+          <mat-icon matPrefix>link</mat-icon>
+          @if (getError('url')) {
+            <mat-error>{{ getError('url') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    }
+
+    @case ('pdf') {
+      <div class="mb-4">
+        <mat-label class="font-medium mb-2 block">Upload PDF</mat-label>
+        <div
+          class="pdf-upload-area border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 transition-colors"
+          (click)="triggerFileInput()"
+        >
+          <input
+            type="file"
+            id="pdfFileInput"
+            accept=".pdf"
+            class="hidden"
+            (change)="onFileSelected($event)"
+          />
+
+          @if (!selectedFile) {
+            <div>
+              <mat-icon class="text-5xl text-gray-400 mb-2">upload_file</mat-icon>
+              <p class="text-gray-600 font-medium">Upload your PDF file here</p>
+            </div>
+          } @else {
+            <div class="selected-file-info">
+              <mat-icon class="text-5xl text-purple-600 mb-2">picture_as_pdf</mat-icon>
+              <p class="text-gray-800 font-medium">{{ selectedFile.name }}</p>
+              <p class="text-xs text-gray-500 mt-1">
+                {{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB
+              </p>
+              <button
+                type="button"
+                class="mt-2 text-sm remove-file-button cursor-pointer"
+                (click)="
+                  selectedFile = null; generationForm.get('file')?.reset(); $event.stopPropagation()
+                "
+              >
+                Remove file
+              </button>
+            </div>
+          }
+        </div>
+        @if (getError('file')) {
+          <mat-error>{{ getError('file') }}</mat-error>
+        }
+      </div>
+    }
+
+    @default {
+      <!-- Optional: fallback if no method selected -->
+      <div class="text-gray-500 text-center py-8">
+        Please select a content source to generate questions.
+      </div>
+    }
+  }
+  <div class="flex justify-end gap-3 mt-6">
+    <app-outline-button
+      [outlineButtonConfig]="cancelButtonConfig"
+      (buttonClicked)="close()"
+    ></app-outline-button>
+
+    <app-filled-button
+      [filledButtonConfig]="generateQuestionButtonConfig"
+      (buttonClicked)="generateQuestions()"
+    ></app-filled-button>
+  </div>
+  @if (componentQuestions.length > 0) {
+    <div class="flex items-center justify-between mb-4 mt-6">
+      <h3 class="form-heading">Generated Questions ({{ totalGeneratedQuestions }})</h3>
+    </div>
+    <app-data-table
+      [columns]="columns"
+      [dataSource]="questionsTableData"
+      [totalItems]="totalGeneratedQuestions"
+      [pageSize]="pageSizeSelected"
+      [pageSizeOptions]="pageSizeOptions"
+      (pageChange)="pageChangeTableSelectedQuestions($event)"
+      (actionClick)="handleDeleteAction($event)"
+    ></app-data-table>
+  } @else {
+    <div class="mt-6 p-4 border border-dashed border-gray-300 rounded-lg text-center text-gray-500">
+      Generated questions will appear here for review.
+    </div>
+  }
+</form>
