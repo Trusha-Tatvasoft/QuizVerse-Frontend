@@ -1,3 +1,5 @@
+import { QuestionPoolListData } from './question-pool-list-data.interface';
+
 export interface GenerateQuizRequest {
   categoryId?: number;
   category?: string;
@@ -26,4 +28,13 @@ export interface GenerateQuestionFromPromptRequest extends GenerateQuizRequest {
 
 export interface GenerateQuestionFromWebUrlRequest extends GenerateQuizRequest {
   url: string;
+}
+
+export interface GenerateQuestionFromPromptRequest extends GenerateQuizRequest {
+  prompt: string;
+}
+
+export interface ImportPreviewDialogData {
+  questions: QuestionPoolListData[];
+  isFromQuizCreation: boolean;
 }

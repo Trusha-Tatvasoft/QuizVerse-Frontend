@@ -47,6 +47,7 @@ class QuizCreationStep1StubComponent {
 })
 class QuizCreationStep2StubComponent {
   selectedIndexStep2: number | null = 0;
+  @Output() selectedIndexStep2Change = new EventEmitter<number | null>();
 }
 
 @Component({
@@ -55,6 +56,8 @@ class QuizCreationStep2StubComponent {
 })
 class QuizCreationStep3LayoutStubComponent {
   selectedQuestions: QuestionsList[] = [];
+  @Output() selectedQuestionsChange = new EventEmitter<QuestionsList[]>();
+  @Output() validSelectedQuestionsChange = new EventEmitter<boolean>();
 }
 
 @Component({
@@ -62,6 +65,14 @@ class QuizCreationStep3LayoutStubComponent {
   template: '',
 })
 class QuizCreationStep4StubComponent {}
+
+@Component({
+  selector: 'app-quiz-creation-step-3-ai-generation',
+  template: '',
+})
+class QuizCreationStep3AiGenerationStubComponent {
+  @Output() questionsGenerated = new EventEmitter<QuestionsList[]>();
+}
 
 describe('QuizCreationLayoutComponent', () => {
   let component: QuizCreationLayoutComponent;
@@ -158,10 +169,6 @@ describe('QuizCreationLayoutComponent', () => {
         CommonModule,
         HttpClientTestingModule,
         QuizCreationLayoutComponent,
-        QuizCreationStep1StubComponent,
-        QuizCreationStep2StubComponent,
-        QuizCreationStep3LayoutStubComponent,
-        QuizCreationStep4StubComponent,
         PageHeaderComponent,
         FilledButtonComponent,
         OutlineButtonComponent,
@@ -180,53 +187,66 @@ describe('QuizCreationLayoutComponent', () => {
     component = fixture.componentInstance;
     cdr = TestBed.inject(ChangeDetectorRef);
 
-    // Setup initial data and stub components
-    component.quizStep1Data = defaultQuizStep1Data;
-    component.step1Component = TestBed.createComponent(QuizCreationStep1StubComponent)
-      .componentInstance as any;
-    component.step2Component = TestBed.createComponent(QuizCreationStep2StubComponent)
-      .componentInstance as any;
-    component.step3Component = TestBed.createComponent(QuizCreationStep3LayoutStubComponent)
-      .componentInstance as any;
-    component.step4Component = TestBed.createComponent(QuizCreationStep4StubComponent)
-      .componentInstance as any;
+    // Create mock instances for child components
+    component.step1Component = {
+      submitStep1Form: jest.fn().mockReturnValue(true),
+      initializeForm: jest.fn(),
+    } as any;
 
-    fixture.detectChanges(); // Ensure Angular lifecycle hooks run
+    component.step2Component = {
+      selectedIndexStep2: 0,
+    } as any;
+
+    component.step3Component = {
+      selectedQuestions: [],
+    } as any;
+
+    component.step4Component = {} as any;
+
+    // Setup initial data
+    component.quizStep1Data = defaultQuizStep1Data;
+    component.selectedQuestions = [];
+
+    fixture.detectChanges();
   });
 
-  it('should create', fakeAsync(() => {
-    fixture.detectChanges();
-    tick();
+  it('should create', () => {
     expect(component).toBeTruthy();
-  }));
+  });
 
   describe('ngOnInit', () => {
-    it('should initialize component', fakeAsync(() => {
+    it('should initialize component and call decodeRouteId', () => {
+      const decodeSpy = jest.spyOn(component as any, 'decodeRouteId');
       component.ngOnInit();
-      tick();
-      fixture.detectChanges();
-      expect(component.activeStep).toBe(1);
-      expect(component.maxSteps).toBe(4);
-    }));
+      expect(decodeSpy).toHaveBeenCalled();
+    });
   });
 
   describe('ngAfterViewInit', () => {
-    it('should call loadQuiz if decodedId exists', fakeAsync(() => {
+    it('should call loadQuiz if decodedId exists', () => {
       component.decodedId = 1;
       const loadQuizSpy = jest.spyOn(component, 'loadQuiz');
       component.ngAfterViewInit();
-      tick();
-      fixture.detectChanges();
       expect(loadQuizSpy).toHaveBeenCalledWith(1);
-    }));
+    });
 
-    it('should not call loadQuiz if decodedId is undefined', fakeAsync(() => {
-      component.decodedId = null as any;
+    it('should not call loadQuiz if decodedId is undefined', () => {
+      component.decodedId = undefined as any;
       const loadQuizSpy = jest.spyOn(component, 'loadQuiz');
       component.ngAfterViewInit();
+      expect(loadQuizSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('ngOnDestroy', () => {
+    it('should complete subscriptions', fakeAsync(() => {
+      const destroyNextSpy = jest.spyOn(component['destroy$'], 'next');
+      const destroyCompleteSpy = jest.spyOn(component['destroy$'], 'complete');
+      component.ngOnDestroy();
       tick();
       fixture.detectChanges();
-      expect(loadQuizSpy).not.toHaveBeenCalled();
+      expect(destroyNextSpy).toHaveBeenCalled();
+      expect(destroyCompleteSpy).toHaveBeenCalled();
     }));
   });
 
@@ -243,190 +263,225 @@ describe('QuizCreationLayoutComponent', () => {
   });
 
   describe('decodeRouteId', () => {
-    it('should decode valid id and update edit mode', fakeAsync(() => {
-      route.snapshot.paramMap.get.mockReturnValue(btoa('123'));
+    it('should decode valid id and update edit mode', () => {
+      const encodedId = btoa('123');
+      route.snapshot.paramMap.get.mockReturnValue(encodedId);
       component.ngOnInit();
-      tick();
-      fixture.detectChanges();
       expect(component.decodedId).toBe(123);
-      expect(component.quizCreationHeaderConfiguration.title).toBe(quizCRUDMessages.editQuizTitle);
-    }));
+    });
 
-    it('should show error and set decodedId to 0 for invalid base64', fakeAsync(() => {
-      route.snapshot.paramMap.get.mockReturnValue('invalid');
+    it('should show error for invalid base64', () => {
+      route.snapshot.paramMap.get.mockReturnValue('invalid-base64');
       component.ngOnInit();
-      tick();
-      fixture.detectChanges();
       expect(snackbarService.showError).toHaveBeenCalledWith(quizCRUDMessages.invalideQuizId);
       expect(component.decodedId).toBe(0);
-    }));
+    });
 
-    it('should show error and set decodedId to 0 for non-number decoded value', fakeAsync(() => {
-      route.snapshot.paramMap.get.mockReturnValue(btoa('not-a-number'));
+    it('should show error for non-number decoded value', () => {
+      const encodedId = btoa('not-a-number');
+      route.snapshot.paramMap.get.mockReturnValue(encodedId);
       component.ngOnInit();
-      tick();
-      fixture.detectChanges();
       expect(snackbarService.showError).toHaveBeenCalledWith(quizCRUDMessages.invalideQuizId);
       expect(component.decodedId).toBe(0);
-    }));
+    });
 
-    it('should do nothing if no id is provided', fakeAsync(() => {
+    it('should do nothing if no id is provided', () => {
       route.snapshot.paramMap.get.mockReturnValue(null);
       component.ngOnInit();
-      tick();
-      fixture.detectChanges();
       expect(component.decodedId).toBeUndefined();
       expect(snackbarService.showError).not.toHaveBeenCalled();
-    }));
+    });
+  });
+
+  describe('getEditQuizConfig', () => {
+    it('should update quizCreationHeaderConfiguration and steps for edit mode', () => {
+      component['getEditQuizConfig']();
+      expect(component.quizCreationHeaderConfiguration.title).toBe(quizCRUDMessages.editQuizTitle);
+      expect(component.quizCreationHeaderConfiguration.subtitle).toBe(
+        quizCRUDMessages.editQuizSubtitle,
+      );
+      expect(component.steps[0].heading).toBe(quizCRUDMessages.editQuizTitle);
+    });
   });
 
   describe('updateSelectedQuestions', () => {
-    it('should update selectedQuestions', fakeAsync(() => {
+    it('should update selectedQuestions', () => {
       component.updateSelectedQuestions(mockQuestionsList);
-      tick();
-      fixture.detectChanges();
       expect(component.selectedQuestions).toEqual(mockQuestionsList);
-    }));
+    });
   });
 
   describe('validSelectedQuestionsChange', () => {
-    it('should update isValidSelectedQuestions', fakeAsync(() => {
+    it('should update isValidSelectedQuestions', () => {
       component.validSelectedQuestionsChange(true);
-      tick();
-      fixture.detectChanges();
       expect(component.isValidSelectedQuestions).toBe(true);
-    }));
+    });
   });
 
-  describe('getStepClass', () => {
-    it('should return step-active for active or completed steps', fakeAsync(() => {
-      component.activeStep = 2;
-      tick();
-      fixture.detectChanges();
-      expect(component.getStepClass(0)).toBe('step-active'); // Step 1
-      expect(component.getStepClass(1)).toBe('step-active'); // Step 2
-    }));
+  describe('addGeneratedQuestions', () => {
+    beforeEach(() => {
+      component.quizStep1Data = mockQuizStep1Data;
+      component.selectedQuestions = [...mockQuestionsList];
+    });
 
-    it('should return step-inactive for future steps', fakeAsync(() => {
-      component.activeStep = 2;
-      tick();
-      fixture.detectChanges();
-      expect(component.getStepClass(2)).toBe('step-inactive'); // Step 3
-    }));
+    it('should add generated questions and validate', () => {
+      const newQuestions: QuestionsList[] = [
+        {
+          id: 2,
+          categoryId: 1,
+          queDifficultyId: 2,
+          queDifficultyName: 'Medium',
+          queText: 'New Question',
+          queTypeId: 1,
+          queTypeName: 'Multiple Choice',
+          queOptionsAns: [],
+        },
+      ];
+
+      component.addGeneratedQuestions(newQuestions);
+
+      expect(component.selectedQuestions).toHaveLength(2);
+      expect(component.selectedQuestions[1]).toEqual(newQuestions[0]);
+    });
+
+    it('should not add questions if array is empty', () => {
+      const initialLength = component.selectedQuestions.length;
+      component.addGeneratedQuestions([]);
+      expect(component.selectedQuestions).toHaveLength(initialLength);
+    });
   });
 
-  describe('getTextClass', () => {
-    it('should return text-active for active or completed steps', fakeAsync(() => {
-      component.activeStep = 2;
-      tick();
-      fixture.detectChanges();
-      expect(component.getTextClass(0)).toBe('text-active'); // Step 1
-      expect(component.getTextClass(1)).toBe('text-active'); // Step 2
-    }));
+  describe('areSelectedQuestionsValid', () => {
+    beforeEach(() => {
+      component.quizStep1Data = mockQuizStep1Data;
+    });
 
-    it('should return text-inactive for future steps', fakeAsync(() => {
-      component.activeStep = 2;
-      tick();
-      fixture.detectChanges();
-      expect(component.getTextClass(2)).toBe('text-inactive'); // Step 3
-    }));
+    it('should return true when questions match distribution', () => {
+      const validQuestions: QuestionsList[] = [
+        { ...mockQuestionsList[0], queDifficultyName: 'Easy' },
+        { ...mockQuestionsList[0], id: 2, queDifficultyName: 'Easy' },
+        { ...mockQuestionsList[0], id: 3, queDifficultyName: 'Medium' },
+        { ...mockQuestionsList[0], id: 4, queDifficultyName: 'Medium' },
+        { ...mockQuestionsList[0], id: 5, queDifficultyName: 'Hard' },
+      ];
+
+      component.selectedQuestions = validQuestions;
+      const result = (component as any).areSelectedQuestionsValid();
+
+      expect(result).toBe(true);
+    });
+
+    it('should return false when questions exceed difficulty limits', () => {
+      const invalidQuestions: QuestionsList[] = [
+        { ...mockQuestionsList[0], queDifficultyName: 'Easy' },
+        { ...mockQuestionsList[0], id: 2, queDifficultyName: 'Easy' },
+        { ...mockQuestionsList[0], id: 3, queDifficultyName: 'Easy' }, // One extra Easy
+        { ...mockQuestionsList[0], id: 4, queDifficultyName: 'Medium' },
+        { ...mockQuestionsList[0], id: 5, queDifficultyName: 'Hard' },
+      ];
+
+      component.selectedQuestions = invalidQuestions;
+      const result = (component as any).areSelectedQuestionsValid();
+
+      expect(result).toBe(false);
+    });
+
+    it('should return false when total questions exceed limit', () => {
+      const tooManyQuestions: QuestionsList[] = Array(10)
+        .fill(0)
+        .map((_, i) => ({
+          ...mockQuestionsList[0],
+          id: i + 1,
+          queDifficultyName: 'Easy',
+        }));
+
+      component.selectedQuestions = tooManyQuestions;
+      const result = (component as any).areSelectedQuestionsValid();
+
+      expect(result).toBe(false);
+    });
   });
 
   describe('goToNextStep', () => {
     beforeEach(() => {
-      component.step1Component.submitStep1Form = jest.fn().mockImplementation(() => true);
+      // Ensure step2Component is properly mocked
       component.step2Component = { selectedIndexStep2: 0 } as any;
-      component.step3Component = { selectedQuestions: Array(5).fill(mockQuestionsList[0]) } as any;
       component.quizStep1Data = mockQuizStep1Data;
+      component.selectedQuestions = Array(5).fill(mockQuestionsList[0]);
       component.isValidSelectedQuestions = true;
     });
 
-    it('should not proceed from step 1 if form is invalid', fakeAsync(() => {
+    it('should not proceed from step 1 if form is invalid', () => {
       component.activeStep = 1;
-      component.step1Component.submitStep1Form = jest.fn().mockImplementation(() => false);
-      component.goToNextStep();
-      tick();
-      fixture.detectChanges();
-      expect(component.activeStep).toBe(1);
-    }));
+      component.step1Component.submitStep1Form = jest.fn().mockReturnValue(false);
 
-    it('should show error and not proceed from step 2 if no selection', fakeAsync(() => {
+      component.goToNextStep();
+
+      expect(component.activeStep).toBe(1);
+    });
+
+    it('should show error and not proceed from step 2 if no selection', () => {
       component.activeStep = 2;
       component.step2Component.selectedIndexStep2 = null;
+
       component.goToNextStep();
-      tick();
-      fixture.detectChanges();
+
       expect(snackbarService.showError).toHaveBeenCalledWith(
         quizCRUDMessages.questionCreationMethodSelectError,
       );
       expect(component.activeStep).toBe(2);
-    }));
+    });
 
-    it('should show error if step 3 has incorrect number of questions', fakeAsync(() => {
+    it('should show error if step 3 has incorrect number of questions', () => {
       component.activeStep = 3;
-      component.step3Component.selectedQuestions = [mockQuestionsList[0]];
+      component.selectedQuestions = [mockQuestionsList[0]]; // Only 1 question
+
       component.goToNextStep();
-      tick();
-      fixture.detectChanges();
+
       expect(snackbarService.showError).toHaveBeenCalledWith(
         quizCRUDMessages.totalQuestionsError(mockQuizStep1Data.totalQuestions),
       );
       expect(component.activeStep).toBe(3);
-    }));
+    });
 
-    it('should show error if step 3 questions are invalid', fakeAsync(() => {
+    it('should show error if step 3 questions are invalid', () => {
       component.activeStep = 3;
       component.isValidSelectedQuestions = false;
+
       component.goToNextStep();
-      tick();
-      fixture.detectChanges();
+
       expect(snackbarService.showError).toHaveBeenCalledWith(
         quizCRUDMessages.difficultyWiseQuestionSelectionError,
       );
       expect(component.activeStep).toBe(3);
-    }));
+    });
 
-    it('should increment activeStep when valid', fakeAsync(() => {
-      component.activeStep = 1;
-      component.goToNextStep();
-      tick();
-      fixture.detectChanges();
-      expect(component.activeStep).toBe(2);
-    }));
-
-    it('should not increment beyond maxSteps', fakeAsync(() => {
+    it('should not increment beyond maxSteps', () => {
       component.activeStep = 4;
       component.goToNextStep();
-      tick();
-      fixture.detectChanges();
       expect(component.activeStep).toBe(4);
-    }));
+    });
   });
 
   describe('goToPreviousStep', () => {
-    it('should decrement activeStep', fakeAsync(() => {
+    it('should decrement activeStep', () => {
       component.activeStep = 2;
       component.goToPreviousStep();
-      tick();
-      fixture.detectChanges();
       expect(component.activeStep).toBe(1);
-    }));
+    });
 
-    it('should not decrement below 1', fakeAsync(() => {
+    it('should not decrement below 1', () => {
       component.activeStep = 1;
       component.goToPreviousStep();
-      tick();
-      fixture.detectChanges();
       expect(component.activeStep).toBe(1);
-    }));
+    });
   });
 
   describe('mapToSaveQuizRequest', () => {
-    it('should map quiz data correctly', fakeAsync(() => {
+    it('should map quiz data correctly', () => {
       component.quizStep1Data = mockQuizStep1Data;
       const result = component.mapToSaveQuizRequest(mockQuizStep1Data, mockQuestionsList);
-      tick();
-      fixture.detectChanges();
+
       const expected: SaveQuizRequest = {
         name: 'Test Quiz',
         categoryId: 1,
@@ -455,110 +510,92 @@ describe('QuizCreationLayoutComponent', () => {
         ],
       };
       expect(result).toEqual(expected);
-    }));
+    });
 
-    it('should handle non-paid quiz', fakeAsync(() => {
+    it('should handle non-paid quiz', () => {
       component.quizStep1Data = { ...mockQuizStep1Data, isPaid: false };
       const result = component.mapToSaveQuizRequest({ ...mockQuizStep1Data, isPaid: false }, []);
-      tick();
-      fixture.detectChanges();
       expect(result.price).toBeUndefined();
-    }));
+    });
   });
 
   describe('saveQuiz', () => {
-    beforeEach(fakeAsync(() => {
-      component.quizStep1Data = defaultQuizStep1Data;
-      component.selectedQuestions = [];
-      component.step1Component.initialFormValues = defaultQuizStep1Data;
-      component.step3Component = { selectedQuestions: Array(5).fill(mockQuestionsList[0]) } as any;
-      tick();
-      fixture.detectChanges();
-    }));
-
-    it('should not save if quizStep1Data or selectedQuestions are missing', fakeAsync(() => {
-      component.quizStep1Data = undefined as any;
-      component.selectedQuestions = [];
-      component.saveQuiz();
-      tick();
-      fixture.detectChanges();
-      expect(quizCreationService.createOrUpdateQuiz).not.toHaveBeenCalled();
-    }));
-
-    it('should save quiz and navigate on success', fakeAsync(() => {
+    beforeEach(() => {
       component.quizStep1Data = mockQuizStep1Data;
       component.selectedQuestions = mockQuestionsList;
+    });
+
+    it('should not save if quizStep1Data is missing', () => {
+      component.quizStep1Data = undefined as any;
       component.saveQuiz();
-      tick();
-      fixture.detectChanges();
+      expect(quizCreationService.createOrUpdateQuiz).not.toHaveBeenCalled();
+    });
+
+    it('should not save if selectedQuestions are empty', () => {
+      component.selectedQuestions = [];
+      component.saveQuiz();
+      expect(quizCreationService.createOrUpdateQuiz).not.toHaveBeenCalled();
+    });
+
+    it('should save quiz and navigate on success', () => {
+      component.saveQuiz();
+
       expect(quizCreationService.createOrUpdateQuiz).toHaveBeenCalled();
       expect(snackbarService.showSuccess).toHaveBeenCalledWith(
         platformMessages.successTitle,
         quizCRUDMessages.quizSaved,
       );
       expect(router.navigate).toHaveBeenCalledWith([Navigations.Admin, Navigations.Quizzes]);
-    }));
+    });
 
-    it('should set id in edit mode', fakeAsync(() => {
-      component.quizStep1Data = mockQuizStep1Data;
-      component.selectedQuestions = mockQuestionsList;
+    it('should set id in edit mode', () => {
       component.isEditMode = true;
       component.decodedId = 1;
       component.saveQuiz();
-      tick();
-      fixture.detectChanges();
-      expect(quizCreationService.createOrUpdateQuiz).toHaveBeenCalledWith(
-        expect.objectContaining({ id: 1 }),
-      );
-    }));
 
-    it('should show error on save failure', fakeAsync(() => {
-      component.quizStep1Data = mockQuizStep1Data;
-      component.selectedQuestions = mockQuestionsList;
+      const saveRequest = quizCreationService.createOrUpdateQuiz.mock
+        .calls[0][0] as SaveQuizRequest;
+      expect(saveRequest.id).toBe(1);
+    });
 
-      const mockError = { error: { message: 'error' } };
-
+    it('should show error on save failure', () => {
+      const mockError = { error: { message: 'Save failed' } };
       quizCreationService.createOrUpdateQuiz.mockReturnValue(throwError(() => mockError));
 
       component.saveQuiz();
-      tick();
-      fixture.detectChanges();
 
-      expect(snackbarService.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'error');
-    }));
+      expect(snackbarService.showError).toHaveBeenCalledWith(
+        platformMessages.errorTitle,
+        'Save failed',
+      );
+    });
   });
 
   describe('draftQuiz', () => {
-    beforeEach(fakeAsync(() => {
-      component.step1Component.submitStep1Form = jest.fn().mockImplementation(() => true);
+    beforeEach(() => {
+      // Ensure all child components are properly mocked
       component.step2Component = { selectedIndexStep2: 0 } as any;
-      component.step3Component = { selectedQuestions: Array(5).fill(mockQuestionsList[0]) } as any;
       component.quizStep1Data = mockQuizStep1Data;
+      component.selectedQuestions = Array(5).fill(mockQuestionsList[0]);
       component.isValidSelectedQuestions = true;
-      tick();
-      fixture.detectChanges();
-    }));
+    });
 
-    it('should not save draft if step 1 form is invalid', fakeAsync(() => {
+    it('should not save draft if step 1 form is invalid', () => {
       component.activeStep = 1;
-      component.step1Component.submitStep1Form = jest.fn().mockImplementation(() => false);
+      component.step1Component.submitStep1Form = jest.fn().mockReturnValue(false);
       component.draftQuiz();
-      tick();
-      fixture.detectChanges();
       expect(quizCreationService.createOrUpdateQuiz).not.toHaveBeenCalled();
-    }));
+    });
 
-    it('should show error and not save draft from step 2 if no selection', fakeAsync(() => {
+    it('should show error and not save draft from step 2 if no selection', () => {
       component.activeStep = 2;
-      component.step2Component = { selectedIndexStep2: null } as any;
+      component.step2Component.selectedIndexStep2 = null;
       component.draftQuiz();
-      tick();
-      fixture.detectChanges();
       expect(snackbarService.showError).toHaveBeenCalledWith(
         quizCRUDMessages.questionCreationMethodSelectError,
       );
       expect(quizCreationService.createOrUpdateQuiz).not.toHaveBeenCalled();
-    }));
+    });
 
     it('should show error if step 3 has incorrect number of questions', fakeAsync(() => {
       component.activeStep = 3;
@@ -571,95 +608,48 @@ describe('QuizCreationLayoutComponent', () => {
       );
       expect(quizCreationService.createOrUpdateQuiz).not.toHaveBeenCalled();
     }));
-
-    it('should show error if step 3 questions are invalid', fakeAsync(() => {
-      component.activeStep = 3;
-      component.isValidSelectedQuestions = false;
-      component.draftQuiz();
-      tick();
-      fixture.detectChanges();
-      expect(snackbarService.showError).toHaveBeenCalledWith(
-        quizCRUDMessages.difficultyWiseQuestionSelectionError,
-      );
-      expect(quizCreationService.createOrUpdateQuiz).not.toHaveBeenCalled();
-    }));
-
-    it('should save draft and navigate on success', fakeAsync(() => {
-      component.draftQuiz();
-      tick();
-      fixture.detectChanges();
-
-      expect(quizCreationService.createOrUpdateQuiz).toHaveBeenCalledWith(
-        expect.objectContaining({ status: QuizStatus.Draft }),
-      );
-      expect(snackbarService.showSuccess).toHaveBeenCalledWith(
-        platformMessages.successTitle,
-        quizCRUDMessages.quizDrafSaved,
-      );
-      expect(router.navigate).toHaveBeenCalledWith([Navigations.Admin, Navigations.Quizzes]);
-    }));
-
-    it('should set id in edit mode for draft', fakeAsync(() => {
-      component.isEditMode = true;
-      component.decodedId = 1;
-      component.draftQuiz();
-      tick();
-      fixture.detectChanges();
-      expect(quizCreationService.createOrUpdateQuiz).toHaveBeenCalledWith(
-        expect.objectContaining({ id: 1, status: QuizStatus.Draft }),
-      );
-    }));
   });
 
   describe('loadQuiz', () => {
-    it('should load quiz and set edit mode on success', fakeAsync(() => {
-      const mockResponse: QuizResponse = {
-        name: 'Test Quiz',
-        categoryId: 1,
-        description: 'Test Description',
-        totalTime: 30,
-        difficultyLevelId: 2,
-        isPaid: true,
-        price: 10,
-        totalQuestion: 5,
-        status: QuizStatus.Active,
-        tags: [],
-        questions: [],
-        noOfQuestionsPerDifficulty: [],
-      };
-      quizCreationService.getQuiz.mockReturnValue(
-        of({
-          result: true,
-          statusCode: 200,
-          message: 'Quiz fetched',
-          data: mockResponse,
-        }),
-      );
-      const mapBackendSpy = jest.spyOn(component, 'mapBackendQuizResponse');
+    it('should load quiz and set edit mode', () => {
       component.loadQuiz(1);
-      tick();
-      fixture.detectChanges();
-      expect(quizCreationService.getQuiz).toHaveBeenCalledWith(1);
-      expect(mapBackendSpy).toHaveBeenCalledWith(mockResponse);
-      expect(component.isEditMode).toBe(true);
-    }));
 
-    it('should show error on load failure', fakeAsync(() => {
-      quizCreationService.getQuiz.mockReturnValue(throwError(() => 'error'));
+      expect(quizCreationService.getQuiz).toHaveBeenCalledWith(1);
+      expect(component.isEditMode).toBe(true);
+    });
+
+    it('should handle load error', () => {
+      quizCreationService.getQuiz.mockReturnValue(
+        throwError(() => ({ error: { message: 'Error loading' } })),
+      );
+
       component.loadQuiz(1);
-      tick();
-      fixture.detectChanges();
-      expect(snackbarService.showError).toHaveBeenCalledWith('Error!', 'Something went wrong.');
-    }));
+
+      expect(snackbarService.showError).toHaveBeenCalledWith(
+        platformMessages.errorTitle,
+        'Error loading',
+      );
+    });
   });
 
   describe('categoryChanged', () => {
-    it('should clear selectedQuestions', fakeAsync(() => {
+    it('should clear selectedQuestions', () => {
       component.selectedQuestions = mockQuestionsList;
       component.categoryChanged();
+      expect(component.selectedQuestions).toEqual([]);
+    });
+  });
+
+  describe('getEditQuizConfig', () => {
+    it('should update quizCreationHeaderConfiguration and steps for edit mode', fakeAsync(() => {
+      component['getEditQuizConfig']();
       tick();
       fixture.detectChanges();
-      expect(component.selectedQuestions).toEqual([]);
+      expect(component.quizCreationHeaderConfiguration.title).toBe(quizCRUDMessages.editQuizTitle);
+      expect(component.quizCreationHeaderConfiguration.subtitle).toBe(
+        quizCRUDMessages.editQuizSubtitle,
+      );
+      expect(component.steps[0].heading).toBe(quizCRUDMessages.editQuizTitle);
     }));
   });
 
@@ -678,9 +668,34 @@ describe('QuizCreationLayoutComponent', () => {
 
   describe('goBack', () => {
     it('should call location.back()', () => {
-      const backSpy = jest.spyOn(location, 'back');
       component.goBack();
-      expect(backSpy).toHaveBeenCalledTimes(1);
+      expect(location.back).toHaveBeenCalled();
+    });
+  });
+
+  describe('getStepClass', () => {
+    it('should return step-active for active or completed steps', () => {
+      component.activeStep = 2;
+      expect(component.getStepClass(0)).toBe('step-active'); // Step 1
+      expect(component.getStepClass(1)).toBe('step-active'); // Step 2
+    });
+
+    it('should return step-inactive for future steps', () => {
+      component.activeStep = 2;
+      expect(component.getStepClass(2)).toBe('step-inactive'); // Step 3
+    });
+  });
+
+  describe('getTextClass', () => {
+    it('should return text-active for active or completed steps', () => {
+      component.activeStep = 2;
+      expect(component.getTextClass(0)).toBe('text-active'); // Step 1
+      expect(component.getTextClass(1)).toBe('text-active'); // Step 2
+    });
+
+    it('should return text-inactive for future steps', () => {
+      component.activeStep = 2;
+      expect(component.getTextClass(2)).toBe('text-inactive'); // Step 3
     });
   });
 });

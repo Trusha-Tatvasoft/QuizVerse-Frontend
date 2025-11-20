@@ -10,8 +10,10 @@ import { environment } from '../../../../environments/environment.dev';
 import { skipLoader } from '../../../utils/constants';
 import { QuestionDetail } from '../../../pages/admin/question-pool/interfaces/question-pool-preview.interface';
 import { QuestionRequest } from '../../../pages/admin/question-pool/interfaces/question-request.interface';
-import { GenerateQuestionFromPromptRequest } from '../../../pages/admin/question-pool/interfaces/question-pool-ai-tab.interface';
-import { GenerateQuestionFromWebUrlRequest } from '../../../pages/admin/question-pool/interfaces/question-pool-ai-tab.interface';
+import {
+  GenerateQuestionFromPromptRequest,
+  GenerateQuestionFromWebUrlRequest,
+} from '../../../pages/admin/question-pool/interfaces/question-pool-ai-tab.interface';
 
 @Injectable({
   providedIn: 'root',
