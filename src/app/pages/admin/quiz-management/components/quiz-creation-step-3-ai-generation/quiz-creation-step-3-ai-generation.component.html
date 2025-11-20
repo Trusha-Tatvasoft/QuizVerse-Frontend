@@ -136,89 +136,92 @@
     }
   </div>
 
-  @for (option of aiGenerationOptions; track option.value) {
-    @if (selectedGenerationMethod === option.value) {
-      @if (option.value === 'text') {
-        <div class="mb-4">
-          <mat-label class="font-medium mb-2 block">Enter Text Content</mat-label>
-          <mat-form-field appearance="outline" class="w-full custom-form-field-text">
-            <textarea
-              matInput
-              formControlName="prompt"
-              rows="8"
-              placeholder="Paste the text content here from which you want to generate questions..."
-            ></textarea>
-            @if (getError('prompt')) {
-              <mat-error>{{ getError('prompt') }}</mat-error>
-            }
-          </mat-form-field>
-        </div>
-      }
+  @switch (selectedGenerationMethod) {
+    @case ('text') {
+      <div class="mb-4">
+        <mat-label class="font-medium mb-2 block">Enter Text Content</mat-label>
+        <mat-form-field appearance="outline" class="w-full custom-form-field-text">
+          <textarea
+            matInput
+            formControlName="prompt"
+            rows="8"
+            placeholder="Paste the text content here from which you want to generate questions..."
+          ></textarea>
+          @if (getError('prompt')) {
+            <mat-error>{{ getError('prompt') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    }
 
-      @if (option.value === 'url') {
-        <div class="mb-4">
-          <mat-label class="font-medium mb-2 block">Enter URL</mat-label>
-          <mat-form-field appearance="outline" class="w-full custom-form-field">
-            <input
-              matInput
-              formControlName="url"
-              placeholder="https://example.com/article"
-              type="url"
-            />
-            <mat-icon matPrefix>link</mat-icon>
-            @if (getError('url')) {
-              <mat-error>{{ getError('url') }}</mat-error>
-            }
-          </mat-form-field>
-        </div>
-      }
+    @case ('url') {
+      <div class="mb-4">
+        <mat-label class="font-medium mb-2 block">Enter URL</mat-label>
+        <mat-form-field appearance="outline" class="w-full custom-form-field">
+          <input
+            matInput
+            formControlName="url"
+            placeholder="https://example.com/article"
+            type="url"
+          />
+          <mat-icon matPrefix>link</mat-icon>
+          @if (getError('url')) {
+            <mat-error>{{ getError('url') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    }
 
-      @if (option.value === 'pdf') {
-        <div class="mb-4">
-          <mat-label class="font-medium mb-2 block">Upload PDF</mat-label>
-          <div
-            class="pdf-upload-area border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 transition-colors"
-            (click)="triggerFileInput()"
-          >
-            <input
-              type="file"
-              id="pdfFileInput"
-              accept=".pdf"
-              class="hidden"
-              (change)="onFileSelected($event)"
-            />
+    @case ('pdf') {
+      <div class="mb-4">
+        <mat-label class="font-medium mb-2 block">Upload PDF</mat-label>
+        <div
+          class="pdf-upload-area border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 transition-colors"
+          (click)="triggerFileInput()"
+        >
+          <input
+            type="file"
+            id="pdfFileInput"
+            accept=".pdf"
+            class="hidden"
+            (change)="onFileSelected($event)"
+          />
 
-            @if (!selectedFile) {
-              <div>
-                <mat-icon class="text-5xl text-gray-400 mb-2">upload_file</mat-icon>
-                <p class="text-gray-600 font-medium">Upload your PDF file here</p>
-              </div>
-            } @else {
-              <div class="selected-file-info">
-                <mat-icon class="text-5xl text-purple-600 mb-2">picture_as_pdf</mat-icon>
-                <p class="text-gray-800 font-medium">{{ selectedFile.name }}</p>
-                <p class="text-xs text-gray-500 mt-1">
-                  {{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB
-                </p>
-                <button
-                  type="button"
-                  class="mt-2 text-sm remove-file-button cursor-pointer"
-                  (click)="
-                    selectedFile = null;
-                    generationForm.get('file')?.reset();
-                    $event.stopPropagation()
-                  "
-                >
-                  Remove file
-                </button>
-              </div>
-            }
-          </div>
-          @if (getError('file')) {
-            <mat-error>{{ getError('file') }}</mat-error>
+          @if (!selectedFile) {
+            <div>
+              <mat-icon class="text-5xl text-gray-400 mb-2">upload_file</mat-icon>
+              <p class="text-gray-600 font-medium">Upload your PDF file here</p>
+            </div>
+          } @else {
+            <div class="selected-file-info">
+              <mat-icon class="text-5xl text-purple-600 mb-2">picture_as_pdf</mat-icon>
+              <p class="text-gray-800 font-medium">{{ selectedFile.name }}</p>
+              <p class="text-xs text-gray-500 mt-1">
+                {{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB
+              </p>
+              <button
+                type="button"
+                class="mt-2 text-sm remove-file-button cursor-pointer"
+                (click)="
+                  selectedFile = null; generationForm.get('file')?.reset(); $event.stopPropagation()
+                "
+              >
+                Remove file
+              </button>
+            </div>
           }
         </div>
-      }
+        @if (getError('file')) {
+          <mat-error>{{ getError('file') }}</mat-error>
+        }
+      </div>
+    }
+
+    @default {
+      <!-- Optional: fallback if no method selected -->
+      <div class="text-gray-500 text-center py-8">
+        Please select a content source to generate questions.
+      </div>
     }
   }
   <div class="flex justify-end gap-3 mt-6">
