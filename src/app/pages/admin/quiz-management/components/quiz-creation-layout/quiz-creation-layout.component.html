@@ -53,13 +53,23 @@
       ></app-quiz-creation-step-2>
     }
     @if (activeStep === 3) {
-      <app-quiz-creation-step-3-layout
-        (selectedQuestionsChange)="updateSelectedQuestions($event)"
-        [selectedQuestions]="selectedQuestions"
-        [quizStep1Data]="quizStep1Data"
-        (validSelectedQuestionsChange)="validSelectedQuestionsChange($event)"
-        [isValidSelectedQuestions]="isValidSelectedQuestions"
-      ></app-quiz-creation-step-3-layout>
+      @if (selectedIndexStep2 == 0) {
+        <app-quiz-creation-step-3-layout
+          (selectedQuestionsChange)="updateSelectedQuestions($event)"
+          [selectedQuestions]="selectedQuestions"
+          [quizStep1Data]="quizStep1Data"
+          (validSelectedQuestionsChange)="validSelectedQuestionsChange($event)"
+          [isValidSelectedQuestions]="isValidSelectedQuestions"
+        ></app-quiz-creation-step-3-layout>
+      }
+      @if (selectedIndexStep2 == 1) {
+        <app-quiz-creation-step-3-ai-generation
+          (selectedQuestionsChange)="updateSelectedQuestions($event)"
+          [selectedQuestions]="selectedQuestions"
+          [quizStep1Data]="quizStep1Data"
+          (validSelectedQuestionsChange)="validSelectedQuestionsChange($event)"
+        ></app-quiz-creation-step-3-ai-generation>
+      }
     }
     @if (activeStep === 4) {
       <app-quiz-creation-step-4
