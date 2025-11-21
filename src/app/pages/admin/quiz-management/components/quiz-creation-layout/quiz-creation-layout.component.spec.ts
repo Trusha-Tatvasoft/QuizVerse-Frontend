@@ -235,7 +235,7 @@ describe('QuizCreationLayoutComponent', () => {
       const loadQuizSpy = jest.spyOn(component, 'loadQuiz');
       component.ngAfterViewInit();
       expect(loadQuizSpy).not.toHaveBeenCalled();
-  });
+    });
   });
 
   describe('ngOnDestroy', () => {
@@ -248,7 +248,7 @@ describe('QuizCreationLayoutComponent', () => {
       expect(destroyNextSpy).toHaveBeenCalled();
       expect(destroyCompleteSpy).toHaveBeenCalled();
     }));
-    });
+  });
 
   describe('ngOnDestroy', () => {
     it('should complete subscriptions', fakeAsync(() => {
@@ -637,7 +637,7 @@ describe('QuizCreationLayoutComponent', () => {
       component.selectedQuestions = mockQuestionsList;
       component.categoryChanged();
       expect(component.selectedQuestions).toEqual([]);
-  });
+    });
   });
 
   describe('getEditQuizConfig', () => {
@@ -651,7 +651,7 @@ describe('QuizCreationLayoutComponent', () => {
       );
       expect(component.steps[0].heading).toBe(quizCRUDMessages.editQuizTitle);
     }));
-    });
+  });
 
   describe('getEditQuizConfig', () => {
     it('should update quizCreationHeaderConfiguration and steps for edit mode', fakeAsync(() => {

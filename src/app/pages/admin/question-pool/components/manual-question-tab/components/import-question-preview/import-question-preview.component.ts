@@ -32,7 +32,7 @@ export class ImportQuestionPreviewComponent {
   submitBtn = submitButtonConfig;
   cancelBtn = cancelButtonConfig;
   questions: QuestionPoolListData[] = [...this.data.questions];
-  isFromQuizCreation: boolean = this.data.isFromQuizCreation || false; 
+  isFromQuizCreation: boolean = this.data.isFromQuizCreation || false;
   private readonly dialogRef = inject(MatDialogRef<ImportQuestionPreviewComponent>);
   private readonly questionPoolService = inject(QuestionPoolService);
   removeQuestion(index: number) {

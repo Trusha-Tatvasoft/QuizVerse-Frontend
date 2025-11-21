@@ -166,6 +166,8 @@ export enum EndPoints {
   ReportQuestionIssue = 'Quiz/report-question-issue',
   QuizRating = 'Quiz/quiz-rating',
   SubmitQuizRating = 'Quiz/submit-quiz-rating',
+  QuizComments = 'Quiz/quiz-comments',
+  TotalQuizComments = 'Quiz/total-quiz-comments',
   //  #endregion
 
   //#region Notification Center

@@ -1,4 +1,4 @@
-import { QuestionPoolListData } from "./question-pool-list-data.interface";
+import { QuestionPoolListData } from './question-pool-list-data.interface';
 
 export interface GenerateQuizRequest {
   categoryId?: number;
@@ -20,6 +20,10 @@ export interface QuestionPerQuestionType {
 
 export interface GenerateQuizFromPDFRequest extends GenerateQuizRequest {
   prompt: File;
+}
+
+export interface GenerateQuestionFromPromptRequest extends GenerateQuizRequest {
+  prompt: string;
 }
 
 export interface GenerateQuestionFromWebUrlRequest extends GenerateQuizRequest {

@@ -114,6 +114,15 @@ export class QuestionPoolService {
     );
   }
 
+  generateQuestionsFromTextPrompt(
+    requestPayload: GenerateQuestionFromPromptRequest,
+  ): Observable<ApiResponse<QuestionPoolListData[]>> {
+    return this.http.post<ApiResponse<QuestionPoolListData[]>>(
+      `${environment.baseUrl}/${EndPoints.GenerateQuestionFromPromptRequest}`,
+      requestPayload,
+    );
+  }
+
   /**
    * Generate quiz questions automatically by analyzing the content of a PDF file.
    * @param formData - The uploaded PDF file wrapped in FormData.
@@ -137,15 +146,6 @@ export class QuestionPoolService {
     return this.http.post<ApiResponse<QuestionPoolListData[]>>(
       `${environment.baseUrl}/${EndPoints.GenerateQuestionFromWebUrlRequest}`,
       request,
-    );
-  }
-
-  generateQuestionsFromTextPrompt(
-    requestPayload: GenerateQuestionFromPromptRequest,
-  ): Observable<ApiResponse<QuestionPoolListData[]>> {
-    return this.http.post<ApiResponse<QuestionPoolListData[]>>(
-      `${environment.baseUrl}/${EndPoints.GenerateQuestionFromPromptRequest}`,
-      requestPayload,
     );
   }
 }

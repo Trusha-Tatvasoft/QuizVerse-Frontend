@@ -724,6 +724,14 @@ export const fetchContentFromUrlMessages = {
 };
 // #endregion
 
+//#region Question generation from text prompt
+export const generateQuestionFormTextPromptMessages = {
+  enterValidPrompt: 'Please enter a valid Prompt.',
+  questionGeneratedSuccess: 'Quiz questions generated successfully from your text prompt!',
+  questionGeneratedFailed: 'Failed to generate questions from the text prompt.',
+};
+// #endregion
+
 //#region AI Configuration
 export const aiModelLabels: Record<keyof typeof AiModelName, string> = {
   Gemini2Point5FlashLite: 'gemini-2.5-flash-lite',

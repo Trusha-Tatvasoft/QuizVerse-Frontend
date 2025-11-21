@@ -1,6 +1,12 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -12,13 +18,21 @@ import { OutlineButtonComponent } from '../../../../../shared/components/outline
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
 import {
   QuestionsList,
-  QuizStep1Data
+  QuizStep1Data,
 } from '../../../../../shared/interfaces/quiz-creation.interface';
 import { Subject, takeUntil, forkJoin, Observable } from 'rxjs';
-import { platformMessages, quizCRUDMessages, tablePaginationConfig } from '../../../../../utils/constants';
+import {
+  platformMessages,
+  quizCRUDMessages,
+  tablePaginationConfig,
+} from '../../../../../utils/constants';
 import { DynamicFormField } from '../../../../../shared/interfaces/dynamic-form-field.interface';
 import { ValidationErrorService } from '../../../../../shared/service/validation-error/validation-error.service';
-import { importQuestionFromWebFormFields, promptTextAreaFormFields, resetBtnConfig } from '../../../question-pool/configs/question-pool.config';
+import {
+  importQuestionFromWebFormFields,
+  promptTextAreaFormFields,
+  resetBtnConfig,
+} from '../../../question-pool/configs/question-pool.config';
 import { importPdfFormFields } from '../../../question-pool/configs/question-pool-dialog.config';
 import { DropdownService } from '../../../../../shared/service/dropdown/dropdown.service';
 import { DropDownData } from '../../../../../shared/interfaces/drop-down-data.interface';
@@ -29,7 +43,7 @@ import {
   QuestionPerQuestionType,
   GenerateQuestionFromWebUrlRequest,
   GenerateQuestionFromPromptRequest,
-  ImportPreviewDialogData
+  ImportPreviewDialogData,
 } from '../../../question-pool/interfaces/question-pool-ai-tab.interface';
 import { TagComponent } from '../../../../../shared/components/tag/tag.component';
 import { createCategoryTag } from '../../../question-pool/components/ai-question-tab/ai-question-tab.helper';
@@ -39,8 +53,16 @@ import { QuestionPoolListData } from '../../../question-pool/interfaces/question
 import { QuestionPoolService } from '../../../../../services/admin/question-pool/question-pool.service';
 import { TableComponent } from '../../../../../shared/components/table/table.component';
 import { TableData } from '../../../../../shared/interfaces/table-component.interface';
-import { aiGenerationOptions, columns, deleteQuestionDialog, generateQuestionButtonConfig } from '../../configs/quiz-creation.config';
-import { getTagConfigWithDifficulty, getTypeTagConfigWithLabel } from '../../../../../utils/quiz-crud-common-functions.utils';
+import {
+  aiGenerationOptions,
+  columns,
+  deleteQuestionDialog,
+  generateQuestionButtonConfig,
+} from '../../configs/quiz-creation.config';
+import {
+  getTagConfigWithDifficulty,
+  getTypeTagConfigWithLabel,
+} from '../../../../../utils/quiz-crud-common-functions.utils';
 import { ConfirmationDialogComponent } from '../../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationDialogData } from '../../../../../shared/interfaces/confirmation-dialog.interface';
 import { AIGenerationOption } from '../../interfaces/quiz-management-summary.interface';
@@ -198,7 +220,9 @@ export class QuizCreationStep3AiGenerationComponent implements OnInit {
     // Check against Max 10  que per AI req
     const currentTotal = this.getTotalAddedOverall();
     if (currentTotal + countToAdd > this.maxAiQuestions) {
-      this.snackbar.showError(quizCRUDMessages.maxAIGenrationQuestionsError(this.maxAiQuestions, currentTotal));
+      this.snackbar.showError(
+        quizCRUDMessages.maxAIGenrationQuestionsError(this.maxAiQuestions, currentTotal),
+      );
       return;
     }
 
