@@ -756,7 +756,7 @@ export const flaggedCommentsAction = {
 };
 //#endregion
 
-//#region QUestion Report Action
+//#region Question Report Action
 export const questionReportAction = {
   VIEW: 'visibility',
   ACCEPTED: 'check_circle',

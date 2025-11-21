@@ -17,3 +17,11 @@ mat-icon {
   color: #9ca3af !important;
   font-size: 18px;
 }
+
+@media (max-width: 500px) {
+  .cancel-report-question {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}

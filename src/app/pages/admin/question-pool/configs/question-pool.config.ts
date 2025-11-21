@@ -116,3 +116,10 @@ export const importQuestionFromWebFormFields: DynamicFormField[] = [
     },
   },
 ];
+
+export const editReportedButtonConfig: ButtonConfig = {
+  label: 'Update Reported Question',
+  fontWeight: 500,
+  variant: 'secondary',
+  type: 'submit',
+};

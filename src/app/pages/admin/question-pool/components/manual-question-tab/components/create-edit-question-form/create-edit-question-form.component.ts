@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,7 +8,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { forkJoin, Subject, takeUntil } from 'rxjs';
 import { MatDialogRef } from '@angular/material/dialog';
-import { cancelButtonConfig, submitButtonConfig } from '../../../../configs/question-pool.config';
+import {
+  cancelButtonConfig,
+  editReportedButtonConfig,
+  submitButtonConfig,
+} from '../../../../configs/question-pool.config';
 import { DynamicFormField } from '../../../../../../../shared/interfaces/dynamic-form-field.interface';
 import { QuestionDetail } from '../../../../interfaces/question-pool-preview.interface';
 import { CommonListDropDown } from '../../../../../../../shared/interfaces/common-dropdown.interface';
@@ -31,6 +35,7 @@ import {
 import { uniqueOptionsGroupValidator } from './create-edit-question-form.validator';
 import { ValidationErrorService } from '../../../../../../../shared/service/validation-error/validation-error.service';
 import { platformMessages } from '../../../../../../../utils/constants';
+import { ReportedQuestionAction } from '../../../../../content-moderation/configs/report-question-table.config';
 
 @Component({
   selector: 'app-create-edit-question-form',
@@ -51,6 +56,8 @@ import { platformMessages } from '../../../../../../../utils/constants';
 })
 export class CreateEditQuestionFormComponent implements OnInit, OnDestroy {
   @Input() questionData?: QuestionDetail;
+  @Input() isReportForm?: boolean = false;
+  @Output() actionTriggered = new EventEmitter<ReportedQuestionAction>();
 
   private readonly dialogRef = inject(MatDialogRef<QuestionFormDialogComponent>);
   private readonly dropdownService = inject(DropdownService);
@@ -63,6 +70,7 @@ export class CreateEditQuestionFormComponent implements OnInit, OnDestroy {
 
   submitBtn = submitButtonConfig;
   cancelBtn = cancelButtonConfig;
+  editBtn = editReportedButtonConfig;
 
   form!: FormGroup;
 
@@ -190,5 +198,21 @@ export class CreateEditQuestionFormComponent implements OnInit, OnDestroy {
 
   closeDialog() {
     this.dialogRef.close();
+  }
+
+  onAction() {
+    if (!this.form.valid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const formData = mapFormToQuestionRequest(this.form);
+
+    const action: ReportedQuestionAction = {
+      questionId: this.questionData?.id || 0,
+      formData,
+    };
+
+    this.actionTriggered.emit(action);
   }
 }
