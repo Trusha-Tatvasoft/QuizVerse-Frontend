@@ -1,5 +1,6 @@
 import { ButtonConfig } from '../../../../shared/interfaces/button-config.interface';
 import { TagInputConfig } from '../../../../shared/interfaces/tag-component.interface';
+import { QuizReport } from './browse-quiz-response.interface';
 
 export interface BrowseQuizzesRequest {
   searchText?: string;
@@ -35,4 +36,11 @@ export interface QuizCardConfig {
   isPaid: boolean;
   isAttempted: boolean;
   buttonConfig: ButtonConfig;
+  report?: QuizReport;
+}
+
+export interface QuizReportRequest {
+  quizId: number;
+  reportId: number;
+  reason: string;
 }

@@ -698,6 +698,14 @@ app-data-table {
   width: 100% !important;
 }
 
+.quiz-title {
+  .report-quiz-btn {
+    button {
+      padding-inline: 0.5rem;
+    }
+  }
+}
+
 // question-pool - generate from ai btns
 .generate-button-container {
   width: 100%;

@@ -16,6 +16,26 @@
         </mat-icon>
       }
     </h3>
+    <!-- Report Quiz Button -->
+    @if (btnDisable()) {
+      <mat-tooltip [matTooltip]="'Report is under processing'">
+        <div>
+          <app-outline-button
+            [outlineButtonConfig]="reportQuizBtn"
+            (click)="openReportDialog()"
+            class="report-quiz-btn"
+          >
+          </app-outline-button>
+        </div>
+      </mat-tooltip>
+    } @else {
+      <app-outline-button
+        [outlineButtonConfig]="reportQuizBtn"
+        (click)="openReportDialog()"
+        class="report-quiz-btn"
+      >
+      </app-outline-button>
+    }
   </div>
 
   <p>{{ cardConfig.description }}</p>

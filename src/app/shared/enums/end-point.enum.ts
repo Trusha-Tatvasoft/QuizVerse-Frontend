@@ -148,6 +148,7 @@ export enum EndPoints {
 
   // #region BrowseQuizzes
   BrowseQuizzes = 'BrowseQuizzes/browse-quizzes',
+  AddQuizReport = 'Quiz/add-edit-quiz-report',
   // #endregion
 
   // #region QuizAttempt

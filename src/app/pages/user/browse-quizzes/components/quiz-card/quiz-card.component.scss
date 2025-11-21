@@ -33,7 +33,14 @@
   .quiz-title {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 0.5rem;
+
+    .report-quiz-btn {
+      button {
+        padding-inline: 0.5rem !important;
+      }
+    }
 
     h3 {
       font-size: 1.15rem;
@@ -71,6 +78,10 @@
           font-size: 17px;
           padding-top: 0.15rem;
         }
+      }
+
+      @media (max-width: 360px) {
+        font-size: 1rem;
       }
     }
   }

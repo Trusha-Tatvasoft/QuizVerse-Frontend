@@ -1,0 +1,93 @@
+<div class="main-dialog-content">
+  <!-- Header -->
+  <div class="dialog-header px-5 flex justify-between items-start">
+    <div class="dialog-title-group">
+      <h2 mat-dialog-title>Report Quiz Issue</h2>
+      <span class="dialog-sub-header">
+        Help us improve by reporting any issues with this quiz
+      </span>
+    </div>
+
+    <!-- Close Button -->
+    <button
+      type="button"
+      class="close-button"
+      (click)="cancel()"
+      (keydown.enter)="cancel()"
+      (keydown.space)="cancel()"
+      aria-label="Close dialog"
+      tabindex="0"
+    >
+      <mat-icon class="close-icon">close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Form -->
+  <form
+    [formGroup]="reportForm"
+    class="dialog-form custom-form-field-override custom-form-icon-override"
+    (ngSubmit)="reportQuiz()"
+  >
+    <div class="form-fields">
+      <!-- quiz title -->
+      <div class="form-field">
+        <label class="field-label">Quiz Title</label>
+        <mat-form-field appearance="outline" class="custom-form-field full-width">
+          <mat-icon fontSet="material-icons-outlined" matPrefix>help</mat-icon>
+          <input matInput [value]="quizTitle" readonly />
+        </mat-form-field>
+      </div>
+
+      <!-- Dynamic Fields -->
+      @for (field of formFields; track field.name) {
+        <div class="form-field">
+          <label class="field-label">{{ field.label }}</label>
+
+          <mat-form-field
+            appearance="outline"
+            [ngClass]="[
+              field.type === 'textarea' ? 'custom-form-field-text' : 'custom-form-field',
+              'full-width',
+            ]"
+          >
+            <mat-icon fontSet="material-icons-outlined" matPrefix>
+              {{ field.icon || 'report' }}
+            </mat-icon>
+
+            @if (field.type === 'textarea') {
+              <textarea
+                matInput
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="3"
+                cdkAutosizeMaxRows="6"
+                [formControlName]="field.name"
+                [placeholder]="field.placeholder"
+              ></textarea>
+            } @else {
+              <input
+                matInput
+                [type]="field.type"
+                [formControlName]="field.name"
+                [placeholder]="field.placeholder"
+                autocomplete="off"
+              />
+            }
+
+            <mat-error>
+              {{ getError(field.name) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      }
+    </div>
+
+    <!-- Actions -->
+    <mat-dialog-actions class="dialog-actions flex justify-end gap-3 p-0">
+      <app-outline-button
+        [outlineButtonConfig]="cancelButton"
+        (buttonClicked)="cancel()"
+      ></app-outline-button>
+      <app-filled-button [filledButtonConfig]="submitButton" class="w-auto"></app-filled-button>
+    </mat-dialog-actions>
+  </form>
+</div>

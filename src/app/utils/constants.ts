@@ -394,9 +394,14 @@ export const platformMessages = {
   failedLoadUserBattles: 'Failed to fatch user battles',
   // #endregion
 
-  // #region Content Moderation
+  //#region Report Quiz
+  successQuizReport: 'Quiz reported successfully.',
+  failedToReportQuiz: 'Failed to report quiz',
+  //#endregion
+  
+  //#region Content Moderation
   failedToLoadCommentPreview: 'Failed to load comment details',
-  // #endregion
+  //#endregion
 };
 //#endregion
 
