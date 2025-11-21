@@ -1,0 +1,130 @@
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  .page-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    color: #1e293b;
+  }
+
+  .page-description {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+  }
+}
+
+.admin-management-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  margin-bottom: 0px;
+
+  .user-management-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .filter-select {
+      width: 220px; // default desktop width
+    }
+  }
+}
+
+@media (min-width: 1017px) and (max-width: 1200px) {
+  .admin-management-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+
+    .user-management-filters {
+      flex-direction: row;
+      width: 100%;
+      gap: 12px;
+
+      .filter-select {
+        width: 49%;
+      }
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .admin-management-toolbar {
+    padding: 16px;
+  }
+}
+@media (min-width: 769px) and (max-width: 1016px) {
+  .admin-management-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+
+    .user-management-filters {
+      flex-direction: row;
+      width: 100%;
+      gap: 12px;
+
+      .filter-select {
+        width: 49%;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    align-items: flex-start;
+    text-align: left;
+
+    .page-title {
+      font-size: 20px;
+    }
+
+    .page-description {
+      font-size: 13px;
+    }
+  }
+
+  .admin-management-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+
+    .user-management-filters {
+      flex-direction: column;
+      width: 100%;
+
+      .filter-select {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    .page-title {
+      font-size: 18px;
+    }
+
+    .page-description {
+      font-size: 12px;
+    }
+  }
+
+  .admin-management-toolbar {
+    padding: 12px;
+  }
+}

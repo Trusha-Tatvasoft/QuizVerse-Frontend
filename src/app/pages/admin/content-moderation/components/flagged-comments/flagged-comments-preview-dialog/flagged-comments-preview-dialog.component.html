@@ -1,0 +1,89 @@
+<div class="dialog-container p-6 w-full">
+  <!-- Title -->
+  <h2 class="text-lg font-semibold text-gray-900 mb-1">Flagged Comment Details</h2>
+  <p class="text-sm text-gray-500 mb-5">Review the complete details of this flagged comment</p>
+
+  <button mat-icon-button class="close-btn-dialog-all" (click)="closeDialog()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <!-- Comment Box -->
+  <div class="bg-gray-50 rounded-lg border border-gray-200 p-3 mb-5">
+    <p class="text-gray-800 text-sm break-words">
+      {{ flaggedCommentData?.comment || 'No comment available.' }}
+    </p>
+  </div>
+
+  <!-- Info Section -->
+  <div class="grid grid-cols-2 gap-4 text-sm text-gray-700">
+    <!-- Author -->
+    <div class="flex items-start space-x-3 break-words">
+      <div
+        class="w-8 h-8 items-center justify-center rounded-full text-white font-medium flex-shrink-0 hidden min-[450px]:flex"
+        [ngClass]="getInitialsColorClass(flaggedCommentData?.author!)"
+      >
+        {{ getInitials(flaggedCommentData?.author!) }}
+      </div>
+
+      <div class="min-w-0 flex-1">
+        <p class="font-medium text-gray-900">Author</p>
+        <p class="text-gray-700 break-words">{{ flaggedCommentData?.author }}</p>
+      </div>
+    </div>
+
+    <!-- Quiz -->
+    <div class="break-words">
+      <p class="font-medium text-gray-900">Quiz</p>
+      <p class="text-gray-700 break-words">{{ flaggedCommentData?.quizName }}</p>
+    </div>
+
+    <!-- Status -->
+    <div class="break-words">
+      <p class="font-medium text-gray-900">Status</p>
+      <app-tag [tagConfig]="getFlaggedCommentStatusConfig(flaggedCommentData?.status!)"></app-tag>
+    </div>
+
+    <!-- Date Added -->
+    <div class="break-words">
+      <p class="font-medium text-gray-900">Date Added</p>
+      <p class="text-gray-700">
+        {{ flaggedCommentData?.date | date: 'dd/MM/yyyy' }}
+      </p>
+    </div>
+
+    <!-- Reason for Flagging -->
+    <div class="col-span-2 break-words">
+      <p class="font-medium text-gray-900">Reason for Flagging</p>
+      <p class="text-gray-700 break-words">
+        {{ flaggedCommentData?.reason || 'No reason provided.' }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div
+    class="flex flex-col min-[450px]:flex-row justify-end gap-3 mt-6 update-flagged-comment-buttons"
+  >
+    <app-outline-button
+      [outlineButtonConfig]="closeButtonConfig"
+      (click)="closeDialog()"
+    ></app-outline-button>
+    @if (flaggedCommentData?.status! === quizRatingStatus.Pending) {
+      <div class="flex flex-col min-[450px]:flex-row gap-3">
+        <app-filled-button
+          [filledButtonConfig]="ignoreReportButtonConfig"
+          (buttonClicked)="
+            handleFlaggedCommentAction(flaggedCommentData?.id!, quizRatingStatus.Ignore)
+          "
+        ></app-filled-button>
+
+        <app-filled-button
+          [filledButtonConfig]="acceptReportButtonConfig"
+          (buttonClicked)="
+            handleFlaggedCommentAction(flaggedCommentData?.id!, quizRatingStatus.Accepted)
+          "
+        ></app-filled-button>
+      </div>
+    }
+  </div>
+</div>
