@@ -69,4 +69,10 @@ export class QuizResultService {
       `${environment.baseUrl}/${EndPoints.TotalQuizComments}/${quizId}`,
     );
   }
+
+  getQuestionReport(reportId: number): Observable<ApiResponse<QuestionIssueReportRequest>> {
+    return this.http.get<ApiResponse<QuestionIssueReportRequest>>(
+      `${environment.baseUrl}/${EndPoints.GetQuestionReported}/${reportId}`,
+    );
+  }
 }

@@ -8,6 +8,7 @@ import { ApiResponse } from '../../../../../shared/interfaces/api-response.inter
 import {
   QuestionIssueReportRequest,
   QuizQuestionReviewExtended,
+  ReportQuestionDialogData,
 } from '../../interfaces/quiz-question-review.interface';
 import { SnackbarService } from '../../../../../shared/service/snackbar/snackbar.service';
 import { platformMessages } from '../../../../../utils/constants';
@@ -20,27 +21,30 @@ import {
 import { AnswerExplanationRequest } from '../../interfaces/answer-explaination-request.interface';
 import { ReportQuestionDialogComponent } from '../report-question-dialog/report-question-dialog.component';
 import { Subject, takeUntil } from 'rxjs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-question-review',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, TagComponent],
+  imports: [CommonModule, MatIconModule, MatButtonModule, TagComponent, MatTooltipModule],
   templateUrl: './question-review.component.html',
   styleUrls: ['./question-review.component.scss'],
 })
 export class QuestionReviewComponent implements OnInit, OnDestroy {
-  private readonly dialog = inject(MatDialog);
-  private readonly quizService = inject(QuizResultService);
-  private readonly snackBarService = inject(SnackbarService);
-  questions: QuizQuestionReviewExtended[] = [];
-  private readonly destroy$ = new Subject<void>();
-
   @Input() quizId!: number; // quizId from parent
+
+  questions: QuizQuestionReviewExtended[] = [];
+  reportDescription: string | null = null;
 
   correctAnswerTagConfig = correctAnswerTagConfig;
   wrongAnswerTagConfig = wrongAnswerTagConfig;
   notAttemptTagConfig = notAttemptedTagConfig;
 
+  private readonly dialog = inject(MatDialog);
+  private readonly quizService = inject(QuizResultService);
+  private readonly snackBarService = inject(SnackbarService);
+
+  private readonly destroy$ = new Subject<void>();
   ngOnInit(): void {
     if (this.quizId) {
       this.loadQuestions(this.quizId);
@@ -81,43 +85,39 @@ export class QuestionReviewComponent implements OnInit, OnDestroy {
           platformMessages.errorTitle,
           platformMessages.failedLoadQuizExplaination,
         );
-
-        this.snackBarService.showError(
-          platformMessages.errorTitle,
-          platformMessages.failedLoadQuizExplaination,
-        );
       },
     });
   }
 
   openReportDialog(question: QuizQuestionReviewExtended): void {
-    const dialogRef = this.dialog.open(ReportQuestionDialogComponent, {
-      width: '500px',
-    });
+    const dialogData: ReportQuestionDialogData = {
+      questionId: question.questionId,
+      questionText: question.questionText,
+      reportId: question.reportId,
+      isEditable: question.isEditable,
+      description: null,
+    };
 
-    // Pass data via @Input properties
-    dialogRef.componentInstance.questionId = question.questionId;
-    dialogRef.componentInstance.questionText = question.questionText;
+    if (question.reportId === null) {
+      this.openDialog(dialogData);
+      return;
+    }
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        const request: QuestionIssueReportRequest = {
-          quizId: this.quizId,
-          questionId: result.questionId,
-          description: result.description,
-        };
-
-        this.quizService.reportQuestionIssue(request).subscribe({
-          next: (response) => {
-            this.snackBarService.showSuccess(platformMessages.successTitle, response.message);
-          },
-          error: (err) => {
-            const errorMessage =
-              err?.error?.message || err?.message || platformMessages.errorMessage;
-            this.snackBarService.showError(platformMessages.errorTitle, errorMessage);
-          },
-        });
-      }
+    this.quizService.getQuestionReport(question.reportId).subscribe({
+      next: (res) => {
+        if (res.result) {
+          dialogData.description = res.data.description;
+        }
+        this.openDialog(dialogData);
+      },
+      error: (err) => {
+        this.snackBarService.showError(
+          platformMessages.errorTitle,
+          err?.error?.message || platformMessages.errorMessage,
+        );
+        // still open dialog to allow user interaction
+        this.openDialog(dialogData);
+      },
     });
   }
 
@@ -143,12 +143,45 @@ export class QuestionReviewComponent implements OnInit, OnDestroy {
             }));
           }
         },
-        error: () => {
+        error: (err) => {
           this.snackBarService.showError(
             platformMessages.errorTitle,
-            platformMessages.failedLoadQuesPreview,
+            err?.error?.message || platformMessages.errorMessage,
           );
         },
       });
+  }
+
+  private openDialog(dialogData: ReportQuestionDialogData): void {
+    const dialogRef = this.dialog.open(ReportQuestionDialogComponent, {
+      width: '500px',
+      data: dialogData,
+    });
+
+    dialogRef.afterClosed().subscribe((result: QuestionIssueReportRequest) => {
+      if (result) {
+        const request: QuestionIssueReportRequest = {
+          quizId: this.quizId,
+          questionId: result.questionId,
+          description: result.description,
+          reportId: result.reportId,
+        };
+
+        this.quizService.reportQuestionIssue(request).subscribe({
+          next: (response) => {
+            if (response.result) {
+              this.snackBarService.showSuccess(platformMessages.successTitle, response.message);
+              this.loadQuestions(this.quizId);
+            }
+          },
+          error: (err) => {
+            this.snackBarService.showError(
+              platformMessages.errorTitle,
+              err?.error?.message || platformMessages.errorMessage,
+            );
+          },
+        });
+      }
+    });
   }
 }

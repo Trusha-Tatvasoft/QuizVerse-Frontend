@@ -22,6 +22,7 @@ describe('QuestionReviewComponent', () => {
       getQuizQuestionReview: jest.fn(),
       getAnswerExplanation: jest.fn(),
       reportQuestionIssue: jest.fn(),
+      getQuestionReport: jest.fn(),
     } as any;
 
     snackBarMock = {
@@ -91,7 +92,7 @@ describe('QuestionReviewComponent', () => {
 
       expect(snackBarMock.showError).toHaveBeenCalledWith(
         platformMessages.errorTitle,
-        platformMessages.failedLoadQuesPreview,
+        platformMessages.errorMessage,
       );
     });
   });
@@ -155,75 +156,114 @@ describe('QuestionReviewComponent', () => {
   });
 
   describe('openReportDialog', () => {
-    it('should open dialog and call report service on success', () => {
-      const dialogRefMock = {
-        componentInstance: {
-          questionId: undefined,
-          questionText: undefined,
-        },
-        afterClosed: jest.fn().mockReturnValue(of({ questionId: 1, description: 'Bad wording' })),
-      };
-      dialogMock.open.mockReturnValue(dialogRefMock as any);
+    const mockDialogRef = (result: any) => ({
+      afterClosed: jest.fn().mockReturnValue(of(result)),
+    });
+
+    it('should open dialog directly when reportId is null', () => {
+      const question = { questionId: 1, questionText: 'Q1', reportId: null } as any;
+      const dialogRef = mockDialogRef({ questionId: 1, description: 'Desc' });
+      dialogMock.open.mockReturnValue(dialogRef as any);
 
       quizServiceMock.reportQuestionIssue.mockReturnValue(
-        of({
-          result: true,
-          data: null,
-          statusCode: 200,
-          message: 'Reported successfully',
-        } as ApiResponse<null>),
+        of({ result: true, statusCode: 200, message: 'Reported', data: null }),
       );
-
-      const question = {
-        questionId: 1,
-        questionText: 'Q1',
-      } as QuizQuestionReviewExtended;
 
       component.openReportDialog(question);
 
-      expect(dialogMock.open).toHaveBeenCalledWith(ReportQuestionDialogComponent, {
-        width: '500px',
-      });
-      expect(dialogRefMock.componentInstance.questionId).toBe(1);
-      expect(dialogRefMock.componentInstance.questionText).toBe('Q1');
-      expect(quizServiceMock.reportQuestionIssue).toHaveBeenCalledWith({
-        quizId: 123,
+      expect(dialogMock.open).toHaveBeenCalledWith(
+        ReportQuestionDialogComponent,
+        expect.any(Object),
+      );
+      expect(quizServiceMock.reportQuestionIssue).toHaveBeenCalled();
+      expect(snackBarMock.showSuccess).toHaveBeenCalledWith(
+        platformMessages.successTitle,
+        'Reported',
+      );
+    });
+
+    it('should fetch report details and open dialog (success path)', () => {
+      const question = {
         questionId: 1,
-        description: 'Bad wording',
-      });
+        questionText: 'Q1',
+        reportId: 100,
+        isEditable: true,
+      } as any;
+      quizServiceMock.getQuestionReport.mockReturnValue(
+        of({
+          result: true,
+          data: { description: 'Existing issue', quizId: 1, questionId: 1, reportId: 100 },
+          statusCode: 200,
+          message: 'OK',
+        }),
+      );
+      const dialogRef = mockDialogRef({ questionId: 1, description: 'Updated desc' });
+      dialogMock.open.mockReturnValue(dialogRef as any);
+      quizServiceMock.reportQuestionIssue.mockReturnValue(
+        of({ result: true, message: 'Reported successfully', statusCode: 200, data: null }),
+      );
+
+      component.openReportDialog(question);
+
+      expect(quizServiceMock.getQuestionReport).toHaveBeenCalledWith(100);
+      expect(dialogMock.open).toHaveBeenCalled();
       expect(snackBarMock.showSuccess).toHaveBeenCalledWith(
         platformMessages.successTitle,
         'Reported successfully',
       );
     });
 
-    it('should show error snackbar if reportQuestionIssue fails', () => {
-      const dialogRefMock = {
-        componentInstance: {},
-        afterClosed: jest.fn().mockReturnValue(of({ questionId: 1, description: 'Bad wording' })),
-      };
-      dialogMock.open.mockReturnValue(dialogRefMock as any);
+    it('should handle error when fetching report details and still open dialog', () => {
+      const question = { questionId: 1, questionText: 'Q1', reportId: 101 } as any;
+      quizServiceMock.getQuestionReport.mockReturnValue(
+        throwError(() => ({ error: { message: 'Failed' } })),
+      );
+      const dialogRef = mockDialogRef({ questionId: 1, description: 'Retry' });
+      dialogMock.open.mockReturnValue(dialogRef as any);
+      quizServiceMock.reportQuestionIssue.mockReturnValue(
+        of({ result: true, message: 'Reported successfully', statusCode: 200, data: null }),
+      );
 
-      quizServiceMock.reportQuestionIssue.mockReturnValue(throwError(() => 'error'));
+      component.openReportDialog(question);
 
-      component.openReportDialog({ questionId: 1, questionText: 'Q1' } as any);
+      expect(snackBarMock.showError).toHaveBeenCalledWith(platformMessages.errorTitle, 'Failed');
+      expect(dialogMock.open).toHaveBeenCalled();
+    });
+
+    it('should show snackbar when reportQuestionIssue fails', () => {
+      const question = { questionId: 1, questionText: 'Q1', reportId: null } as any;
+      const dialogRef = mockDialogRef({ questionId: 1, description: 'Bad wording' });
+      dialogMock.open.mockReturnValue(dialogRef as any);
+      quizServiceMock.reportQuestionIssue.mockReturnValue(
+        throwError(() => ({ error: { message: 'Server Error' } })),
+      );
+
+      component.openReportDialog(question);
 
       expect(snackBarMock.showError).toHaveBeenCalledWith(
         platformMessages.errorTitle,
-        platformMessages.errorMessage,
+        'Server Error',
       );
     });
 
     it('should do nothing if dialog result is falsy', () => {
-      const dialogRefMock = {
-        componentInstance: {},
-        afterClosed: jest.fn().mockReturnValue(of(null)),
-      };
-      dialogMock.open.mockReturnValue(dialogRefMock as any);
+      const question = { questionId: 1, questionText: 'Q1', reportId: null } as any;
+      const dialogRef = mockDialogRef(null);
+      dialogMock.open.mockReturnValue(dialogRef as any);
 
-      component.openReportDialog({ questionId: 1, questionText: 'Q1' } as any);
+      component.openReportDialog(question);
 
       expect(quizServiceMock.reportQuestionIssue).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('ngOnDestroy', () => {
+    it('should complete destroy$ subject', () => {
+      const completeSpy = jest.spyOn<any, any>(component['destroy$'], 'complete');
+      const nextSpy = jest.spyOn<any, any>(component['destroy$'], 'next');
+      component.ngOnDestroy();
+      expect(nextSpy).toHaveBeenCalled();
+      expect(completeSpy).toHaveBeenCalled();
     });
   });
 });

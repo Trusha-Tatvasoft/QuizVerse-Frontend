@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { QuizResultService } from './quiz-result.service';
 import { environment } from '../../../../environments/environment.dev';
 import { ApiResponse } from '../../../shared/interfaces/api-response.interface';
@@ -12,6 +12,7 @@ import {
 import { AnswerExplanationRequest } from '../../../pages/user/quiz-result-page/interfaces/answer-explaination-request.interface';
 import { QuizCommentsResponse } from '../../../pages/user/quiz-result-page/interfaces/quiz-comments.interface';
 import { QuizRating } from '../../../pages/user/quiz-result-page/interfaces/quiz-ratting.interface';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('QuizResultService (Jest)', () => {
   let service: QuizResultService;
@@ -21,8 +22,11 @@ describe('QuizResultService (Jest)', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [QuizResultService],
+      providers: [
+        QuizResultService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
     });
 
     service = TestBed.inject(QuizResultService);
@@ -67,6 +71,8 @@ describe('QuizResultService (Jest)', () => {
           userAnswer: 'A',
           correctAnswer: 'B',
           isCorrect: false,
+          isEditable: false,
+          reportId: null,
         },
       ],
       message: 'Review loaded',
@@ -110,6 +116,7 @@ describe('QuizResultService (Jest)', () => {
       quizId: 1,
       questionId: 2,
       description: 'This question is unclear',
+      reportId: null,
     };
     const mockResponse: ApiResponse<any> = {
       result: true,
@@ -383,5 +390,28 @@ describe('QuizResultService (Jest)', () => {
       expect(req.request.method).toBe('GET');
       req.flush(mockErrorResponse);
     });
+  });
+
+  it('should GET question report by reportId', () => {
+    const reportId = 101;
+    const mockResponse: ApiResponse<QuestionIssueReportRequest> = {
+      result: true,
+      statusCode: 200,
+      data: {
+        quizId: 1,
+        questionId: 2,
+        description: 'Reported issue details',
+        reportId,
+      },
+      message: 'Report fetched successfully',
+    };
+
+    service.getQuestionReport(reportId).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+    });
+
+    const req = httpMock.expectOne(`${baseUrl}/${EndPoints.GetQuestionReported}/${reportId}`);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
   });
 });
