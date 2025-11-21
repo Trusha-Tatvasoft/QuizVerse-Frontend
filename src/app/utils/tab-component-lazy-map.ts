@@ -128,8 +128,8 @@ export const tabLazyComponentMap: Record<string, () => Promise<Type<unknown>>> =
   // content moderation tabs
   reportedQuizzes: () =>
     import(
-      '../pages/layout/notification-center/components/notification-card/notification-card.component'
-    ).then((m) => m.NotificationCardComponent),
+      '../pages/admin/content-moderation/components/reported-quiz/reported-quiz.component'
+    ).then((m) => m.ReportedQuizComponent),
 
   flaggedComments: () =>
     import(
