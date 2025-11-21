@@ -10,7 +10,10 @@ import { environment } from '../../../../environments/environment.dev';
 import { skipLoader } from '../../../utils/constants';
 import { QuestionDetail } from '../../../pages/admin/question-pool/interfaces/question-pool-preview.interface';
 import { QuestionRequest } from '../../../pages/admin/question-pool/interfaces/question-request.interface';
-import { GenerateQuestionFromWebUrlRequest } from '../../../pages/admin/question-pool/interfaces/question-pool-ai-tab.interface';
+import {
+  GenerateQuestionFromPromptRequest,
+  GenerateQuestionFromWebUrlRequest,
+} from '../../../pages/admin/question-pool/interfaces/question-pool-ai-tab.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -108,6 +111,15 @@ export class QuestionPoolService {
     return this.http.post<ApiResponse<string>>(
       `${environment.baseUrl}/${EndPoints.SaveQuestions}`,
       questions,
+    );
+  }
+
+  generateQuestionsFromTextPrompt(
+    requestPayload: GenerateQuestionFromPromptRequest,
+  ): Observable<ApiResponse<QuestionPoolListData[]>> {
+    return this.http.post<ApiResponse<QuestionPoolListData[]>>(
+      `${environment.baseUrl}/${EndPoints.GenerateQuestionFromPromptRequest}`,
+      requestPayload,
     );
   }
 

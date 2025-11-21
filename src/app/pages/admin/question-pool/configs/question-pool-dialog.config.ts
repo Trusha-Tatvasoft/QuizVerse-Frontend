@@ -220,6 +220,28 @@ export const importPdfFormFields: DynamicFormField[] = [
   },
 ];
 
+export const promptTextAreaFormFields: DynamicFormField[] = [
+  {
+    name: 'prompt',
+    label: 'Prompt To Generate Questions*',
+    type: 'textarea',
+    placeholder: 'Write the prompt here...',
+    icon: 'message',
+    validators: [
+      Validators.required,
+      Validators.maxLength(500),
+      Validators.minLength(25),
+      Validators.pattern(/^$|^\S[\s\S]*$/),
+    ],
+    validationMessages: {
+      required: 'Prompt text is required.',
+      minLength: 'Prompt must be at least 25 characters long.',
+      maxLength: 'Prompt cannot exceed 500 characters.',
+      pattern: 'Prompt should not start with a space.',
+    },
+  },
+];
+
 export const importQuestionFromWebFormFields: DynamicFormField[] = [
   {
     name: 'url',

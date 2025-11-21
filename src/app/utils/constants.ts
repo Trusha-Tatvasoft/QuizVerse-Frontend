@@ -398,6 +398,10 @@ export const platformMessages = {
   successQuizReport: 'Quiz reported successfully.',
   failedToReportQuiz: 'Failed to report quiz',
   //#endregion
+  
+  //#region Content Moderation
+  failedToLoadCommentPreview: 'Failed to load comment details',
+  //#endregion
 };
 //#endregion
 
@@ -569,6 +573,16 @@ export const quizCRUDMessages = {
     difficultyLimit === 0
       ? `No ${difficultyName} questions allowed.`
       : `Max ${difficultyLimit} ${difficultyName} questions allowed.`,
+  maxAIGenrationQuestionsError: (maxAiQuestions: number, currentTotal: number) =>
+    `Cannot add. The maximum for AI generation is ${maxAiQuestions} questions. You have ${maxAiQuestions - currentTotal} remaining.`,
+  uploadFileError: 'Please upload a PDF file',
+  noFileSelectedError: 'No PDF file selected.',
+  selectAIGenerationMethod: 'Please provide the content (text, URL, or PDF).',
+  addAIQueGenerationConfiguration: 'Please add at least one AI configuration.',
+  aiGenMethodError: 'Invalid generation method selected.',
+  queGeneratedSUccess: 'Questions successfully created!',
+  tryOtherGenSource: 'Please try another source.',
+  errorWhileQueGeneration: 'Something went wrong while generating questions.',
   difficultyWiseQuestionSelectionError: 'Please select the questions as per your quiz settings.',
   minimumNumberOfQuestionError: 'Total questions must be between 5 and 100.',
   mcqOptionError: 'Correct answer must match one of the options.',
@@ -715,6 +729,14 @@ export const fetchContentFromUrlMessages = {
 };
 // #endregion
 
+//#region Question generation from text prompt
+export const generateQuestionFormTextPromptMessages = {
+  enterValidPrompt: 'Please enter a valid Prompt.',
+  questionGeneratedSuccess: 'Quiz questions generated successfully from your text prompt!',
+  questionGeneratedFailed: 'Failed to generate questions from the text prompt.',
+};
+// #endregion
+
 //#region AI Configuration
 export const aiModelLabels: Record<keyof typeof AiModelName, string> = {
   Gemini2Point5FlashLite: 'gemini-2.5-flash-lite',
@@ -729,4 +751,24 @@ export const aiModelLabels: Record<keyof typeof AiModelName, string> = {
   MoonshotAiKimiK2Instruct: 'moonshotai/kimi-k2-instruct',
   OpenAiGptOss20B: 'openai/gpt-oss-20b',
 };
+//#endregion
+
+//#region Flagged Comments Action
+export const flaggedCommentsAction = {
+  VIEW: 'message',
+  ACCEPTED: 'check_circle',
+  IGNORED: 'block',
+};
+//#endregion
+
+//#region QUestion Report Action
+export const questionReportAction = {
+  VIEW: 'visibility',
+  ACCEPTED: 'check_circle',
+  IGNORED: 'block',
+  PENDING: 'hourglass_empty',
+  UNDERREVIEW: 'bookmark_added',
+};
+
+export const dialogCloseCorrectly = 'Dialogue closs correctly';
 //#endregion
