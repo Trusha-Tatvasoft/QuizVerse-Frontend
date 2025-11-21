@@ -31,6 +31,7 @@ import { platformMessages, quizCRUDMessages } from '../../../../../utils/constan
 import { Subject, takeUntil } from 'rxjs';
 import { QuizCreationStep3LayoutComponent } from '../quiz-creation-step-3-layout/quiz-creation-step-3-layout.component';
 import { QuizStatus } from '../../../../../shared/enums/quiz-management.enum';
+import { QuizCreationStep3AiGenerationComponent } from '../quiz-creation-step-3-ai-generation/quiz-creation-step-3-ai-generation.component';
 
 @Component({
   selector: 'app-quiz-creation-layout',
@@ -43,6 +44,7 @@ import { QuizStatus } from '../../../../../shared/enums/quiz-management.enum';
     QuizCreationStep3LayoutComponent,
     FilledButtonComponent,
     OutlineButtonComponent,
+    QuizCreationStep3AiGenerationComponent,
   ],
   templateUrl: './quiz-creation-layout.component.html',
   styleUrl: './quiz-creation-layout.component.scss',
@@ -52,12 +54,6 @@ export class QuizCreationLayoutComponent {
   @ViewChild(QuizCreationStep2Component) step2Component!: QuizCreationStep2Component;
   @ViewChild(QuizCreationStep3LayoutComponent) step3Component!: QuizCreationStep3LayoutComponent;
   @ViewChild(QuizCreationStep4Component) step4Component!: QuizCreationStep4Component;
-
-  private readonly snackbar = inject(SnackbarService);
-  private readonly quizCreationService = inject(QuizCreationService);
-  private readonly router = inject(Router);
-  private readonly location = inject(Location);
-  private readonly route = inject(ActivatedRoute);
 
   // Header configs
   quizCreationHeaderConfiguration = quizCreationHeaderConfig;
@@ -70,9 +66,6 @@ export class QuizCreationLayoutComponent {
 
   // Other config
   steps = stepsToCreateQuiz;
-
-  private readonly destroy$ = new Subject<void>();
-  readonly maxSteps = 4;
   activeStep: number = 1;
 
   //for data transfer between steps components
@@ -84,6 +77,14 @@ export class QuizCreationLayoutComponent {
   //edit
   decodedId: number;
   isEditMode: boolean = false;
+  private readonly snackbar = inject(SnackbarService);
+  private readonly quizCreationService = inject(QuizCreationService);
+  private readonly router = inject(Router);
+  private readonly location = inject(Location);
+  private readonly route = inject(ActivatedRoute);
+
+  private readonly destroy$ = new Subject<void>();
+  readonly maxSteps = 4;
 
   ngOnInit(): void {
     this.decodeRouteId();
@@ -91,51 +92,6 @@ export class QuizCreationLayoutComponent {
 
   ngAfterViewInit(): void {
     if (this.decodedId) this.loadQuiz(this.decodedId);
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  //fetch quiz id for edit
-  private decodeRouteId(): void {
-    const encodedId = this.route.snapshot.paramMap.get('id');
-    if (!encodedId) return;
-
-    try {
-      const urlDecoded = decodeURIComponent(encodedId);
-      const base64Decoded = atob(urlDecoded);
-      const asNumber = Number(base64Decoded);
-
-      if (!isNaN(asNumber)) {
-        this.decodedId = asNumber;
-        this.getEditQuizConfig();
-      } else {
-        this.snackbar.showError(quizCRUDMessages.invalideQuizId);
-        this.decodedId = 0;
-      }
-    } catch {
-      this.snackbar.showError(quizCRUDMessages.invalideQuizId);
-      this.decodedId = 0;
-    }
-  }
-
-  private getEditQuizConfig() {
-    this.quizCreationHeaderConfiguration = {
-      ...quizCreationHeaderConfig,
-      title: quizCRUDMessages.editQuizTitle,
-      subtitle: quizCRUDMessages.editQuizSubtitle,
-    };
-
-    this.steps = stepsToCreateQuiz.map((step, index) =>
-      index === 0
-        ? {
-            ...step,
-            heading: quizCRUDMessages.editQuizTitle,
-          }
-        : step,
-    );
   }
 
   /** Go back to the previous page */
@@ -179,15 +135,37 @@ export class QuizCreationLayoutComponent {
     return index + 1 <= this.activeStep ? 'text-active' : 'text-inactive';
   }
 
+  /**
+   * Receives new questions from the AI generation component
+   * and appends them to the main selectedQuestions list.
+   */
+  addGeneratedQuestions(newQuestions: QuestionsList[]) {
+    if (!newQuestions || newQuestions.length === 0) {
+      return;
+    }
+
+    // 1. Append the new questions to the master list
+    this.selectedQuestions.push(...newQuestions);
+
+    // 2. Re-calculate the validity of the *entire* list
+    this.isValidSelectedQuestions = this.areSelectedQuestionsValid();
+  }
+
   //navigation for steps
   goToNextStep(): void {
     if (this.activeStep === 1 && !this.step1Component.submitStep1Form()) {
       return;
-    } else if (this.activeStep === 2 && !(this.step2Component.selectedIndexStep2 === 0)) {
-      this.snackbar.showError(quizCRUDMessages.questionCreationMethodSelectError);
-      return;
+    } else if (this.activeStep === 2) {
+      // Check if any method is selected (manual = 0, AI = 1)
+      if (
+        this.step2Component.selectedIndexStep2 !== 0 &&
+        this.step2Component.selectedIndexStep2 !== 1
+      ) {
+        this.snackbar.showError(quizCRUDMessages.questionCreationMethodSelectError);
+        return;
+      }
     } else if (this.activeStep === 3) {
-      if (this.step3Component.selectedQuestions.length != this.quizStep1Data?.totalQuestions) {
+      if (this.selectedQuestions.length != this.quizStep1Data?.totalQuestions) {
         this.snackbar.showError(
           quizCRUDMessages.totalQuestionsError(this.quizStep1Data?.totalQuestions),
         );
@@ -288,9 +266,14 @@ export class QuizCreationLayoutComponent {
   draftQuiz(): void {
     if (this.activeStep === 1 && !this.step1Component.submitStep1Form()) {
       return;
-    } else if (this.activeStep === 2 && !(this.step2Component.selectedIndexStep2 === 0)) {
-      this.snackbar.showError(quizCRUDMessages.questionCreationMethodSelectError);
-      return;
+    } else if (this.activeStep === 2) {
+      if (
+        this.step2Component.selectedIndexStep2 !== 0 &&
+        this.step2Component.selectedIndexStep2 !== 1
+      ) {
+        this.snackbar.showError(quizCRUDMessages.questionCreationMethodSelectError);
+        return;
+      }
     } else if (this.activeStep === 3) {
       if (this.step3Component.selectedQuestions.length != this.quizStep1Data?.totalQuestions) {
         this.snackbar.showError(
@@ -390,5 +373,90 @@ export class QuizCreationLayoutComponent {
 
   categoryChanged() {
     this.selectedQuestions = [];
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  //fetch quiz id for edit
+  private decodeRouteId(): void {
+    const encodedId = this.route.snapshot.paramMap.get('id');
+    if (!encodedId) return;
+
+    try {
+      const urlDecoded = decodeURIComponent(encodedId);
+      const base64Decoded = atob(urlDecoded);
+      const asNumber = Number(base64Decoded);
+
+      if (!isNaN(asNumber)) {
+        this.decodedId = asNumber;
+        this.getEditQuizConfig();
+      } else {
+        this.snackbar.showError(quizCRUDMessages.invalideQuizId);
+        this.decodedId = 0;
+      }
+    } catch {
+      this.snackbar.showError(quizCRUDMessages.invalideQuizId);
+      this.decodedId = 0;
+    }
+  }
+
+  private getEditQuizConfig() {
+    this.quizCreationHeaderConfiguration = {
+      ...quizCreationHeaderConfig,
+      title: quizCRUDMessages.editQuizTitle,
+      subtitle: quizCRUDMessages.editQuizSubtitle,
+    };
+
+    this.steps = stepsToCreateQuiz.map((step, index) =>
+      index === 0
+        ? {
+            ...step,
+            heading: quizCRUDMessages.editQuizTitle,
+          }
+        : step,
+    );
+  }
+
+  /**
+   * Helper function to validate the selected questions against
+   * the difficulty distribution from Step 1.
+   */
+  private areSelectedQuestionsValid(): boolean {
+    if (!this.quizStep1Data || !Array.isArray(this.selectedQuestions)) {
+      return true; // No data to check against
+    }
+
+    // Count selected questions by difficulty
+    const difficultyCounts: Record<string, number> = {};
+    this.selectedQuestions.forEach((question) => {
+      // Ensure difficulty name is present
+      if (question.queDifficultyName) {
+        const difficultyName = question.queDifficultyName.toLowerCase();
+        difficultyCounts[difficultyName] = (difficultyCounts[difficultyName] || 0) + 1;
+      }
+    });
+
+    // Check against the Step 1 distribution
+    for (const dist of this.quizStep1Data?.difficultyDistribution ?? []) {
+      // dist.key is "easyQuestions", "mediumQuestions", etc.
+      const difficultyName = dist.key.replace('Questions', ''); // "easy", "medium"
+      const difficultyLimit = Number(dist.value ?? 0);
+      const count = difficultyCounts[difficultyName] ?? 0;
+
+      if (count > difficultyLimit) {
+        return false; // Too many questions of this difficulty
+      }
+    }
+
+    // Check total questions limit
+    const totalLimit = Number(this.quizStep1Data.totalQuestions ?? 0);
+    if (this.selectedQuestions.length > totalLimit) {
+      return false;
+    }
+
+    return true;
   }
 }

@@ -17,6 +17,8 @@
         flex-wrap: wrap;
         gap: 1rem;
         width: 100%;
+        margin-top: 5px;
+        padding-inline: 2px;
 
         .filter-select {
           flex: 1 1 calc(33.333% - 12px);

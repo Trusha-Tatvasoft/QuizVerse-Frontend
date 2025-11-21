@@ -754,3 +754,13 @@ app-data-table {
     }
   }
 }
+
+@media (max-width: 450px) {
+  .update-flagged-comment-buttons app-outline-button .outline-button {
+    width: 100% !important;
+  }
+
+  .update-flagged-comment-buttons div app-filled-button .filled-button {
+    width: 100% !important;
+  }
+}

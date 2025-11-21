@@ -49,8 +49,11 @@ export enum EndPoints {
   GetQuestionPrevirew = 'QuestionPool/get-question-preview',
   CreateOrUpdateQuestion = 'QuestionPool/create-or-update-question',
   SaveQuestions = 'QuestionPool/save-questions',
+  GenerateQuestionFromWebUrlRequest = 'QuestionPool/generate-question-using-web-url',
   PreviewQuestionsFromCsv = 'QuestionPool/preview-questions-from-csv',
   PreviewQuestionsFromExcel = 'QuestionPool/preview-questions-from-excel',
+  GenerateFromPdf = 'QuestionPool/generate-from-pdf',
+  GenerateQuestionFromPromptRequest = 'QuestionPool/generate-from-text-prompt',
   // #endregion
 
   // #region QuizCategory
@@ -163,6 +166,8 @@ export enum EndPoints {
   ReportQuestionIssue = 'Quiz/report-question-issue',
   QuizRating = 'Quiz/quiz-rating',
   SubmitQuizRating = 'Quiz/submit-quiz-rating',
+  QuizComments = 'Quiz/quiz-comments',
+  TotalQuizComments = 'Quiz/total-quiz-comments',
   //  #endregion
 
   //#region Notification Center
@@ -178,6 +183,9 @@ export enum EndPoints {
 
   //#region Content Moderation
   ContentModerationMatricsData = 'ContentModeration/get-content-moderation-matrics-data',
+  FlaggedContentList = 'ContentModeration/get-flagged-comments',
+  FlaggedCommentsById = 'ContentModeration/get-flagged-comment-by-id',
+  ManageFlaggedCommentStatus = 'ContentModeration/update-flagged-comment-status',
   ReportQuestionsList = 'ContentModeration/get-question-report-by-pagination',
   ReportQuestionAction = 'ContentModeration/update-question_report_action',
   GetReportedQuestionPreview = 'ContentModeration/get_question_issue_report_preview',
