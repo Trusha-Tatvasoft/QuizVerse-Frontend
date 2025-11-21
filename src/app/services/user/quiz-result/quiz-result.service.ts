@@ -11,6 +11,7 @@ import {
 } from '../../../pages/user/quiz-result-page/interfaces/quiz-question-review.interface';
 import { AnswerExplanationRequest } from '../../../pages/user/quiz-result-page/interfaces/answer-explaination-request.interface';
 import { QuizRating } from '../../../pages/user/quiz-result-page/interfaces/quiz-ratting.interface';
+import { QuizCommentsResponse } from '../../../pages/user/quiz-result-page/interfaces/quiz-comments.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -54,6 +55,18 @@ export class QuizResultService {
     return this.http.post<ApiResponse<string>>(
       `${environment.baseUrl}/${EndPoints.SubmitQuizRating}`,
       request,
+    );
+  }
+
+  getComments(quizId: number, batchNumber: number): Observable<ApiResponse<QuizCommentsResponse>> {
+    return this.http.get<ApiResponse<QuizCommentsResponse>>(
+      `${environment.baseUrl}/${EndPoints.QuizComments}/${quizId}/${batchNumber}`,
+    );
+  }
+
+  getTotalComments(quizId: number): Observable<ApiResponse<number>> {
+    return this.http.get<ApiResponse<number>>(
+      `${environment.baseUrl}/${EndPoints.TotalQuizComments}/${quizId}`,
     );
   }
 

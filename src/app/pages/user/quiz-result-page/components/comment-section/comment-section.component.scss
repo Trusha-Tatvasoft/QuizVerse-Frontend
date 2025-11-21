@@ -1,0 +1,220 @@
+.comment-section-container {
+  max-width: 894px;
+  background: #ffffff !important; // Ensure background isn't overridden
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin: 0rem auto;
+  margin-top: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  font-family: 'Inter', sans-serif;
+
+  .header {
+    margin-bottom: 1rem;
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 0.25rem;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 0.9rem;
+    }
+  }
+
+  .comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+
+    .comment-card {
+      display: flex;
+      align-items: flex-start;
+      background: #fff;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      padding: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+      .profile {
+        width: 40px;
+        height: 40px;
+        position: relative;
+        margin-right: 0.8rem;
+
+        .profile-pic,
+        .profile-fallback {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 600;
+          background: #e5e7eb;
+          color: #374151;
+          object-fit: cover;
+
+          @media (max-width: 576px) {
+            font-size: 0.8rem;
+          }
+        }
+
+        .profile-fallback {
+          &.bg-avatar-0 {
+            background-color: #ffb703;
+            color: #000;
+          }
+
+          &.bg-avatar-1 {
+            background-color: #fb8500;
+            color: #fff;
+          }
+
+          &.bg-avatar-2 {
+            background-color: #219ebc;
+            color: #fff;
+          }
+
+          &.bg-avatar-3 {
+            background-color: #8ecae6;
+            color: #000;
+          }
+
+          &.bg-avatar-4 {
+            background-color: #ff006e;
+            color: #fff;
+          }
+
+          &.bg-avatar-5 {
+            background-color: #8338ec;
+            color: #fff;
+          }
+
+          &.bg-avatar-6 {
+            background-color: #3a86ff;
+            color: #fff;
+          }
+
+          &.bg-avatar-7 {
+            background-color: #06d6a0;
+            color: #000;
+          }
+
+          &.bg-avatar-8 {
+            background-color: #ef476f;
+            color: #fff;
+          }
+
+          &.bg-avatar-9 {
+            background-color: #ffd166;
+            color: #000;
+          }
+
+          &.bg-avatar-10 {
+            background-color: #118ab2;
+            color: #fff;
+          }
+
+          &.bg-avatar-11 {
+            background-color: #073b4c;
+            color: #fff;
+          }
+        }
+      }
+
+      .comment-content {
+        flex: 1;
+
+        .comment-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.5rem;
+
+          .user-info {
+            .user-name {
+              font-weight: 600;
+              color: #222;
+            }
+
+            .comment-date {
+              font-size: 0.8rem;
+              color: #999;
+            }
+          }
+
+          .rating {
+            .star {
+              font-size: 18px;
+              color: #ccc;
+
+              &.filled {
+                color: #ffc107; // gold for filled stars
+              }
+            }
+          }
+
+          @media (max-width: 520px) {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.3rem;
+          }
+        }
+
+        .comment-text {
+          color: #333;
+          font-size: 0.95rem;
+          line-height: 1.4;
+        }
+      }
+    }
+  }
+
+  .load-more-container {
+    text-align: center;
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    button {
+      font-weight: 500;
+      border-radius: 20px;
+      padding: 0.5rem 1.5rem;
+    }
+  }
+
+  .no-comments {
+    text-align: center;
+    padding: 2rem;
+    color: #888;
+  }
+}
+
+// Media query fixes for better responsive behavior
+@media (max-width: 768px) {
+  .comment-section-container {
+    padding: 1rem 1.5rem;
+
+    .header h3 {
+      font-size: 1.2rem;
+    }
+
+    .stars mat-icon {
+      font-size: 1.75rem !important;
+      height: 1.75rem !important;
+      width: 1.75rem !important;
+    }
+  }
+}
+
+@media (max-width: 425px) {
+  .comment-section-container {
+    padding: 1rem;
+
+    .header h3 {
+      font-size: 1.1rem;
+    }
+  }
+}

@@ -10,4 +10,5 @@ export interface IncomingBattleRequest {
   battleDifficulty: string;
   sendingDate?: Date;
   timeAgo?: string;
+  totalXp: number;
 }

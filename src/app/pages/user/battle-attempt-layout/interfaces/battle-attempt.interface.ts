@@ -23,6 +23,7 @@ export interface BattleStartDetails {
   opponentProfile: PlayerProfileDto;
   totalQuestions: number;
   battleName: string;
+  battleId: number;
 }
 
 // play battle

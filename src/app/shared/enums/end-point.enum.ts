@@ -49,8 +49,11 @@ export enum EndPoints {
   GetQuestionPrevirew = 'QuestionPool/get-question-preview',
   CreateOrUpdateQuestion = 'QuestionPool/create-or-update-question',
   SaveQuestions = 'QuestionPool/save-questions',
+  GenerateQuestionFromWebUrlRequest = 'QuestionPool/generate-question-using-web-url',
   PreviewQuestionsFromCsv = 'QuestionPool/preview-questions-from-csv',
   PreviewQuestionsFromExcel = 'QuestionPool/preview-questions-from-excel',
+  GenerateFromPdf = 'QuestionPool/generate-from-pdf',
+  GenerateQuestionFromPromptRequest = 'QuestionPool/generate-from-text-prompt',
   // #endregion
 
   // #region QuizCategory
@@ -66,6 +69,7 @@ export enum EndPoints {
   CreateOrUpdateQuiz = 'QuizManagement/create-update-quiz',
   GetQuizById = 'QuizManagement/get-quiz-by-id',
   ExportQuestions = 'QuizManagement/export-questions-to-csv',
+  DeleteQuiz = 'QuizManagement/delete-quiz',
   UpdateQuizAction = 'QuizManagement/update-quiz-action',
   // #endregion
 
@@ -163,6 +167,8 @@ export enum EndPoints {
   QuizRating = 'Quiz/quiz-rating',
   SubmitQuizRating = 'Quiz/submit-quiz-rating',
   GetQuestionReported = 'Quiz/get-report-question-issue',
+  QuizComments = 'Quiz/quiz-comments',
+  TotalQuizComments = 'Quiz/total-quiz-comments',
   //  #endregion
 
   //#region Notification Center
@@ -174,5 +180,17 @@ export enum EndPoints {
   // #region AI Configuration
   AiConfigurationCardData = 'AiConfiguration/get-ai-configuration-card-details',
   AiUsageDetails = 'AiConfiguration/get-ai-uses-details',
+  //#endregion
+
+  //#region Content Moderation
+  ContentModerationMatricsData = 'ContentModeration/get-content-moderation-matrics-data',
+  FlaggedContentList = 'ContentModeration/get-flagged-comments',
+  FlaggedCommentsById = 'ContentModeration/get-flagged-comment-by-id',
+  ManageFlaggedCommentStatus = 'ContentModeration/update-flagged-comment-status',
+  ReportQuestionsList = 'ContentModeration/get-question-report-by-pagination',
+  ReportQuestionAction = 'ContentModeration/update-question_report_action',
+  GetReportedQuestionPreview = 'ContentModeration/get_question_issue_report_preview',
+  GetListOfAffectedQuizAndBattle = 'ContentModeration/get_affected_quiz_and_battle',
+  UpdateReportedQuestion = 'ContentModeration/update-reported-question',
   //#endregion
 }

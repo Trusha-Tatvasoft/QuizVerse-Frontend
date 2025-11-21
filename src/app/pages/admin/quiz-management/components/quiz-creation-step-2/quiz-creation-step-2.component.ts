@@ -39,6 +39,12 @@ export class QuizCreationStep2Component {
 
       // Emit change to parent
       this.selectedIndexStep2Change.emit(this.selectedIndexStep2);
+    } else if (index === 1) {
+      this.selectedIndexStep2 = index;
+      root.style.setProperty('--selected-card-color', 'var(--global-primary-color)');
+
+      // Emit change to parent
+      this.selectedIndexStep2Change.emit(this.selectedIndexStep2);
     } else {
       this.snackbar.showInfo(quizCRUDMessages.featureNotAvailable);
     }

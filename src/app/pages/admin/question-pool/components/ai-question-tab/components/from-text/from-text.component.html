@@ -1,1 +1,40 @@
-<p>comming soon!</p>
+<form [formGroup]="promptForm">
+  <div>
+    @for (field of fields; track field.name) {
+      @if (field.type === 'textarea') {
+        <div>
+          <mat-form-field
+            appearance="outline"
+            class="custom-form-field-text full-width px-1 mt-1"
+            [floatLabel]="'auto'"
+          >
+            <mat-icon fontSet="material-icons-outlined" matPrefix>
+              {{ field.icon || 'link' }}
+            </mat-icon>
+
+            <textarea
+              matInput
+              [id]="field.name"
+              [formControlName]="field.name"
+              [placeholder]="field.placeholder"
+              class="custom-input-field min-h-[50px]"
+            ></textarea>
+
+            @if (promptForm.get(field.name)?.touched && promptForm.get(field.name)?.invalid) {
+              <mat-error>
+                {{ getError(field.name) }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      }
+    }
+  </div>
+
+  <div class="generate-button-container mt-2">
+    <app-filled-button
+      [filledButtonConfig]="generateBtnConfig"
+      (click)="generateQuestion()"
+    ></app-filled-button>
+  </div>
+</form>

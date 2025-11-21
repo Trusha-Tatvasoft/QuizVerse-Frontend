@@ -13,12 +13,14 @@ import {
 } from '../../../../configs/question-pool-dialog.config';
 import { allowedPDFType, platformMessages } from '../../../../../../../utils/constants';
 import { generateQueButtonConfig } from '../../../../configs/question-pool.config';
-import {
-  GenerateQuizRequest,
-  GenerateQuizFromPDFRequest,
-} from '../../../../interfaces/question-pool-ai-tab.interface';
+import { GenerateQuizRequest } from '../../../../interfaces/question-pool-ai-tab.interface';
 import { filter, Subject, takeUntil } from 'rxjs';
 import { AiQuestionTabComponent } from '../../ai-question-tab.component';
+import { QuestionPoolService } from '../../../../../../../services/admin/question-pool/question-pool.service';
+import { QuestionPoolListData } from '../../../../interfaces/question-pool-list-data.interface';
+import { ImportQuestionPreviewComponent } from '../../../manual-question-tab/components/import-question-preview/import-question-preview.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { QuestionFormDialogComponent } from '../../../question-form-dialog/question-form-dialog.component';
 
 @Component({
   selector: 'app-from-pdf',
@@ -48,6 +50,9 @@ export class FromPdfComponent {
   private readonly snackbar = inject(SnackbarService);
   private readonly validationErrorService = inject(ValidationErrorService);
   private readonly aiComponent = inject(AiQuestionTabComponent);
+  private readonly dialog = inject(MatDialog);
+  private readonly questionPoolService = inject(QuestionPoolService);
+  private readonly dialogRef = inject(MatDialogRef<QuestionFormDialogComponent>);
 
   ngOnInit(): void {
     this.buildForm();
@@ -109,12 +114,37 @@ export class FromPdfComponent {
       return;
     }
 
-    const requestPayload: GenerateQuizFromPDFRequest = {
-      ...this.quizConfig,
-      prompt: this.selectedFile,
-    };
-
     // call to BE service here
+    const formData = new FormData();
+    formData.append('Prompt', this.selectedFile);
+    formData.append('CategoryId', (this.quizConfig.categoryId ?? 0).toString());
+    if (this.quizConfig.category) {
+      formData.append('Category', this.quizConfig.category);
+    }
+    formData.append('QuestionSpec', JSON.stringify(this.quizConfig.questionSpec || []));
+
+    this.questionPoolService
+      .generateQuestionsFromPdf(formData)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          if (res.result) {
+            this.snackbar.showSuccess(
+              platformMessages.successTitle,
+              'Questions successfully created!',
+            );
+            this.openPreviewDialog(res.data);
+          } else {
+            this.snackbar.showError(platformMessages.errorTitle, 'Please try another PDF.');
+          }
+        },
+        error: () => {
+          this.snackbar.showError(
+            platformMessages.errorTitle,
+            'Something went wrong while generating from PDF.',
+          );
+        },
+      });
   }
 
   getError(fieldName: string): string | null {
@@ -144,6 +174,21 @@ export class FromPdfComponent {
         field.name,
         this.fb.control('', (field.validators as ValidatorFn[]) || []),
       );
+    });
+  }
+
+  private openPreviewDialog(questions: QuestionPoolListData[]) {
+    const dialogRef = this.dialog.open(ImportQuestionPreviewComponent, {
+      minWidth: '50vw',
+      maxWidth: '100vw',
+      maxHeight: '90vh',
+      data: questions,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.dialogRef.close(true);
+      }
     });
   }
 }

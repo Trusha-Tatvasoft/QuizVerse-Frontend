@@ -9,6 +9,8 @@ import { QuestionPoolListData } from '../../../pages/admin/question-pool/interfa
 import { environment } from '../../../../environments/environment.dev';
 import { EndPoints } from '../../../shared/enums/end-point.enum';
 import { QuestionRequest } from '../../../pages/admin/question-pool/interfaces/question-request.interface';
+import { GenerateQuestionFromWebUrlRequest } from '../../../pages/admin/question-pool/interfaces/question-pool-ai-tab.interface';
+import { GenerateQuestionFromPromptRequest } from '../../../pages/admin/question-pool/interfaces/question-pool-ai-tab.interface';
 
 describe('QuestionPoolService', () => {
   let service: QuestionPoolService;
@@ -311,5 +313,427 @@ describe('QuestionPoolService', () => {
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(questions);
     req.flush(mockResponse);
+  });
+
+  it('should generate questions from a PDF file', () => {
+    const pdfFile = new File(['pdf-content'], 'questions.pdf', { type: 'application/pdf' });
+    const formData = new FormData();
+    formData.append('file', pdfFile);
+
+    const generateUrl = `${environment.baseUrl}/${EndPoints.GenerateFromPdf}`;
+
+    const mockResponse: ApiResponse<QuestionPoolListData[]> = {
+      result: true,
+      statusCode: 200,
+      message: 'PDF processed successfully',
+      data: [
+        {
+          id: 10,
+          categoryId: 1,
+          categoryName: 'Generated Category',
+          queDifficultyId: 2,
+          queDifficultyName: 'Medium',
+          queText: 'Generated question from PDF?',
+          queTypeId: 4,
+          queTypeName: 'Multiple Choice',
+          queOptionsAns: [
+            { id: 1, questionId: 10, key: 'Answer', value: '42' },
+            { id: 2, questionId: 10, key: 'Option', value: '24' },
+          ],
+        },
+      ],
+    };
+
+    service.generateQuestionsFromPdf(formData).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+      expect(res.result).toBe(true);
+      expect(res.data.length).toBe(1);
+      expect(res.data[0].queText).toBe('Generated question from PDF?');
+      expect(res.data[0].queOptionsAns[0].value).toBe('42');
+    });
+
+    const req = httpMock.expectOne(generateUrl);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body instanceof FormData).toBe(true);
+    req.flush(mockResponse);
+  });
+
+  it('should generate questions using web URL', () => {
+    const generateUrl = `${environment.baseUrl}/${EndPoints.GenerateQuestionFromWebUrlRequest}`;
+
+    const requestPayload: GenerateQuestionFromWebUrlRequest = {
+      url: 'https://example.com/science-articles',
+      categoryId: 2,
+      questionSpec: [
+        {
+          questionDifficultyId: 1,
+          questionDifficultyName: 'Easy',
+          questionPerQuestionType: [
+            {
+              questionPerQuestionTypeId: 5,
+              questionPerQuestionTypeName: 'Multiple Choice',
+              noOfQuesitons: 3,
+            },
+            {
+              questionPerQuestionTypeId: 6,
+              questionPerQuestionTypeName: 'True/False',
+              noOfQuesitons: 2,
+            },
+          ],
+        },
+      ],
+    };
+
+    const mockResponse: ApiResponse<QuestionPoolListData[]> = {
+      result: true,
+      statusCode: 200,
+      message: 'Questions generated successfully',
+      data: [
+        {
+          id: 1,
+          categoryId: 2,
+          categoryName: 'Science',
+          queDifficultyId: 1,
+          queDifficultyName: 'Easy',
+          queText: 'What is the boiling point of water?',
+          queTypeId: 5,
+          queTypeName: 'Multiple Choice',
+          queOptionsAns: [
+            { id: 1, questionId: 1, key: 'Answer', value: '100°C' },
+            { id: 2, questionId: 1, key: 'Option1', value: '90°C' },
+          ],
+        },
+      ],
+    };
+
+    service.getQuestionsUsingWebUrl(requestPayload).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+      expect(res.result).toBe(true);
+      expect(res.data.length).toBe(1);
+      expect(res.data[0].queText).toBe('What is the boiling point of water?');
+    });
+
+    const req = httpMock.expectOne(generateUrl);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(requestPayload);
+    req.flush(mockResponse);
+  });
+
+  describe('generateQuestionsFromTextPrompt', () => {
+    it('should generate questions from text prompt successfully', () => {
+      const requestPayload: GenerateQuestionFromPromptRequest = {
+        prompt: 'Generate science questions about physics',
+        categoryId: 1,
+        category: 'Science',
+        questionSpec: [
+          {
+            questionDifficultyId: 1,
+            questionDifficultyName: 'Easy',
+            questionPerQuestionType: [
+              {
+                questionPerQuestionTypeId: 1,
+                questionPerQuestionTypeName: 'Multiple Choice',
+                noOfQuesitons: 5,
+              },
+            ],
+          },
+        ],
+      };
+
+      const mockResponse: ApiResponse<QuestionPoolListData[]> = {
+        result: true,
+        statusCode: 200,
+        message: 'Questions generated successfully',
+        data: [
+          {
+            id: 101,
+            categoryId: 1,
+            categoryName: 'Science',
+            queDifficultyId: 1,
+            queDifficultyName: 'Easy',
+            queText: "What is Newton's first law of motion?",
+            queTypeId: 1,
+            queTypeName: 'Multiple Choice',
+            queOptionsAns: [
+              { id: 1, questionId: 101, key: 'option', value: 'Law of Inertia' },
+              { id: 2, questionId: 101, key: 'option', value: 'Law of Acceleration' },
+              { id: 3, questionId: 101, key: 'option', value: 'Law of Action-Reaction' },
+              { id: 4, questionId: 101, key: 'answer', value: 'Law of Inertia' },
+            ],
+          },
+          {
+            id: 102,
+            categoryId: 1,
+            categoryName: 'Science',
+            queDifficultyId: 1,
+            queDifficultyName: 'Easy',
+            queText: 'What is the SI unit of force?',
+            queTypeId: 1,
+            queTypeName: 'Multiple Choice',
+            queOptionsAns: [
+              { id: 5, questionId: 102, key: 'option', value: 'Joule' },
+              { id: 6, questionId: 102, key: 'option', value: 'Watt' },
+              { id: 7, questionId: 102, key: 'option', value: 'Newton' },
+              { id: 8, questionId: 102, key: 'answer', value: 'Newton' },
+            ],
+          },
+        ],
+      };
+
+      service.generateQuestionsFromTextPrompt(requestPayload).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+        expect(response.result).toBe(true);
+        expect(response.message).toBe('Questions generated successfully');
+        expect(response.data.length).toBe(2);
+        expect(response.data[0].queText).toContain('Newton');
+        expect(response.data[1].queOptionsAns[3].value).toBe('Newton');
+      });
+
+      const req = httpMock.expectOne(
+        `${environment.baseUrl}/${EndPoints.GenerateQuestionFromPromptRequest}`,
+      );
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual(requestPayload);
+      req.flush(mockResponse);
+    });
+
+    it('should handle empty response when no questions are generated', () => {
+      const requestPayload: GenerateQuestionFromPromptRequest = {
+        prompt: 'Generate questions about unknown topic',
+        categoryId: 2,
+        category: 'Unknown',
+        questionSpec: [
+          {
+            questionDifficultyId: 2,
+            questionDifficultyName: 'Medium',
+            questionPerQuestionType: [
+              {
+                questionPerQuestionTypeId: 2,
+                questionPerQuestionTypeName: 'True/False',
+                noOfQuesitons: 3,
+              },
+            ],
+          },
+        ],
+      };
+
+      const mockResponse: ApiResponse<QuestionPoolListData[]> = {
+        result: true,
+        statusCode: 200,
+        message: 'No questions generated for the given prompt',
+        data: [],
+      };
+
+      service.generateQuestionsFromTextPrompt(requestPayload).subscribe((response) => {
+        expect(response.result).toBe(true);
+        expect(response.data.length).toBe(0);
+        expect(response.message).toBe('No questions generated for the given prompt');
+      });
+
+      const req = httpMock.expectOne(
+        `${environment.baseUrl}/${EndPoints.GenerateQuestionFromPromptRequest}`,
+      );
+      expect(req.request.method).toBe('POST');
+      req.flush(mockResponse);
+    });
+
+    it('should handle server error when generating questions', () => {
+      const requestPayload: GenerateQuestionFromPromptRequest = {
+        prompt: 'Generate questions',
+        categoryId: 1,
+        category: 'Science',
+        questionSpec: [],
+      };
+
+      const mockErrorResponse: ApiResponse<QuestionPoolListData[]> = {
+        result: false,
+        statusCode: 500,
+        message: 'Internal server error while generating questions',
+        data: [],
+      };
+
+      service.generateQuestionsFromTextPrompt(requestPayload).subscribe((response) => {
+        expect(response.result).toBe(false);
+        expect(response.statusCode).toBe(500);
+        expect(response.message).toContain('server error');
+        expect(response.data.length).toBe(0);
+      });
+
+      const req = httpMock.expectOne(
+        `${environment.baseUrl}/${EndPoints.GenerateQuestionFromPromptRequest}`,
+      );
+      expect(req.request.method).toBe('POST');
+      req.flush(mockErrorResponse);
+    });
+
+    it('should handle validation error for invalid prompt', () => {
+      const requestPayload: GenerateQuestionFromPromptRequest = {
+        prompt: '', // Empty prompt
+        categoryId: 1,
+        category: 'Science',
+        questionSpec: [
+          {
+            questionDifficultyId: 1,
+            questionDifficultyName: 'Easy',
+            questionPerQuestionType: [
+              {
+                questionPerQuestionTypeId: 1,
+                questionPerQuestionTypeName: 'Multiple Choice',
+                noOfQuesitons: 5,
+              },
+            ],
+          },
+        ],
+      };
+
+      const mockErrorResponse: ApiResponse<QuestionPoolListData[]> = {
+        result: false,
+        statusCode: 400,
+        message: 'Prompt cannot be empty',
+        data: [],
+      };
+
+      service.generateQuestionsFromTextPrompt(requestPayload).subscribe((response) => {
+        expect(response.result).toBe(false);
+        expect(response.statusCode).toBe(400);
+        expect(response.message).toBe('Prompt cannot be empty');
+      });
+
+      const req = httpMock.expectOne(
+        `${environment.baseUrl}/${EndPoints.GenerateQuestionFromPromptRequest}`,
+      );
+      expect(req.request.method).toBe('POST');
+      req.flush(mockErrorResponse);
+    });
+
+    it('should generate mixed question types based on specification', () => {
+      const requestPayload: GenerateQuestionFromPromptRequest = {
+        prompt: 'Generate mixed questions about mathematics',
+        categoryId: 3,
+        category: 'Mathematics',
+        questionSpec: [
+          {
+            questionDifficultyId: 1,
+            questionDifficultyName: 'Easy',
+            questionPerQuestionType: [
+              {
+                questionPerQuestionTypeId: 1,
+                questionPerQuestionTypeName: 'Multiple Choice',
+                noOfQuesitons: 3,
+              },
+              {
+                questionPerQuestionTypeId: 2,
+                questionPerQuestionTypeName: 'True/False',
+                noOfQuesitons: 2,
+              },
+            ],
+          },
+          {
+            questionDifficultyId: 2,
+            questionDifficultyName: 'Medium',
+            questionPerQuestionType: [
+              {
+                questionPerQuestionTypeId: 3,
+                questionPerQuestionTypeName: 'Short Answer',
+                noOfQuesitons: 1,
+              },
+            ],
+          },
+        ],
+      };
+
+      const mockResponse: ApiResponse<QuestionPoolListData[]> = {
+        result: true,
+        statusCode: 200,
+        message: 'Questions generated successfully',
+        data: [
+          {
+            id: 201,
+            categoryId: 3,
+            categoryName: 'Mathematics',
+            queDifficultyId: 1,
+            queDifficultyName: 'Easy',
+            queText: 'What is 2 + 2?',
+            queTypeId: 1,
+            queTypeName: 'Multiple Choice',
+            queOptionsAns: [
+              { id: 9, questionId: 201, key: 'option', value: '3' },
+              { id: 10, questionId: 201, key: 'option', value: '4' },
+              { id: 11, questionId: 201, key: 'option', value: '5' },
+              { id: 12, questionId: 201, key: 'answer', value: '4' },
+            ],
+          },
+          {
+            id: 202,
+            categoryId: 3,
+            categoryName: 'Mathematics',
+            queDifficultyId: 1,
+            queDifficultyName: 'Easy',
+            queText: 'Is 5 a prime number?',
+            queTypeId: 2,
+            queTypeName: 'True/False',
+            queOptionsAns: [{ id: 13, questionId: 202, key: 'answer', value: 'True' }],
+          },
+          {
+            id: 203,
+            categoryId: 3,
+            categoryName: 'Mathematics',
+            queDifficultyId: 2,
+            queDifficultyName: 'Medium',
+            queText: 'Solve for x: 2x + 5 = 15',
+            queTypeId: 3,
+            queTypeName: 'Short Answer',
+            queOptionsAns: [{ id: 14, questionId: 203, key: 'answer', value: '5' }],
+          },
+        ],
+      };
+
+      service.generateQuestionsFromTextPrompt(requestPayload).subscribe((response) => {
+        expect(response.data.length).toBe(3);
+
+        const multipleChoiceQuestions = response.data.filter(
+          (q) => q.queTypeName === 'Multiple Choice',
+        );
+        const trueFalseQuestions = response.data.filter((q) => q.queTypeName === 'True/False');
+        const shortAnswerQuestions = response.data.filter((q) => q.queTypeName === 'Short Answer');
+
+        expect(multipleChoiceQuestions.length).toBe(1);
+        expect(trueFalseQuestions.length).toBe(1);
+        expect(shortAnswerQuestions.length).toBe(1);
+
+        expect(multipleChoiceQuestions[0].queDifficultyName).toBe('Easy');
+        expect(shortAnswerQuestions[0].queDifficultyName).toBe('Medium');
+      });
+
+      const req = httpMock.expectOne(
+        `${environment.baseUrl}/${EndPoints.GenerateQuestionFromPromptRequest}`,
+      );
+      expect(req.request.method).toBe('POST');
+      req.flush(mockResponse);
+    });
+
+    it('should use correct endpoint URL for question generation', () => {
+      const requestPayload: GenerateQuestionFromPromptRequest = {
+        prompt: 'Test prompt',
+        categoryId: 1,
+        category: 'Test',
+        questionSpec: [],
+      };
+
+      const expectedUrl = `${environment.baseUrl}/${EndPoints.GenerateQuestionFromPromptRequest}`;
+
+      service.generateQuestionsFromTextPrompt(requestPayload).subscribe();
+
+      const req = httpMock.expectOne(expectedUrl);
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual(requestPayload);
+
+      req.flush({
+        result: true,
+        statusCode: 200,
+        message: 'Success',
+        data: [],
+      });
+    });
   });
 });

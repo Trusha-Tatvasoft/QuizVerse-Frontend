@@ -6,10 +6,16 @@ import { SnackbarService } from '../../../shared/service/snackbar/snackbar.servi
 import { QuestionReviewComponent } from './components/question-review/question-review.component';
 import { Subject } from 'rxjs';
 import { QuizRatingComponent } from './components/quiz-rating/quiz-rating.component';
+import { CommentSectionComponent } from './components/comment-section/comment-section.component';
 
 @Component({
   selector: 'app-quiz-result-page',
-  imports: [QuizResultHeaderComponent, QuestionReviewComponent, QuizRatingComponent],
+  imports: [
+    QuizResultHeaderComponent,
+    QuestionReviewComponent,
+    CommentSectionComponent,
+    QuizRatingComponent,
+  ],
   templateUrl: './quiz-result-page.component.html',
   styleUrl: './quiz-result-page.component.scss',
 })

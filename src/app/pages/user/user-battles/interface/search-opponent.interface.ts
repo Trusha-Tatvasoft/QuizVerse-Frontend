@@ -36,4 +36,5 @@ export interface BattleStartDetails {
   battleAttemptId: number;
   totalQuestions: number;
   battleName: string;
+  battleId: number;
 }

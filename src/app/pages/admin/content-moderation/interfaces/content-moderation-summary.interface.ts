@@ -1,6 +1,6 @@
 export interface ContentModerationSummary {
-  pendingReports: number;
-  underReview: number;
-  resolvedToday: number;
-  bannedUsers: number;
+  pendingReportsCount: number;
+  underReviewReportsCount: number;
+  todayResolvedReportsCount: number;
+  bannedUserCount: number;
 }

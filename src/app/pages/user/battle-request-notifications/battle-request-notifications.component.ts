@@ -5,6 +5,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { IncomingRequestNotificationComponent } from '../../../shared/components/incoming-request-notification/incoming-request-notification.component';
 import { BattleHubService } from '../../../services/user/user-battles/battle-hub.service';
 import { notificationTimeout } from '../../../utils/constants';
+import { Router } from '@angular/router';
+import { Navigations } from '../../../shared/enums/navigation';
 
 @Component({
   selector: 'app-battle-request-notifications',
@@ -17,6 +19,7 @@ export class BattleRequestNotificationsComponent implements OnInit, OnDestroy {
   notifications: IncomingBattleRequest[] = [];
   private readonly battleHubService = inject(BattleHubService);
   private readonly destroy$ = new Subject<void>();
+  private readonly router = inject(Router);
 
   ngOnInit(): void {
     this.connectToHub();
@@ -45,9 +48,24 @@ export class BattleRequestNotificationsComponent implements OnInit, OnDestroy {
     this.battleHubService.removeIncomingRequest(request.requestId);
   }
 
-  acceptRequest(request: IncomingBattleRequest) {
+  acceptRequest(request: IncomingBattleRequest): void {
     this.battleHubService.acceptRequest(request);
     this.removeNotification(request);
+
+    const encodedBattleId = btoa(encodeURIComponent(request.battleId.toString()));
+
+    this.router.navigate(
+      [
+        Navigations.User,
+        Navigations.Battles,
+        Navigations.BattleList,
+        Navigations.WaitingOpponent,
+        encodedBattleId,
+      ],
+      {
+        state: { battleData: request },
+      },
+    );
   }
 
   declineRequest(request: IncomingBattleRequest) {
