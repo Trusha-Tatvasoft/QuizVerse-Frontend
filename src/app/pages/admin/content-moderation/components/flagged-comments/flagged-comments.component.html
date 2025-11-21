@@ -1,0 +1,32 @@
+<main>
+  <div class="admin-management-toolbar">
+    <section class="page-header">
+      <h2 class="page-title">Flagged Comments</h2>
+    </section>
+
+    <div class="user-management-filters">
+      <!-- Status Filter -->
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-select
+          [(value)]="selectedStatus"
+          (selectionChange)="onFilterChange()"
+          placeholder="All Status"
+        >
+          <mat-option [value]="''">All Status</mat-option>
+          @for (status of flaggedCommentStatus; track status.value) {
+            <mat-option [value]="status.value">{{ status.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <app-flagged-comments-table
+    [dataSource]="dataSource()"
+    [totalItems]="totalItems()"
+    (pageChange)="onPageChange($event)"
+    (sortChange)="onSortChange($event)"
+    (actionClick)="handleFlaggedCommentAction($event)"
+  >
+  </app-flagged-comments-table>
+</main>
